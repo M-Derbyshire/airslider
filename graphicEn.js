@@ -24,6 +24,9 @@ class GraphicEn{
             this.visibleModels[0] = kernel.loadedModels[0];
         }
         
+        //clear everything on the gameCan
+        this.gameCtx.clearRect(0, 0, this.gameCan.width, this.gameCan.height);
+        
         for(let i = 0; i < this.visibleModels.length; i++)
         {
             this.visibleModels[i].draw();

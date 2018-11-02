@@ -8,6 +8,9 @@ class Model {
         this.x;
         this.y;
         this.z;
+        this.xSpeed;
+        this.ySpeed;
+        this.zSpeed;
         
         this.loadNextFrame = false; //needed when loading images
     }
