@@ -3,4 +3,9 @@ class GameEn{
     {
         
     }
+    
+    run()
+    {
+        
+    }
 }

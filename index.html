@@ -10,7 +10,6 @@
             }
             
             canvas {
-                border: 1px solid red;
                 position: absolute;
             }
         </style>
@@ -29,9 +28,14 @@
         <script src="assets/models/model/model.js"></script> <!-- base model -->
         
         <!-- include any scripts/models here -->
+        <script src="assets/models/tarian/tarian.js"></script>
         
         <script>
             var kernel = new Kernel();
+            window.addEventListener("load", () => {
+                kernel.load();
+                kernel.run();
+            }, true);
         </script>
     </body>
 </html>
