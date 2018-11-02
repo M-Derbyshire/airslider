@@ -1,0 +1,6 @@
+class GameEn{
+    constructor()
+    {
+        
+    }
+}
