@@ -46,10 +46,22 @@ class GraphicEn{
     
     setCanvasSize(canvas)
     {
-        let x = 10;
-        let y = 10;
-        let width = window.innerWidth - (x * 2);
-        let height = (window.innerHeight / 1.1) - (y * 2);
+        let width;
+        let height;
+        
+        //should be essentially 16:9
+        //if 16:9 is stretches out of window, correct it
+        if((window.innerWidth / 1.77777) > window.innerHeight)
+        {
+            height = window.innerHeight;
+            width = height * 1.77777;
+        } else {
+            height = window.innerWidth / 1.77777;
+            width = window.innerWidth;
+        }
+        
+        let x = (window.innerWidth - width) / 2;
+        let y = (window.innerHeight - height) / 2;
         
         for(let i = 0; i < canvas.length; i++)
         {
