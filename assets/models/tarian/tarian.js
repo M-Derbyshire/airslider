@@ -13,7 +13,7 @@ class Tarian extends Model {
         };
         
         this.z = zUnit(30);
-        this.x = (kernel.graphicEn.gameCan.width / 2) - this.anims[this.state].width;
+        this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height) + this.z;
         
         this.xSpeed = xUnit(10);

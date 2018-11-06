@@ -16,7 +16,7 @@ class Model {
     }
     
     
-    registerAnim(path, frameCount, fps, width, height)
+    registerAnim(path, frameCount, fps, width, height, xOffset = 0, yOffset = 0)
     {
         let anim = {
             path: path,
@@ -26,7 +26,9 @@ class Model {
             nextCount: (kernel.fps / fps) - 1, //when to move to the next frame (done so anim and game can have different fps)
             currentFrame: 0,
             height: height,
-            width: width
+            width: width,
+            xOffset: xOffset,
+            yOffset: yOffset
         };
         
         for(let i = 0; i < anim.frameCount; i++)
@@ -59,6 +61,6 @@ class Model {
     
     draw()
     {
-        kernel.graphicEn.gameCtx.drawImage(this.nextFrame(), this.x, this.y, this.anims[this.state].width, this.anims[this.state].height);
+        kernel.graphicEn.gameCtx.drawImage(this.nextFrame(), this.x + this.anims[this.state].xOffset, this.y + this.anims[this.state].yOffset, this.anims[this.state].width, this.anims[this.state].height);
     }
 }
