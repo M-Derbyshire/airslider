@@ -61,6 +61,6 @@ class Model {
     
     draw()
     {
-        kernel.graphicEn.gameCtx.drawImage(this.nextFrame(), this.x + this.anims[this.state].xOffset, this.y + this.anims[this.state].yOffset, this.anims[this.state].width, this.anims[this.state].height);
+        kernel.graphicEn.gameCtx.drawImage(this.nextFrame(), this.x, this.y, this.anims[this.state].width, this.anims[this.state].height);
     }
 }
