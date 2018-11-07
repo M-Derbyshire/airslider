@@ -9,7 +9,9 @@ class Tarian extends Model {
     load()
     {
         this.anims = {
-            forward: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, 24, xUnit(150), yUnit(225))
+            forward: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, 24, xUnit(150), yUnit(225)),
+            left: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/left", 4, 24, xUnit(300), yUnit(225)),
+            right: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/right", 4, 24, xUnit(300), yUnit(225))
         };
         
         this.z = zUnit(30);
