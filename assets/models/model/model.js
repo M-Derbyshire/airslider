@@ -23,7 +23,7 @@ class Model {
             frameCount: frameCount,
             frames: [],
             waitCount: 0, //used when waiting to move to next frame
-            nextCount: (kernel.fps / fps) - 1, //when to move to the next frame (done so anim and game can have different fps)
+            nextCount: (kernel.fps / fps), //when to move to the next frame (done so anim and game can have different fps)
             currentFrame: 0,
             height: height,
             width: width,
