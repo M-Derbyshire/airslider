@@ -13,6 +13,9 @@ class Model {
         this.zSpeed;
         
         this.loadNextFrame = false; //needed when loading images
+        
+        this.events = []; //will hold array of events objects
+        this.loadedIndex; //will hold current index in kernel.loadedModels
     }
     
     
@@ -27,7 +30,7 @@ class Model {
             currentFrame: 0,
             height: height,
             width: width,
-            xOffset: xOffset,
+            xOffset: xOffset, //change position for consistency
             yOffset: yOffset
         };
         
@@ -37,6 +40,20 @@ class Model {
             anim.frames[i].src = anim.path + "/" + i + ".png";
         }
         return anim;
+    }
+    
+    //takes models array related to event, and action (which is a function) 
+    registerEvent(relatedModels, action)
+    {
+        this.events.push({
+            models: kernel.loadedModels.filter((model, index) => {
+                if(relatedModels.includes(model.constructor.name))
+                {
+                    return index;
+                }
+            }),
+            check: action
+        }); 
     }
     
     nextFrame()
@@ -69,5 +86,23 @@ class Model {
         this.x += this.anims[state].xOffset;
         this.y += this.anims[state].yOffset;
         this.state = state;
+    }
+    
+    move()
+    {
+        //meant to be overloaded
+        //only created here for static models
+    }
+    
+    checkEvents()
+    {
+        this.events.forEach((event) => {
+            event.check(this.loadedIndex);
+        });
+        
+        if(this.extraEvents)
+        {
+            this.extraEvents();
+        }
     }
 }

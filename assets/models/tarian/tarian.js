@@ -17,11 +17,12 @@ class Tarian extends Model {
         this.z = zUnit(30);
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height) + this.z;
-        
         this.xSpeed = xUnit(40);
+        
+        this.registerEvent(["MrStickyStick"], this.collisionEvent);
     }
     
-    move() //0 up; 1 right; 2 down; 3 left; 4 in; 5 out
+    move()
     {
         switch(this.state)
         {
@@ -34,7 +35,7 @@ class Tarian extends Model {
         }
     }
     
-    checkEvents()
+    extraEvents()
     {
         //check for leaving the game area
         if(this.x < 0)
@@ -46,6 +47,18 @@ class Tarian extends Model {
         {
             this.x = kernel.graphicEn.gameCan.width - this.anims["forward"].width;
             this.state = "forward";
+        }
+    }
+    
+    collisionEvent(thisIndex)
+    {
+        let thisModel = kernel.loadedModels[thisIndex];
+        
+        for(let i = 0; i < this.models.length; i++)
+        {
+            let otherModel = kernel.loadedModels[i];
+            
+            
         }
     }
 }
