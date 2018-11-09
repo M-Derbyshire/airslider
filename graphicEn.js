@@ -55,8 +55,9 @@ class GraphicEn{
         let width;
         let height;
         
-        //should be essentially 16:9
-        //if 16:9 is stretches out of window, correct it
+        //should be essentially 17:9
+        //if 17:9 is stretches out of window, correct it
+        // 17 / 9 = 1.88888 (and a bit more)
         let widthRatio = 1.88888;
         if((window.innerWidth / widthRatio) > window.innerHeight)
         {

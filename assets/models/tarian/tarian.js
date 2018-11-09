@@ -33,4 +33,19 @@ class Tarian extends Model {
                 break;
         }
     }
+    
+    checkEvents()
+    {
+        //check for leaving the game area
+        if(this.x < 0)
+        {
+            this.x = 0;
+            this.state = "forward";
+        }
+        if(this.x + this.anims[this.state].width > kernel.graphicEn.gameCan.width)
+        {
+            this.x = kernel.graphicEn.gameCan.width - this.anims["forward"].width;
+            this.state = "forward";
+        }
+    }
 }

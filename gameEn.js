@@ -58,6 +58,17 @@ class GameEn{
     
     run()
     {
-        kernel.loadedModels[0].move();
+        for (let i = 0; i < kernel.loadedModels.length; i++)
+        {
+            kernel.loadedModels[i].move();
+        }
+        
+        //needs to be seperate from the for loop above.
+        //as both/all models involved in an event need to
+        //know it
+        for (let i = 0; i < kernel.loadedModels.length; i++)
+        {
+            kernel.loadedModels[i].checkEvents();
+        }
     }
 }
