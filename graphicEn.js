@@ -14,6 +14,10 @@ class GraphicEn{
         
         this.setCanvasSize([this.backCan, this.gameCan, this.infoCan, this.menuCan]);
         this.setBackground("white", true);
+        
+        //road values
+        this.roadColor = "#999999";
+        this.vanishPoint = this.gameCan.height / 2;
     }
     
     run()
@@ -26,6 +30,8 @@ class GraphicEn{
         
         //clear everything on the gameCan
         this.gameCtx.clearRect(0, 0, this.gameCan.width, this.gameCan.height);
+        
+        this.drawRoad();
         
         for(let i = 0; i < this.visibleModels.length; i++)
         {
@@ -51,12 +57,13 @@ class GraphicEn{
         
         //should be essentially 16:9
         //if 16:9 is stretches out of window, correct it
-        if((window.innerWidth / 1.77777) > window.innerHeight)
+        let widthRatio = 1.77777;
+        if((window.innerWidth / widthRatio) > window.innerHeight)
         {
             height = window.innerHeight;
-            width = height * 1.77777;
+            width = height * widthRatio;
         } else {
-            height = window.innerWidth / 1.77777;
+            height = window.innerWidth / widthRatio;
             width = window.innerWidth;
         }
         
@@ -70,5 +77,16 @@ class GraphicEn{
             canvas[i].width = width;
             canvas[i].height = height;
         }
+    }
+    
+    drawRoad()
+    {
+        this.gameCtx.lineWidth = 1;
+        this.gameCtx.fillStyle = this.roadColor;
+        this.gameCtx.beginPath();
+        this.gameCtx.moveTo(0, this.gameCan.height);
+        this.gameCtx.lineTo(this.gameCan.width / 2, this.vanishPoint);
+        this.gameCtx.lineTo(this.gameCan.width, this.gameCan.height);
+        this.gameCtx.fill();
     }
 }
