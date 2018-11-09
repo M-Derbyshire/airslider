@@ -10,8 +10,8 @@ class Tarian extends Model {
     {
         this.anims = {
             forward: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, 24, xUnit(150), yUnit(225)),
-            left: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/left", 4, 24, xUnit(550), yUnit(225)),
-            right: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/right", 4, 24, xUnit(550), yUnit(225))
+            left: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/left", 4, 24, xUnit(220), yUnit(225)),
+            right: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/right", 4, 24, xUnit(220), yUnit(225))
         };
         
         this.z = zUnit(30);
@@ -21,14 +21,14 @@ class Tarian extends Model {
         this.xSpeed = xUnit(10);
     }
     
-    move(direction) //0 up; 1 right; 2 down; 3 left; 4 in; 5 out
+    move() //0 up; 1 right; 2 down; 3 left; 4 in; 5 out
     {
-        switch(direction)
+        switch(this.state)
         {
-            case 1:
+            case "right":
                 this.x += this.xSpeed;
                 break;
-            case 3:
+            case "left":
                 this.x -= this.xSpeed;
                 break;
         }

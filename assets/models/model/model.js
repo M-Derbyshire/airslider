@@ -63,4 +63,11 @@ class Model {
     {
         kernel.graphicEn.gameCtx.drawImage(this.nextFrame(), this.x, this.y, this.anims[this.state].width, this.anims[this.state].height);
     }
+    
+    changeState(state)
+    {
+        this.x += this.anims[state].xOffset;
+        this.y += this.anims[state].yOffset;
+        this.state = state;
+    }
 }

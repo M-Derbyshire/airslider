@@ -6,12 +6,23 @@ class GameEn{
         
         //these first 2 are for testing on computer
         window.addEventListener("keydown", (e) => {
+            // this.currentMove = e.key;
+            switch(e.key)
+            {
+                case "ArrowLeft":
+                    kernel.loadedModels[0].changeState("left");
+                    break;
+                case "ArrowRight":
+                    kernel.loadedModels[0].changeState("right");
+                    break;
+            }
             this.currentMove = e.key;
         }, true);
         
         window.addEventListener("keyup", (e) => {
             if(this.currentMove == e.key)
             {
+                kernel.loadedModels[0].changeState("forward");
                 this.currentMove = "";
             }
         }, true);
@@ -44,14 +55,6 @@ class GameEn{
     
     run()
     {
-        //controls
-        if(this.currentMove == "ArrowLeft")
-        {
-            kernel.loadedModels[0].move(3);
-        }
-        if(this.currentMove == "ArrowRight")
-        {
-            kernel.loadedModels[0].move(1);
-        }
+        kernel.loadedModels[0].move();
     }
 }
