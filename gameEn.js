@@ -31,8 +31,10 @@ class GameEn{
         window.addEventListener("mousedown", (e) => {
             if(e.clientX < (window.innerWidth / 2))
             {
+                kernel.loadedModels[0].changeState("left");
                 this.currentMove = "ArrowLeft";
             } else {
+                kernel.loadedModels[0].changeState("right");
                 this.currentMove = "ArrowRight";
             }
         }, true);
@@ -48,6 +50,7 @@ class GameEn{
             
             if(this.currentMove == newMove)
             {
+                kernel.loadedModels[0].changeState("forward");
                 this.currentMove = "";
             }
         }, true);
