@@ -18,7 +18,7 @@ class Tarian extends Model {
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height) + this.z;
         
-        this.xSpeed = xUnit(10);
+        this.xSpeed = xUnit(40);
     }
     
     move() //0 up; 1 right; 2 down; 3 left; 4 in; 5 out
