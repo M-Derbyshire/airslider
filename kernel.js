@@ -12,7 +12,6 @@ class Kernel {
     {
         //push models here so they can be picked up by the engines
         this.loadedModels.push(new Tarian());
-        this.loadedModels.push(new MrStickyStick());
         
         this.gameEn = new GameEn();
         this.graphicEn = new GraphicEn();

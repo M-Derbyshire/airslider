@@ -26,7 +26,6 @@ class GraphicEn{
         if(this.visibleModels[0] != kernel.loadedModels[0])
         {
             this.visibleModels[0] = kernel.loadedModels[0];
-            this.visibleModels[1] = kernel.loadedModels[1];
         }
         
         //clear everything on the gameCan

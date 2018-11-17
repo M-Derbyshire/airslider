@@ -12,8 +12,6 @@ class Model {
         this.ySpeed;
         this.zSpeed;
         
-        this.loadNextFrame = false; //needed when loading images
-        
         this.events = []; //will hold array of events objects
         this.loadedIndex; //will hold current index in kernel.loadedModels
     }
@@ -97,7 +95,10 @@ class Model {
     checkEvents()
     {
         this.events.forEach((event) => {
-            event.check(this.loadedIndex);
+            for(let i = 0; i < event.models.length; i++)
+            {
+                event.check(kernel.loadedModels[this.loadedIndex], event.models[i]);
+            }
         });
         
         if(this.extraEvents)

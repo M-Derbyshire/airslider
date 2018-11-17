@@ -19,7 +19,7 @@ class Tarian extends Model {
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height) + this.z;
         this.xSpeed = xUnit(40);
         
-        this.registerEvent(["MrStickyStick"], this.collisionEvent);
+        this.registerEvent(["MrStickyStick"], this.zCollisionEvent);
     }
     
     move()
@@ -50,15 +50,15 @@ class Tarian extends Model {
         }
     }
     
-    collisionEvent(thisIndex)
+    zCollisionEvent(thisModel, otherModel)
     {
-        let thisModel = kernel.loadedModels[thisIndex];
-        
-        for(let i = 0; i < this.models.length; i++)
+        if ((thisModel.z == otherModel.z) &&
+        (thisModel.x + thisModel.anims[thisModel.state].width >= otherModel.x) &&
+        (thisModel.x <= otherModel.x + otherModel.anims[otherModel.state].width) &&
+        (thisModel.y + thisModel.anims[thisModel.state].height >= otherModel.y) &&
+        (thisModel.y <= otherModel.y + otherModel.anims[otherModel.state].height))
         {
-            let otherModel = kernel.loadedModels[i];
-            
-            
+            console.log("zCollision");
         }
     }
 }
