@@ -10,8 +10,6 @@ class GraphicEn{
         this.menuCan = document.getElementById("menuCan");
         this.menuCtx = this.menuCan.getContext("2d");
         
-        this.visibleModels = []; //references to models in kernel.loadedModels
-        
         this.setCanvasSize([this.backCan, this.gameCan, this.infoCan, this.menuCan]);
         this.setBackground("white", true);
         
@@ -22,20 +20,17 @@ class GraphicEn{
     
     run()
     {
-        //just setting up the reference to Tarian
-        if(this.visibleModels[0] != kernel.loadedModels[0])
-        {
-            this.visibleModels[0] = kernel.loadedModels[0];
-        }
-        
         //clear everything on the gameCan
         this.gameCtx.clearRect(0, 0, this.gameCan.width, this.gameCan.height);
         
         this.drawRoad();
         
-        for(let i = 0; i < this.visibleModels.length; i++)
+        for(let i = 0; i < kernel.loadedModels.length; i++)
         {
-            this.visibleModels[i].draw();
+            if(kernel.loadedModels[i].active)
+            {
+                kernel.loadedModels[i].draw();
+            }
         }
     }
     

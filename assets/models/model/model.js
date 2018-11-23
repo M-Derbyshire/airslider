@@ -4,6 +4,7 @@ class Model {
     constructor(){
         this.state; //string with the current state of the model
         this.anims; //object of all the animations (returned by registerAnim())
+        this.active;
         
         this.x;
         this.y;

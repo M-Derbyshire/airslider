@@ -4,6 +4,7 @@ class Tarian extends Model {
         super(Model);
         
         this.state = "forward";
+        this.active = true;
     }
     
     load()

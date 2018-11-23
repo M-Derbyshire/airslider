@@ -63,7 +63,10 @@ class GameEn{
     {
         for (let i = 0; i < kernel.loadedModels.length; i++)
         {
-            kernel.loadedModels[i].move();
+            if(kernel.loadedModels[i].active)
+            {
+                kernel.loadedModels[i].move();
+            }
         }
         
         //needs to be seperate from the for loop above.
@@ -71,7 +74,10 @@ class GameEn{
         //know it
         for (let i = 0; i < kernel.loadedModels.length; i++)
         {
-            kernel.loadedModels[i].checkEvents();
+            if(kernel.loadedModels[i].active)
+            {
+                kernel.loadedModels[i].checkEvents();
+            }
         }
     }
 }
