@@ -8,7 +8,7 @@ function yUnit(unit)
 {
     return (kernel.graphicEn.gameCan.height / 1000) * unit;
 }
-function zUnit(unit)
-{
-    return -((kernel.graphicEn.gameCan.height / 1000) * unit);
-}
+// function zUnit(unit)
+// {
+//     return -((kernel.graphicEn.gameCan.height / 1000) * unit);
+// }

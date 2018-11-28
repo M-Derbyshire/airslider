@@ -17,6 +17,12 @@ class GameEn{
                     case "ArrowRight":
                         kernel.loadedModels[0].changeState("right");
                         break;
+                    case "ArrowUp":
+                        kernel.loadedModels[0].changeState("push");
+                        break;
+                    case "ArrowDown":
+                        kernel.loadedModels[0].changeState("pull");
+                        break;
                 }
                 this.currentMove = e.key;
             }

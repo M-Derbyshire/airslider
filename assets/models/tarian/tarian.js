@@ -12,13 +12,16 @@ class Tarian extends Model {
         this.anims = {
             forward: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, kernel.fps, xUnit(120), yUnit(170)),
             left: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/left", 4, kernel.fps, xUnit(170), yUnit(170), -xUnit(40)),
-            right: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/right", 4, kernel.fps, xUnit(170), yUnit(170), xUnit(40))
+            right: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/right", 4, kernel.fps, xUnit(170), yUnit(170), xUnit(40)),
+            push: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, kernel.fps, xUnit(120), yUnit(170)),
+            pull: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, kernel.fps, xUnit(120), yUnit(170))
         };
         
-        this.z = zUnit(15);
+        this.z = 15;
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height) + this.z;
         this.xSpeed = xUnit(40);
+        this.zSpeed = 5;
         
         this.registerEvent(["MrStickyStick"], this.zCollisionEvent);
     }
@@ -32,6 +35,12 @@ class Tarian extends Model {
                 break;
             case "left":
                 this.x -= this.xSpeed;
+                break;
+            case "push":
+                this.z += this.zSpeed;
+                break;
+            case "pull":
+                this.z -= this.zSpeed;
                 break;
         }
     }

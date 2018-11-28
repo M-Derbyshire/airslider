@@ -15,7 +15,7 @@ class GraphicEn{
         
         //road values
         this.roadColor = "#999999";
-        this.vanishPoint = this.gameCan.height / 2;
+        zCalc.setVanishPoint(this.gameCan.width / 2, this.gameCan.height / 2, 1000);
     }
     
     run()
@@ -81,7 +81,7 @@ class GraphicEn{
         this.gameCtx.fillStyle = this.roadColor;
         this.gameCtx.beginPath();
         this.gameCtx.moveTo(0, this.gameCan.height);
-        this.gameCtx.lineTo(this.gameCan.width / 2, this.vanishPoint);
+        this.gameCtx.lineTo(zCalc.vPointX, zCalc.vPointY);
         this.gameCtx.lineTo(this.gameCan.width, this.gameCan.height);
         this.gameCtx.fill();
     }

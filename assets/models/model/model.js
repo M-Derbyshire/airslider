@@ -77,7 +77,13 @@ class Model {
     
     draw()
     {
-        kernel.graphicEn.gameCtx.drawImage(this.nextFrame(), this.x, this.y + this.z, this.anims[this.state].width, this.anims[this.state].height);
+        kernel.graphicEn.gameCtx.drawImage(
+            this.nextFrame(), 
+            zCalc.x(this.x, this.anims[this.state].width, this.z), 
+            zCalc.y(this.y, this.anims[this.state].height, this.z), 
+            zCalc.width(this.anims[this.state].width, this.z), 
+            zCalc.height(this.anims[this.state].height, this.z)
+        );
     }
     
     changeState(state)
