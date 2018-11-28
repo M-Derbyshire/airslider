@@ -47,15 +47,17 @@ class Tarian extends Model {
     
     extraEvents()
     {
+        let barrierGap = 0;
+        
         //check for leaving the game area
-        if(this.x < 0)
+        if(this.x < barrierGap)
         {
-            this.x = 0;
+            this.x = barrierGap;
             this.state = "forward";
         }
-        if(this.x + this.anims[this.state].width > kernel.graphicEn.gameCan.width)
+        if(this.x + this.anims[this.state].width > kernel.graphicEn.gameCan.width - barrierGap)
         {
-            this.x = kernel.graphicEn.gameCan.width - this.anims["forward"].width;
+            this.x = kernel.graphicEn.gameCan.width - this.anims["forward"].width - barrierGap;
             this.state = "forward";
         }
     }
