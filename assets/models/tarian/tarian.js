@@ -17,9 +17,9 @@ class Tarian extends Model {
             pull: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, kernel.fps, xUnit(120), yUnit(170))
         };
         
-        this.z = 15;
+        this.z = 50;
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
-        this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height) + this.z;
+        this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
         this.xSpeed = xUnit(40);
         this.zSpeed = 5;
         
