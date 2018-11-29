@@ -23,9 +23,11 @@ class ZCalc
     x(xPos, width, zPos)
     {
         width = this.width(width, zPos);
-        let centerPos = xPos + (width / 2);
-        let du = (this.vPointX - centerPos) / this.vPointDepth; //the depth units to use
+        
+        let du = (this.vPointX - xPos) / this.vPointDepth; //the depth units to use
         let drawX = xPos + (zPos * du);
+        
+        console.log(drawX); //x seems to speed up as you get higher
         
         if(zPos > this.vPointDepth)
         {
@@ -39,8 +41,7 @@ class ZCalc
     {
         height = this.height(height, zPos);
         
-        let centerPos = yPos + (height / 2);
-        let du = (this.vPointY - centerPos) / this.vPointDepth; //the depth units to use
+        let du = (this.vPointY - yPos) / this.vPointDepth; //the depth units to use
         let drawY = yPos + (zPos * du);
         
         if(zPos > this.vPointDepth)
