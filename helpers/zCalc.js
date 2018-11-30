@@ -27,8 +27,6 @@ class ZCalc
         let du = (this.vPointX - xPos) / this.vPointDepth; //the depth units to use
         let drawX = xPos + (zPos * du);
         
-        console.log(drawX); //x seems to speed up as you get higher
-        
         if(zPos > this.vPointDepth)
         {
             return this.vPointX - (width / 2);
