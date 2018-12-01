@@ -20,59 +20,49 @@ class ZCalc
         this.vPointDepth = depth;
     }
     
-    x(xPos, width, zPos)
+    x(xPos, zPos)
     {
-        width = this.width(width, zPos);
-        
-        let du = (this.vPointX - xPos) / this.vPointDepth; //the depth units to use
-        let drawX = xPos + (zPos * du);
-        
         if(zPos > this.vPointDepth)
         {
-            return this.vPointX - (width / 2);
+            return 0;
         } else {
+            let du = (this.vPointX - xPos) / this.vPointDepth; //the depth units to use
+            let drawX = xPos + (zPos * du);
             return drawX;
         }
     }
     
-    y(yPos, height, zPos)
+    y(yPos, zPos)
     {
-        height = this.height(height, zPos);
-        
-        let du = (this.vPointY - yPos) / this.vPointDepth; //the depth units to use
-        let drawY = yPos + (zPos * du);
-        
         if(zPos > this.vPointDepth)
         {
-            return this.vPointY - (height / 2);
+            return 0;
         } else {
+            let du = (this.vPointY - yPos) / this.vPointDepth; //the depth units to use
+            let drawY = yPos + (zPos * du);
             return drawY;
         }
     }
     
     width(width, zPos)
     {
-        let du = width / this.vPointDepth; //the depth units to use
-        width -= zPos * du;
-        
         if(zPos > this.vPointDepth)
         {
             return 0;
         } else {
-            return width;
+            let du = width / this.vPointDepth; //the depth units to use
+            return width - (zPos * du);
         }
     }
     
     height(height, zPos)
     {
-        let du = height / this.vPointDepth; //the depth units to use
-        height -= zPos * du;
-        
         if(zPos > this.vPointDepth)
         {
             return 0;
         } else {
-            return height;
+            let du = height / this.vPointDepth; //the depth units to use
+            return height - (zPos * du);
         }
     }
 }
