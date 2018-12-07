@@ -7,10 +7,6 @@ class ZCalc
         this.vPointY;
         
         this.vPointDepth; //the max z position
-        
-        //used when calculating the position to draw the model
-        this.depthUnitX;
-        this.depthUnitY;
     }
     
     setVanishPoint(x, y, depth)
