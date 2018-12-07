@@ -9,7 +9,7 @@ class Tarian extends Model {
     
     load()
     {
-        //I've used exact values for the fps, so it will be consistent when changing fps
+        //I've used exact values for the fps, so it will be consistent when changing game fps
         this.anims = {
             forward: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, 24, xUnit(120), yUnit(170)),
             left: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/left", 4, 24, xUnit(170), yUnit(170), -xUnit(40)),
