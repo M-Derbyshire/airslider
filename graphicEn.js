@@ -50,6 +50,7 @@ class GraphicEn{
     {
         let width;
         let height;
+        let dpi = window.devicePixelRatio || 1;
         
         //should be essentially 17:9
         //if 17:9 is stretches out of window, correct it
@@ -71,8 +72,10 @@ class GraphicEn{
         {
             canvas[i].style.left = x + "px";
             canvas[i].style.top = y + "px";
-            canvas[i].width = width;
-            canvas[i].height = height;
+            canvas[i].width = width * dpi;
+            canvas[i].height = height * dpi;
+            canvas[i].style.width = width + "px";
+            canvas[i].style.height = height + "px";
         }
     }
     
