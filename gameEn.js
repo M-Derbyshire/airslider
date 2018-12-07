@@ -81,9 +81,6 @@ class GameEn{
                 kernel.loadedModels[0].changeState("forward");
                 this.currentMove = "";
             }
-            
-            // kernel.loadedModels[0].changeState("forward");
-            // this.currentMove = "";
         }, true);
     }
     
