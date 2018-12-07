@@ -11,6 +11,7 @@ class GraphicEn{
         this.menuCtx = this.menuCan.getContext("2d");
         
         this.setCanvasSize([this.backCan, this.gameCan, this.infoCan, this.menuCan]);
+        
         this.setBackground("white", true);
         
         //road values

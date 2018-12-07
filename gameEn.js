@@ -1,7 +1,7 @@
 class GameEn{
     constructor()
     {
-        //setup key press events
+        //setup for control events
         this.currentMove;
         
         //these first 2 are for testing on computer
@@ -36,7 +36,7 @@ class GameEn{
         
         //these are for game on mobile
         window.addEventListener("touchstart", (e) => {
-            if(e.clientX < (window.innerWidth / 2))
+            if(e.touches[0].pageX < (window.innerWidth / 2))
             {
                 kernel.loadedModels[0].changeState("left");
                 this.currentMove = "ArrowLeft";
@@ -47,19 +47,22 @@ class GameEn{
         }, true);
         
         window.addEventListener("touchend", (e) => {
-            let newMove;
-            if(e.clientX < (window.innerWidth / 2))
-            {
-                newMove = "ArrowLeft";
-            } else {
-                newMove = "ArrowRight";
-            }
+            // let newMove;
+            // if(e.touches[0].pageX < (window.innerWidth / 2))
+            // {
+            //     newMove = "ArrowLeft";
+            // } else {
+            //     newMove = "ArrowRight";
+            // }
             
-            if(this.currentMove == newMove)
-            {
-                kernel.loadedModels[0].changeState("forward");
-                this.currentMove = "";
-            }
+            // if(this.currentMove == newMove)
+            // {
+            //     kernel.loadedModels[0].changeState("forward");
+            //     this.currentMove = "";
+            // }
+            
+            kernel.loadedModels[0].changeState("forward");
+            this.currentMove = "";
         }, true);
     }
     
