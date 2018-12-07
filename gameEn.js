@@ -5,33 +5,37 @@ class GameEn{
         this.currentMove;
         
         //these first 2 are for testing on computer
-        window.addEventListener("keydown", (e) => {
-            // this.currentMove = e.key;
-            if(this.currentMove !== e.key)
-            {
-                switch(e.key)
+        if(window.innerWidth >= 900)
+        {
+            window.addEventListener("keydown", (e) => {
+                // this.currentMove = e.key;
+                if(this.currentMove !== e.key)
                 {
-                    case "ArrowLeft":
-                        kernel.loadedModels[0].changeState("left");
-                        break;
-                    case "ArrowRight":
-                        kernel.loadedModels[0].changeState("right");
-                        break;
+                    switch(e.key)
+                    {
+                        case "ArrowLeft":
+                            kernel.loadedModels[0].changeState("left");
+                            break;
+                        case "ArrowRight":
+                            kernel.loadedModels[0].changeState("right");
+                            break;
+                    }
+                    this.currentMove = e.key;
                 }
-                this.currentMove = e.key;
-            }
-        }, true);
+            }, true);
+            
+            window.addEventListener("keyup", (e) => {
+                if(this.currentMove == e.key)
+                {
+                    kernel.loadedModels[0].changeState("forward");
+                    this.currentMove = "";
+                }
+            }, true);
+        }
         
-        window.addEventListener("keyup", (e) => {
-            if(this.currentMove == e.key)
-            {
-                kernel.loadedModels[0].changeState("forward");
-                this.currentMove = "";
-            }
-        }, true);
         
         //these are for game on mobile
-        window.addEventListener("mousedown", (e) => {
+        window.addEventListener("touchstart", (e) => {
             if(e.clientX < (window.innerWidth / 2))
             {
                 kernel.loadedModels[0].changeState("left");
@@ -42,7 +46,7 @@ class GameEn{
             }
         }, true);
         
-        window.addEventListener("mouseup", (e) => {
+        window.addEventListener("touchend", (e) => {
             let newMove;
             if(e.clientX < (window.innerWidth / 2))
             {
