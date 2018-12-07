@@ -18,8 +18,7 @@ class Tarian extends Model {
         this.z = 50;
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
-        this.xSpeed = xUnit(40);
-        this.zSpeed = 5;
+        this.xSpeed = xSpeed(1000);
         
         this.registerEvent(["MrStickyStick"], this.zCollisionEvent);
     }

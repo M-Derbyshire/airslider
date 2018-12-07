@@ -8,7 +8,13 @@ function yUnit(unit)
 {
     return (kernel.graphicEn.gameCan.height / 1000) * unit;
 }
-// function zUnit(unit)
-// {
-//     return -((kernel.graphicEn.gameCan.height / 1000) * unit);
-// }
+
+function xSpeed(speed)
+{
+    return xUnit(speed) / kernel.fps;
+}
+
+function ySpeed(speed)
+{
+    return yUnit(speed) / kernel.fps;
+}
