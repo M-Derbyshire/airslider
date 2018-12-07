@@ -36,33 +36,54 @@ class GameEn{
         
         //these are for game on mobile
         window.addEventListener("touchstart", (e) => {
-            if(e.touches[0].pageX < (window.innerWidth / 2))
+            for(let i = 0; i < e.touches.length; i++)
             {
-                kernel.loadedModels[0].changeState("left");
-                this.currentMove = "ArrowLeft";
-            } else {
-                kernel.loadedModels[0].changeState("right");
-                this.currentMove = "ArrowRight";
+                if(e.touches[i].pageX < (window.innerWidth / 2))
+                {
+                    kernel.loadedModels[i].changeState("left");
+                    this.currentMove = "ArrowLeft";
+                } else {
+                    kernel.loadedModels[i].changeState("right");
+                    this.currentMove = "ArrowRight";
+                }
             }
         }, true);
         
         window.addEventListener("touchend", (e) => {
-            // let newMove;
-            // if(e.touches[0].pageX < (window.innerWidth / 2))
-            // {
-            //     newMove = "ArrowLeft";
-            // } else {
-            //     newMove = "ArrowRight";
-            // }
+            let newMove = null;
+            for(let i = 0; i < e.touches.length; i++)
+            {
+                if(e.touches[i].pageX < (window.innerWidth / 2))
+                {
+                    newMove = "ArrowLeft";
+                } else {
+                    newMove = "ArrowRight";
+                }
+            }
             
-            // if(this.currentMove == newMove)
-            // {
-            //     kernel.loadedModels[0].changeState("forward");
-            //     this.currentMove = "";
-            // }
+            if(newMove && this.currentMove != newMove)
+            {
+                this.currentMove = newMove;
+                
+                switch(newMove)
+                {
+                    case "ArrowLeft":
+                        kernel.loadedModels[0].changeState("left");
+                        break;
+                    case "ArrowRight":
+                        kernel.loadedModels[0].changeState("right");
+                        break;
+                }
+            }
             
-            kernel.loadedModels[0].changeState("forward");
-            this.currentMove = "";
+            if(!newMove)
+            {
+                kernel.loadedModels[0].changeState("forward");
+                this.currentMove = "";
+            }
+            
+            // kernel.loadedModels[0].changeState("forward");
+            // this.currentMove = "";
         }, true);
     }
     
