@@ -93,7 +93,7 @@ class Model {
         this.state = state;
     }
     
-    move()
+    act()
     {
         //meant to be overloaded
         //only created here for static models

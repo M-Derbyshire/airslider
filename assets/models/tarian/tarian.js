@@ -24,7 +24,7 @@ class Tarian extends Model {
         this.registerEvent(["MrStickyStick"], this.zCollisionEvent);
     }
     
-    move()
+    act()
     {
         switch(this.state)
         {

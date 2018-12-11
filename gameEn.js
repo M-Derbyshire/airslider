@@ -90,7 +90,7 @@ class GameEn{
         {
             if(kernel.loadedModels[i].active)
             {
-                kernel.loadedModels[i].move();
+                kernel.loadedModels[i].act();
             }
         }
         
