@@ -25,19 +25,26 @@
         <script src="graphicEn.js"></script>
         <script src="soundEn.js"></script>
         <script src="menuEn.js"></script>
-        <script src="assets/models/model/model.js"></script> <!-- base model -->
         
         <!-- helpers -->
         <script src="helpers/unitHelpers.js"></script> <!-- provides xUnit, yUnit, xSpeed and ySpeed -->
         <script src="helpers/zCalc.js"></script> <!-- calculates positions and widths/heights based on z position -->
         
-        <!-- include any scripts/models here -->
+        <!-- include any models here -->
+        <script src="assets/models/model/model.js"></script> <!-- base model -->
         <script src="assets/models/tarian/tarian.js"></script>
         
+        <!-- include any levels here -->
+        <script src="assets/levels/level/level.js"></script> <!-- base level -->
+        <script src="assets/levels/theConstruct/theConstruct.js"></script>
+        
+        <!-- include any extra scripts here -->
+        
+        <!-- start up the kernel -->
         <script>
             var kernel = new Kernel();
             window.addEventListener("load", () => {
-                kernel.load();
+                kernel.load(new TheConstruct()); //take this line out when creating menu system
                 kernel.run();
             }, true);
         </script>

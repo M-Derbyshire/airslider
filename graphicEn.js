@@ -12,11 +12,7 @@ class GraphicEn{
         
         this.setCanvasSize([this.backCan, this.gameCan, this.infoCan, this.menuCan]);
         
-        this.setBackground("white", true);
-        
-        //road values
-        this.roadColor = "#999999";
-        zCalc.setVanishPoint(this.gameCan.width / 2, this.gameCan.height / 2, 1000);
+        this.setBackground(kernel.level.background, kernel.level.useColorBackground);
     }
     
     run()
@@ -24,7 +20,7 @@ class GraphicEn{
         //clear everything on the gameCan
         this.gameCtx.clearRect(0, 0, this.gameCan.width, this.gameCan.height);
         
-        this.drawRoad();
+        kernel.level.drawBack();
         
         for(let i = 0; i < kernel.loadedModels.length; i++)
         {
@@ -33,6 +29,8 @@ class GraphicEn{
                 kernel.loadedModels[i].draw();
             }
         }
+        
+        kernel.level.drawFront();
     }
     
     setBackground(input, useColor = false)
@@ -77,16 +75,5 @@ class GraphicEn{
             canvas[i].style.width = width + "px";
             canvas[i].style.height = height + "px";
         }
-    }
-    
-    drawRoad()
-    {
-        this.gameCtx.lineWidth = 1;
-        this.gameCtx.fillStyle = this.roadColor;
-        this.gameCtx.beginPath();
-        this.gameCtx.moveTo(0, this.gameCan.height);
-        this.gameCtx.lineTo(zCalc.vPointX, zCalc.vPointY);
-        this.gameCtx.lineTo(this.gameCan.width, this.gameCan.height);
-        this.gameCtx.fill();
     }
 }

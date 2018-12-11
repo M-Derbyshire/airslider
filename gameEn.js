@@ -94,6 +94,8 @@ class GameEn{
             }
         }
         
+        kernel.level.act();
+        
         //needs to be seperate from the for loop above.
         //as both/all models involved in an event need to
         //know it

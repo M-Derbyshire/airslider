@@ -8,10 +8,12 @@ class Kernel {
         this.lastTime = new Date();
     }
     
-    load()
+    load(LevelClass)
     {
-        //push models here so they can be picked up by the engines
-        this.loadedModels.push(new Tarian());
+        this.level = LevelClass;
+        
+        //get models here so they can be picked up by the engines
+        this.loadedModels = this.level.getModels();
         
         this.gameEn = new GameEn();
         this.graphicEn = new GraphicEn();
@@ -19,6 +21,7 @@ class Kernel {
         this.menuEn = new MenuEn();
         
         //do any extra setup that may need access to the engines
+        this.level.load();
         for(let i = 0; i < this.loadedModels.length; i++)
         {
             this.loadedModels[i].loadedIndex = i; //used for events
