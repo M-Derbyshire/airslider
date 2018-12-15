@@ -11,7 +11,6 @@ class Kernel {
     load(LevelClass)
     {
         this.level = LevelClass;
-        this.level.load();
         
         //get models here so they can be picked up by the engines
         this.loadedModels = this.level.getModels();
@@ -22,6 +21,7 @@ class Kernel {
         this.menuEn = new MenuEn();
         
         //do any extra setup that may need access to the engines
+        this.level.load();
         for(let i = 0; i < this.loadedModels.length; i++)
         {
             this.loadedModels[i].loadedIndex = i; //used for events
