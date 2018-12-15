@@ -1,6 +1,8 @@
 class GraphicEn{
     constructor()
     {
+        this.zSortedModels;
+        
         this.backCan = document.getElementById("backCan");
         this.backCtx = this.backCan.getContext("2d");
         this.gameCan = document.getElementById("gameCan");
@@ -17,16 +19,23 @@ class GraphicEn{
     
     run()
     {
+        //create copy of array of models and sort it by the z index
+        //this will make sure the models are displayed in order
+        this.zSortedModels = kernel.loadedModels;
+        this.zSortedModels.sort((a, b) => {
+            return b.z - a.z;
+        });
+        
         //clear everything on the gameCan
         this.gameCtx.clearRect(0, 0, this.gameCan.width, this.gameCan.height);
         
         kernel.level.drawBack();
         
-        for(let i = 0; i < kernel.loadedModels.length; i++)
+        for(let i = 0; i < this.zSortedModels.length; i++)
         {
-            if(kernel.loadedModels[i].active)
+            if(this.zSortedModels[i].active)
             {
-                kernel.loadedModels[i].draw();
+                this.zSortedModels[i].draw();
             }
         }
         
