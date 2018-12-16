@@ -47,13 +47,11 @@ class Tarian extends Model {
         {
             this.x = barrierGap;
             this.state = "forward";
-            navigator.vibrate(vibePattern);
         }
         if(this.x + this.anims[this.state].width > kernel.graphicEn.gameCan.width - barrierGap)
         {
             this.x = kernel.graphicEn.gameCan.width - this.anims["forward"].width - barrierGap;
             this.state = "forward";
-            navigator.vibrate(vibePattern);
         }
     }
     
