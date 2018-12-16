@@ -25,13 +25,12 @@ class Level
     drawBack()
     {
         
-        
-        this.drawRoad()
-        
         if(this.extraDrawBack)
         {
             this.extraDrawBack();
         }
+        
+        this.drawRoad()
     }
     
     drawFront()
