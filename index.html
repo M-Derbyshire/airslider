@@ -45,7 +45,7 @@
         <!-- start up the kernel -->
         <script>
             var kernel = new Kernel();
-            window.addEventListener("load", () => {
+            window.addEventListener("load", function() {
                 kernel.load(new TheConstruct()); //take this line out when creating menu system
                 kernel.run();
             }, true);
