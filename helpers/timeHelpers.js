@@ -1,9 +1,9 @@
-secondsToFrames(seconds)
+function secondsToFrames(seconds)
 {
     return seconds * kernel.fps;
 }
 
-minutesToFrames(minutes)
+function minutesToFrames(minutes)
 {
     return secondsToFrames(minutes) * 60;
 }

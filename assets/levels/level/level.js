@@ -6,6 +6,8 @@ class Level
         this.useColorBackground = true;
         
         this.roadColor = "#999999";
+        
+        this.framesPassed = 0;
     }
     
     //set things that can only be done after the engines are constructed
@@ -54,4 +56,13 @@ class Level
         kernel.graphicEn.gameCtx.lineTo(kernel.graphicEn.gameCan.width, kernel.graphicEn.gameCan.height);
         kernel.graphicEn.gameCtx.fill();
     }
+    
+    
+    //level sections ---------------------------------------
+    
+    sendShockers(fromIndex, toIndex)
+    {
+        
+    }
+    
 }
