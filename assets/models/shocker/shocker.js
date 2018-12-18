@@ -18,5 +18,17 @@ class Shocker extends Model
         
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
         this.zSpeed = ySpeed(1000);
+        this.z = zCalc.vPointDepth;
+    }
+    
+    act()
+    {
+        this.z -= this.zSpeed;
+        
+        
+        if(this.z < 0)
+        {
+            this.active = false;
+        }
     }
 }
