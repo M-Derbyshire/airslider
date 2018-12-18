@@ -1,7 +1,12 @@
 class GraphicEn{
     constructor()
     {
-        this.zSortedModels;
+        //used when making sure models are displayed in the right order based on their z-index
+        this.zSortedIndexes = [];
+        for(let i = 0; i < kernel.loadedModels.length; i++)
+        {
+            this.zSortedIndexes.push(i);
+        }
         
         this.backCan = document.getElementById("backCan");
         this.backCtx = this.backCan.getContext("2d");
@@ -19,11 +24,9 @@ class GraphicEn{
     
     run()
     {
-        //create copy of array of models and sort it by the z index
-        //this will make sure the models are displayed in order
-        this.zSortedModels = kernel.loadedModels;
-        this.zSortedModels.sort((a, b) => {
-            return b.z - a.z;
+        //this will be used to make sure the models are displayed in order
+        this.zSortedIndexes.sort((a, b) => {
+            return kernel.loadedModels[b].z - kernel.loadedModels[a].z;
         });
         
         //clear everything on the gameCan
@@ -31,11 +34,11 @@ class GraphicEn{
         
         kernel.level.drawBack();
         
-        for(let i = 0; i < this.zSortedModels.length; i++)
+        for(let i = 0; i < kernel.loadedModels.length; i++)
         {
-            if(this.zSortedModels[i].active)
+            if(kernel.loadedModels[this.zSortedIndexes[i]].active)
             {
-                this.zSortedModels[i].draw();
+                kernel.loadedModels[this.zSortedIndexes[i]].draw();
             }
         }
         
