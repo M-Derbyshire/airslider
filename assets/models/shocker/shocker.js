@@ -13,7 +13,7 @@ class Shocker extends Model
     load()
     {
         this.anims = {
-            shock: this.registerAnim(kernel.rootPath + "/assets/models/shocker/anim/" + this.color, 3, 24, xUnit(200), yUnit(340))
+            shock: this.registerAnim(kernel.rootPath + "/assets/models/shocker/anim/" + this.color, 3, 24, xUnit(100), yUnit(340))
         };
         
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
