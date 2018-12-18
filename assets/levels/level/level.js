@@ -8,6 +8,8 @@ class Level
         this.roadColor = "#999999";
         
         this.framesPassed = 0;
+        
+        this.shockerCount;
     }
     
     //set things that can only be done after the engines are constructed
@@ -62,7 +64,19 @@ class Level
     
     sendShockers(fromIndex, toIndex)
     {
-        
+        for(let i = fromIndex; i <= toIndex; i++)
+        {
+            if((!kernel.loadedModels[i].active && i == fromIndex) || (!kernel.loadedModels[i].active && kernel.loadedModels[i - 1].active && kernel.loadedModels[i].z > (kernel.loadedModels[i - 1].z + (zCalc.vPointDepth / this.shockerCount))))
+            {
+                let leftEdge = 0;
+                let rightEdge = kernel.graphicEn.gameCan.width - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width;
+                
+                kernel.loadedModels[i].z = zCalc.vPointDepth;
+                kernel.loadedModels[i].y = (Math.random() * (rightEdge - leftEdge) + leftEdge);
+                
+                kernel.loadedModels[i].active = true;
+            }
+        }
     }
     
 }
