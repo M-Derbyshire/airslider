@@ -23,8 +23,7 @@ class ZCalc
             return 0;
         } else {
             let du = (this.vPointX - xPos) / this.vPointDepth; //the depth units to use
-            let drawX = xPos + (zPos * du);
-            return drawX;
+            return xPos + (zPos * du);
         }
     }
     
@@ -35,8 +34,7 @@ class ZCalc
             return 0;
         } else {
             let du = (this.vPointY - yPos) / this.vPointDepth; //the depth units to use
-            let drawY = yPos + (zPos * du);
-            return drawY;
+            return yPos + (zPos * du);;
         }
     }
     
@@ -48,6 +46,7 @@ class ZCalc
         } else {
             let du = width / this.vPointDepth; //the depth units to use
             return width - (zPos * du);
+            //the greater the zpos, the greater is taken off
         }
     }
     
