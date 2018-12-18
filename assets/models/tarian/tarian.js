@@ -40,7 +40,6 @@ class Tarian extends Model {
     extraEvents()
     {
         let barrierGap = 0;
-        let vibePattern = 125;
         
         //check for leaving the game area
         if(this.x < barrierGap)
