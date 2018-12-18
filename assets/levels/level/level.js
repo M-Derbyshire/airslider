@@ -10,11 +10,17 @@ class Level
         this.framesPassed = 0;
         
         this.shockerCount;
+        
+        this.leftEdge;
+        this.rightEdge;
     }
     
     //set things that can only be done after the engines are constructed
     load()
     {
+        this.leftEdge = 0;
+        this.rightEdge = kernel.graphicEn.gameCan.width;
+        
         zCalc.setVanishPoint(kernel.graphicEn.gameCan.width / 2, kernel.graphicEn.gameCan.height / 2, 1000);
     }
     
@@ -68,12 +74,8 @@ class Level
         {
             if((!kernel.loadedModels[i].active && i == fromIndex) || (!kernel.loadedModels[i].active && kernel.loadedModels[i - 1].active && (kernel.loadedModels[i - 1].z + (zCalc.vPointDepth / this.shockerCount) < zCalc.vPointDepth)))
             {
-                let leftEdge = 0;
-                let rightEdge = kernel.graphicEn.gameCan.width - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width;
-                
                 kernel.loadedModels[i].z = zCalc.vPointDepth;
-                kernel.loadedModels[i].x = (Math.random() * (rightEdge - leftEdge)) + leftEdge;
-                
+                kernel.loadedModels[i].x = (Math.random() * ((this.rightEdge - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width) - this.leftEdge)) + this.leftEdge;
                 kernel.loadedModels[i].active = true;
             }
         }
