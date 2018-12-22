@@ -8,9 +8,9 @@ class Kernel {
         this.lastTime = new Date();
     }
     
-    load(LevelClass)
+    load(Level)
     {
-        this.level = LevelClass;
+        this.level = Level;
         
         //get models here so they can be picked up by the engines
         this.loadedModels = this.level.getModels();
