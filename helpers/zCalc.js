@@ -1,5 +1,9 @@
 class ZCalc 
 {
+    //I'm going to say this right now:
+    //I don't know how I did it, but I did it.
+    // -- Darbs
+    
     constructor()
     {
         //vanishing point is set with vPointX and vPointY
@@ -7,6 +11,7 @@ class ZCalc
         this.vPointY;
         
         this.vPointDepth; //the max z position
+        this.calcDepth; //used when calculating the depth
     }
     
     setVanishPoint(x, y, depth)
@@ -14,6 +19,7 @@ class ZCalc
         this.vPointX = x;
         this.vPointY = y;
         this.vPointDepth = depth;
+        this.calcDepth = (depth / 16);
     }
     
     x(xPos, zPos)
@@ -22,8 +28,12 @@ class ZCalc
         {
             return 0;
         } else {
-            let du = (this.vPointX - xPos) / this.vPointDepth; //the depth units to use
-            return xPos + (zPos * du);
+            zPos = (zPos - 1) / 4;
+            for(let i = 0; i <= zPos; i++)
+            {
+                xPos += ((this.vPointX - xPos) / this.calcDepth);
+            }
+            return xPos;
         }
     }
     
@@ -33,8 +43,12 @@ class ZCalc
         {
             return 0;
         } else {
-            let du = (this.vPointY - yPos) / this.vPointDepth; //the depth units to use
-            return yPos + (zPos * du);;
+            zPos = (zPos - 1) / 4;
+            for(let i = 0; i <= zPos; i++)
+            {
+                yPos += ((this.vPointY - yPos) / this.calcDepth);
+            }
+            return yPos;
         }
     }
     
@@ -44,9 +58,12 @@ class ZCalc
         {
             return 0;
         } else {
-            let du = width / this.vPointDepth; //the depth units to use
-            return width - (zPos * du);
-            //the greater the zpos, the greater is taken off
+            zPos = (zPos - 1) / 4;
+            for(let i = 0; i <= zPos; i++)
+            {
+                width -= (width / this.calcDepth);
+            }
+            return width;
         }
     }
     
@@ -56,8 +73,12 @@ class ZCalc
         {
             return 0;
         } else {
-            let du = height / this.vPointDepth; //the depth units to use
-            return height - (zPos * du);
+            zPos = (zPos - 1) / 4;
+            for(let i = 0; i <= zPos; i++)
+            {
+                height -= (height / this.calcDepth);
+            }
+            return height;
         }
     }
 }
