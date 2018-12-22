@@ -24,7 +24,7 @@ class ZCalc
     
     x(xPos, zPos)
     {
-        if(zPos > this.vPointDepth)
+        if(zPos > this.vPointDepth || zPos < 0)
         {
             return 0;
         } else {
@@ -39,7 +39,7 @@ class ZCalc
     
     y(yPos, zPos)
     {
-        if(zPos > this.vPointDepth)
+        if(zPos > this.vPointDepth || zPos < 0)
         {
             return 0;
         } else {
@@ -54,7 +54,7 @@ class ZCalc
     
     width(width, zPos)
     {
-        if(zPos > this.vPointDepth)
+        if(zPos > this.vPointDepth || zPos < 0)
         {
             return 0;
         } else {
@@ -69,7 +69,7 @@ class ZCalc
     
     height(height, zPos)
     {
-        if(zPos > this.vPointDepth)
+        if(zPos > this.vPointDepth || zPos < 0)
         {
             return 0;
         } else {
