@@ -17,6 +17,8 @@ class TheConstruct extends Level
         let models = [];
         
         models.push(new Tarian()); //add main character (has to be 0)
+        controlConstructor.keyboardControls(0);
+        controlConstructor.touchControls(0);
         
         //shockers
         this.shockerIndexes.from = models.length;
