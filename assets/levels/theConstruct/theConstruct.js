@@ -34,7 +34,7 @@ class TheConstruct extends Level
         this.framesPassed++;
         
         //start the shockers after first 5 seconds (run until end of first minute)
-        if(this.framesPassed > secondsToFrames(1) && this.framesPassed < minutesToFrames(1))
+        if(this.framesPassed > secondsToFrames(5) && this.framesPassed < minutesToFrames(1))
         {
             this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
         }
