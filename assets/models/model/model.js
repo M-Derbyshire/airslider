@@ -25,7 +25,7 @@ class Model {
             frameCount: frameCount,
             frames: [],
             waitCount: 0, //used when waiting to move to next frame
-            nextCount: (kernel.fps / fps), //when to move to the next frame (done so anim and game can have different fps)
+            nextCount: (kernel.fps / fps) - 1, //when to move to the next frame (done so anim and game can have different fps)
             currentFrame: 0,
             height: height,
             width: width,
@@ -60,7 +60,7 @@ class Model {
         let frame = this.anims[this.state].frames[this.anims[this.state].currentFrame];
         
         //change the frame to the next one
-        if(this.anims[this.state].waitCount == this.anims[this.state].nextCount)
+        if(this.anims[this.state].waitCount >= this.anims[this.state].nextCount)
         {
             if(this.anims[this.state].currentFrame == this.anims[this.state].frameCount - 1) //if frame is last one
             {

@@ -34,8 +34,8 @@ class Kernel {
         requestAnimationFrame(this.run.bind(this));
         
         //don't run unless it's time for next frame
-        this.dt = new Date();
-        if((this.dt.getTime() - this.lastTime.getTime()) < (1000 / this.fps))
+        let dt = new Date();
+        if((dt.getTime() - this.lastTime.getTime()) < (1000 / this.fps))
         {
             return;
         }
