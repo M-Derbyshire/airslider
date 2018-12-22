@@ -72,10 +72,12 @@ class Level
     {
         for(let i = fromIndex; i <= toIndex; i++)
         {
+            console.log(kernel.loadedModels[1].z);
             if((!kernel.loadedModels[i].active && i == fromIndex) || (!kernel.loadedModels[i].active && kernel.loadedModels[i - 1].active && (kernel.loadedModels[i - 1].z + (zCalc.vPointDepth / this.shockerCount) < zCalc.vPointDepth)))
             {
                 kernel.loadedModels[i].z = zCalc.vPointDepth;
                 kernel.loadedModels[i].x = (Math.random() * ((this.rightEdge - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width) - this.leftEdge)) + this.leftEdge;
+                
                 kernel.loadedModels[i].active = true;
             }
         }
