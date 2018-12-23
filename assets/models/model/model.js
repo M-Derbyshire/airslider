@@ -46,7 +46,7 @@ class Model {
     {
         this.events.push({
             models: kernel.loadedModels.filter((model, index) => {
-                if(relatedModels.includes(model.constructor.name))
+                if(relatedModels.includes(model.constructor.name) && index != this.loadedIndex)
                 {
                     return index;
                 }
