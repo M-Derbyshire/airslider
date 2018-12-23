@@ -4,7 +4,7 @@ class TheConstruct extends Level
     {
         super(Level);
         
-        this.shockerCount = 5;
+        this.shockerCount = 3;
         this.shockerIndexes = {
             from: 0,
             to: 0
@@ -24,7 +24,7 @@ class TheConstruct extends Level
         this.shockerIndexes.from = models.length;
         for(let i = 0; i < this.shockerCount; i++)
         {
-            models.push(new Shocker("yellow", "regular"));
+            models.push(new Shocker("yellow", "sweep"));
         }
         this.shockerIndexes.to = models.length - 1;
         

@@ -17,18 +17,39 @@ class Shocker extends Model
         };
         
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
-        this.zSpeed = ySpeed(1000);
         this.z = zCalc.vPointDepth;
+        
+        this.zSpeed = ySpeed(1000);
+        switch(this.mode)
+        {
+            case "static":
+                this.xSpeed = 0;
+                break;
+            case "sweep":
+                //make shocker sweep either left or right
+                this.xSpeed = (((Math.random() * 2) * 2) - 1) * xSpeed(1000);
+                break;
+        }
     }
     
     act()
     {
         this.z -= this.zSpeed;
-        
+        this.x += this.xSpeed;
         
         if(this.z < 0)
         {
             this.active = false;
+        }
+    }
+    
+    extraEvents()
+    {
+        //check for leaving the game area
+        if((this.x < kernel.level.leftEdge) || (this.x + this.anims[this.state].width > kernel.level.rightEdge))
+        {
+            this.xSpeed = -(this.xSpeed);
+            this.x += this.xSpeed;
         }
     }
 }
