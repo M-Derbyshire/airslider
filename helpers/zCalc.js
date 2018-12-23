@@ -81,6 +81,11 @@ class ZCalc
             return height;
         }
     }
+    
+    speed(speed)
+    {
+        return ((this.vPointDepth / 1000) * speed) / kernel.fps;
+    }
 }
 
 var zCalc = new ZCalc();
