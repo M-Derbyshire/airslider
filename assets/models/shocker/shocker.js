@@ -27,7 +27,7 @@ class Shocker extends Model
                 break;
             case "sweep":
                 //make shocker sweep either left or right
-                this.xSpeed = (((Math.random() * 2) * 2) - 1) * xSpeed(1000);
+                this.xSpeed = (((Math.floor(Math.random() * 2)) * 2) - 1) * xSpeed(1000);
                 break;
         }
     }
