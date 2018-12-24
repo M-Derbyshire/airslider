@@ -1,6 +1,6 @@
 class Shocker extends Model
 {
-    constructor(color, mode)
+    constructor(color, mode, playerIndex = 0)
     {
         super(Model);
         
@@ -8,6 +8,12 @@ class Shocker extends Model
         this.mode = mode;
         this.state = "shock";
         this.active = false;
+        
+        if(this.mode == "home")
+        {
+            this.homingTargetIndex = playerIndex;
+            this.homingSpeed = 10;
+        }
     }
     
     load()
@@ -30,11 +36,23 @@ class Shocker extends Model
                 //make shocker sweep either left or right
                 this.xSpeed = (((Math.floor(Math.random() * 2)) * 2) - 1) * xSpeed(1000);
                 break;
+            case "home":
+                this.zSpeed = (this.zSpeed / 4) * 3;
+                this.xSpeed = 0;
+                break;
         }
     }
     
     act()
     {
+        if(this.mode == "home")
+        {
+            //sweep towards the player
+            this.xSpeed = 
+            ((kernel.loadedModels[this.homingTargetIndex].x + (kernel.loadedModels[this.homingTargetIndex].anims[kernel.loadedModels[this.homingTargetIndex].state].width / 2)) - 
+            (this.x + (this.anims[this.state].width / 2))) / this.homingSpeed;
+        }
+        
         this.z -= this.zSpeed;
         this.x += this.xSpeed;
         

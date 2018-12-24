@@ -24,7 +24,7 @@ class TheConstruct extends Level
         this.shockerIndexes.from = models.length;
         for(let i = 0; i < this.shockerCount; i++)
         {
-            models.push(new Shocker("yellow", "sweep"));
+            models.push(new Shocker("yellow", "static"));
         }
         this.shockerIndexes.to = models.length - 1;
         
