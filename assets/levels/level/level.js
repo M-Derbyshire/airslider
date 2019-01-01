@@ -13,6 +13,8 @@ class Level
         
         this.leftEdge;
         this.rightEdge;
+        
+        this.tunnel = [];
     }
     
     //set things that can only be done after the engines are constructed
@@ -22,7 +24,7 @@ class Level
         this.rightEdge = kernel.graphicEn.gameCan.width;
         
         zCalc.setVanishPoint(kernel.graphicEn.gameCan.width / 2, kernel.graphicEn.gameCan.height / 2, 1000);
-        this.levelSpeed = zCalc.speed(400);
+        this.levelSpeed = zCalc.speed(800);
     }
     
     //meant to be overridden
@@ -41,7 +43,8 @@ class Level
             this.extraDrawBack();
         }
         
-        this.drawRoad()
+        this.drawTunnel();
+        this.drawRoad();
     }
     
     drawFront()
@@ -81,6 +84,124 @@ class Level
                 kernel.loadedModels[i].active = true;
             }
         }
+    }
+    
+    //tunnel[i].z - .length - .color - .active
+    drawTunnel()
+    {
+        if(this.tunnel.length > 0 && !this.tunnel[0].active)
+        {
+            this.tunnel[0].active = true;
+        }
+        
+        for(let i = 0; i < this.tunnel.length; i++)
+        {
+            if(this.tunnel[i].color == "clear")
+            {
+                kernel.graphicEn.gameCtx.clearRect(
+                    zCalc.x(0, this.tunnel[i].z),
+                    zCalc.y(0, this.tunnel[i].z),
+                    zCalc.width(kernel.graphicEn.gameCan.width, this.tunnel[i].z),
+                    zCalc.height(kernel.graphicEn.gameCan.height, this.tunnel[i].z)
+                );
+            } else {
+                kernel.graphicEn.gameCtx.fillStyle = this.tunnel[i].color;
+                kernel.graphicEn.gameCtx.fillRect(
+                    zCalc.x(0, this.tunnel[i].z),
+                    zCalc.y(0, this.tunnel[i].z),
+                    zCalc.width(kernel.graphicEn.gameCan.width, this.tunnel[i].z),
+                    zCalc.height(kernel.graphicEn.gameCan.height, this.tunnel[i].z)
+                );
+            }
+            
+            if((i < (this.tunnel.length - 1)) && !this.tunnel[i + 1].active && ((zCalc.vPointDepth - this.tunnel[i].z) >= this.tunnel[i].length))
+            {
+                this.tunnel[i + 1].active = true;
+            }
+            
+            if(this.tunnel[i].active)
+            {
+                this.tunnel[i].z -= this.levelSpeed;
+            }
+            
+            //keep at 0 if need be
+            //needs to be last as array length may change
+            if(this.tunnel[i].z < 0)
+            {
+                this.tunnel[i].z = 0;
+                this.tunnel[i].active = false;
+                
+                //get rid of previous one
+                if(i != 0)
+                {
+                    this.tunnel.splice(i - 1, 1);
+                    i--;
+                } else if(this.tunnel[i].color == "clear")
+                {
+                    this.tunnel.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+    }
+    
+    //tunnel[i].z - .length - .color - .active
+    tunnelAlternate(col1, col2)
+    {
+        return [
+            {
+                z: zCalc.vPointDepth,
+                length: 100,
+                color: col1,
+                active: false
+            },
+            {
+                z: zCalc.vPointDepth,
+                length: 10,
+                color: col2,
+                active: false
+            }
+        ];
+    }
+    
+    tunnelBreakingAlternate(col1, col2)
+    {
+        return [
+            {
+                z: zCalc.vPointDepth,
+                length: 50,
+                color: col1,
+                active: false
+            },
+            {
+                z: zCalc.vPointDepth,
+                length: 100,
+                color: "clear",
+                active: false
+            },
+            {
+                z: zCalc.vPointDepth,
+                length: 50,
+                color: col2,
+                active: false
+            },
+            {
+                z: zCalc.vPointDepth,
+                length: 100,
+                color: "clear",
+                active: false
+            }
+        ];
+    }
+    
+    tunnelClear()
+    {
+        return {
+            z: zCalc.vPointDepth,
+            length: 1,
+            color: "clear",
+            active: false
+        };
     }
     
 }

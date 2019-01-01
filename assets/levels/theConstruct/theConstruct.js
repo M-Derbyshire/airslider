@@ -20,14 +20,6 @@ class TheConstruct extends Level
         controlConstructor.keyboardControls(0);
         controlConstructor.touchControls(0);
         
-        //shockers
-        this.shockerIndexes.from = models.length;
-        for(let i = 0; i < this.shockerCount; i++)
-        {
-            models.push(new Shocker("yellow", "static"));
-        }
-        this.shockerIndexes.to = models.length - 1;
-        
         return models;
     }
     
@@ -38,7 +30,20 @@ class TheConstruct extends Level
         //start the shockers after first 5 seconds (run until end of first minute)
         if(this.framesPassed > secondsToFrames(5) && this.framesPassed < minutesToFrames(1))
         {
-            this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
+            if(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].active)
+            {
+                let newTunnelParts = this.tunnelAlternate("#ff0000", "#000000");
+                
+                for(let i = 0; i < newTunnelParts.length; i++)
+                {
+                    this.tunnel.push(newTunnelParts[i]);
+                }
+            }
+        }
+        
+        if(this.framesPassed == minutesToFrames(1))
+        {
+            this.tunnel.push(this.tunnelClear());
         }
     }
     
