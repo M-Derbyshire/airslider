@@ -24,7 +24,7 @@ class Level
         this.rightEdge = kernel.graphicEn.gameCan.width;
         
         zCalc.setVanishPoint(kernel.graphicEn.gameCan.width / 2, kernel.graphicEn.gameCan.height / 2, 1000);
-        this.levelSpeed = zCalc.speed(800);
+        this.levelSpeed = zCalc.speed(600);
     }
     
     //meant to be overridden

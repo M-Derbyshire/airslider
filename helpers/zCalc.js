@@ -19,7 +19,7 @@ class ZCalc
         this.vPointX = x;
         this.vPointY = y;
         this.vPointDepth = depth;
-        this.calcDepth = (depth / 16);
+        this.calcDepth = (depth / 32);
     }
     
     x(xPos, zPos)
