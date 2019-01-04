@@ -1,12 +1,8 @@
 class HUDComponent
 {
-    constructor(x, y, width, height, state = null)
+    constructor()
     {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.state = state;
+        this.ctx = kernel.graphicEn.infoCtx;
     }
     
     //meant to be overriden

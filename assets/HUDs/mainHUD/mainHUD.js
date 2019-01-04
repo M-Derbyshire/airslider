@@ -7,6 +7,6 @@ class MainHUD extends HUD
     
     load()
     {
-        this.components.push(new HealthBar(0, 0, 10, 10));
+        this.components.push(new HealthBar(xUnit(0), yUnit(500), xUnit(1000), yUnit(500)));
     }
 }
