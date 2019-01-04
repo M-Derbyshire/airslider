@@ -8,4 +8,7 @@ class Component
         this.height = height;
         this.state = state;
     }
+    
+    //meant to be overriden
+    draw(){}
 }
