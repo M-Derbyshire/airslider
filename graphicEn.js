@@ -46,6 +46,7 @@ class GraphicEn{
         
         if(kernel.level.HUD.update)
         {
+            this.infoCtx.clearRect(0, 0, this.infoCan.width, this.infoCan.height);
             kernel.level.HUD.draw();
         }
     }
