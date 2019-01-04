@@ -17,16 +17,4 @@ class HUD
         }
         this.update = false;
     }
-    
-    addComponent(component, x, y, width, height, state = null)
-    {
-        this.components.push(component);
-        let i = this.components.length - 1; //index of the new component
-        
-        this.components[i].x = x;
-        this.components[i].y = y;
-        this.components[i].width = width;
-        this.components[i].height = height;
-        this.components[i].state = state;
-    }
 }
