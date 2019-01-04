@@ -1,4 +1,4 @@
-class Component
+class HUDComponent
 {
     constructor(x, y, width, height, state = null)
     {

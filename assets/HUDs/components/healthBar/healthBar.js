@@ -1,7 +1,7 @@
-class HealthBar extends Component
+class HealthBar extends HUDComponent
 {
     constructor()
     {
-        super(Component);
+        super(HUDComponent);
     }
 }
