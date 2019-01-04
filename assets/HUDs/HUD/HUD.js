@@ -16,6 +16,5 @@ class HUD
         {
             this.components[i].draw();
         }
-        this.update = false;
     }
 }
