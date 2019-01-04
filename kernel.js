@@ -22,6 +22,7 @@ class Kernel {
         
         //do any extra setup that may need access to the engines
         this.level.load();
+        this.level.HUD.load();
         for(let i = 0; i < this.loadedModels.length; i++)
         {
             this.loadedModels[i].loadedIndex = i; //used for events

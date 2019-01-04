@@ -5,6 +5,9 @@ class Level
         this.background = "white"; //use a color if nothing set in subclass (hence true on the next line)
         this.useColorBackground = true;
         
+        this.HUD; //the Heads Up Display for the level
+        this.HUD = new MainHUD();
+        
         this.roadColor = "#999999";
         
         this.framesPassed = 0;

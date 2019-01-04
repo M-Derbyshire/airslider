@@ -43,6 +43,11 @@ class GraphicEn{
         }
         
         kernel.level.drawFront();
+        
+        if(kernel.level.HUD.update)
+        {
+            kernel.level.HUD.draw();
+        }
     }
     
     setBackground(input, useColor = false)

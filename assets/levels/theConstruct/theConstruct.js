@@ -9,7 +9,6 @@ class TheConstruct extends Level
             from: 0,
             to: 0
         };
-        
     }
     
     getModels()
