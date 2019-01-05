@@ -8,7 +8,7 @@ class Level
         this.HUD; //the Heads Up Display for the level
         this.HUD = new MainHUD();
         
-        this.roadColor = "#999999";
+        this.roadColor = "#303030";
         
         this.framesPassed = 0;
         
