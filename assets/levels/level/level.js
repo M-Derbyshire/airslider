@@ -149,48 +149,48 @@ class Level
     }
     
     //tunnel[i].z - .length - .color - .active
-    tunnelAlternate(col1, col2)
+    tunnelAlternate(col1, len1, col2, len2)
     {
         return [
             {
                 z: zCalc.vPointDepth,
-                length: 100,
+                length: len1,
                 color: col1,
                 active: false
             },
             {
                 z: zCalc.vPointDepth,
-                length: 10,
+                length: len2,
                 color: col2,
                 active: false
             }
         ];
     }
     
-    tunnelBreakingAlternate(col1, col2)
+    tunnelBreakingAlternate(col1, len1, col2, len2, clearLen)
     {
         return [
             {
                 z: zCalc.vPointDepth,
-                length: 50,
+                length: len1,
                 color: col1,
                 active: false
             },
             {
                 z: zCalc.vPointDepth,
-                length: 100,
+                length: clearLen,
                 color: "clear",
                 active: false
             },
             {
                 z: zCalc.vPointDepth,
-                length: 50,
+                length: len2,
                 color: col2,
                 active: false
             },
             {
                 z: zCalc.vPointDepth,
-                length: 100,
+                length: clearLen,
                 color: "clear",
                 active: false
             }
