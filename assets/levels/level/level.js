@@ -207,4 +207,24 @@ class Level
         };
     }
     
+    startingTunnel(func, col1, len1, col2, len2)
+    {
+        while(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].z < zCalc.vPointDepth)
+        {
+            let newTunnelParts = func(col1, len1, col2, len2);
+            
+            for(let i = 0; i < newTunnelParts.length; i++)
+            {
+                this.tunnel.push(newTunnelParts[i]);
+                this.tunnel[this.tunnel.length - 1].active = true;
+                
+                if(this.tunnel.length > 1)
+                {
+                    this.tunnel[this.tunnel.length - 1].z = this.tunnel[this.tunnel.length - 2].z + this.tunnel[this.tunnel.length - 2].length + (this.levelSpeed / 2);
+                } else {
+                    this.tunnel[this.tunnel.length - 1].z = 0;
+                }
+            }
+        }
+    }
 }

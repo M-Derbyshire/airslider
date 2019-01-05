@@ -27,6 +27,12 @@ class TheConstruct extends Level
     {
         this.framesPassed++;
         
+        //start in the tunnel
+        if(this.framesPassed == 1)
+        {
+            this.startingTunnel(this.tunnelAlternate, "#ff0000", 100, "#000000", 10);
+        }
+        
         //start the shockers after first 5 seconds (run until end of first minute)
         if(this.framesPassed < secondsToFrames(30))
         {
@@ -46,5 +52,4 @@ class TheConstruct extends Level
             this.tunnel.push(this.tunnelClear());
         }
     }
-    
 }
