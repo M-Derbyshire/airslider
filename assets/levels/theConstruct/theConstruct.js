@@ -22,7 +22,7 @@ class TheConstruct extends Level
         
         for(let i = 0; i < this.shockerCount; i++)
         {
-            models.push(new Shocker("yellow", "home", 100));
+            models.push(new Shocker("yellow", "home", 200));
         }
         
         return models;

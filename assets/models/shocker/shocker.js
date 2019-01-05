@@ -35,7 +35,7 @@ class Shocker extends Model
                 break;
             case "home":
                 this.zSpeed = (this.zSpeed / 4) * 3;
-                this.homingSpeed = 1000 / this.xSpeed;
+                this.homingSpeed = 100 / this.xSpeed;
                 this.xSpeed = 0;
                 break;
         }
@@ -47,8 +47,8 @@ class Shocker extends Model
         {
             //sweep towards the player
             this.xSpeed = 
-            ((kernel.loadedModels[this.homingTargetIndex].x + (kernel.loadedModels[this.homingTargetIndex].anims[kernel.loadedModels[this.homingTargetIndex].state].width / 2)) - 
-            (this.x + (this.anims[this.state].width / 2))) / this.homingSpeed;
+            xSpeed(((kernel.loadedModels[this.homingTargetIndex].x + (kernel.loadedModels[this.homingTargetIndex].anims[kernel.loadedModels[this.homingTargetIndex].state].width / 2)) - 
+            (this.x + (this.anims[this.state].width / 2))) / this.homingSpeed);
         }
         
         this.z -= this.zSpeed;
