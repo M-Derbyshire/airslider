@@ -12,7 +12,7 @@ class Shocker extends Model
         if(this.mode == "home")
         {
             this.homingTargetIndex = playerIndex;
-            this.homingSpeed = 10;
+            this.homingSpeed = 20;
         }
     }
     
