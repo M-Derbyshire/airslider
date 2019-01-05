@@ -4,7 +4,7 @@ class TheConstruct extends Level
     {
         super(Level);
         
-        this.shockerCount = 3;
+        this.shockerCount = 5;
         this.shockerIndexes = {
             from: 0,
             to: 0
@@ -19,6 +19,11 @@ class TheConstruct extends Level
         controlConstructor.keyboardControls(0);
         controlConstructor.touchControls(0);
         this.HUD.modelIndexes.push(0);
+        
+        for(let i = 0; i < this.shockerCount; i++)
+        {
+            models.push(new Shocker("yellow", "sweep"));
+        }
         
         return models;
     }
@@ -36,6 +41,8 @@ class TheConstruct extends Level
         //start the shockers after first 5 seconds (run until end of first minute)
         if(this.framesPassed < secondsToFrames(30))
         {
+            this.sendShockers(1, 5);
+            
             if(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].active)
             {
                 let newTunnelParts = this.tunnelAlternate("#ff0000", 100, "#000000", 10);
