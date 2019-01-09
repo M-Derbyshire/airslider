@@ -17,6 +17,7 @@ class Model {
         this.loadedIndex; //will hold current index in kernel.loadedModels
     }
     
+    load() {} //meant to be overridden
     
     registerAnim(path, frameCount, fps, width, height, xOffset = 0, yOffset = 0)
     {
