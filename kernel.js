@@ -12,6 +12,8 @@ class Kernel {
     {
         this.level = Level;
         
+        this.setCanvasSize();
+        
         //get models here so they can be picked up by the engines
         this.loadedModels = this.level.getModels();
         
@@ -45,5 +47,38 @@ class Kernel {
         this.gameEn.run();
         this.graphicEn.run();
         this.soundEn.run();
+    }
+    
+    setCanvasSize(canvases = document.getElementsByTagName("canvas"))
+    {
+        let width;
+        let height;
+        let dpi = window.devicePixelRatio || 1;
+        
+        //should be essentially 17:9
+        //if 17:9 is stretches out of window, correct it
+        // 17 / 9 = 1.88888 (and a bit more)
+        let widthRatio = 1.88888;
+        if((window.innerWidth / widthRatio) > window.innerHeight)
+        {
+            height = window.innerHeight;
+            width = height * widthRatio;
+        } else {
+            height = window.innerWidth / widthRatio;
+            width = window.innerWidth;
+        }
+        
+        let x = (window.innerWidth - width) / 2;
+        let y = (window.innerHeight - height) / 2;
+        
+        for(let i = 0; i < canvases.length; i++)
+        {
+            canvases[i].style.left = x + "px";
+            canvases[i].style.top = y + "px";
+            canvases[i].width = width * dpi;
+            canvases[i].height = height * dpi;
+            canvases[i].style.width = width + "px";
+            canvases[i].style.height = height + "px";
+        }
     }
 }

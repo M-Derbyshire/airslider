@@ -17,8 +17,6 @@ class GraphicEn{
         this.menuCan = document.getElementById("menuCan");
         this.menuCtx = this.menuCan.getContext("2d");
         
-        this.setCanvasSize([this.backCan, this.gameCan, this.infoCan, this.menuCan]);
-        
         this.setBackground(kernel.level.background, kernel.level.useColorBackground);
     }
     
@@ -60,39 +58,6 @@ class GraphicEn{
             this.backCtx.fillRect(0, 0, this.backCan.width, this.backCan.height);
         } else {
             
-        }
-    }
-    
-    setCanvasSize(canvas)
-    {
-        let width;
-        let height;
-        let dpi = window.devicePixelRatio || 1;
-        
-        //should be essentially 17:9
-        //if 17:9 is stretches out of window, correct it
-        // 17 / 9 = 1.88888 (and a bit more)
-        let widthRatio = 1.88888;
-        if((window.innerWidth / widthRatio) > window.innerHeight)
-        {
-            height = window.innerHeight;
-            width = height * widthRatio;
-        } else {
-            height = window.innerWidth / widthRatio;
-            width = window.innerWidth;
-        }
-        
-        let x = (window.innerWidth - width) / 2;
-        let y = (window.innerHeight - height) / 2;
-        
-        for(let i = 0; i < canvas.length; i++)
-        {
-            canvas[i].style.left = x + "px";
-            canvas[i].style.top = y + "px";
-            canvas[i].width = width * dpi;
-            canvas[i].height = height * dpi;
-            canvas[i].style.width = width + "px";
-            canvas[i].style.height = height + "px";
         }
     }
 }

@@ -46,7 +46,7 @@ class Level
             this.extraDrawBack();
         }
         
-        this.drawTunnel();
+        //this.drawTunnel();
         this.drawRoad();
     }
     
