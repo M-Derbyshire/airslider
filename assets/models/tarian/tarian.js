@@ -67,12 +67,12 @@ class Tarian extends Model {
         if(this.x < kernel.level.leftEdge)
         {
             this.x = kernel.level.leftEdge;
-            this.state = "forward";
+            this.changeState("forward");
         }
         if(this.x + this.anims[this.state].width > kernel.level.rightEdge)
         {
             this.x = kernel.level.rightEdge - this.anims["forward"].width;
-            this.state = "forward";
+            this.changeState("forward");
         }
     }
     

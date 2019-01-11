@@ -21,7 +21,7 @@ class Model {
     
     levelStopped() {}
     
-    registerAnim(path, frameCount, fps, width, height, xOffset = 0, yOffset = 0)
+    registerAnim(path, frameCount, fps, width, height, xOffset = 0, yOffset = 0, nextAnim = "")
     {
         let anim = {
             path: path,
@@ -34,6 +34,7 @@ class Model {
             width: width,
             xOffset: xOffset, //change position for consistency
             yOffset: yOffset,
+            nextAnim: nextAnim, //used to follow through from one anim into another
         };
         
         for(let i = 0; i < anim.frameCount; i++)
@@ -61,13 +62,16 @@ class Model {
     nextFrame()
     {
         let frame = this.anims[this.state].frames[this.anims[this.state].currentFrame];
-
         //change the frame to the next one
         if(this.anims[this.state].waitCount >= this.anims[this.state].nextCount)
         {
             if(this.anims[this.state].currentFrame == this.anims[this.state].frameCount - 1) //if frame is last one
             {
                 this.anims[this.state].currentFrame = 0;
+                if(this.anims[this.state].nextAnim != "") //change the state if this shouldn't be looped
+                {
+                    this.changeState(this.anims[this.state].nextAnim);
+                }
             } else {
                 this.anims[this.state].currentFrame++;
             }
