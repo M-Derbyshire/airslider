@@ -14,10 +14,43 @@ class Tarian extends Model {
     {
         //I've used exact values for the fps, so it will be consistent when changing game fps
         this.anims = {
-            forward: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, 24, xUnit(120), yUnit(170)),
-            left: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/left", 4, 24, xUnit(170), yUnit(170), -xUnit(40)),
-            right: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/right", 4, 24, xUnit(170), yUnit(170), xUnit(40)),
-            lost: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, 24, xUnit(120), yUnit(170)),
+            forward: this.registerAnim({
+                path: kernel.rootPath + "/assets/models/tarian/anim/forward", 
+                frameCount: 4,
+                fps: 24,
+                width: xUnit(120),
+                height: yUnit(170),
+            }),
+            left: this.registerAnim({
+                path: kernel.rootPath + "/assets/models/tarian/anim/left", 
+                frameCount: 4, 
+                fps: 24, 
+                width: xUnit(170), 
+                height: yUnit(170), 
+                xOffset: -xUnit(40),
+            }),
+            right: this.registerAnim({
+                path: kernel.rootPath + "/assets/models/tarian/anim/right", 
+                frameCount: 4,
+                fps: 24,
+                width: xUnit(170),
+                height: yUnit(170),
+                xOffset: xUnit(40),
+            }),
+            explode: this.registerAnim({
+                path: kernel.rootPath + "/assets/models/tarian/anim/forward",
+                frameCount: 4,
+                fps: 24,
+                width: xUnit(120),
+                height: yUnit(170),
+            }),
+            lost: this.registerAnim({
+                path: kernel.rootPath + "/assets/models/tarian/anim/forward",
+                frameCount: 4,
+                fps: 24,
+                width: xUnit(120),
+                height: yUnit(170),
+            }),
         };
         
         this.z = 10;
@@ -41,7 +74,7 @@ class Tarian extends Model {
                 break;
         }
         
-        if(this.lost && this.state != "lost" || 1!=1) //also check for exploding anim
+        if(this.lost && (this.state != "lost" || this.state != "explode")) //also check for exploding anim
         {
             this.state = "lost";
         }
