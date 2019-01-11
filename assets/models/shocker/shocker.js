@@ -11,6 +11,20 @@ class Shocker extends Model
         this.active = false;
         this.xSpeed = speedX; //this will be fed through xSpeed() in load()
         this.homingTargetIndex = playerIndex;
+        
+        //set the damage this shocker weill deal
+        switch(this.color)
+        {
+            case "yellow":
+                this.damageDealt = 2;
+                break;
+            case "orange":
+                this.damageDealt = 5;
+                break;
+            case "red":
+                this.damageDealt = 10;
+                break;
+        }
     }
     
     load()
