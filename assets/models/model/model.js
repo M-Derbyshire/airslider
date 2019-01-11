@@ -39,7 +39,11 @@ class Model {
         
         for(let i = 0; i < anim.frameCount; i++)
         {
+            kernel.assetsLoading++;
             anim.frames[i] = new Image();
+            anim.frames[i].onload = () => {
+                kernel.assetsLoading--;
+            };
             anim.frames[i].src = anim.path + "/" + i + ".png";
         }
         return anim;

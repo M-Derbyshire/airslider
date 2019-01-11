@@ -6,6 +6,7 @@ class Kernel {
         let filePath = window.location.pathname;
         this.rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
         this.lastTime = new Date();
+        this.assetsLoading = 0; //increased when asset starts loading, decrease when done
     }
     
     load()
