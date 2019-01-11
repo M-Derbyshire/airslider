@@ -7,6 +7,7 @@ class Tarian extends Model {
         this.active = true;
         this.health = 100;
         
+        this.exploding = false;
         this.lost = false;
     }
     
@@ -37,12 +38,13 @@ class Tarian extends Model {
                 height: yUnit(170),
                 xOffset: xUnit(40),
             }),
-            explode: this.registerAnim({
+            exploding: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/tarian/anim/forward",
                 frameCount: 4,
                 fps: 24,
                 width: xUnit(120),
                 height: yUnit(170),
+                nextAnim: "lost",
             }),
             lost: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/tarian/anim/forward",
@@ -74,9 +76,22 @@ class Tarian extends Model {
                 break;
         }
         
-        if(this.lost && (this.state != "lost" || this.state != "explode")) //also check for exploding anim
+        
+        //make sure the exploding/lost anims always run when they should
+        if(this.exploding && this.state != "exploding")
         {
-            this.state = "lost";
+            if(this.state == "lost")
+            {
+                this.exploding = false;
+                this.lost = true;
+            } else {
+                this.changeState("exploding");
+            }
+        }
+        
+        if(this.lost && this.state != "lost")
+        {
+            this.changeState("lost");
         }
         
         //this will run if Tarian is onscreen, but defeated
@@ -121,7 +136,7 @@ class Tarian extends Model {
             if(kernel.loadedModels[thisModel.loadedIndex].health <= 0)
             {
                 kernel.loadedModels[thisModel.loadedIndex].health = 0;
-                kernel.loadedModels[thisModel.loadedIndex].lost = true;
+                kernel.loadedModels[thisModel.loadedIndex].exploding = true;
             }
             kernel.level.HUD.update = true;
         }
