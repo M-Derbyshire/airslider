@@ -6,6 +6,8 @@ class Tarian extends Model {
         this.state = "forward";
         this.active = true;
         this.health = 100;
+        
+        this.lost = false;
     }
     
     load()
@@ -14,13 +16,15 @@ class Tarian extends Model {
         this.anims = {
             forward: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, 24, xUnit(120), yUnit(170)),
             left: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/left", 4, 24, xUnit(170), yUnit(170), -xUnit(40)),
-            right: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/right", 4, 24, xUnit(170), yUnit(170), xUnit(40))
+            right: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/right", 4, 24, xUnit(170), yUnit(170), xUnit(40)),
+            lost: this.registerAnim(kernel.rootPath + "/assets/models/tarian/anim/forward", 4, 24, xUnit(120), yUnit(170)),
         };
         
         this.z = 10;
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
         this.xSpeed = xSpeed(1000);
+        this.zSpeed = 0; //used on failure
         
         this.registerEvent(["Shocker"], this.zCollisionEvent);
     }
@@ -35,6 +39,25 @@ class Tarian extends Model {
             case "left":
                 this.x -= this.xSpeed;
                 break;
+        }
+        
+        if(this.lost && this.state != "lost" || 1!=1) //also check for exploding anim
+        {
+            this.state = "lost";
+        }
+        
+        //this will run if Tarian is onscreen, but defeated
+        if(this.state == "lost" && this.z >= 0)
+        {
+            this.zSpeed--;
+            this.z += this.zSpeed;
+        }
+        
+        //if Tarian is offscreen after loss
+        if(this.z <= 0)
+        {
+            this.active = false;
+            kernel.level.levelStop();
         }
     }
     
@@ -62,9 +85,10 @@ class Tarian extends Model {
         (thisModel.y <= otherModel.y + otherModel.anims[otherModel.state].height))
         {
             kernel.loadedModels[thisModel.loadedIndex].health -= otherModel.damageDealt;
-            if(kernel.loadedModels[thisModel.loadedIndex].health < 0)
+            if(kernel.loadedModels[thisModel.loadedIndex].health <= 0)
             {
                 kernel.loadedModels[thisModel.loadedIndex].health = 0;
+                kernel.loadedModels[thisModel.loadedIndex].lost = true;
             }
             kernel.level.HUD.update = true;
         }

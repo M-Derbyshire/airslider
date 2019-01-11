@@ -19,6 +19,8 @@ class Model {
     
     load() {} //meant to be overridden
     
+    levelStopped() {}
+    
     registerAnim(path, frameCount, fps, width, height, xOffset = 0, yOffset = 0)
     {
         let anim = {

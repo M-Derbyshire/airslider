@@ -72,6 +72,15 @@ class Level
         kernel.graphicEn.gameCtx.fill();
     }
     
+    levelStop()
+    {
+        this.levelSpeed = 0;
+        
+        for(let i = 0; i < kernel.loadedModels.length; i++)
+        {
+            kernel.loadedModels[i].levelStopped();
+        }
+    }
     
     //level sections ---------------------------------------
     
