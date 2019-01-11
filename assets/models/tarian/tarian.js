@@ -39,23 +39,23 @@ class Tarian extends Model {
                 xOffset: xUnit(40),
             }),
             exploding: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/tarian/anim/forward",
-                frameCount: 4,
+                path: kernel.rootPath + "/assets/models/tarian/anim/exploding",
+                frameCount: 5,
                 fps: 24,
                 width: xUnit(120),
                 height: yUnit(170),
                 nextAnim: "lost",
             }),
             lost: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/tarian/anim/forward",
-                frameCount: 4,
+                path: kernel.rootPath + "/assets/models/tarian/anim/lost",
+                frameCount: 3,
                 fps: 24,
                 width: xUnit(120),
                 height: yUnit(170),
             }),
         };
         
-        this.z = 10;
+        this.z = 20;
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
         this.xSpeed = xSpeed(1000);
