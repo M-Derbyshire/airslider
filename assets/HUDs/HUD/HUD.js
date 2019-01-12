@@ -16,5 +16,12 @@ class HUD
         {
             this.components[i].draw();
         }
+        
+        this.update = false;
+        
+        if(this.extraDraw)
+        {
+            this.extraDraw();
+        }
     }
 }

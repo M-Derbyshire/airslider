@@ -61,7 +61,7 @@ class Tarian extends Model {
         this.xSpeed = xSpeed(1000);
         this.zSpeed = 0; //used on failure
         
-        this.registerEvent(["Shocker"], this.zCollisionEvent);
+        this.registerEvent(["Shocker"], this.zCollisionEventShocker);
     }
     
     act()
@@ -124,7 +124,7 @@ class Tarian extends Model {
         }
     }
     
-    zCollisionEvent(thisModel, otherModel)
+    zCollisionEventShocker(thisModel, otherModel)
     {
         if (((thisModel.z >= (otherModel.z - otherModel.zSpeed)) && (thisModel.z <= otherModel.z)) &&
         (thisModel.x + thisModel.anims[thisModel.state].width >= otherModel.x) &&
@@ -138,6 +138,7 @@ class Tarian extends Model {
                 kernel.loadedModels[thisModel.loadedIndex].health = 0;
                 kernel.loadedModels[thisModel.loadedIndex].exploding = true;
             }
+            kernel.level.HUD.damageFlash.start(otherModel.color);
             kernel.level.HUD.update = true;
         }
     }

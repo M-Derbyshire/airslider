@@ -7,4 +7,5 @@ class HUDComponent
     
     //meant to be overriden
     draw(){}
+    load(){}
 }
