@@ -140,6 +140,7 @@ class Tarian extends Model {
             }
             kernel.level.HUD.damageFlash.start(otherModel.color);
             kernel.level.HUD.update = true;
+            navigator.vibrate(250);
         }
     }
 }
