@@ -132,15 +132,18 @@ class Tarian extends Model {
         (thisModel.y + thisModel.anims[thisModel.state].height >= otherModel.y) &&
         (thisModel.y <= otherModel.y + otherModel.anims[otherModel.state].height))
         {
-            kernel.loadedModels[thisModel.loadedIndex].health -= otherModel.damageDealt;
-            if(kernel.loadedModels[thisModel.loadedIndex].health <= 0)
+            if(thisModel.state != "exploding" && thisModel.state != "lost")
             {
-                kernel.loadedModels[thisModel.loadedIndex].health = 0;
-                kernel.loadedModels[thisModel.loadedIndex].exploding = true;
+                kernel.loadedModels[thisModel.loadedIndex].health -= otherModel.damageDealt;
+                if(kernel.loadedModels[thisModel.loadedIndex].health <= 0)
+                {
+                    kernel.loadedModels[thisModel.loadedIndex].health = 0;
+                    kernel.loadedModels[thisModel.loadedIndex].exploding = true;
+                }
+                kernel.level.HUD.damageFlash.start(otherModel.color);
+                kernel.level.HUD.update = true;
+                navigator.vibrate(250);
             }
-            kernel.level.HUD.damageFlash.start(otherModel.color);
-            kernel.level.HUD.update = true;
-            navigator.vibrate(250);
         }
     }
 }
