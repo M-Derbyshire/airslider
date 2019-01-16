@@ -91,7 +91,7 @@ class Kernel {
     {
         for(let i = 0; i < kernel.loadedAssets.length; i++)
         {
-            if(kernel.loadedAssets[i].src == path)
+            if(kernel.loadedAssets[i][0] == path)
             {
                 return i;
             }
@@ -99,13 +99,16 @@ class Kernel {
         
         //wil not run if above finds something
         kernel.assetsStillLoading++;
-        this.loadedAssets.push(new Image()); 
+        this.loadedAssets.push([
+            path,
+            new Image()
+        ]); 
         
-        kernel.loadedAssets[kernel.loadedAssets.length - 1].onload = () => {
+        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].onload = () => {
             kernel.assetsStillLoading--;
         };
         
-        kernel.loadedAssets[kernel.loadedAssets.length - 1].src = path;
+        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].src = path;
         
         return kernel.loadedAssets.length - 1;
     }
