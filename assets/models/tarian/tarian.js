@@ -5,7 +5,7 @@ class Tarian extends Model {
         
         this.state = "forward";
         this.active = true;
-        this.health = 12;
+        this.health = 100;
         
         this.exploding = false;
         this.lost = false;
