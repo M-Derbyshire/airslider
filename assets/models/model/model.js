@@ -85,7 +85,7 @@ class Model {
     draw()
     {
         kernel.graphicEn.gameCtx.drawImage(
-            kernel.loadedAssets[this.nextFrame()][1], 
+            kernel.loadedAssets[this.nextFrame()], 
             zCalc.x(this.x, this.z), 
             zCalc.y(this.y, this.z), 
             zCalc.width(this.anims[this.state].width, this.z), 

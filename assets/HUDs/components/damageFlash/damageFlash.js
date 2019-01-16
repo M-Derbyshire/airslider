@@ -31,7 +31,7 @@ class DamageFlash extends HUDComponent
             kernel.graphicEn.infoCtx.globalAlpha = this.opacity;
         
             kernel.graphicEn.infoCtx.drawImage(
-                kernel.loadedAssets[this.images[this.color]][1],
+                kernel.loadedAssets[this.images[this.color]],
                 0,
                 0,
                 kernel.graphicEn.infoCan.width,
