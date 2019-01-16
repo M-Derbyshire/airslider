@@ -5,10 +5,12 @@ class Tarian extends Model {
         
         this.state = "forward";
         this.active = true;
-        this.health = 100;
+        this.health = 12;
         
         this.exploding = false;
         this.lost = false;
+        this.flashSpeed = secondsToFrames(0.5);
+        this.lastFlashChange = -this.flashSpeed; //used in the flashing
     }
     
     load()
@@ -76,6 +78,10 @@ class Tarian extends Model {
                 break;
         }
         
+        if(this.health <= 10 && this.health > 0)
+        {
+            this.flash();
+        }
         
         //make sure the exploding/lost anims always run when they should
         if(this.exploding && this.state != "exploding")
@@ -139,11 +145,20 @@ class Tarian extends Model {
                 {
                     kernel.loadedModels[thisModel.loadedIndex].health = 0;
                     kernel.loadedModels[thisModel.loadedIndex].exploding = true;
+                    kernel.loadedModels[thisModel.loadedIndex].display = true;
                 }
                 kernel.level.HUD.damageFlash.start(otherModel.color);
                 kernel.level.HUD.update = true;
                 navigator.vibrate(250);
             }
+        }
+    }
+    
+    flash()
+    {
+        if(this.lastFlashChange + this.flashSpeed <= kernel.level.framesPassed)
+        {
+            this.display = !this.display;
         }
     }
 }
