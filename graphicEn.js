@@ -34,7 +34,7 @@ class GraphicEn{
         
         for(let i = 0; i < kernel.loadedModels.length; i++)
         {
-            if(kernel.loadedModels[this.zSortedIndexes[i]].active)
+            if(kernel.loadedModels[this.zSortedIndexes[i]].active && kernel.loadedModels[this.zSortedIndexes[i]].display)
             {
                 kernel.loadedModels[this.zSortedIndexes[i]].draw();
             }
