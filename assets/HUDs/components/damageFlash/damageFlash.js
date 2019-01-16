@@ -31,7 +31,7 @@ class DamageFlash extends HUDComponent
             kernel.graphicEn.infoCtx.globalAlpha = this.opacity;
         
             kernel.graphicEn.infoCtx.drawImage(
-                this.images[this.color],
+                kernel.loadedAssets[this.images[this.color]][1],
                 0,
                 0,
                 kernel.graphicEn.infoCan.width,
@@ -45,20 +45,10 @@ class DamageFlash extends HUDComponent
     load()
     {
         this.images = {
-            yellow: new Image(),
-            orange: new Image(),
-            red: new Image(),
+            yellow: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/yellow.png"),
+            orange: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/orange.png"),
+            red: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/red.png"),
         };
-        
-        kernel.assetsLoading += 3;
-        
-        this.images.yellow.onload = this.imagesCallback;
-        this.images.orange.onload = this.imagesCallback;
-        this.images.red.onload = this.imagesCallback;
-        
-        this.images.yellow.src = kernel.rootPath + "/assets/HUDs/components/damageFlash/images/yellow.png";
-        this.images.orange.src = kernel.rootPath + "/assets/HUDs/components/damageFlash/images/orange.png";
-        this.images.red.src = kernel.rootPath + "/assets/HUDs/components/damageFlash/images/red.png";
     }
     
     imagesCallback()

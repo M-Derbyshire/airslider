@@ -40,12 +40,7 @@ class Model {
         
         for(let i = 0; i < anim.frameCount; i++)
         {
-            kernel.assetsLoading++;
-            anim.frames[i] = new Image();
-            anim.frames[i].onload = () => {
-                kernel.assetsLoading--;
-            };
-            anim.frames[i].src = anim.path + "/" + i + ".png";
+            anim.frames[i] = kernel.loadImage(anim.path + "/" + i + ".png");
         }
         return anim;
     }
@@ -90,7 +85,7 @@ class Model {
     draw()
     {
         kernel.graphicEn.gameCtx.drawImage(
-            this.nextFrame(), 
+            kernel.loadedAssets[this.nextFrame()][1], 
             zCalc.x(this.x, this.z), 
             zCalc.y(this.y, this.z), 
             zCalc.width(this.anims[this.state].width, this.z), 

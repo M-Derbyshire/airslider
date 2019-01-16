@@ -6,7 +6,8 @@ class Kernel {
         let filePath = window.location.pathname;
         this.rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
         this.lastTime = new Date();
-        this.assetsLoading = 0; //increased when asset starts loading, decrease when done
+        this.assetsStillLoading = 0; //increased when asset starts loading, decrease when done
+        this.loadedAssets = [];
     }
     
     load()
@@ -84,5 +85,31 @@ class Kernel {
             canvases[i].style.width = width + "px";
             canvases[i].style.height = height + "px";
         }
+    }
+    
+    loadImage(path)
+    {
+        for(let i = 0; i < kernel.loadedAssets.length; i++)
+        {
+            if(kernel.loadedAssets[i][0] == path)
+            {
+                return i;
+            }
+        }
+        
+        //wil not run if above finds something
+        kernel.assetsStillLoading++;
+        this.loadedAssets.push([
+            path,
+            new Image()
+        ]); 
+        
+        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].onload = () => {
+            kernel.assetsStillLoading--;
+        };
+        
+        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].src = path;
+        
+        return kernel.loadedAssets.length - 1;
     }
 }
