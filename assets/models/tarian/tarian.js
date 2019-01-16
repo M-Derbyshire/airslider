@@ -61,7 +61,7 @@ class Tarian extends Model {
         this.xSpeed = xSpeed(1000);
         this.zSpeed = 0; //used on failure
         
-        this.registerEvent(["Shocker"], this.zCollisionEventShocker);
+        this.registerEvent(["Shocker"], this.zCollisionEvent);
     }
     
     act()
@@ -124,7 +124,7 @@ class Tarian extends Model {
         }
     }
     
-    zCollisionEventShocker(thisModel, otherModel)
+    zCollisionEvent(thisModel, otherModel)
     {
         if (((thisModel.z >= (otherModel.z - otherModel.zSpeed)) && (thisModel.z <= otherModel.z)) &&
         (thisModel.x + thisModel.anims[thisModel.state].width >= otherModel.x) &&
