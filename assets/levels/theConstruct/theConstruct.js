@@ -37,7 +37,9 @@ class TheConstruct extends Level
         //start in the tunnel
         if(this.framesPassed == 1)
         {
-            this.startingTunnel(this.tunnelAlternate, "#ff0000", 100, "#000000", 10);
+            let tunnelParts = [this.tunnelPartColor("#ff0000", 100)];
+            tunnelParts.push(this.tunnelPartColor("#000000", 10));
+            this.startingTunnel(tunnelParts);
         }
         
         //start the shockers after first 5 seconds (run until end of first minute)
@@ -47,7 +49,8 @@ class TheConstruct extends Level
             
             if(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].active)
             {
-                let newTunnelParts = this.tunnelAlternate("#ff0000", 100, "#000000", 10);
+                let newTunnelParts = [this.tunnelPartColor("#ff0000", 100)];
+                newTunnelParts.push(this.tunnelPartColor("#000000", 10));
                 
                 for(let i = 0; i < newTunnelParts.length; i++)
                 {
@@ -58,7 +61,7 @@ class TheConstruct extends Level
         
         if(this.framesPassed == secondsToFrames(30))
         {
-            this.tunnel.push(this.tunnelClear());
+            this.tunnel.push(this.tunnelPartClear());
         }
     }
 }

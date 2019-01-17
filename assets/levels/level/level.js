@@ -158,73 +158,35 @@ class Level
     }
     
     //tunnel[i].z - .length - .color - .active
-    tunnelAlternate(col1, len1, col2, len2)
-    {
-        return [
-            {
-                z: zCalc.vPointDepth,
-                length: len1,
-                color: col1,
-                active: false
-            },
-            {
-                z: zCalc.vPointDepth,
-                length: len2,
-                color: col2,
-                active: false
-            }
-        ];
-    }
-    
-    tunnelBreakingAlternate(col1, len1, col2, len2, clearLen)
-    {
-        return [
-            {
-                z: zCalc.vPointDepth,
-                length: len1,
-                color: col1,
-                active: false
-            },
-            {
-                z: zCalc.vPointDepth,
-                length: clearLen,
-                color: "clear",
-                active: false
-            },
-            {
-                z: zCalc.vPointDepth,
-                length: len2,
-                color: col2,
-                active: false
-            },
-            {
-                z: zCalc.vPointDepth,
-                length: clearLen,
-                color: "clear",
-                active: false
-            }
-        ];
-    }
-    
-    tunnelClear()
+    tunnelPartColor(col, len)
     {
         return {
             z: zCalc.vPointDepth,
-            length: 1,
+            length: len,
+            color: col,
+            active: false
+        };
+    }
+    
+    tunnelPartClear(len = 1)
+    {
+        return {
+            z: zCalc.vPointDepth,
+            length: len,
             color: "clear",
             active: false
         };
     }
     
-    startingTunnel(func, col1, len1, col2, len2)
+    startingTunnel(parts)
     {
         while(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].z < zCalc.vPointDepth)
         {
-            let newTunnelParts = func(col1, len1, col2, len2);
+            parts = JSON.parse(JSON.stringify(parts));
             
-            for(let i = 0; i < newTunnelParts.length; i++)
+            for(let i = 0; i < parts.length; i++)
             {
-                this.tunnel.push(newTunnelParts[i]);
+                this.tunnel.push(parts[i]);
                 this.tunnel[this.tunnel.length - 1].active = true;
                 
                 if(this.tunnel.length > 1)
