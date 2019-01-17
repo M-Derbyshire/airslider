@@ -158,7 +158,7 @@ class Level
     }
     
     //tunnel[i].z - .length - .color - .active
-    tunnelPartColor(col, len)
+    newTunnelPart(col, len = 1)
     {
         return {
             z: zCalc.vPointDepth,
@@ -168,17 +168,7 @@ class Level
         };
     }
     
-    tunnelPartClear(len = 1)
-    {
-        return {
-            z: zCalc.vPointDepth,
-            length: len,
-            color: "clear",
-            active: false
-        };
-    }
-    
-    startingTunnel(parts)
+    createStartingTunnel(parts)
     {
         while(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].z < zCalc.vPointDepth)
         {
