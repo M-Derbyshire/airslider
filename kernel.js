@@ -89,12 +89,10 @@ class Kernel {
     
     loadImage(path)
     {
-        for(let i = 0; i < kernel.loadedAssets.length; i++)
+        let assetHasLoaded = this.checkAssetLoaded(path);
+        if(assetHasLoaded)
         {
-            if(kernel.loadedAssets[i][0] == path)
-            {
-                return i;
-            }
+            return assetHasLoaded;
         }
         
         //wil not run if above finds something
@@ -111,5 +109,41 @@ class Kernel {
         kernel.loadedAssets[kernel.loadedAssets.length - 1][1].src = path;
         
         return kernel.loadedAssets.length - 1;
+    }
+    
+    loadAudio(path)
+    {
+        let assetHasLoaded = this.checkAssetLoaded(path);
+        if(assetHasLoaded)
+        {
+            return assetHasLoaded;
+        }
+        
+        //wil not run if above finds something
+        kernel.assetsStillLoading++;
+        this.loadedAssets.push([
+            path,
+            new Audio()
+        ]); 
+        
+        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].onload = () => {
+            kernel.assetsStillLoading--;
+        };
+        
+        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].src = path;
+        
+        return kernel.loadedAssets.length - 1;
+    }
+    
+    checkAssetLoaded(path)
+    {
+        for(let i = 0; i < kernel.loadedAssets.length; i++)
+        {
+            if(kernel.loadedAssets[i][0] == path)
+            {
+                return i;
+            }
+        }
+        return false;
     }
 }
