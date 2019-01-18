@@ -18,9 +18,15 @@ class Model {
         this.loadedIndex; //will hold current index in kernel.loadedModels
     }
     
-    load() {} //meant to be overridden
-    
+    //meant to be overridden
+    load() {}
     levelStopped() {}
+    act() {}
+    
+    loadSuper()
+    {
+        
+    }
     
     registerAnim({path, frameCount, fps, width, height, xOffset = 0, yOffset = 0, nextAnim = ""})
     {
@@ -98,12 +104,6 @@ class Model {
         this.x += this.anims[state].xOffset;
         this.y += this.anims[state].yOffset;
         this.state = state;
-    }
-    
-    act()
-    {
-        //meant to be overloaded
-        //only created here for static models
     }
     
     checkEvents()

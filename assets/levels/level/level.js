@@ -23,7 +23,7 @@ class Level
     }
     
     //set things that can only be done after the engines are constructed
-    load()
+    loadSuper()
     {
         this.leftEdge = 0;
         this.rightEdge = kernel.graphicEn.gameCan.width;
@@ -37,6 +37,7 @@ class Level
     
     //meant to be overridden
     getModels(){}
+    load(){}
     
     act()
     {

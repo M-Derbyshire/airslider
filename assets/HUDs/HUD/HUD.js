@@ -7,8 +7,22 @@ class HUD
         this.modelIndexes = []; //indexes of models used by this HUD
     }
     
+    loadSuper()
+    {
+        
+    }
+    
     //meant to be overriden
     load(){}
+    
+    loadComponents()
+    {
+        for(let i = 0; i < this.components.length; i++)
+        {
+            this.components[i].loadSuper();
+            this.components[i].load();
+        }
+    }
     
     draw()
     {

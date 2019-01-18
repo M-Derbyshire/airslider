@@ -12,11 +12,9 @@ class MainHUD extends HUD
         this.components.push(new HealthBar(xUnit(100), yUnit(50), xUnit(800), yUnit(60)));
         this.damageFlash = new DamageFlash();
         
-        for(let i = 0; i < this.components.length; i++)
-        {
-            this.components[i].load();
-        }
+        this.loadComponents();
         
+        this.damageFlash.loadSuper();
         this.damageFlash.load();
     }
     
