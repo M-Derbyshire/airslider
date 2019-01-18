@@ -40,4 +40,19 @@ class SoundEn{
         this.music.currentTime = 0;
         this.musicIsPlaying = false;
     }
+    
+    playSound(ref, loop = false)
+    {
+        //position needs to be reset so sounds will restart
+        //if they're triggered mid-way through playing
+        kernel.loadedAssets[ref][1].currentTime = 0;
+        kernel.loadedAssets[ref][1].loop = loop;
+        kernel.loadedAssets[ref][1].play();
+    }
+    
+    stopSound(ref)
+    {
+        //sound position will be reset in playSound() method
+        kernel.loadedAssets[ref][1].pause();
+    }
 }

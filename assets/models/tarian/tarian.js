@@ -11,6 +11,8 @@ class Tarian extends Model {
         this.lost = false;
         this.flashSpeed = secondsToFrames(0.5);
         this.lastFlashChange = -this.flashSpeed; //used in the flashing
+        
+        this.testSound;
     }
     
     load()
@@ -64,6 +66,8 @@ class Tarian extends Model {
         this.zSpeed = 0; //used on failure
         
         this.registerEvent(["Shocker"], this.zCollisionEvent);
+        
+        this.testSound = kernel.loadAudio(kernel.rootPath + "/assets/models/tarian/sounds/test.mp3");
     }
     
     act()
@@ -150,6 +154,7 @@ class Tarian extends Model {
                 kernel.level.HUD.damageFlash.start(otherModel.color);
                 kernel.level.HUD.update = true;
                 navigator.vibrate(250);
+                kernel.soundEn.playSound(thisModel.testSound);
             }
         }
     }
