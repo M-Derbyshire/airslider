@@ -129,7 +129,7 @@ class Kernel {
             new Audio()
         ]); 
         
-        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].addEventListener("loadeddata", () => {
+        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].addEventListener("canplaythrough", () => {
             kernel.assetsStillLoading--;
         });
         kernel.loadedAssets[kernel.loadedAssets.length - 1][1].src = path;
