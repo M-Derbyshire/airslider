@@ -38,7 +38,9 @@ class TheConstruct extends Level
         if(this.framesPassed == 1)
         {
             let tunnelParts = [this.newTunnelPart("#ff0000", 100)];
-            tunnelParts.push(this.newTunnelPart("#000000", 10));
+            tunnelParts.push(this.newTunnelPart("#333333", 5));
+            tunnelParts.push(this.newTunnelPart("#000000", 15));
+            tunnelParts.push(this.newTunnelPart("#333333", 5));
             this.createStartingTunnel(tunnelParts);
         }
         
@@ -50,7 +52,9 @@ class TheConstruct extends Level
             if(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].active)
             {
                 let newTunnelParts = [this.newTunnelPart("#ff0000", 100)];
-                newTunnelParts.push(this.newTunnelPart("#000000", 10));
+                newTunnelParts.push(this.newTunnelPart("#333333", 5));
+                newTunnelParts.push(this.newTunnelPart("#000000", 15));
+                newTunnelParts.push(this.newTunnelPart("#333333", 5));
                 
                 for(let i = 0; i < newTunnelParts.length; i++)
                 {

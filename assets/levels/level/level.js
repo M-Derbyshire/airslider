@@ -129,6 +129,7 @@ class Level
             if((i < (this.tunnel.length - 1)) && !this.tunnel[i + 1].active && ((zCalc.vPointDepth - this.tunnel[i].z) >= this.tunnel[i].length))
             {
                 this.tunnel[i + 1].active = true;
+                this.tunnel[i + 1].z = this.tunnel[i].z + this.tunnel[i].length;
             }
             
             if(this.tunnel[i].active)
@@ -181,7 +182,7 @@ class Level
                 
                 if(this.tunnel.length > 1)
                 {
-                    this.tunnel[this.tunnel.length - 1].z = this.tunnel[this.tunnel.length - 2].z + this.tunnel[this.tunnel.length - 2].length + (this.levelSpeed / 2);
+                    this.tunnel[this.tunnel.length - 1].z = this.tunnel[this.tunnel.length - 2].z + this.tunnel[this.tunnel.length - 2].length;
                 } else {
                     this.tunnel[this.tunnel.length - 1].z = 0;
                 }
