@@ -37,9 +37,6 @@ class TheConstruct extends Level
         //start in the tunnel
         if(this.framesPassed == 1)
         {
-            //this will be handled  by levels here once menu system is sorted
-            //kernel.soundEn.playMusic();
-            
             let tunnelParts = [this.newTunnelPart("#ff0000", 100)];
             tunnelParts.push(this.newTunnelPart("#333333", 5));
             tunnelParts.push(this.newTunnelPart("#000000", 15));

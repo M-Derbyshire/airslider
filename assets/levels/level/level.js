@@ -30,9 +30,6 @@ class Level
         
         zCalc.setVanishPoint(kernel.graphicEn.gameCan.width / 2, kernel.graphicEn.gameCan.height / 2, 1000);
         this.levelSpeed = zCalc.speed(600);
-        
-        this.music = kernel.loadAudio(kernel.rootPath + "/assets/levels/level/music/beautifulsmile.mp3");
-        kernel.soundEn.setMusic(this.music, true);
     }
     
     //meant to be overridden
