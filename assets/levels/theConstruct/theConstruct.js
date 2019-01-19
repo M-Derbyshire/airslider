@@ -37,6 +37,8 @@ class TheConstruct extends Level
             yUnit(50),
             yUnit(15)
         );
+        
+        this.background = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/background.png");
     }
     
     act()

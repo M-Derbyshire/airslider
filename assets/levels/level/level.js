@@ -3,7 +3,6 @@ class Level
     constructor()
     {
         this.background = "white"; //use a color if nothing set in subclass (hence true on the next line)
-        this.useColorBackground = true;
         
         this.HUD; //the Heads Up Display for the level
         this.HUD = new MainHUD();
@@ -53,6 +52,10 @@ class Level
     
     drawBack()
     {
+        if(!kernel.graphicEn.backgroundDrawn)
+        {
+            kernel.graphicEn.setBackground(this.background);
+        }
         
         if(this.extraDrawBack)
         {

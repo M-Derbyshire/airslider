@@ -17,7 +17,7 @@ class GraphicEn{
         this.menuCan = document.getElementById("menuCan");
         this.menuCtx = this.menuCan.getContext("2d");
         
-        this.setBackground(kernel.level.background, kernel.level.useColorBackground);
+        this.backgroundDrawn = false;
     }
     
     run()
@@ -56,7 +56,15 @@ class GraphicEn{
             this.backCtx.fillStyle = input;
             this.backCtx.fillRect(0, 0, this.backCan.width, this.backCan.height);
         } else {
-            
+            this.backCtx.drawImage(
+                kernel.loadedAssets[input][1],
+                0,
+                0,
+                this.backCan.width,
+                this.backCan.height
+            );
         }
+        
+        this.backgroundDrawn = true;
     }
 }
