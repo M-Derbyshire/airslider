@@ -30,6 +30,15 @@ class TheConstruct extends Level
         return models;
     }
     
+    load()
+    {
+        this.setGround(
+            kernel.rootPath + "/assets/levels/theConstruct/images/ground.png",
+            yUnit(50),
+            yUnit(15)
+        );
+    }
+    
     act()
     {
         this.framesPassed++;
@@ -65,6 +74,7 @@ class TheConstruct extends Level
         
         if(this.framesPassed == secondsToFrames(30))
         {
+            this.outsideVisible = true;
             this.tunnel.push(this.newTunnelPart("clear"));
         }
     }

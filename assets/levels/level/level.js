@@ -20,6 +20,16 @@ class Level
         this.tunnel = [];
         
         this.music;
+        
+        this.ground = {
+            ref: 0,
+            height: 0,
+            distance: 0,
+            offset: 0
+        };
+        
+        this.groundZ = [];
+        this.outsideVisible = false;
     }
     
     //set things that can only be done after the engines are constructed
@@ -47,6 +57,11 @@ class Level
         if(this.extraDrawBack)
         {
             this.extraDrawBack();
+        }
+        
+        if(this.outsideVisible)
+        {
+            this.drawGround();
         }
         
         this.drawTunnel();
@@ -86,6 +101,51 @@ class Level
     }
     
     //level sections ---------------------------------------
+    
+    setGround(path, height, distance)
+    {
+        this.ground.ref = kernel.loadImage(path);
+        this.ground.height = height;
+        this.ground.distance = distance;
+        
+        for(let z = zCalc.vPointDepth; z >= (0 - distance); z -= distance)
+        {
+            this.groundZ.push(z);
+        }
+    }
+    
+    drawGround()
+    {
+        for(let i = 0; i < this.groundZ.length; i++)
+        {
+            if(this.ground.offset > this.ground.distance)
+            {
+                this.ground.offset = 0;
+            }
+            
+            this.ground.offset += (this.levelSpeed / 100);
+            
+            let y = zCalc.y(kernel.graphicEn.gameCan.height, this.groundZ[i] - this.ground.offset);
+            let width = zCalc.width((kernel.graphicEn.gameCan.width * 2), this.groundZ[i] - this.ground.offset);
+            let height = zCalc.height(this.ground.height, this.groundZ[i] - this.ground.offset);
+            
+            kernel.graphicEn.gameCtx.drawImage(
+                kernel.loadedAssets[this.ground.ref][1],
+                zCalc.x(0 - (kernel.graphicEn.gameCan.width * 2), this.groundZ[i] - this.ground.offset),
+                y,
+                width,
+                height
+            );
+            
+            kernel.graphicEn.gameCtx.drawImage(
+                kernel.loadedAssets[this.ground.ref][1],
+                zCalc.x(0 + kernel.graphicEn.gameCan.width, this.groundZ[i] - this.ground.offset),
+                y,
+                width,
+                height
+            );
+        }
+    }
     
     sendShockers(fromIndex, toIndex)
     {
