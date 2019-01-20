@@ -28,7 +28,7 @@ class Level
         };
         
         this.groundZ = [];
-        this.outsideVisible = true;
+        this.outsideVisible = false;
     }
     
     //set things that can only be done after the engines are constructed
@@ -67,7 +67,7 @@ class Level
             this.drawGround();
         }
         
-        //this.drawTunnel();
+        this.drawTunnel();
         this.drawRoad();
     }
     
