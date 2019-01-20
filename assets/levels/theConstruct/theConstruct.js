@@ -34,8 +34,7 @@ class TheConstruct extends Level
     {
         this.setGround(
             kernel.rootPath + "/assets/levels/theConstruct/images/ground.png",
-            yUnit(50),
-            yUnit(15)
+            yUnit(50)
         );
         
         this.background = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/background.png");

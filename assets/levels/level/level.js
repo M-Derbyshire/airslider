@@ -28,7 +28,7 @@ class Level
         };
         
         this.groundZ = [];
-        this.outsideVisible = false;
+        this.outsideVisible = true;
     }
     
     //set things that can only be done after the engines are constructed
@@ -67,7 +67,7 @@ class Level
             this.drawGround();
         }
         
-        this.drawTunnel();
+        //this.drawTunnel();
         this.drawRoad();
     }
     
@@ -105,15 +105,31 @@ class Level
     
     //level sections ---------------------------------------
     
-    setGround(path, height, distance)
+    setGround(path, height)
     {
         this.ground.ref = kernel.loadImage(path);
         this.ground.height = height;
-        this.ground.distance = distance;
+        let distance = -1;
         
-        for(let z = zCalc.vPointDepth; z >= (0 - distance); z -= distance)
+        this.groundZ.push(zCalc.vPointDepth);
+        
+        for(let z = zCalc.vPointDepth; z >= 0; z--)
         {
-            this.groundZ.push(z);
+            if(distance == -1)
+            {
+                //find the z distance between images
+                if(zCalc.y(kernel.graphicEn.gameCan.height, z) >= zCalc.y(kernel.graphicEn.gameCan.height, this.groundZ[this.groundZ.length - 1]) + zCalc.height(height, this.groundZ[this.groundZ.length - 1]))
+                {
+                    distance = this.groundZ[this.groundZ.length - 1] - z;
+                    this.ground.distance = distance;
+                    this.groundZ.push(z);
+                }
+            } else {
+                if(this.groundZ[this.groundZ.length - 1] - z == distance)
+                {
+                    this.groundZ.push(z);
+                }
+            }
         }
     }
     
