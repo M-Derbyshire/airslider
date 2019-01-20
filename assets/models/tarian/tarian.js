@@ -42,7 +42,7 @@ class Tarian extends Model {
             }),
             exploding: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/tarian/anim/exploding",
-                frameCount: 5,
+                frameCount: 22,
                 fps: 24,
                 width: xUnit(120),
                 height: yUnit(170),
@@ -103,7 +103,7 @@ class Tarian extends Model {
         //this will run if Tarian is onscreen, but defeated
         if(this.state == "lost" && this.z >= 0)
         {
-            this.zSpeed--;
+            this.zSpeed -= 0.5;
             this.z += this.zSpeed;
         }
         
@@ -146,10 +146,13 @@ class Tarian extends Model {
                     kernel.loadedModels[thisModel.loadedIndex].health = 0;
                     kernel.loadedModels[thisModel.loadedIndex].exploding = true;
                     kernel.loadedModels[thisModel.loadedIndex].display = true;
+                    navigator.vibrate(3000);
+                } else {
+                    navigator.vibrate(250);
                 }
+                
                 kernel.level.HUD.damageFlash.start(otherModel.color);
                 kernel.level.HUD.update = true;
-                navigator.vibrate(250);
             }
         }
     }
