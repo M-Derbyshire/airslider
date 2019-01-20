@@ -122,12 +122,12 @@ class Level
                 {
                     distance = this.groundZ[this.groundZ.length - 1] - z;
                     this.ground.distance = distance;
-                    this.groundZ.push(z);
+                    this.groundZ.push(z + 1);
                 }
             } else {
                 if(this.groundZ[this.groundZ.length - 1] - z == distance)
                 {
-                    this.groundZ.push(z);
+                    this.groundZ.push(z + 1);
                 }
             }
         }
