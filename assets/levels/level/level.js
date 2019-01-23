@@ -28,7 +28,7 @@ class Level
         };
         
         this.groundZ = [];
-        this.outsideVisible = true;
+        this.outsideVisible = false;
     }
     
     //set things that can only be done after the engines are constructed
@@ -62,7 +62,7 @@ class Level
             this.drawGround();
         }
         
-        //this.drawTunnel();
+        this.drawTunnel();
         this.drawRoad();
     }
     
@@ -139,21 +139,21 @@ class Level
             
             this.ground.offset += (this.levelSpeed / 100);
             
-            let y = zCalc.y(kernel.graphicEn.gameCan.height, this.groundZ[i] - this.ground.offset);
-            let width = zCalc.width((kernel.graphicEn.gameCan.width * 2), this.groundZ[i] - this.ground.offset);
+            let y = zCalc.y(kernel.graphicEn.backCan.height, this.groundZ[i] - this.ground.offset);
+            let width = zCalc.width((kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset);
             let height = zCalc.height(this.ground.height, this.groundZ[i] - this.ground.offset);
             
-            kernel.graphicEn.gameCtx.drawImage(
+            kernel.graphicEn.backCtx.drawImage(
                 kernel.loadedAssets[this.ground.ref][1],
-                zCalc.x(0 - (kernel.graphicEn.gameCan.width * 2), this.groundZ[i] - this.ground.offset),
+                zCalc.x(0 - (kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset),
                 y,
                 width,
                 height
             );
             
-            kernel.graphicEn.gameCtx.drawImage(
+            kernel.graphicEn.backCtx.drawImage(
                 kernel.loadedAssets[this.ground.ref][1],
-                zCalc.x(0 + kernel.graphicEn.gameCan.width, this.groundZ[i] - this.ground.offset),
+                zCalc.x(0 + kernel.graphicEn.backCan.width, this.groundZ[i] - this.ground.offset),
                 y,
                 width,
                 height
