@@ -28,7 +28,7 @@ class Level
         };
         
         this.groundZ = [];
-        this.outsideVisible = false;
+        this.outsideVisible = true;
     }
     
     //set things that can only be done after the engines are constructed
@@ -52,11 +52,6 @@ class Level
     
     drawBack()
     {
-        if(!kernel.graphicEn.backgroundDrawn)
-        {
-            kernel.graphicEn.setBackground(this.background);
-        }
-        
         if(this.extraDrawBack)
         {
             this.extraDrawBack();
@@ -67,7 +62,7 @@ class Level
             this.drawGround();
         }
         
-        this.drawTunnel();
+        //this.drawTunnel();
         this.drawRoad();
     }
     

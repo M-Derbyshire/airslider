@@ -38,6 +38,7 @@ class TheConstruct extends Level
         );
         
         this.background = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/background.png");
+        kernel.graphicEn.setStaticBackground(this.background);
     }
     
     act()

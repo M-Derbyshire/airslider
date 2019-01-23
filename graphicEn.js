@@ -16,8 +16,6 @@ class GraphicEn{
         this.infoCtx = this.infoCan.getContext("2d");
         this.menuCan = document.getElementById("menuCan");
         this.menuCtx = this.menuCan.getContext("2d");
-        
-        this.backgroundDrawn = false;
     }
     
     run()
@@ -49,22 +47,29 @@ class GraphicEn{
         }
     }
     
-    setBackground(input, useColor = false)
+    setStaticBackground(input, useColor = false)
     {
         if(useColor)
         {
             this.backCtx.fillStyle = input;
             this.backCtx.fillRect(0, 0, this.backCan.width, this.backCan.height);
         } else {
-            this.backCtx.drawImage(
-                kernel.loadedAssets[input][1],
-                0,
-                0,
-                this.backCan.width,
-                this.backCan.height
-            );
+            this.drawBackgroundFull(input); //in the unlikely event this has already loadec
+            kernel.loadedAssets[input][1].onload = () => {
+                kernel.defaultAssetCallback();
+                this.drawBackgroundFull(input);
+            };
         }
-        
-        this.backgroundDrawn = true;
+    }
+    
+    drawBackgroundFull(ref)
+    {
+        this.backCtx.drawImage(
+            kernel.loadedAssets[ref][1],
+            0,
+            0,
+            this.backCan.width,
+            this.backCan.height
+        );
     }
 }

@@ -90,7 +90,7 @@ class Kernel {
         }
     }
     
-    loadImage(path)
+    loadImage(path, callback = this.defaultAssetCallback)
     {
         let assetIsHeld = this.checkAssetHeld(path);
         if(assetIsHeld)
@@ -105,16 +105,14 @@ class Kernel {
             new Image()
         ]); 
         
-        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].onload = () => {
-            kernel.assetsStillLoading--;
-        };
+        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].onload = callback;
         
         kernel.loadedAssets[kernel.loadedAssets.length - 1][1].src = path;
         
         return kernel.loadedAssets.length - 1;
     }
     
-    loadAudio(path)
+    loadAudio(path, callback = this.defaultAssetCallback)
     {
         let assetIsHeld = this.checkAssetHeld(path);
         if(assetIsHeld)
@@ -129,9 +127,7 @@ class Kernel {
             new Audio()
         ]); 
         
-        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].addEventListener("canplaythrough", () => {
-            kernel.assetsStillLoading--;
-        });
+        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].addEventListener("canplaythrough", callback);
         kernel.loadedAssets[kernel.loadedAssets.length - 1][1].src = path;
         
         return kernel.loadedAssets.length - 1;
@@ -147,5 +143,10 @@ class Kernel {
             }
         }
         return false;
+    }
+    
+    defaultAssetCallback()
+    {
+        kernel.assetsStillLoading--;
     }
 }
