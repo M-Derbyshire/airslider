@@ -12,10 +12,16 @@ class GraphicEn{
         this.backCtx = this.backCan.getContext("2d");
         this.gameCan = document.getElementById("gameCan");
         this.gameCtx = this.gameCan.getContext("2d");
+        this.lightCan = document.getElementById("lightCan");
+        this.lightCtx = this.lightCan.getContext("2d");
         this.infoCan = document.getElementById("infoCan");
         this.infoCtx = this.infoCan.getContext("2d");
         this.menuCan = document.getElementById("menuCan");
         this.menuCtx = this.menuCan.getContext("2d");
+        
+        this.lightChanged = false;
+        this.lightLuminosity = 0;
+        this.lightMask;
     }
     
     run()
@@ -45,6 +51,21 @@ class GraphicEn{
             this.infoCtx.clearRect(0, 0, this.infoCan.width, this.infoCan.height);
             kernel.level.HUD.draw();
         }
+        
+        if(this.lightChanged)
+        {
+            this.lightCtx.globalAlpha = this.lightLuminosity;
+            
+            this.lightCtx.drawImage(
+                kernel.loadedAssets[this.lightMask][1],
+                0,
+                0,
+                this.lightCan.width,
+                this.lightCan.height
+            );
+            
+            this.lightChanged = false;
+        }
     }
     
     setStaticBackground(input, useColor = false)
@@ -71,5 +92,17 @@ class GraphicEn{
             this.backCan.width,
             this.backCan.height
         );
+    }
+    
+    setLightLuminosity(lum) //takes a number between 0 (darkest) and 1 (lightest)
+    {
+        this.lightLuminosity = 1 - lum;
+        this.lightChanged = true;
+    }
+    
+    setLightMask(ref)
+    {
+        this.lightMask = ref;
+        this.lightChanged = true;
     }
 }

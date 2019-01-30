@@ -39,6 +39,12 @@ class Level
         
         zCalc.setVanishPoint(kernel.graphicEn.gameCan.width / 2, kernel.graphicEn.gameCan.height / 2, 1000);
         this.levelSpeed = zCalc.speed(600);
+        
+        kernel.graphicEn.setLightMask(kernel.loadImage(
+            kernel.rootPath + "/assets/levels/level/images/mask.png"
+        ));
+        
+        kernel.graphicEn.setLightLuminosity(0.25);
     }
     
     //meant to be overridden
