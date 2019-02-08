@@ -29,6 +29,11 @@ class Level
         
         this.groundZ = [];
         this.outsideVisible = false;
+        
+        this.tunnelLightMask;
+        this.tunnelLightBrightness;
+        this.outsideLightMask;
+        this.outsideLightBrightness;
     }
     
     //set things that can only be done after the engines are constructed
@@ -40,20 +45,31 @@ class Level
         zCalc.setVanishPoint(kernel.graphicEn.gameCan.width / 2, kernel.graphicEn.gameCan.height / 2, 1000);
         this.levelSpeed = zCalc.speed(600);
         
-        kernel.graphicEn.setLightMask(kernel.loadImage(
-            kernel.rootPath + "/assets/levels/level/images/mask.png"
-        ));
-        
-        kernel.graphicEn.setLightLuminosity(0.25);
+        this.tunnelLightMask = kernel.loadImage(kernel.rootPath + "/assets/levels/level/images/mask.png");
+        this.tunnelLightBrightness = 0.25;
     }
     
     //meant to be overridden
     getModels(){}
     load(){}
+    act(){}
     
-    act()
+    checkLightMask()
     {
+        if(kernel.graphicEn.lightMask != this.tunnelLightMask && 
+            this.tunnel.length > 0 && 
+            this.tunnel[0].color != "clear")
+        {
+            kernel.graphicEn.setLightMask(this.tunnelLightMask);
+            kernel.graphicEn.setLightLuminosity(this.tunnelLightBrightness);
+        }
         
+        if(kernel.graphicEn.lightMask != this.outsideLightMask &&
+            (this.tunnel.length == 0 || this.tunnel[0].color == "clear"))
+        {
+            kernel.graphicEn.setLightMask(this.outsideLightMask);
+            kernel.graphicEn.setLightLuminosity(this.outsideLightBrightness);
+        }
     }
     
     drawBack()

@@ -37,13 +37,22 @@ class TheConstruct extends Level
             yUnit(50)
         );
         
-        this.background = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/background.png");
+        this.background = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/testBackground.png");
         kernel.graphicEn.setStaticBackground(this.background);
+        
+        this.outsideLightMask = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/testBackgroundMask.png");
+        this.outsideLightBrightness = 0;
+        
+        kernel.graphicEn.setLightMask(this.tunnelLightMask);
+        kernel.graphicEn.setLightLuminosity(this.tunnelLightBrightness);
     }
     
     act()
     {
         this.framesPassed++;
+        
+        //if outside/inside changes, change light mask
+        this.checkLightMask();
         
         //start in the tunnel
         if(this.framesPassed == 1)
@@ -56,16 +65,27 @@ class TheConstruct extends Level
         }
         
         //start the shockers after first 5 seconds (run until end of first minute)
-        if(this.framesPassed < secondsToFrames(30))
+        if(this.framesPassed < secondsToFrames(15))
         {
             this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
             
             if(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].active)
             {
-                let newTunnelParts = [this.newTunnelPart("#ff0000", 100)];
-                newTunnelParts.push(this.newTunnelPart("#333333", 5));
-                newTunnelParts.push(this.newTunnelPart("#000000", 15));
-                newTunnelParts.push(this.newTunnelPart("#333333", 5));
+                // let newTunnelParts = [this.newTunnelPart("#ff0000", 100)];
+                // newTunnelParts.push(this.newTunnelPart("#333333", 5));
+                // newTunnelParts.push(this.newTunnelPart("#000000", 15));
+                // newTunnelParts.push(this.newTunnelPart("#333333", 5));
+                
+                let newTunnelParts = [
+                    this.newTunnelPart("#ff0000", 100),
+                    this.newTunnelPart("#333333", 5),
+                    this.newTunnelPart("#000000", 15),
+                    this.newTunnelPart("#333333", 5),
+                    this.newTunnelPart("clear", 100),
+                    this.newTunnelPart("#333333", 5),
+                    this.newTunnelPart("#000000", 15),
+                    this.newTunnelPart("#333333", 5)
+                ];
                 
                 for(let i = 0; i < newTunnelParts.length; i++)
                 {
@@ -74,7 +94,7 @@ class TheConstruct extends Level
             }
         }
         
-        if(this.framesPassed == secondsToFrames(30))
+        if(this.framesPassed == secondsToFrames(15))
         {
             this.outsideVisible = true;
             this.tunnel.push(this.newTunnelPart("clear"));

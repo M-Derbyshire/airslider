@@ -54,6 +54,8 @@ class GraphicEn{
         
         if(this.lightChanged)
         {
+            this.lightCtx.clearRect(0, 0, this.lightCan.width, this.lightCan.height);
+            
             this.lightCtx.globalAlpha = this.lightLuminosity;
             
             this.lightCtx.drawImage(
