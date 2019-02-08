@@ -58,14 +58,14 @@ class Level
     {
         if(kernel.graphicEn.lightMask != this.tunnelLightMask && 
             this.tunnel.length > 0 && 
-            this.tunnel[0].color != "clear")
+            this.tunnel[Math.floor((this.tunnel.length / 4))].color != "clear")
         {
             kernel.graphicEn.setLightMask(this.tunnelLightMask);
             kernel.graphicEn.setLightLuminosity(this.tunnelLightBrightness);
         }
         
         if(kernel.graphicEn.lightMask != this.outsideLightMask &&
-            (this.tunnel.length == 0 || this.tunnel[0].color == "clear"))
+            (this.tunnel.length == 0 || this.tunnel[Math.floor((this.tunnel.length / 4))].color == "clear"))
         {
             kernel.graphicEn.setLightMask(this.outsideLightMask);
             kernel.graphicEn.setLightLuminosity(this.outsideLightBrightness);
