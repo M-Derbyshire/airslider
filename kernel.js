@@ -99,17 +99,17 @@ class Kernel {
         }
         
         //wil not run if above finds something
-        kernel.assetsStillLoading++;
+        this.assetsStillLoading++;
         this.loadedAssets.push([
             path,
             new Image()
         ]); 
         
-        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].onload = callback;
+        this.loadedAssets[this.loadedAssets.length - 1][1].onload = callback;
         
-        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].src = path;
+        this.loadedAssets[this.loadedAssets.length - 1][1].src = path;
         
-        return kernel.loadedAssets.length - 1;
+        return this.loadedAssets.length - 1;
     }
     
     loadAudio(path, callback = this.defaultAssetCallback)
@@ -121,23 +121,23 @@ class Kernel {
         }
         
         //wil not run if above finds something
-        kernel.assetsStillLoading++;
+        this.assetsStillLoading++;
         this.loadedAssets.push([
             path,
             new Audio()
         ]); 
         
-        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].addEventListener("canplaythrough", callback);
-        kernel.loadedAssets[kernel.loadedAssets.length - 1][1].src = path;
+        this.loadedAssets[this.loadedAssets.length - 1][1].addEventListener("canplaythrough", callback);
+        this.loadedAssets[this.loadedAssets.length - 1][1].src = path;
         
-        return kernel.loadedAssets.length - 1;
+        return this.loadedAssets.length - 1;
     }
     
     checkAssetHeld(path)
     {
-        for(let i = 0; i < kernel.loadedAssets.length; i++)
+        for(let i = 0; i < this.loadedAssets.length; i++)
         {
-            if(kernel.loadedAssets[i][0] == path)
+            if(this.loadedAssets[i][0] == path)
             {
                 return i;
             }
