@@ -57,7 +57,7 @@ class TheConstruct extends Level
             kernel.loadedModels[this.monsterIndex].start();
         }
         
-        if(this.framesPassed == secondsToFrames(30))
+        if(this.framesPassed == minutesToFrames(1))
         {
             kernel.loadedModels[this.monsterIndex].stop();
         }
