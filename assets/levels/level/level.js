@@ -13,6 +13,8 @@ class Level
         
         this.shockerCount;
         
+        this.monsterIndex;
+        
         this.leftEdge;
         this.rightEdge;
         

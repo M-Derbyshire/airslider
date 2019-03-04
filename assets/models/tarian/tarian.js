@@ -63,7 +63,7 @@ class Tarian extends Model {
         this.xSpeed = xSpeed(1000);
         this.zSpeed = 0; //used on failure
         
-        this.registerEvent(["Shocker"], this.zCollisionEvent);
+        this.registerEvent(["Shocker", "NeonPidgeon"], this.zCollisionEvent);
     }
     
     act()

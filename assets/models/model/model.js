@@ -16,6 +16,8 @@ class Model {
         
         this.events = []; //will hold array of events objects
         this.loadedIndex; //will hold current index in kernel.loadedModels
+        
+        this.damageDealt = 0;
     }
     
     //meant to be overridden
@@ -58,11 +60,11 @@ class Model {
             models: kernel.loadedModels.filter((model, index) => {
                 if(relatedModels.includes(model.constructor.name) && index != this.loadedIndex)
                 {
-                    return index;
+                    return true;
                 }
             }),
             check: action
-        }); 
+        });
     }
     
     nextFrame()
