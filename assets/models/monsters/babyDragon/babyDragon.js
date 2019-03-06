@@ -14,15 +14,15 @@ class BabyDragon extends Monster {
                 path: kernel.rootPath + "/assets/models/monsters/babyDragon/anim/left",
                 frameCount: 4,
                 fps: 24,
-                width: xUnit(350),
-                height: yUnit(250)
+                width: xUnit(400),
+                height: yUnit(300)
             }),
             right: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/monsters/babyDragon/anim/right",
                 frameCount: 4,
                 fps: 24,
-                width: xUnit(350),
-                height: yUnit(250)
+                width: xUnit(400),
+                height: yUnit(300)
             })
         };
         
@@ -31,11 +31,14 @@ class BabyDragon extends Monster {
         ];
         
         this.offScreenUnits = 500;
-        this.startY = yUnit(150),
+        this.startY = yUnit(10),
         this.startX = kernel.level.rightEdge + this.offScreenUnits;
         
         this.startZ = kernel.loadedModels[this.playerIndex].z;
-        this.enterXSpeed = xUnit(25);
+        this.enterXSpeed = xUnit(10);
+        
+        //set the z of the lava ball
+        kernel.loadedModels[this.lavaBallIndex].z = this.startZ;
         
         this.reset();
     }
@@ -77,10 +80,44 @@ class BabyDragon extends Monster {
     
     move(monster)
     {
+        monster.x += monster.xSpeed;
         
+        if(monster.x <= kernel.level.leftEdge || (monster.x + monster.anims[monster.state].width >= kernel.level.rightEdge))
+        {
+            monster.xSpeed = -monster.xSpeed;
+            monster.changeState(
+                (monster.state == "left") ? "right" : "left"
+            );
+        }
+        
+        if(!kernel.loadedModels[monster.lavaBallIndex].active)
+        {
+            monster.dropBall(monster);
+        }
+    }
+    
+    //attacks-----------------------------------------------------
+    dropBall(monster)
+    {
+        let l = kernel.loadedModels[monster.lavaBallIndex];
+        
+        //center it
+        let xOffset = -xUnit(65);
+        
+        if(monster.state == "right")
+        {
+            xOffset = -xOffset - xUnit(25);
+        }
+        
+        l.x = monster.x + (monster.anims[monster.state].width / 2) + xOffset;
+        l.y = monster.y + monster.anims[monster.state].height + -yUnit(20);
+        
+        l.changeState("drop");
+        l.active = true;
     }
     
     //events------------------------------------------------------------
     
-    
+    //none for this monster
+    //events are for the lava ball
 }
