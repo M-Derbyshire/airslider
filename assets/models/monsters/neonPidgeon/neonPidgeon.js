@@ -76,7 +76,6 @@ class NeonPidgeon extends Monster {
         {
             this.x -= this.enterXSpeed;
         } else {
-            this.z = kernel.loadedModels[this.playerIndex].z;
             this.entering = false;
             this.lastDrop = kernel.level.framesPassed;
         }
