@@ -59,4 +59,5 @@ class Monster extends Model {
     //meant to be overridden
     enter(){}
     exit(){}
+    reset(){}
 }

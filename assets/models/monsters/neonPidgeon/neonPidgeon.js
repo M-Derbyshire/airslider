@@ -46,29 +46,20 @@ class NeonPidgeon extends Monster {
             this.rise
         ];
         
-        this.enterZSpeed = yUnit(25);
         this.enterXSpeed = xUnit(10);
-        
         this.offScreenUnits = (this.specialLevel) ? xUnit(500) : xUnit(800);
         this.startY = (this.specialLevel) ? yUnit(250) : yUnit(150);
         this.startX = kernel.level.rightEdge + this.offScreenUnits;
         this.startZ = kernel.loadedModels[this.playerIndex].z;
-        
-        this.xSpeed = (this.specialLevel) ? -xUnit(45): -xUnit(40);
         this.ySpeed = yUnit(50);
-        
         this.dropWaitOffset = secondsToFrames(5);
         this.dropWaitRange = secondsToFrames(5);
         this.lastDrop;
-        this.dropWait = -1;
         
-        this.y = this.startY;
-        this.x = this.startX;
-        this.z = this.startZ;
-        this.changeState("flapping");
+        this.reset();
     }
     
-    //entering and exiting-----------------------------------------
+    //entering and exiting and reseting-----------------------------------------
     
     enter()
     {
@@ -99,6 +90,16 @@ class NeonPidgeon extends Monster {
                 this.active = false;
             }
         }
+    }
+    
+    reset()
+    {
+        this.dropWait = -1;
+        this.y = this.startY;
+        this.x = this.startX;
+        this.z = this.startZ;
+        this.xSpeed = (this.specialLevel) ? -xUnit(45): -xUnit(40);
+        this.changeState("flapping");
     }
     
     //movement-----------------------------------------------------

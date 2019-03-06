@@ -35,17 +35,12 @@ class BabyDragon extends Monster {
         this.startX = kernel.level.rightEdge + this.offScreenUnits;
         
         this.startZ = kernel.loadedModels[this.playerIndex].z;
+        this.enterXSpeed = xUnit(25);
         
-        this.xSpeed = -xUnit(30);
-        this.enterXSpeed = -xUnit(25);
-        
-        this.x = this.startX;
-        this.y = this.startY;
-        this.z = this.startZ;
-        this.changeState("left");
+        this.reset();
     }
     
-    //entering and exiting-----------------------------------------
+    //entering and exiting and reseting-----------------------------------------
     
     enter()
     {
@@ -67,6 +62,15 @@ class BabyDragon extends Monster {
             this.exiting = false;
             this.active = false;
         }
+    }
+    
+    reset()
+    {
+        this.xSpeed = -xUnit(30);
+        this.x = this.startX;
+        this.y = this.startY;
+        this.z = this.startZ;
+        this.changeState("left");
     }
     
     //movement-----------------------------------------------------
