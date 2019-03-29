@@ -45,7 +45,7 @@ class Level
         this.rightEdge = kernel.graphicEn.gameCan.width;
         
         zCalc.setVanishPoint(kernel.graphicEn.gameCan.width / 2, kernel.graphicEn.gameCan.height / 2, 1000);
-        this.levelSpeed = zCalc.speed(600);
+        this.levelSpeed = zCalc.speed(600); //need to use this in monsters for death
         
         this.tunnelLightMask = kernel.loadImage(kernel.rootPath + "/assets/levels/level/images/mask.png");
         this.tunnelLightBrightness = 0.25;

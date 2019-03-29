@@ -16,6 +16,8 @@ class Monster extends Model {
         
         this.entering = false;
         this.exiting = false;
+        
+        this.fireWeapon = true;
     }
     
     nextAction()
@@ -42,6 +44,17 @@ class Monster extends Model {
             return;
         }
         
+        if(kernel.level.levelSpeed < this.realZSpeed)
+        {
+            this.z += (this.realZSpeed - kernel.level.levelSpeed);
+            this.fireWeapon = false;
+            
+            if(this.z >= zCalc.vPointDepth)
+            {
+                this.active = false;
+            }
+        }
+        
         this.actions[this.currentAction](kernel.loadedModels[this.loadedIndex]); //run the current action
     }
     
@@ -54,6 +67,12 @@ class Monster extends Model {
     stop()
     {
         this.exiting = true;
+    }
+    
+    loadSuper() //this is overriding the model method (which, as it stands now, is empty)
+    {
+        this.fireWeapon = true;
+        this.realZSpeed = kernel.level.levelSpeed;
     }
     
     //meant to be overridden

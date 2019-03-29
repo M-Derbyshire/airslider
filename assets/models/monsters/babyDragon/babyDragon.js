@@ -90,7 +90,7 @@ class BabyDragon extends Monster {
             );
         }
         
-        if(!kernel.loadedModels[monster.lavaBallIndex].active)
+        if(!kernel.loadedModels[monster.lavaBallIndex].active && monster.fireWeapon)
         {
             monster.dropBall(monster);
         }
