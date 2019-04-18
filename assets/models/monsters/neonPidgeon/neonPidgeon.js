@@ -54,7 +54,6 @@ class NeonPidgeon extends Monster {
         this.ySpeed = yUnit(50);
         this.dropWaitOffset = secondsToFrames(5);
         this.dropWaitRange = secondsToFrames(5);
-        this.lastDrop;
         
         this.reset();
     }
@@ -94,6 +93,7 @@ class NeonPidgeon extends Monster {
     
     reset()
     {
+        this.lastDrop = 0;
         this.dropWait = -1;
         this.y = this.startY;
         this.x = this.startX;
