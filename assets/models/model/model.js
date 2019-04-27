@@ -80,7 +80,6 @@ class Model {
                 this.anims[this.state].currentFrame += Math.floor(this.anims[this.state].fps / kernel.fps);
             } else {
                 this.anims[this.state].currentFrame++;
-                //console.log(this.anims[this.state].currentFrame);
             }
             
             if(this.anims[this.state].currentFrame > this.anims[this.state].frameCount - 1) //if frame is last one
