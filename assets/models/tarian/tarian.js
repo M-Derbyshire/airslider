@@ -9,8 +9,7 @@ class Tarian extends Model {
         
         this.exploding = false;
         this.lost = false;
-        this.flashSpeed = secondsToFrames(0.5);
-        this.lastFlashChange = -this.flashSpeed; //used in the flashing
+        this.lastFlashChange = 0; //used in the flashing
     }
     
     load()
@@ -60,7 +59,7 @@ class Tarian extends Model {
         this.z = 20;
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
-        this.xSpeedRaw = 1000;
+        this.xSpeed = 1000;
         this.zSpeed = 0; //used on failure
         
         this.registerEvent([
@@ -72,15 +71,13 @@ class Tarian extends Model {
     
     act()
     {
-        this.xSpeed = this.xSpeedRaw;
-        
         switch(this.state)
         {
             case "right":
-                this.x += xSpeed(this.xSpeedRaw);
+                this.moveRight(this.xSpeed);
                 break;
             case "left":
-                this.x -= xSpeed(this.xSpeedRaw);
+                this.moveLeft(this.xSpeed);
                 break;
         }
         
@@ -110,8 +107,8 @@ class Tarian extends Model {
         if(this.state == "lost" && this.z >= 0)
         {
             this.state = "lost";
-            this.zSpeed -= zCalc.speed(15);
-            this.z += this.zSpeed;
+            this.zSpeed -= 15;
+            this.moveOut(-this.zSpeed);
         }
         
         //if Tarian is offscreen after loss
@@ -166,9 +163,12 @@ class Tarian extends Model {
     
     flash()
     {
+        this.flashSpeed = secondsToFrames(0.05);
+        
         if(this.lastFlashChange + this.flashSpeed <= kernel.level.framesPassed)
         {
             this.display = !this.display;
+            this.lastFlashChange = kernel.level.framesPassed;
         }
     }
 }
