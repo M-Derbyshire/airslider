@@ -44,9 +44,9 @@ class Monster extends Model {
             return;
         }
         
-        if(kernel.level.levelSpeed < this.realZSpeed)
+        if(kernel.level.levelSpeedRaw < this.realZSpeedRaw)
         {
-            this.z += (this.realZSpeed - kernel.level.levelSpeed);
+            this.z += (zCalc.speed(this.realZSpeed) - zCalc.speed(kernel.level.levelSpeed));
             this.fireWeapon = false;
             
             if(this.z >= zCalc.vPointDepth)
@@ -72,7 +72,7 @@ class Monster extends Model {
     loadSuper() //this is overriding the model method (which, as it stands now, is empty)
     {
         this.fireWeapon = true;
-        this.realZSpeed = kernel.level.levelSpeed;
+        this.realZSpeedRaw = kernel.level.levelSpeedRaw;
     }
     
     //meant to be overridden

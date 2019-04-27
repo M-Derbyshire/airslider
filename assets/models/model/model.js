@@ -38,7 +38,7 @@ class Model {
             frames: [],
             fps: fps,
             waitCount: 0, //used when waiting to move to next frame
-            nextCount: (kernel.fps / fps), //when to move to the next frame (done so anim and game can have different fps)
+            nextCount: 0, //when to move to the next frame (done so anim and game can have different fps. this is set on every new frame)
             currentFrame: 0,
             height: height,
             width: width,
@@ -70,6 +70,8 @@ class Model {
     
     nextFrame()
     {
+        this.anims[this.state].nextCount = (kernel.fps / this.anims[this.state].fps);
+        
         //change the frame to the next one
         if(this.anims[this.state].waitCount >= this.anims[this.state].nextCount)
         {

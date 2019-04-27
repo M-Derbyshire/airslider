@@ -45,7 +45,8 @@ class Level
         this.rightEdge = kernel.graphicEn.gameCan.width;
         
         zCalc.setVanishPoint(kernel.graphicEn.gameCan.width / 2, kernel.graphicEn.gameCan.height / 2, 1000);
-        this.levelSpeed = zCalc.speed(600); //need to use this in monsters for death
+        this.levelSpeedRaw = 600; //Can be used if you need to check for a change in level speed, or to change it
+        this.updateLevelSpeed();
         
         this.tunnelLightMask = kernel.loadImage(kernel.rootPath + "/assets/levels/level/images/mask.png");
         this.tunnelLightBrightness = 0.25;
@@ -55,6 +56,14 @@ class Level
     getModels(){}
     load(){}
     act(){}
+    
+    updateLevelSpeed()
+    {
+        if(this.levelSpeed != 0)
+        {
+            this.levelSpeed = zCalc.speed(this.levelSpeedRaw); //need to use this in monsters for death
+        }
+    }
     
     checkLightMask()
     {
@@ -114,7 +123,7 @@ class Level
     
     levelStop()
     {
-        this.levelSpeed = 0;
+        this.levelSpeedRaw = 0;
         
         for(let i = 0; i < kernel.loadedModels.length; i++)
         {

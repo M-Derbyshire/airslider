@@ -48,6 +48,7 @@ class TheConstruct extends Level
     
     act()
     {
+        this.updateLevelSpeed(); //keeps level speed consistent via fps
         this.framesPassed++;
         
         //if outside/inside changes, change light mask

@@ -60,7 +60,7 @@ class Tarian extends Model {
         this.z = 20;
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
-        this.xSpeed = xSpeed(1000);
+        this.xSpeedRaw = 1000;
         this.zSpeed = 0; //used on failure
         
         this.registerEvent([
@@ -72,13 +72,15 @@ class Tarian extends Model {
     
     act()
     {
+        this.xSpeed = this.xSpeedRaw;
+        
         switch(this.state)
         {
             case "right":
-                this.x += this.xSpeed;
+                this.x += xSpeed(this.xSpeedRaw);
                 break;
             case "left":
-                this.x -= this.xSpeed;
+                this.x -= xSpeed(this.xSpeedRaw);
                 break;
         }
         
@@ -107,7 +109,8 @@ class Tarian extends Model {
         //this will run if Tarian is onscreen, but defeated
         if(this.state == "lost" && this.z >= 0)
         {
-            this.zSpeed -= 0.5;
+            this.state = "lost";
+            this.zSpeed -= zCalc.speed(15);
             this.z += this.zSpeed;
         }
         
