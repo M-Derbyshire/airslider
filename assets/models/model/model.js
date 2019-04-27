@@ -36,6 +36,7 @@ class Model {
             path: path,
             frameCount: frameCount,
             frames: [],
+            fps: fps,
             waitCount: 0, //used when waiting to move to next frame
             nextCount: (kernel.fps / fps), //when to move to the next frame (done so anim and game can have different fps)
             currentFrame: 0,
@@ -69,25 +70,30 @@ class Model {
     
     nextFrame()
     {
-        let frame = this.anims[this.state].frames[this.anims[this.state].currentFrame];
         //change the frame to the next one
         if(this.anims[this.state].waitCount >= this.anims[this.state].nextCount)
         {
-            if(this.anims[this.state].currentFrame == this.anims[this.state].frameCount - 1) //if frame is last one
+            if(this.anims[this.state].fps > kernel.fps)
+            {
+                this.anims[this.state].currentFrame += Math.floor(this.anims[this.state].fps / kernel.fps);
+            } else {
+                this.anims[this.state].currentFrame++;
+                //console.log(this.anims[this.state].currentFrame);
+            }
+            
+            if(this.anims[this.state].currentFrame > this.anims[this.state].frameCount - 1) //if frame is last one
             {
                 this.anims[this.state].currentFrame = 0;
                 if(this.anims[this.state].nextAnim != "") //change the state if this shouldn't be looped
                 {
                     this.changeState(this.anims[this.state].nextAnim);
                 }
-            } else {
-                this.anims[this.state].currentFrame++;
             }
             this.anims[this.state].waitCount = 0;
         }
         this.anims[this.state].waitCount++;
         
-        return frame;
+        return this.anims[this.state].frames[this.anims[this.state].currentFrame];
     }
     
     draw()

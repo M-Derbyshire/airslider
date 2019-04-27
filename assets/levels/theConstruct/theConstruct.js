@@ -20,7 +20,8 @@ class TheConstruct extends Level
         controlConstructor.touchControls(0);
         this.HUD.modelIndexes.push(0);
         
-        models.push(new Falcon(0));
+        models.push(new NeonPidgeon(0));
+        //models.push(new Falcon(0));
         this.monsterIndex = 1;
         
         return models;
