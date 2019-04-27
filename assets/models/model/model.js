@@ -130,4 +130,34 @@ class Model {
             this.extraEvents();
         }
     }
+    
+    moveLeft(speed)
+    {
+        this.x -= xSpeed(speed);
+    }
+    
+    moveRight(speed)
+    {
+        this.x += xSpeed(speed);
+    }
+    
+    moveUp(speed)
+    {
+        this.y -= ySpeed(speed);
+    }
+    
+    moveRight(speed)
+    {
+        this.y += ySpeed(speed);
+    }
+    
+    moveIn(speed)
+    {
+        this.z += zCalc.speed(speed);
+    }
+    
+    moveOut(speed)
+    {
+        this.z -= zCalc.speed(speed);
+    }
 }
