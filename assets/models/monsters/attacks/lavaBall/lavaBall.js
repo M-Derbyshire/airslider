@@ -42,7 +42,7 @@ class LavaBall extends Model {
         this.state = "drop";
         this.registerEvent(["Tarian"], this.hitPlayerEvent);
         
-        this.ySpeed = yUnit(90);
+        this.ySpeed = ySpeed(2160);
     }
     
     act()

@@ -46,12 +46,12 @@ class NeonPidgeon extends Monster {
             this.rise
         ];
         
-        this.enterXSpeed = xUnit(10);
+        this.enterXSpeed = xSpeed(240);
         this.offScreenUnits = (this.specialLevel) ? xUnit(500) : xUnit(800);
         this.startY = (this.specialLevel) ? yUnit(250) : yUnit(150);
         this.startX = kernel.level.rightEdge + this.offScreenUnits;
         this.startZ = kernel.loadedModels[this.playerIndex].z;
-        this.ySpeed = yUnit(50);
+        this.ySpeed = ySpeed(1200);
         this.dropWaitOffset = secondsToFrames(5);
         this.dropWaitRange = secondsToFrames(5);
         
@@ -98,7 +98,7 @@ class NeonPidgeon extends Monster {
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
-        this.xSpeed = (this.specialLevel) ? -xUnit(45): -xUnit(40);
+        this.xSpeed = (this.specialLevel) ? -xSpeed(1080): -xSpeed(960);
         this.changeState("flapping");
     }
     
