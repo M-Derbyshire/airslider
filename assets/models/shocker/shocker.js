@@ -9,7 +9,7 @@ class Shocker extends Model
         this.mode = mode;
         this.state = "shock";
         this.active = false;
-        this.xSpeedRaw = speedX; //this will be fed through xSpeed() in load()
+        this.xSpeed = speedX; //this will be fed through xSpeed()
         this.homingTargetIndex = playerIndex;
         
         //set the damage this shocker will deal
@@ -50,7 +50,7 @@ class Shocker extends Model
         if(this.mode == "sweep")
         {
             //make shocker sweep either left or right
-            this.xSpeed = (((Math.floor(Math.random() * 2)) * 2) - 1) * xSpeed(this.xSpeedRaw);
+            this.xSpeed = (((Math.floor(Math.random() * 2)) * 2) - 1) * this.xSpeed;
         }
     }
     
@@ -61,17 +61,17 @@ class Shocker extends Model
         if(this.mode == "home")
         {
             this.zSpeed = (this.zSpeed / 4) * 3;
-            this.homingSpeed = 100 / xSpeed(this.xSpeedRaw);
+            this.homingSpeed = 100 / this.xSpeed;
             this.xSpeed = 0;
             
             //sweep towards the player
             this.xSpeed = 
-            xSpeed(((kernel.loadedModels[this.homingTargetIndex].x + (kernel.loadedModels[this.homingTargetIndex].anims[kernel.loadedModels[this.homingTargetIndex].state].width / 2)) - 
-            (this.x + (this.anims[this.state].width / 2))) / this.homingSpeed);
+            ((kernel.loadedModels[this.homingTargetIndex].x + (kernel.loadedModels[this.homingTargetIndex].anims[kernel.loadedModels[this.homingTargetIndex].state].width / 2)) - 
+            (this.x + (this.anims[this.state].width / 2))) / this.homingSpeed;
         }
         
-        this.z -= this.zSpeed;
-        this.x += this.xSpeed;
+        this.moveOut(this.zSpeed);
+        this.x += xSpeed(this.xSpeed);
         
         if(this.z < 0)
         {
@@ -84,8 +84,8 @@ class Shocker extends Model
         //check for leaving the game area
         if((this.x < kernel.level.leftEdge) || (this.x + this.anims[this.state].width > kernel.level.rightEdge))
         {
-            this.xSpeed = -xSpeed(this.xSpeedRaw);
-            this.x += this.xSpeed;
+            this.xSpeed = -this.xSpeed;
+            this.x += xSpeed(this.xSpeed);
         }
     }
     
