@@ -146,7 +146,7 @@ class Model {
         this.y -= ySpeed(speed);
     }
     
-    moveRight(speed)
+    moveDown(speed)
     {
         this.y += ySpeed(speed);
     }
