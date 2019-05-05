@@ -35,7 +35,7 @@ class BabyDragon extends Monster {
         this.startX = kernel.level.rightEdge + this.offScreenUnits;
         
         this.startZ = kernel.loadedModels[this.playerIndex].z;
-        this.enterXSpeed = xSpeed(240);
+        this.enterXSpeed = 240;
         
         //set the z of the lava ball
         kernel.loadedModels[this.lavaBallIndex].z = this.startZ;
@@ -49,7 +49,7 @@ class BabyDragon extends Monster {
     {
         if(kernel.level.rightEdge < (this.x + this.anims[this.state].width))
         {
-            this.x -= this.enterXSpeed;
+            this.moveLeft(this.enterXSpeed);
         } else {
             this.entering = false;
         }
@@ -58,7 +58,7 @@ class BabyDragon extends Monster {
     exit()
     {
         this.changeState("left");
-        this.x -= this.enterXSpeed;
+        this.moveLeft(this.enterXSpeed);
         
         if((this.x + this.anims[this.state].width) < (kernel.level.leftEdge - this.offScreenUnits))
         {
@@ -69,7 +69,7 @@ class BabyDragon extends Monster {
     
     reset()
     {
-        this.xSpeed = -xSpeed(720);
+        this.xSpeed = -720;
         this.x = this.startX;
         this.y = this.startY;
         this.z = this.startZ;
@@ -80,7 +80,7 @@ class BabyDragon extends Monster {
     
     move(monster)
     {
-        monster.x += monster.xSpeed;
+        monster.x += xSpeed(monster.xSpeed);
         
         if(monster.x + (monster.anims[monster.state].width / 2) <= kernel.level.leftEdge || (monster.x + (monster.anims[monster.state].width / 2) >= kernel.level.rightEdge))
         {

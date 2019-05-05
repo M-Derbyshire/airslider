@@ -42,14 +42,14 @@ class LavaBall extends Model {
         this.state = "drop";
         this.registerEvent(["Tarian"], this.hitPlayerEvent);
         
-        this.ySpeed = ySpeed(2160);
+        this.ySpeed = 2160;
     }
     
     act()
     {
         if(this.state == "drop")
         {
-            this.y += this.ySpeed;
+            this.moveDown(this.ySpeed);
         }
         
         if(this.y + this.anims[this.state].height >= kernel.graphicEn.gameCan.height && this.state == "drop")

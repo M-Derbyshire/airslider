@@ -46,12 +46,12 @@ class NeonPidgeon extends Monster {
             this.rise
         ];
         
-        this.enterXSpeed = xSpeed(240);
+        this.enterXSpeed = 240;
         this.offScreenUnits = (this.specialLevel) ? xUnit(500) : xUnit(800);
         this.startY = (this.specialLevel) ? yUnit(250) : yUnit(150);
         this.startX = kernel.level.rightEdge + this.offScreenUnits;
         this.startZ = kernel.loadedModels[this.playerIndex].z;
-        this.ySpeed = ySpeed(1200);
+        this.ySpeed = 1200;
         this.dropWaitOffset = secondsToFrames(5);
         this.dropWaitRange = secondsToFrames(5);
         
@@ -64,7 +64,7 @@ class NeonPidgeon extends Monster {
     {
         if(kernel.level.rightEdge < (this.x + this.anims[this.state].width))
         {
-            this.x -= this.enterXSpeed;
+            this.moveLeft(this.enterXSpeed);
         } else {
             this.entering = false;
             this.lastDrop = kernel.level.framesPassed;
@@ -81,7 +81,7 @@ class NeonPidgeon extends Monster {
         } else {
             this.changeState("flapping");
         
-            this.x -= this.enterXSpeed;
+            this.moveLeft(this.enterXSpeed);
             
             if((this.x + this.anims[this.state].width) < (kernel.level.leftEdge - this.offScreenUnits))
             {
@@ -98,7 +98,7 @@ class NeonPidgeon extends Monster {
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
-        this.xSpeed = (this.specialLevel) ? -xSpeed(1080): -xSpeed(960);
+        this.xSpeed = (this.specialLevel) ? -1080 : -960;
         this.changeState("flapping");
     }
     
@@ -106,7 +106,7 @@ class NeonPidgeon extends Monster {
     
     moveSideways(monster)
     {
-        monster.x += monster.xSpeed;
+        monster.x += xSpeed(monster.xSpeed);
         
         if(monster.x <= kernel.level.leftEdge || (monster.x + monster.anims[monster.state].width >= kernel.level.rightEdge))
         {
@@ -132,12 +132,12 @@ class NeonPidgeon extends Monster {
     
     drop(monster)
     {
-        monster.y += monster.ySpeed;
+        monster.moveDown(monster.ySpeed);
     }
     
     rise(monster)
     {
-        monster.y -= monster.ySpeed;
+        monster.moveUp(monster.ySpeed);
         
         if(monster.y <= monster.startY)
         {

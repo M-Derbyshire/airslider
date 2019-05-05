@@ -22,6 +22,8 @@ class TheConstruct extends Level
         
         models.push(new NeonPidgeon(0));
         //models.push(new Falcon(0));
+        //models.push(new LavaBall());
+        //models.push(new BabyDragon(0, 1));
         this.monsterIndex = 1;
         
         return models;
