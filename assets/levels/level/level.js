@@ -170,7 +170,7 @@ class Level
                 this.ground.offset = 0;
             }
             
-            this.ground.offset += (this.levelSpeed / 100);
+            this.ground.offset += (this.levelSpeed / 1000);
             
             let y = zCalc.y(kernel.graphicEn.backCan.height, this.groundZ[i] - this.ground.offset);
             let width = zCalc.width((kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset);
