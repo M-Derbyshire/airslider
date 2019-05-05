@@ -46,6 +46,11 @@ class TheConstruct extends Level
         
         kernel.graphicEn.setLightMask(this.outsideLightMask);
         kernel.graphicEn.setLightLuminosity(this.outsideLightBrightness);
+        
+        this.createStartingTunnel([
+            this.newTunnelPart("#ff0000", 100),
+            this.newTunnelPart("#000000", 10)
+        ]);
     }
     
     act()
@@ -55,6 +60,12 @@ class TheConstruct extends Level
         
         //if outside/inside changes, change light mask
         this.checkLightMask();
+        
+        //tunnel stuff
+        this.continueTunnel([
+            this.newTunnelPart("#ff0000", 100),
+            this.newTunnelPart("#000000", 10)
+        ]);
         
         if(this.framesPassed == secondsToFrames(2))
         {
