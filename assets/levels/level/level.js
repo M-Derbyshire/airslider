@@ -268,6 +268,18 @@ class Level
         }
     }
     
+    
+    continueTunnel(newTunnelParts)
+    {
+        if(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].active)
+        {
+            for(let i = 0; i < newTunnelParts.length; i++)
+            {
+                this.tunnel.push(newTunnelParts[i]);
+            }
+        }
+    }
+    
     //tunnel[i].z - .length - .color - .active
     newTunnelPart(col, len = 1)
     {
