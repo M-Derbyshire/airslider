@@ -70,7 +70,7 @@ class Model {
     
     nextFrame()
     {
-        this.anims[this.state].nextCount = kernel.fps / this.anims[this.state].fps;
+        this.anims[this.state].nextCount = Math.floor(kernel.fps / this.anims[this.state].fps);
         
         //change the frame to the next one
         if(this.anims[this.state].waitCount >= this.anims[this.state].nextCount)
