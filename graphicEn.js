@@ -112,6 +112,9 @@ class GraphicEn{
     
     fpsMeter()
     {
+        this.infoCtx.clearRect(0, 0, this.infoCan.width, this.infoCan.height);
+        kernel.level.HUD.draw();
+        
         let fontSize = 30
         this.infoCtx.font = fontSize + "px Arial";
         this.infoCtx.fillStyle = "blue";
