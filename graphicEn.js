@@ -68,6 +68,8 @@ class GraphicEn{
             
             this.lightChanged = false;
         }
+        
+        this.fpsMeter();
     }
     
     setStaticBackground(input, useColor = false)
@@ -106,5 +108,13 @@ class GraphicEn{
     {
         this.lightMask = ref;
         this.lightChanged = true;
+    }
+    
+    fpsMeter()
+    {
+        let fontSize = 30
+        this.infoCtx.font = fontSize + "px Arial";
+        this.infoCtx.fillStyle = "blue";
+        this.infoCtx.fillText("FPS: " + kernel.fps, xUnit(10), yUnit(10) + fontSize);
     }
 }
