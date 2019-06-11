@@ -2,10 +2,13 @@ class Kernel {
     constructor()
     {
         this.fps = 24;
-        this.loadedModels = []; //will hold all models loaded during loading
+        this.fpsLimit = 24;
+        this.lastTime = new Date();
+        
         let filePath = window.location.pathname;
         this.rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
-        this.lastTime = new Date();
+        
+        this.loadedModels = []; //will hold all models loaded during loading
         this.assetsStillLoading = 0; //increased when asset starts loading, decrease when done
         this.loadedAssets = [];
     }
@@ -45,12 +48,17 @@ class Kernel {
         requestAnimationFrame(this.run.bind(this));
         
         //don't run unless it's time for next frame
+        //!!!!!!!!!!!!!! This was supposed to be a test, but it shows fps as less than fpsLimit (old way did this too)
         let dt = new Date();
-        if((dt.getTime() - this.lastTime.getTime()) < (1000 / this.fps) || this.assetsStillLoading > 0)
+    
+        if((dt.getTime() - this.lastTime.getTime()) < (1000 / this.fpsLimit))
         {
             return;
         }
-        this.lastTime = new Date();
+        
+        this.fps = 1000 / (dt.getTime() - this.lastTime.getTime());
+        
+        this.lastTime = dt;
         
         this.gameEn.run();
         this.graphicEn.run();
