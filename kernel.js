@@ -2,7 +2,7 @@ class Kernel {
     constructor()
     {
         this.fps = 24;
-        this.fpsLimit = 24;
+        this.fpsLimit = 120;
         this.lastTime = new Date();
         
         let filePath = window.location.pathname;
