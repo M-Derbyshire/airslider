@@ -3,7 +3,9 @@ class Kernel {
     {
         this.fps = 24;
         this.fpsLimit = 120;
-        this.lastTime = new Date();
+        this.lastTime = new Date(); //used when calculating fps and enforcing fps limit
+        this.startTime = new Date(); //this shouldn't be changed now
+        this.totalTime;
         
         let filePath = window.location.pathname;
         this.rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -47,10 +49,10 @@ class Kernel {
     {
         requestAnimationFrame(this.run.bind(this));
         
+        this.updateTotalTime();
+        
         //don't run unless it's time for next frame
-        //!!!!!!!!!!!!!! This was supposed to be a test, but it shows fps as less than fpsLimit (old way did this too)
         let dt = new Date();
-    
         if((dt.getTime() - this.lastTime.getTime()) < (1000 / this.fpsLimit))
         {
             return;
@@ -63,6 +65,12 @@ class Kernel {
         this.gameEn.run();
         this.graphicEn.run();
         this.soundEn.run();
+    }
+    
+    updateTotalTime()
+    {
+        let dt = new Date()
+        this.totalTime = dt.getTime() - this.startTime.getTime();
     }
     
     setCanvasSize(canvases = document.getElementsByTagName("canvas"))
