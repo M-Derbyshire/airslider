@@ -1,6 +1,6 @@
 function secondsToFrames(seconds)
 {
-    return seconds * kernel.fps;
+    return Math.floor(seconds * kernel.fps);
 }
 
 function minutesToFrames(minutes)
