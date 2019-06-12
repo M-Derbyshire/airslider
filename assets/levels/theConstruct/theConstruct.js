@@ -67,13 +67,12 @@ class TheConstruct extends Level
         //     this.newTunnelPart("#000000", 10)
         // ]);
         
-        //this is sometimes stopping monster from starting!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if(this.framesPassed >= secondsToFrames(2) && this.framesPassed <= secondsToFrames(3) && !kernel.loadedModels[this.monsterIndex].entering)
         {
             kernel.loadedModels[this.monsterIndex].start(); 
         }
         
-        if(this.framesPassed == minutesToFrames(1))
+        if(this.framesPassed >= minutesToFrames(1) && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
         {
             kernel.loadedModels[this.monsterIndex].stop();
         }
