@@ -46,7 +46,7 @@ class Monster extends Model {
         
         if(kernel.level.levelSpeedRaw < this.realZSpeedRaw)
         {
-            this.z += (zCalc.speed(this.realZSpeed) - zCalc.speed(kernel.level.levelSpeed));
+            this.z += (zCalc.speed(this.realZSpeedRaw) - zCalc.speed(kernel.level.levelSpeed));
             this.fireWeapon = false;
             
             if(this.z >= zCalc.vPointDepth)
