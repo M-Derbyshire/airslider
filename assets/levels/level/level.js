@@ -36,7 +36,7 @@ class Level
         this.tunnelLightBrightness;
         this.outsideLightMask;
         this.outsideLightBrightness;
-        this.lightChanged = true;
+        this.lightChanged = false;
     }
     
     //set things that can only be done after the engines are constructed
