@@ -88,6 +88,10 @@ class BabyDragon extends Monster {
             monster.changeState(
                 (monster.state == "left") ? "right" : "left"
             );
+            
+            monster.x = (monster.xSpeed > 0) ? 
+                ((kernel.level.leftEdge - (monster.anims[monster.state].width / 2)) + 1) :
+                ((kernel.level.rightEdge - (monster.anims[monster.state].width / 2)) - 1);
         }
         
         if(!kernel.loadedModels[monster.lavaBallIndex].active && monster.fireWeapon)

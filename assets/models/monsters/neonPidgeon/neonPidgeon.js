@@ -108,9 +108,13 @@ class NeonPidgeon extends Monster {
     {
         monster.x += xSpeed(monster.xSpeed);
         
-        if(monster.x <= kernel.level.leftEdge || (monster.x + monster.anims[monster.state].width >= kernel.level.rightEdge))
+        if(monster.x <= kernel.level.leftEdge || monster.x + monster.anims[monster.state].width >= kernel.level.rightEdge)
         {
             monster.xSpeed = -monster.xSpeed;
+            
+            monster.x = (monster.xSpeed > 0) ? 
+                (kernel.level.leftEdge + 1) :
+                ((kernel.level.rightEdge - monster.anims[monster.state].width) - 1);
         }
         
         if(monster.dropWait == -1)
