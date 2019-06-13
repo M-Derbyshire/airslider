@@ -19,7 +19,6 @@ class GraphicEn{
         this.menuCan = document.getElementById("menuCan");
         this.menuCtx = this.menuCan.getContext("2d");
         
-        this.lightChanged = false;
         this.lightLuminosity = 0;
         this.lightMask;
     }
