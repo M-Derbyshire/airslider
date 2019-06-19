@@ -21,6 +21,7 @@ class GraphicEn{
         
         this.lightLuminosity = 0;
         this.lightMask;
+        this.lightChanged = false;
     }
     
     run()
