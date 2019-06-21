@@ -53,7 +53,7 @@ class Kernel {
         
         //don't run unless it's time for next frame
         let dt = new Date();
-        if((dt.getTime() - this.lastTime.getTime()) < (1000 / this.fpsLimit))
+        if((dt.getTime() - this.lastTime.getTime()) < (1000 / this.fpsLimit) || this.assetsStillLoading > 0)
         {
             return;
         }
