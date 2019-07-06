@@ -6,12 +6,17 @@ class DamageFlash extends HUDComponent
         
         this.images;
         this.opacity = 0;
-        this.flashSpeed = 6 / kernel.fps;
+        this.flashSpeed = 0.1; //this will be changed when drawing it to match fps
+        this.flashSpeedDivider = 4; //change this to change flash speed
         this.color;
     }
     
     draw()
     {
+        this.flashSpeed = (this.flashSpeed >= 0) ? 
+            (this.flashSpeedDivider / kernel.fps) : 
+            -(this.flashSpeedDivider / kernel.fps);
+        
         if(this.opacity >= 1)
         {
             this.opacity = 1;
