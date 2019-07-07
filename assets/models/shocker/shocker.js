@@ -1,6 +1,6 @@
 class Shocker extends Model
 {
-    constructor(color, mode, speedX, playerIndex = 0)
+    constructor(color, mode, speedX = 0, playerIndex = 0)
     {
         super(Model);
         
@@ -41,11 +41,6 @@ class Shocker extends Model
         
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
         this.z = zCalc.vPointDepth;
-        
-        if(this.mode = "static")
-        {
-            this.xSpeed = 0;
-        }
         
         if(this.mode == "sweep")
         {
