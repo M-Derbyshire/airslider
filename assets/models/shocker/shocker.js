@@ -57,7 +57,7 @@ class Shocker extends Model
     {
         if(kernel.level.levelSpeed == 0) //updates zSpeed
         {
-            this.zSpeed = zCalc.speed(kernel.level.initialLevelSpeedRaw) / 4;
+            this.zSpeed = -(zCalc.speed(kernel.level.initialLevelSpeedRaw) / 2);
         } else {
             this.zSpeed = kernel.level.levelSpeed / 2;
         }
@@ -91,10 +91,5 @@ class Shocker extends Model
             this.xSpeed = -this.xSpeed;
             this.x += xSpeed(this.xSpeed);
         }
-    }
-    
-    levelStopped()
-    {
-        this.zSpeed = -this.zSpeed;
     }
 }
