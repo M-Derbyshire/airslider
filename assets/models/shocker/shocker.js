@@ -24,17 +24,21 @@ class Shocker extends Model
             case "red":
                 this.damageDealt = 10;
                 break;
+            case "purple":
+                this.damageDealt = 2;
         }
     }
     
     load()
     {
+        let width = (this.color == "purple") ? xUnit(300) : xUnit(100);
+        
         this.anims = {
             shock: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/shocker/anim/" + this.color,
                 frameCount: 3,
                 fps: 24,
-                width: xUnit(100),
+                width: width,
                 height: yUnit(340),
             })
         };
