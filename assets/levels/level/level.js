@@ -37,6 +37,10 @@ class Level
         this.outsideLightMask;
         this.outsideLightBrightness;
         this.lightChanged = false;
+        
+        this.levelSpeed;
+        this.levelSpeedRaw;
+        this.initialLevelSpeedRaw;
     }
     
     //set things that can only be done after the engines are constructed
@@ -46,10 +50,12 @@ class Level
         this.rightEdge = kernel.graphicEn.gameCan.width;
         
         zCalc.setVanishPoint(kernel.graphicEn.gameCan.width / 2, kernel.graphicEn.gameCan.height / 2, 1000);
-        this.levelSpeedRaw = 600; //Can be used if you need to check for a change in level speed, or to change it
+        
+        this.initialLevelSpeedRaw = 600;
+        this.levelSpeedRaw = this.initialLevelSpeedRaw; //Can be used if you need to check for a change in level speed, or to change it
         this.updateLevelSpeed();
         
-        this.tunnelLightMask = kernel.loadImage(kernel.rootPath + "/assets/levels/level/images/mask.png");
+        this.tunnelLightMask = kernel.loadImage(kernel.rootPath + "/assets/levels/level/images/tunnelLightMask.png");
         this.tunnelLightBrightness = 0.25;
     }
     

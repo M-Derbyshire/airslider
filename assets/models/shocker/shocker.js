@@ -51,7 +51,12 @@ class Shocker extends Model
     
     act()
     {
-        this.zSpeed = kernel.level.levelSpeed / 2; //updates zSpeed
+        if(kernel.level.levelSpeed == 0) //updates zSpeed
+        {
+            this.zSpeed = zCalc.speed(kernel.level.initialLevelSpeedRaw) / 4;
+        } else {
+            this.zSpeed = kernel.level.levelSpeed / 2;
+        }
         
         if(this.mode == "home")
         {
@@ -65,7 +70,7 @@ class Shocker extends Model
             (this.x + (this.anims[this.state].width / 2))) / this.homingSpeed;
         }
         
-        this.moveOut(this.zSpeed);
+        this.z -= this.zSpeed; //not using this.moveOut(), as the levelspeed is being reset based on fps -- thus this is as well
         this.x += xSpeed(this.xSpeed);
         
         if(this.z < 0)
