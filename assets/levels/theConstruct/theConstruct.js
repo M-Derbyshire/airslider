@@ -4,7 +4,7 @@ class TheConstruct extends Level
     {
         super(Level);
         
-        this.shockerCount = 7;
+        this.shockerCount = 7; //this is actually required, as you can change it to change difficulty during the level
         this.shockerIndexes = {
             from: 1,
             to: 7
