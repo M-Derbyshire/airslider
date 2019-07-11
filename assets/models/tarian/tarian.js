@@ -10,6 +10,7 @@ class Tarian extends Model {
         this.exploding = false;
         this.lost = false;
         this.lastFlashChange = 0; //used in the flashing
+        this.flashSpeed = 50;
     }
     
     load()
@@ -163,12 +164,10 @@ class Tarian extends Model {
     
     flash()
     {
-        this.flashSpeed = secondsToFrames(0.05);
-        
-        if(this.lastFlashChange + this.flashSpeed <= kernel.level.framesPassed)
+        if(this.lastFlashChange == 0 || this.lastFlashChange + this.flashSpeed < getTotalMilliseconds())
         {
             this.display = !this.display;
-            this.lastFlashChange = kernel.level.framesPassed;
+            this.lastFlashChange = getTotalMilliseconds();
         }
     }
 }
