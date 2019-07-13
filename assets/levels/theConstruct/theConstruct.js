@@ -6,8 +6,8 @@ class TheConstruct extends Level
         
         this.shockerCount = 7; //this is actually required, as you can change it to change difficulty during the level
         this.shockerIndexes = {
-            from: 1,
-            to: 7
+            from: 3,
+            to: 8
         };
     }
     
@@ -22,13 +22,13 @@ class TheConstruct extends Level
         
         //models.push(new NeonPidgeon(0));
         //models.push(new Falcon(0));
-        //models.push(new LavaBall());
-        //models.push(new BabyDragon(0, 1));
-        //this.monsterIndex = 1;
+        models.push(new LavaBall());
+        models.push(new BabyDragon(0, 1));
+        this.monsterIndex = 2;
         
         for(let i = this.shockerIndexes.from; i <= this.shockerIndexes.to; i++)
         {
-            models.push(new Shocker("purple", "static"));
+            models.push(new Shocker("yellow", "static"));
         }
         
         return models;
@@ -54,7 +54,7 @@ class TheConstruct extends Level
         kernel.graphicEn.setLightLuminosity(this.tunnelLightBrightness);
         
         this.createStartingTunnel([
-            this.newTunnelPart("#ff0000", 80),
+            this.newTunnelPart("#0000ff", 80),
             this.newTunnelPart("#000000", 20)
         ]);
     }
@@ -69,20 +69,20 @@ class TheConstruct extends Level
         
         //tunnel stuff
         this.continueTunnel([
-            this.newTunnelPart("#ff0000", 80),
+            this.newTunnelPart("#0000ff", 80),
             this.newTunnelPart("#000000", 20)
         ]);
         
         this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
         
-        // if(getTotalSeconds() >= 2 && getTotalSeconds() <= 3 && !kernel.loadedModels[this.monsterIndex].entering)
-        // {
-        //     kernel.loadedModels[this.monsterIndex].start(); 
-        // }
+        if(getTotalSeconds() >= 2 && getTotalSeconds() <= 3 && !kernel.loadedModels[this.monsterIndex].entering)
+        {
+            kernel.loadedModels[this.monsterIndex].start(); 
+        }
         
-        // if(getTotalSeconds() >= 60 && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
-        // {
-        //     kernel.loadedModels[this.monsterIndex].stop();
-        // }
+        if(getTotalSeconds() >= 60 && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
+        {
+            kernel.loadedModels[this.monsterIndex].stop();
+        }
     }
 }

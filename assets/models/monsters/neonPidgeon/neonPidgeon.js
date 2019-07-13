@@ -46,7 +46,7 @@ class NeonPidgeon extends Monster {
             this.rise
         ];
         
-        this.enterXSpeed = 240;
+        this.enterXSpeed = 90;
         this.offScreenUnits = (this.specialLevel) ? xUnit(500) : xUnit(800);
         this.startY = (this.specialLevel) ? yUnit(250) : yUnit(150);
         this.startX = kernel.level.rightEdge + this.offScreenUnits;

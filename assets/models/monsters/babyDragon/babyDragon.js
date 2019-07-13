@@ -35,7 +35,7 @@ class BabyDragon extends Monster {
         this.startX = kernel.level.rightEdge + this.offScreenUnits;
         
         this.startZ = kernel.loadedModels[this.playerIndex].z;
-        this.enterXSpeed = 240;
+        this.enterXSpeed = 90;
         
         //set the z of the lava ball
         kernel.loadedModels[this.lavaBallIndex].z = this.startZ;
