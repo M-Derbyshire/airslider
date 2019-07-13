@@ -6,8 +6,8 @@ class TheConstruct extends Level
         
         this.shockerCount = 7; //this is actually required, as you can change it to change difficulty during the level
         this.shockerIndexes = {
-            from: 3,
-            to: 8
+            from: 2,
+            to: 9
         };
     }
     
@@ -20,11 +20,11 @@ class TheConstruct extends Level
         controlConstructor.touchControls(0);
         this.HUD.modelIndexes.push(0);
         
-        //models.push(new NeonPidgeon(0));
+        models.push(new NeonPidgeon(0));
         //models.push(new Falcon(0));
-        models.push(new LavaBall());
-        models.push(new BabyDragon(0, 1));
-        this.monsterIndex = 2;
+        // models.push(new LavaBall());
+        // models.push(new BabyDragon(0, 1));
+        this.monsterIndex = 1;
         
         for(let i = this.shockerIndexes.from; i <= this.shockerIndexes.to; i++)
         {
@@ -75,7 +75,7 @@ class TheConstruct extends Level
         
         this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
         
-        if(getTotalSeconds() >= 2 && getTotalSeconds() <= 3 && !kernel.loadedModels[this.monsterIndex].entering)
+        if(getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !kernel.loadedModels[this.monsterIndex].entering)
         {
             kernel.loadedModels[this.monsterIndex].start(); 
         }

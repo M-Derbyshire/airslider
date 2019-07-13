@@ -47,13 +47,15 @@ class NeonPidgeon extends Monster {
         ];
         
         this.enterXSpeed = 90;
+        this.exitXSpeed = 240;
         this.offScreenUnits = (this.specialLevel) ? xUnit(500) : xUnit(800);
         this.startY = (this.specialLevel) ? yUnit(250) : yUnit(150);
         this.startX = kernel.level.rightEdge + this.offScreenUnits;
         this.startZ = kernel.loadedModels[this.playerIndex].z;
         this.ySpeed = 1200;
-        this.dropWaitOffset = secondsToFrames(5);
-        this.dropWaitRange = secondsToFrames(5);
+        this.dropWaitOffset = 2000; //5 seconds
+        this.dropWaitRange = 2000; //4 seconds
+        this.initialDropWait = 8000;
         
         this.reset();
     }
@@ -67,7 +69,7 @@ class NeonPidgeon extends Monster {
             this.moveLeft(this.enterXSpeed);
         } else {
             this.entering = false;
-            this.lastDrop = kernel.level.framesPassed;
+            this.nextDrop = getTotalMilliseconds() + this.initialDropWait;
         }
     }
     
@@ -81,7 +83,7 @@ class NeonPidgeon extends Monster {
         } else {
             this.changeState("flapping");
         
-            this.moveLeft(this.enterXSpeed);
+            this.moveLeft(this.exitXSpeed);
             
             if((this.x + this.anims[this.state].width) < (kernel.level.leftEdge - this.offScreenUnits))
             {
@@ -93,8 +95,7 @@ class NeonPidgeon extends Monster {
     
     reset()
     {
-        this.lastDrop = 0;
-        this.dropWait = -1;
+        this.nextDrop = -1;
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
@@ -117,16 +118,15 @@ class NeonPidgeon extends Monster {
                 ((kernel.level.rightEdge - monster.anims[monster.state].width) - 1);
         }
         
-        if(monster.dropWait == -1)
+        if(monster.nextDrop == -1)
         {
-            monster.dropWait = monster.dropWaitOffset + Math.floor(Math.random() * monster.dropWaitRange);
-        } else if((kernel.level.framesPassed >= monster.lastDrop + monster.dropWait) && 
+            monster.nextDrop = getTotalMilliseconds() + monster.dropWaitOffset + Math.floor(Math.random() * monster.dropWaitRange);
+        } else if((getTotalMilliseconds() >= monster.nextDrop) && 
             !monster.overlapping && 
             ((monster.x + monster.anims[monster.state].width >= kernel.loadedModels[monster.playerIndex].x) && 
             (monster.x <= kernel.loadedModels[monster.playerIndex].x + kernel.loadedModels[monster.playerIndex].anims[kernel.loadedModels[monster.playerIndex].state].width)))
         {
-            monster.dropWaitOffset = monster.lastDrop + monster.dropWait;
-            monster.dropWait = -1;
+            monster.nextDrop = -1;
             monster.changeState("falling");
             monster.nextAction();
         }
