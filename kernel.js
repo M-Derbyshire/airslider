@@ -50,14 +50,14 @@ class Kernel {
     {
         requestAnimationFrame(this.run.bind(this));
         
-        this.updateTotalTime();
-        
         //don't run unless it's time for next frame
         let dt = new Date();
         if((dt.getTime() - this.lastTime.getTime()) < (1000 / this.fpsLimit) || !this.active || this.assetsStillLoading > 0)
         {
             return;
         }
+        
+        this.updateTotalTime();
         
         this.fps = 1000 / (dt.getTime() - this.lastTime.getTime());
         
