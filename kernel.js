@@ -71,11 +71,12 @@ class Kernel {
     updateTotalTime()
     {
         let dt = new Date()
+        let timePassed = Math.floor(dt.getMilliseconds()) - Math.floor(this.lastTime.getMilliseconds());
         
         //if a millisecond has passed (or more, if it's been inactive)
-        if(Math.floor(dt.getMilliseconds()) - Math.floor(this.lastTime.getMilliseconds()) >= 1)
+        if(timePassed >= 1)
         {
-            this.totalActiveMilliseconds++;
+            this.totalActiveMilliseconds += timePassed;
         }
     }
     
