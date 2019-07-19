@@ -12,10 +12,10 @@ function minutesToFrames(minutes)
 //these are more accurate
 function getTotalSeconds()
 {
-    return kernel.totalTime / 1000;
+    return kernel.totalActiveMilliseconds / 1000;
 }
 
 function getTotalMilliseconds()
 {
-    return kernel.totalTime;
+    return kernel.totalActiveMilliseconds;
 }

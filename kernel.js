@@ -4,8 +4,9 @@ class Kernel {
         this.fps = 24;
         this.fpsLimit = 120;
         this.lastTime = new Date(); //used when calculating fps and enforcing fps limit
-        this.startTime = new Date(); //this shouldn't be changed now
-        this.totalTime;
+        
+        this.totalActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
+        this.active = true;
         
         let filePath = window.location.pathname;
         this.rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -53,7 +54,7 @@ class Kernel {
         
         //don't run unless it's time for next frame
         let dt = new Date();
-        if((dt.getTime() - this.lastTime.getTime()) < (1000 / this.fpsLimit) || this.assetsStillLoading > 0)
+        if((dt.getTime() - this.lastTime.getTime()) < (1000 / this.fpsLimit) || !this.active || this.assetsStillLoading > 0)
         {
             return;
         }
@@ -70,7 +71,12 @@ class Kernel {
     updateTotalTime()
     {
         let dt = new Date()
-        this.totalTime = dt.getTime() - this.startTime.getTime();
+        
+        //if a millisecond has passed (or more, if it's been inactive)
+        if(Math.floor(dt.getMilliseconds()) - Math.floor(this.lastTime.getMilliseconds()) >= 1)
+        {
+            this.totalActiveMilliseconds++;
+        }
     }
     
     setCanvasSize(canvases = document.getElementsByTagName("canvas"))
