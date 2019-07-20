@@ -32,7 +32,7 @@ class Falcon extends Monster {
             }),
             flapping: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/monsters/falcon/anim/flapping",
-                frameCount: 4,
+                frameCount: 8,
                 fps: 24,
                 width: xUnit(250),
                 height: yUnit(75),
