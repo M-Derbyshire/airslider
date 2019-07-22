@@ -32,6 +32,17 @@ class Monster extends Model {
     
     act()
     {
+        if(kernel.level.levelSpeedRaw < this.realZSpeedRaw)
+        {
+            this.z += (zCalc.speed(this.realZSpeedRaw) - zCalc.speed(kernel.level.levelSpeed));
+            this.fireWeapon = false;
+            
+            if(this.z >= zCalc.vPointDepth)
+            {
+                this.active = false;
+            }
+        }
+        
         if(this.entering)
         {
             this.enter();
@@ -42,17 +53,6 @@ class Monster extends Model {
         {
             this.exit();
             return;
-        }
-        
-        if(kernel.level.levelSpeedRaw < this.realZSpeedRaw)
-        {
-            this.z += (zCalc.speed(this.realZSpeedRaw) - zCalc.speed(kernel.level.levelSpeed));
-            this.fireWeapon = false;
-            
-            if(this.z >= zCalc.vPointDepth)
-            {
-                this.active = false;
-            }
         }
         
         this.actions[this.currentAction](kernel.loadedModels[this.loadedIndex]); //run the current action
