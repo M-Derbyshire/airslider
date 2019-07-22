@@ -32,7 +32,7 @@ class Monster extends Model {
     
     act()
     {
-        if(kernel.level.levelSpeedRaw < this.realZSpeedRaw)
+        if(kernel.level.levelSpeedRaw < this.realZSpeedRaw && this.active)
         {
             this.z += (zCalc.speed(this.realZSpeedRaw) - zCalc.speed(kernel.level.levelSpeed));
             this.fireWeapon = false;

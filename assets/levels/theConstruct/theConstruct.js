@@ -4,10 +4,10 @@ class TheConstruct extends Level
     {
         super(Level);
         
-        this.shockerCount = 7; //this is actually required, as you can change it to change difficulty during the level
+        this.shockerCount = 12; //this is actually required, as you can change it to change difficulty during the level
         this.shockerIndexes = {
-            from: 2,
-            to: 9
+            from: 3,
+            to: 15
         };
     }
     
@@ -20,11 +20,11 @@ class TheConstruct extends Level
         controlConstructor.touchControls(0);
         this.HUD.modelIndexes.push(0);
         
-        models.push(new NeonPidgeon(0));
+        //models.push(new NeonPidgeon(0));
         //models.push(new Falcon(0));
-        // models.push(new LavaBall());
-        // models.push(new BabyDragon(0, 1));
-        this.monsterIndex = 1;
+        models.push(new LavaBall());
+        models.push(new BabyDragon(0, 1));
+        this.monsterIndex = 2;
         
         for(let i = this.shockerIndexes.from; i <= this.shockerIndexes.to; i++)
         {
@@ -67,22 +67,48 @@ class TheConstruct extends Level
         //if outside/inside changes, change light mask
         this.checkLightMask();
         
-        //tunnel stuff
-        this.continueTunnel([
-            this.newTunnelPart("#0000ff", 80),
-            this.newTunnelPart("#000000", 20)
-        ]);
-        
-        this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
-        
-        if(getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !kernel.loadedModels[this.monsterIndex].entering)
+        if(getTotalSeconds() <= 37)
         {
-            kernel.loadedModels[this.monsterIndex].start(); 
+            this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
         }
         
-        if(getTotalSeconds() >= 60 && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
+        if(getTotalSeconds() <= 43)
+        {
+            //tunnel stuff
+            this.continueTunnel([
+                this.newTunnelPart("#0000ff", 80),
+                this.newTunnelPart("#000000", 20)
+            ]);
+        }
+        
+        if(getTotalSeconds() >= 43 && getTotalSeconds() <= 44 && this.tunnel[this.tunnel.length - 1].color !== "clear")
+        {
+            this.continueTunnel([
+                this.newTunnelPart("clear", 1)
+            ]);
+        }
+        
+        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 45 && getTotalSeconds() <= 46 && !kernel.loadedModels[this.monsterIndex].entering)
+        {
+            kernel.loadedModels[this.monsterIndex].start();
+        }
+        
+        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 75 && getTotalSeconds() <= 76 && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
         {
             kernel.loadedModels[this.monsterIndex].stop();
+        }
+        
+        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 83)
+        {
+            this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
+            
+            //tunnel stuff
+            this.continueTunnel([
+                this.newTunnelPart("#0000ff", 80),
+                this.newTunnelPart("#000000", 10),
+                this.newTunnelPart("clear", 40),
+                this.newTunnelPart("#000000", 10)
+            ]);
         }
     }
 }
