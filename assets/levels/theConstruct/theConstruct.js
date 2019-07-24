@@ -109,10 +109,10 @@ class TheConstruct extends Level
             
             //tunnel stuff
             this.continueTunnel([
-                this.newTunnelPart("#0000ff", 80),
-                this.newTunnelPart("#000000", 20),
-                this.newTunnelPart("clear", 80),
-                this.newTunnelPart("#000000", 20)
+                this.newTunnelPart("#0000ff", 60),
+                this.newTunnelPart("#000000", 15),
+                this.newTunnelPart("clear", 60),
+                this.newTunnelPart("#000000", 15)
             ]);
         }
     }
