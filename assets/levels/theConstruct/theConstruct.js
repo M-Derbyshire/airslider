@@ -4,10 +4,10 @@ class TheConstruct extends Level
     {
         super(Level);
         
-        this.shockerCount = 12; //this is actually required, as you can change it to change difficulty during the level
+        this.shockerCount = 24; //this is actually required, as you can change it to change difficulty during the level
         this.shockerIndexes = {
             from: 3,
-            to: 15
+            to: 27
         };
     }
     
@@ -54,8 +54,8 @@ class TheConstruct extends Level
         kernel.graphicEn.setLightLuminosity(this.tunnelLightBrightness);
         
         this.createStartingTunnel([
-            this.newTunnelPart("#0000ff", 80),
-            this.newTunnelPart("#000000", 20)
+            this.newTunnelPart("#0000ff", 60),
+            this.newTunnelPart("#000000", 15)
         ]);
     }
     
@@ -76,8 +76,8 @@ class TheConstruct extends Level
         {
             //tunnel stuff
             this.continueTunnel([
-                this.newTunnelPart("#0000ff", 80),
-                this.newTunnelPart("#000000", 20)
+                this.newTunnelPart("#0000ff", 60),
+                this.newTunnelPart("#000000", 15)
             ]);
         }
         
@@ -98,21 +98,21 @@ class TheConstruct extends Level
             kernel.loadedModels[this.monsterIndex].start();
         }
         
-        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 75 && getTotalSeconds() <= 76 && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
+        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 110 && getTotalSeconds() <= 111 && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
         {
             kernel.loadedModels[this.monsterIndex].stop();
         }
         
-        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 83)
+        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 118)
         {
             this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
             
             //tunnel stuff
             this.continueTunnel([
                 this.newTunnelPart("#0000ff", 80),
-                this.newTunnelPart("#000000", 10),
-                this.newTunnelPart("clear", 40),
-                this.newTunnelPart("#000000", 10)
+                this.newTunnelPart("#000000", 20),
+                this.newTunnelPart("clear", 80),
+                this.newTunnelPart("#000000", 20)
             ]);
         }
     }
