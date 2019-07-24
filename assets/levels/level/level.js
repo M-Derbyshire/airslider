@@ -76,6 +76,7 @@ class Level
     {
         if(kernel.graphicEn.lightMask != this.tunnelLightMask && 
             this.tunnel.length > 0 && 
+            this.tunnel[0].z <= 0 &&
             this.tunnel[Math.floor((this.tunnel.length / 4))].color != "clear")
         {
             kernel.graphicEn.setLightMask(this.tunnelLightMask);
