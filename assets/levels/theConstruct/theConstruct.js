@@ -98,12 +98,12 @@ class TheConstruct extends Level
             kernel.loadedModels[this.monsterIndex].start();
         }
         
-        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 110 && getTotalSeconds() <= 111 && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
+        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 75 && getTotalSeconds() <= 76 && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
         {
             kernel.loadedModels[this.monsterIndex].stop();
         }
         
-        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 118)
+        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 83)
         {
             this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
             
