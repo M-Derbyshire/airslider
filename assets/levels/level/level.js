@@ -194,7 +194,7 @@ class Level
             
             kernel.graphicEn.backCtx.drawImage(
                 kernel.loadedAssets[this.ground.ref][1],
-                zCalc.x(0 + kernel.graphicEn.backCan.width, this.groundZ[i] - this.ground.offset),
+                zCalc.x(kernel.graphicEn.backCan.width, this.groundZ[i] - this.ground.offset),
                 y,
                 width,
                 height

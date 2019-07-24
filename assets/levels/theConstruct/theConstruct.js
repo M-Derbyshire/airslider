@@ -88,6 +88,11 @@ class TheConstruct extends Level
             ]);
         }
         
+        if(!this.outsideVisible && getTotalSeconds() >= 44 && getTotalSeconds() <= 45)
+        {
+            this.outsideVisible = true;
+        }
+        
         if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 45 && getTotalSeconds() <= 46 && !kernel.loadedModels[this.monsterIndex].entering)
         {
             kernel.loadedModels[this.monsterIndex].start();
