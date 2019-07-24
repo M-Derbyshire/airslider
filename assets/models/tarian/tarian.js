@@ -137,7 +137,8 @@ class Tarian extends Model {
     
     zCollisionEvent(thisModel, otherModel)
     {
-        if (((thisModel.z >= (otherModel.z - otherModel.zSpeed)) && (thisModel.z <= otherModel.z)) &&
+        if (otherModel.active && 
+        ((thisModel.z >= (otherModel.z - otherModel.zSpeed)) && (thisModel.z <= otherModel.z)) &&
         (thisModel.x + thisModel.anims[thisModel.state].width >= otherModel.x) &&
         (thisModel.x <= otherModel.x + otherModel.anims[otherModel.state].width) &&
         (thisModel.y + thisModel.anims[thisModel.state].height >= otherModel.y) &&
