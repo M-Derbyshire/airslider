@@ -208,8 +208,36 @@ class Level
         {
             if((!kernel.loadedModels[i].active && i == fromIndex) || (!kernel.loadedModels[i].active && kernel.loadedModels[i - 1].active && (kernel.loadedModels[i - 1].z + (zCalc.vPointDepth / this.shockerCount) < zCalc.vPointDepth)))
             {
+                
+                // need to set some to be where the Tarian is, so player can't just stay in one place
+                let xPos;
+                if(i % 2 == 0) 
+                {
+                    //player character
+                    let px = kernel.loadedModels[0].x;
+                    let pw = kernel.loadedModels[0].anims[kernel.loadedModels[0].state].width;
+                    
+                    //shocker
+                    let sw = kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width;
+                    
+                    // want their center points to line up
+                    xPos = (px + (pw / 2)) - (sw / 2);
+                    
+                    //now make sure they are within the bounds of the level
+                    if(xPos < this.leftEdge)
+                    {
+                        xPos = this.leftEdge;
+                    } else if (xPos + sw > this.rightEdge)
+                    {
+                        xPos = this.rightEdge - sw;
+                    }
+                    
+                } else {
+                    xPos = (Math.random() * ((this.rightEdge - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width) - this.leftEdge)) + this.leftEdge;
+                }
+                
                 kernel.loadedModels[i].z = zCalc.vPointDepth;
-                kernel.loadedModels[i].x = (Math.random() * ((this.rightEdge - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width) - this.leftEdge)) + this.leftEdge;
+                kernel.loadedModels[i].x = xPos;
                 
                 kernel.loadedModels[i].active = true;
             }
