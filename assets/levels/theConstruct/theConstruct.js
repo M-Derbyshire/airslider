@@ -4,10 +4,10 @@ class TheConstruct extends Level
     {
         super(Level);
         
-        this.shockerCount = 24; //this is actually required, as you can change it to change difficulty during the level
+        this.shockerCount = 10; //this is actually required, as you can change it to change difficulty during the level
         this.shockerIndexes = {
             from: 3,
-            to: 27
+            to: 13
         };
     }
     
