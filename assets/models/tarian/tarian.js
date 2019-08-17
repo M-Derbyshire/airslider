@@ -11,6 +11,8 @@ class Tarian extends Model {
         this.lost = false;
         this.lastFlashChange = 0; //used in the flashing
         this.flashSpeed = 50;
+        
+        this.lastSpeedChange = 0; //used when changing the speed
     }
     
     load()
@@ -61,10 +63,11 @@ class Tarian extends Model {
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
         
-        this.accl = 20;
-        this.deaccl = 10;
+        this.accl = 200; // applied every tenth of a second
+        this.deaccl = 100; // applied every tenth of a second
         this.topSpeed = 1000;
         this.xSpeed = 0;
+        
         this.zSpeed = 0; //used on failure
         
         this.registerEvent([
@@ -118,45 +121,50 @@ class Tarian extends Model {
     
     movePlayer() //this will just use moveRight(), but can also feed in negative numbers
     {
-        let direction = 0;
-        let speedChange = this.accl;
-        
-        // speed will be multiplied by the direction, to decide left or right
-        if(this.state == "right")
+        if(kernel.totalActiveMilliseconds - this.lastSpeedChange >= 100) //1 tenth of a second
         {
-            direction = 1;
-        } else if (this.state == "left")
-        {
-            direction = -1;
-        } else if (this.state !== "left" && this.state !== "right") //if stopping
-        {
-            if(this.xSpeed > 0)
-            {
-                direction = -1;
-            } else if (this.xSpeed < 0)
+            this.lastSpeedChange = kernel.totalActiveMilliseconds;
+            
+            let direction = 0;
+            let speedChange = this.accl;
+            
+            // speed will be multiplied by the direction, to decide left or right
+            if(this.state == "right")
             {
                 direction = 1;
+            } else if (this.state == "left")
+            {
+                direction = -1;
+            } else if (this.state !== "left" && this.state !== "right") //if stopping
+            {
+                if(this.xSpeed > 0)
+                {
+                    direction = -1;
+                } else if (this.xSpeed < 0)
+                {
+                    direction = 1;
+                }
+                
+                speedChange = this.deaccl;
             }
             
-            speedChange = this.deaccl;
-        }
-        
-        //set the speed
-        speedChange *= direction;
-        this.xSpeed += speedChange;
-        
-        // finally, if gone above topspeed, set to topspeed
-        // else, if reached zero, set to zero
-        if(this.xSpeed > this.topSpeed || this.xSpeed < -this.topSpeed)
-        {
-            this.xSpeed = this.topSpeed * direction;
-        } 
-        else if (
-                    (this.state !== "left" && this.state !== "right") && 
-                    (this.xSpeed > -speedChange && this.xSpeed < speedChange)
-                )
-        {
-            this.xSpeed = 0;
+            //set the speed
+            speedChange *= direction;
+            this.xSpeed += speedChange;
+            
+            // finally, if gone above topspeed, set to topspeed
+            // else, if reached zero, set to zero
+            if(this.xSpeed > this.topSpeed || this.xSpeed < -this.topSpeed)
+            {
+                this.xSpeed = this.topSpeed * direction;
+            } 
+            else if (
+                        (this.state !== "left" && this.state !== "right") && 
+                        (this.xSpeed > -speedChange && this.xSpeed < speedChange)
+                    )
+            {
+                this.xSpeed = 0;
+            }
         }
         
         this.moveRight(this.xSpeed);
