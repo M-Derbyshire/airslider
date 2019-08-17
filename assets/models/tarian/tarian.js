@@ -60,7 +60,11 @@ class Tarian extends Model {
         this.z = 20;
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
-        this.xSpeed = 1000;
+        
+        this.accl = 20;
+        this.deaccl = 10;
+        this.topSpeed = 1000;
+        this.xSpeed = 0;
         this.zSpeed = 0; //used on failure
         
         this.registerEvent([
@@ -72,15 +76,7 @@ class Tarian extends Model {
     
     act()
     {
-        switch(this.state)
-        {
-            case "right":
-                this.moveRight(this.xSpeed);
-                break;
-            case "left":
-                this.moveLeft(this.xSpeed);
-                break;
-        }
+        this.movePlayer();
         
         if(this.health <= 10 && this.health > 0)
         {
@@ -120,18 +116,74 @@ class Tarian extends Model {
         }
     }
     
+    movePlayer() //this will just use moveRight(), but can also feed in negative numbers
+    {
+        let direction = 0;
+        let speedChange = this.accl;
+        
+        // speed will be multiplied by the direction, to decide left or right
+        if(this.state == "right")
+        {
+            direction = 1;
+        } else if (this.state == "left")
+        {
+            direction = -1;
+        } else if (this.state !== "left" && this.state !== "right") //if stopping
+        {
+            if(this.xSpeed > 0)
+            {
+                direction = -1;
+            } else if (this.xSpeed < 0)
+            {
+                direction = 1;
+            }
+            
+            speedChange = this.deaccl;
+        }
+        
+        //set the speed
+        speedChange *= direction;
+        this.xSpeed += speedChange;
+        
+        // finally, if gone above topspeed, set to topspeed
+        // else, if reached zero, set to zero
+        if(this.xSpeed > this.topSpeed || this.xSpeed < -this.topSpeed)
+        {
+            this.xSpeed = this.topSpeed * direction;
+        } 
+        else if (
+                    (this.state !== "left" && this.state !== "right") && 
+                    (this.xSpeed > -speedChange && this.xSpeed < speedChange)
+                )
+        {
+            this.xSpeed = 0;
+        }
+        
+        this.moveRight(this.xSpeed);
+    }
+    
     extraEvents()
     {
         //check for leaving the game area
         if(this.x < kernel.level.leftEdge)
         {
+            if(this.state == "left")
+            {
+                this.changeState("forward");
+            }
+            
             this.x = kernel.level.leftEdge;
-            this.changeState("forward");
+            this.xSpeed = 0;
         }
         if(this.x + this.anims[this.state].width > kernel.level.rightEdge)
         {
-            this.x = kernel.level.rightEdge - this.anims["forward"].width;
-            this.changeState("forward");
+            if(this.state == "right")
+            {
+                this.changeState("forward");
+            }
+            
+            this.x = kernel.level.rightEdge - this.anims[this.state].width;
+            this.xSpeed = 0;
         }
     }
     
