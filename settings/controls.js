@@ -10,10 +10,10 @@ class ControlConstructor
     //place methods in this class to setup the controls
     //Pass in the model index number (kernel.loadedModels array) if needed
     
-    //This is for testing on computer
+    //This is for playing in browser
     keyboardControls(index)
     {
-        if(window.innerWidth >= 900)
+        if(!kernel.isOnMobile)
         {
             window.addEventListener("keydown", (e) => {
                 // this.currentMove = e.key;
@@ -42,7 +42,7 @@ class ControlConstructor
         }
     }
     
-    //these are for game on mobile
+    //these are for game on mobile (can also be used in browser with mouse)
     touchControls(index)
     {
         window.addEventListener("touchstart", (e) => {

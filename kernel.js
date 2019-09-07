@@ -1,6 +1,8 @@
 class Kernel {
     constructor()
     {
+        this.isOnMobile = false; //is this a mobile app (such as through Cordova)?
+        
         this.fps = 24;
         this.fpsLimit = 120;
         this.lastTime = new Date(); //used when calculating fps and enforcing fps limit
