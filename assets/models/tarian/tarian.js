@@ -212,9 +212,6 @@ class Tarian extends Model {
                     kernel.loadedModels[thisModel.loadedIndex].health = 0;
                     kernel.loadedModels[thisModel.loadedIndex].exploding = true;
                     kernel.loadedModels[thisModel.loadedIndex].display = true;
-                    navigator.vibrate(3000);
-                } else {
-                    navigator.vibrate(250);
                 }
                 
                 kernel.level.HUD.damageFlash.start(otherModel.color);
