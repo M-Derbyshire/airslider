@@ -80,16 +80,15 @@ class Kernel {
         }
     }
     
-    setCanvasSize(canvases = document.getElementsByTagName("canvas"))
+    setCanvasSize(aspectHorizontal = 17, aspectVertical = 9, canvases = document.getElementsByTagName("canvas"))
     {
         let width;
         let height;
         let dpi = window.devicePixelRatio || 1;
         
-        //should be essentially 17:9
-        //if 17:9 is stretches out of window, correct it
-        // 17 / 9 = 1.88888 (and a bit more)
-        let widthRatio = 1.88888;
+        // set the width and height of the canvases based on the aspect ratio
+        //if aspect ratio is stretched out of window, correct it
+        let widthRatio = aspectHorizontal / aspectVertical;
         if((window.innerWidth / widthRatio) > window.innerHeight)
         {
             height = window.innerHeight;
