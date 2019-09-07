@@ -70,6 +70,22 @@ class Kernel {
         this.soundEn.run();
     }
     
+    toggleGamePause()
+    {
+        if(this.active)
+        {
+            this.soundEn.pauseMusic();
+            for(let i = 0; i < kernel.loadedAssets.length; i++)
+            {
+                this.soundEn.stopSound(i);
+            }
+        } else {
+            this.soundEn.playMusic();
+        }
+        
+        this.active = !this.active;
+    }
+    
     updateTotalTime()
     {
         let dt = new Date()
