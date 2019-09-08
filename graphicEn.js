@@ -79,7 +79,7 @@ class GraphicEn{
             this.backCtx.fillStyle = input;
             this.backCtx.fillRect(0, 0, this.backCan.width, this.backCan.height);
         } else {
-            this.drawBackgroundFull(input); //in the unlikely event this has already loadec
+            this.drawBackgroundFull(input); //in the unlikely event this has already loaded
             kernel.loadedAssets[input][1].onload = () => {
                 kernel.defaultAssetCallback();
                 this.drawBackgroundFull(input);
