@@ -1,11 +1,11 @@
 class Falcon extends Monster {
-    constructor(playerIndex, otherMonster = false, wolfIndex = -1)
+    constructor(playerIndex, otherMonsterIndex = -1)
     {
         super(Monster);
         
         this.playerIndex = playerIndex;
-        this.specialLevel = otherMonster;
-        this.wolfIndex = wolfIndex;
+        this.specialLevel = (otherMonsterIndex >= 0);
+        this.wolfIndex = otherMonsterIndex;
         
         this.overlapping = false;
         
@@ -20,49 +20,49 @@ class Falcon extends Monster {
                 path: kernel.rootPath + "/assets/models/monsters/falcon/anim/dropping/left",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(250),
+                width: xUnit(450),
                 height: yUnit(200),
             }),
             dropRight: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/monsters/falcon/anim/dropping/right",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(250),
+                width: xUnit(450),
                 height: yUnit(200),
             }),
             flapping: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/monsters/falcon/anim/flapping",
                 frameCount: 8,
                 fps: 24,
-                width: xUnit(250),
-                height: yUnit(75),
+                width: xUnit(350),
+                height: yUnit(200),
             }),
             left: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/monsters/falcon/anim/left",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(250),
-                height: yUnit(75),
+                width: xUnit(350),
+                height: yUnit(200),
             }),
             right: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/monsters/falcon/anim/right",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(250),
-                height: yUnit(75),
+                width: xUnit(350),
+                height: yUnit(200),
             }),
             riseLeft: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/monsters/falcon/anim/rising/left",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(150),
+                width: xUnit(450),
                 height: yUnit(250),
             }),
             riseRight: this.registerAnim({
                 path: kernel.rootPath + "/assets/models/monsters/falcon/anim/rising/right",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(150),
+                width: xUnit(450),
                 height: yUnit(250),
             }),
         };
@@ -70,13 +70,15 @@ class Falcon extends Monster {
         this.registerEvent(["Tarian"], this.hitPlayerOrGroundEvent);
         
         this.actions = [
-            
+            this.stalking
         ];
         
-        this.enterXSpeed = 240;
+        this.player = kernel.loadedModels[this.playerIndex];
+        
+        this.enterXSpeed = 140;
         this.offScreenUnits = xUnit(800);
-        this.startY = yUnit(150);
-        this.startX = kernel.level.rightEdge + this.offScreenUnits;
+        this.startY = yUnit(75);
+        this.startX = kernel.level.leftEdge - this.offScreenUnits;
         this.startZ = kernel.loadedModels[this.playerIndex].z;
         this.ySpeed = 1200;
         this.dropWaitOffset = secondsToFrames(5);
@@ -89,12 +91,12 @@ class Falcon extends Monster {
     
     enter()
     {
-        if(kernel.level.leftEdge > this.x)
+        // move until centered above player
+        if(this.x + (this.anims[this.state].width / 2) < this.player.x + (this.player.anims[this.player.state].width / 2))
         {
             this.moveRight(this.enterXSpeed);
         } else {
             this.entering = false;
-            this.lastDrop = kernel.level.framesPassed;
         }
     }
     
@@ -107,7 +109,7 @@ class Falcon extends Monster {
             //this.changeState("rising");
             //this.rise(kernel.loadedModels[this.loadedIndex]);
         } else {
-            //this.changeState("flapping");
+            this.changeState("flapping");
         
             this.moveRight(this.enterXSpeed);
             
@@ -126,12 +128,17 @@ class Falcon extends Monster {
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
-        this.xSpeed = (this.specialLevel) ? 1080: 960;
+        this.xSpeed = 960;
         this.changeState("flapping");
     }
     
     //movement-----------------------------------------------------
     
+    stalking(monster)
+    {
+        //keep monster centered above player
+        monster.x = monster.player.x + (monster.player.anims[monster.player.state].width / 2) - (monster.anims[monster.state].width / 2);
+    }
     
     
     //events------------------------------------------------------------
