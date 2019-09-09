@@ -96,6 +96,7 @@ class Falcon extends Monster {
         {
             this.moveRight(this.enterXSpeed);
         } else {
+            this.lastSwoop = getTotalMilliseconds();
             this.entering = false;
         }
     }
@@ -123,8 +124,9 @@ class Falcon extends Monster {
     
     reset()
     {
-        this.lastDrop = 0;
-        this.dropWait = -1;
+        this.lastSwoop = -1;
+        this.directionMultiplier = 1; //1 for right, -1 for left
+        this.swoopWait = 6000; // 6 seconds for first one
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
@@ -134,10 +136,32 @@ class Falcon extends Monster {
     
     //movement-----------------------------------------------------
     
+    setDirection()
+    {
+        //this will set to either -1 or 1
+        this.directionMultiplier = (Math.round(Math.random()) * 2) - 1;
+    }
+    
     stalking(monster)
     {
         //keep monster centered above player
         monster.x = monster.player.x + (monster.player.anims[monster.player.state].width / 2) - (monster.anims[monster.state].width / 2);
+        
+        if(getTotalMilliseconds() - monster.lastSwoop >= monster.swoopWait)
+        {
+            monster.swoopWait = (Math.random() * 3000) + 1000; //between 1 and 4 seconds
+            monster.lastSwoop = getTotalMilliseconds();
+            monster.setDirection();
+            
+            if(monster.directionMultiplier == -1)
+            {
+                monster.changeState("left");
+            } else {
+                monster.changeState("right");
+            }
+            
+            monster.nextAction();
+        }
     }
     
     
