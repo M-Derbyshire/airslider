@@ -73,7 +73,8 @@ class Tarian extends Model {
         this.registerEvent([
             "Shocker", 
             "NeonPidgeon",
-            "LavaBall"
+            "LavaBall",
+            "Falcon"
         ], this.zCollisionEvent);
     }
     

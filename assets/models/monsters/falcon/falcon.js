@@ -9,7 +9,8 @@ class Falcon extends Monster {
         
         this.overlapping = false;
         
-        this.damageDealt = 12;
+        this.damageDealtOrig = 12;
+        this.damageDealt; // will be 0 when rising, so as to not do more damage
         this.color = "none";
     }
     
@@ -140,6 +141,9 @@ class Falcon extends Monster {
     
     stalking(monster)
     {
+        //reset the damage
+        monster.damageDealt = monster.damageDealtOrig;
+        
         //keep monster centered above player
         monster.x = monster.player.x + (monster.player.anims[monster.player.state].width / 2) - (monster.anims[monster.state].width / 2);
         
@@ -208,6 +212,7 @@ class Falcon extends Monster {
             monster.changeState("flapping");
             monster.nextAction();
         } else {
+            monster.damageDealt = 0; //will be reset at stalking
             monster.moveUp(monster.ySpeed);
             monster.moveRight((monster.xSpeed * 0.75) * monster.directionMultiplier);
         }
