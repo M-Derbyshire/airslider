@@ -70,7 +70,11 @@ class Falcon extends Monster {
         this.registerEvent(["Tarian"], this.hitPlayerOrGroundEvent);
         
         this.actions = [
-            this.stalking
+            this.stalking,
+            this.strafe,
+            this.swoopDown,
+            this.swoopUp,
+            this.reposition
         ];
         
         this.player = kernel.loadedModels[this.playerIndex];
@@ -103,13 +107,8 @@ class Falcon extends Monster {
     
     exit()
     {
-        if(this.y != this.startY)
+        if(this.y == this.startY)
         {
-            //if not at correct height, don't leave yet
-            
-            //this.changeState("rising");
-            //this.rise(kernel.loadedModels[this.loadedIndex]);
-        } else {
             this.changeState("flapping");
         
             this.moveRight(this.enterXSpeed);
@@ -119,6 +118,8 @@ class Falcon extends Monster {
                 this.exiting = false;
                 this.active = false;
             }
+        } else {
+            this.actions[this.currentAction](kernel.loadedModels[this.loadedIndex]); //run the current action
         }
     }
     
@@ -131,16 +132,11 @@ class Falcon extends Monster {
         this.x = this.startX;
         this.z = this.startZ;
         this.xSpeed = 960;
+        this.ySpeed = 1200;
         this.changeState("flapping");
     }
     
     //movement-----------------------------------------------------
-    
-    setDirection()
-    {
-        //this will set to either -1 or 1
-        this.directionMultiplier = (Math.round(Math.random()) * 2) - 1;
-    }
     
     stalking(monster)
     {
@@ -150,13 +146,14 @@ class Falcon extends Monster {
         if(getTotalMilliseconds() - monster.lastSwoop >= monster.swoopWait)
         {
             monster.swoopWait = (Math.random() * 3000) + 1000; //between 1 and 4 seconds
-            monster.lastSwoop = getTotalMilliseconds();
-            monster.setDirection();
+            // will set the lastSwoop time after swooping has finished
             
-            if(monster.directionMultiplier == -1)
+            if(monster.x + (monster.anims[monster.state].width / 2) > (kernel.level.rightEdge - kernel.level.leftEdge) / 2)
             {
+                monster.directionMultiplier = -1;
                 monster.changeState("left");
             } else {
+                monster.directionMultiplier = 1;
                 monster.changeState("right");
             }
             
@@ -164,6 +161,74 @@ class Falcon extends Monster {
         }
     }
     
+    strafe(monster)
+    {
+        let mx = monster.x;
+        let mw = monster.x + monster.anims[monster.state].width;
+        let px = kernel.loadedModels[monster.playerIndex].x;
+        let pw = kernel.loadedModels[monster.playerIndex].anims[kernel.loadedModels[monster.playerIndex].state].width;
+        let yDifference = kernel.loadedModels[monster.playerIndex].y - monster.y;
+        
+        // if the position is correct for a swoop down
+        if((mx - yDifference > px && mx - yDifference < px + pw) || //moving left
+            (mw + yDifference > px && mw + yDifference < px + pw)) //moving right
+        {
+            monster.directionMultiplier = -monster.directionMultiplier;
+            monster.changeState((monster.directionMultiplier == -1) ? "dropLeft" : "dropRight");
+            monster.nextAction();
+        } else {
+            monster.moveRight(monster.xSpeed * monster.directionMultiplier);
+        }
+    }
+    
+    swoopDown(monster)
+    {
+        //center of monster and player
+        let mc = monster.x + (monster.anims[monster.state].width / 2);
+        let pc = kernel.loadedModels[monster.playerIndex].x + (kernel.loadedModels[monster.playerIndex].width / 2);
+        
+        let directionChange = 5;
+        
+        //check which is further: x difference or y difference
+        if((mc - pc) * -monster.directionMultiplier > kernel.loadedModels[monster.playerIndex].y - monster.y)
+        {
+            monster.moveRight((monster.xSpeed + directionChange) * monster.directionMultiplier);
+            monster.moveDown(monster.ySpeed);
+        } else {
+            monster.moveRight(monster.xSpeed * monster.directionMultiplier);
+            monster.moveDown(monster.ySpeed + directionChange);
+        }
+    }
+    
+    swoopUp(monster)
+    {
+        if(monster.y <= monster.startY)
+        {
+            monster.y = monster.startY;
+            monster.changeState("flapping");
+            monster.nextAction();
+        } else {
+            monster.moveUp(monster.ySpeed);
+            monster.moveRight((monster.xSpeed * 0.75) * monster.directionMultiplier);
+        }
+    }
+    
+    reposition(monster)
+    {
+        //get player center and monster center; also pre-calculate the real speed of the monster
+        let pc = kernel.loadedModels[monster.playerIndex].x + (kernel.loadedModels[monster.playerIndex].anims[kernel.loadedModels[monster.playerIndex].state].width / 2)
+        let mc = monster.x + (monster.anims[monster.state].width / 2);
+        let calcSpeed = xSpeed(monster.xSpeed);
+        
+        if(mc < pc + calcSpeed && mc > pc - calcSpeed)
+        {
+            monster.lastSwoop = getTotalMilliseconds();
+            monster.nextAction();
+        } else {
+            monster.directionMultiplier = (pc < mc) ? -1 : 1;
+            monster.moveRight(monster.xSpeed * monster.directionMultiplier);
+        }
+    }
     
     //events------------------------------------------------------------
     
@@ -175,17 +240,16 @@ class Falcon extends Monster {
         (thisModel.y <= otherModel.y + otherModel.anims[otherModel.state].height)) || 
         (thisModel.y + thisModel.anims[thisModel.state].height >= kernel.graphicEn.gameCan.height))
         {
-            if(((thisModel.y + thisModel.anims[thisModel.state].height) > otherModel.y) && 
-            (thisModel.y + thisModel.anims[thisModel.state].height < kernel.graphicEn.gameCan.height))
+            if(thisModel.state == "dropLeft" || thisModel.state == "dropRight")
             {
-                //makes sure the player doesn't lose extra health if they collide from the side
-                kernel.loadedModels[thisModel.loadedIndex].y = otherModel.y - thisModel.anims[thisModel.state].height - 1;
-            }
-            
-            if(thisModel.state == "falling")
-            {
-                kernel.loadedModels[thisModel.loadedIndex].changeState("rising");
-                kernel.loadedModels[thisModel.loadedIndex].nextAction();
+                // if the monster didn't collide with the ground
+                if(thisModel.y + thisModel.anims[thisModel.state].height < kernel.graphicEn.gameCan.height)
+                {
+                    thisModel.directionMultiplier = -thisModel.directionMultiplier;
+                }
+                
+                thisModel.changeState((thisModel.directionMultiplier == -1) ? "riseLeft" : "riseRight");
+                thisModel.nextAction();
             }
         }
     }
