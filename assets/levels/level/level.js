@@ -215,8 +215,19 @@ class Level
                 let px = kernel.loadedModels[0].x;
                 let pw = kernel.loadedModels[0].anims[kernel.loadedModels[0].state].width;
                 
-                if(i % 2 == 0) 
+                if((i + 1) % 3 == 0) //if this is every third in every 3 shockers
                 {
+                    // put somewhere on left side of level
+                    xPos = (Math.random() * (((this.rightEdge - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width) - this.leftEdge) / 2)) + this.leftEdge;
+                
+                } else if((i + 2) % 3 == 0) //if this is every second in every 3 shockers
+                {
+                    xPos = (Math.random() * (((this.rightEdge - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width) - this.leftEdge) / 2)) + ((this.rightEdge - this.leftEdge) / 2);
+                
+                } else //might as well be if this is first in every 3 shockers
+                {
+                    // put where player is (x coordinate)
+                    
                     //shocker
                     let sw = kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width;
                     
@@ -230,14 +241,6 @@ class Level
                     } else if (xPos + sw > this.rightEdge)
                     {
                         xPos = this.rightEdge - sw;
-                    }
-                    
-                } else {
-                    // want the random shocker positions to be on opposite half of the player
-                    xPos = (Math.random() * (((this.rightEdge - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width) - this.leftEdge) / 2)) + this.leftEdge;
-                    if(px + pw < (this.rightEdge - this.leftEdge) / 2)
-                    {
-                        xPos += (this.rightEdge - this.leftEdge) / 2
                     }
                 }
                 
