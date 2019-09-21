@@ -63,7 +63,7 @@ class Tarian extends Model {
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
         this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
         
-        this.accl = 400; // applied every tenth of a second
+        this.accl = 800; // applied every tenth of a second
         this.deaccl = 100; // applied every tenth of a second
         this.topSpeed = 1000;
         this.xSpeed = 0;
