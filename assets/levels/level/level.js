@@ -2,14 +2,12 @@ class Level
 {
     constructor()
     {
-        this.background = "white"; //use a color if nothing set in subclass (hence true on the next line)
+        this._background = "white"; //use a color if nothing set in subclass (hence true on the next line)
         
         this.HUD; //the Heads Up Display for the level
         this.HUD = new MainHUD();
         
         this.roadColor = "#999999";
-        
-        this.framesPassed = 0;
         
         this.shockerCount;
         
@@ -20,7 +18,7 @@ class Level
         
         this.tunnel = [];
         
-        this.music;
+        this._musicRef;
         
         this.ground = {
             ref: 0,
@@ -79,15 +77,15 @@ class Level
             this.tunnel[0].z <= 0 &&
             this.tunnel[Math.floor((this.tunnel.length / 4))].color != "clear")
         {
-            kernel.graphicEn.setLightMask(this.tunnelLightMask);
-            kernel.graphicEn.setLightLuminosity(this.tunnelLightBrightness);
+            kernel.graphicEn.lightMask = this.tunnelLightMask;
+            kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
         }
         
         if(kernel.graphicEn.lightMask != this.outsideLightMask &&
             (this.tunnel.length == 0 || this.tunnel[Math.floor(this.tunnel.length / 8)].color == "clear"))
         {
-            kernel.graphicEn.setLightMask(this.outsideLightMask);
-            kernel.graphicEn.setLightLuminosity(this.outsideLightBrightness);
+            kernel.graphicEn.lightMask = this.outsideLightMask;
+            kernel.graphicEn.lightLuminosity = this.outsideLightBrightness;
         }
     }
     

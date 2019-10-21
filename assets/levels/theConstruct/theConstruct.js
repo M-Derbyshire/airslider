@@ -41,8 +41,8 @@ class TheConstruct extends Level
             yUnit(50)
         );
         
-        this.background = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/testBackground.png");
-        kernel.graphicEn.setStaticBackground(this.background);
+        this._background = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/testBackground.png");
+        kernel.graphicEn.setStaticBackground(this._background);
         
         this.outsideLightMask = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/testBackgroundMask.png");
         this.outsideLightBrightness = 0;
@@ -50,8 +50,8 @@ class TheConstruct extends Level
         this.outsideVisible = false;
         
         //these are set in level
-        kernel.graphicEn.setLightMask(this.tunnelLightMask);
-        kernel.graphicEn.setLightLuminosity(this.tunnelLightBrightness);
+        kernel.graphicEn.lightMask = this.tunnelLightMask;
+        kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
         
         this.createStartingTunnel([
             this.newTunnelPart("#0000ff", 60),
@@ -62,7 +62,6 @@ class TheConstruct extends Level
     act()
     {
         this.updateLevelSpeed(); //keeps level speed consistent via fps
-        this.framesPassed++;
         
         //if outside/inside changes, change light mask
         this.checkLightMask();

@@ -2,10 +2,10 @@ class GraphicEn{
     constructor()
     {
         //used when making sure models are displayed in the right order based on their z-index
-        this.zSortedIndexes = [];
+        this._zSortedIndexes = [];
         for(let i = 0; i < kernel.loadedModels.length; i++)
         {
-            this.zSortedIndexes.push(i);
+            this._zSortedIndexes.push(i);
         }
         
         this.backCan = document.getElementById("backCan");
@@ -19,15 +19,33 @@ class GraphicEn{
         this.menuCan = document.getElementById("menuCan");
         this.menuCtx = this.menuCan.getContext("2d");
         
-        this.lightLuminosity = 0;
-        this.lightMask;
-        this.lightChanged = false;
+        this._lightLuminosity = 0;
+        this._lightMask;
+        this._lightChanged = false;
     }
+    
+    //getters and setters --------------------------------------
+    get lightLuminosity() {return this._lightLuminosity;}
+    set lightLuminosity(lum) //takes a number between 0 (darkest) and 1 (lightest)
+    {
+        this._lightLuminosity = 1 - lum;
+        this._lightChanged = true;
+    }
+    
+    get lightMask() {return this._lightMask;}
+    set lightMask(ref)
+    {
+        this._lightMask = ref;
+        this._lightChanged = true;
+    }
+    
+    get lightChanged() {return this._lightChanged;}
+    //----------------------------------------------------------
     
     run()
     {
         //this will be used to make sure the models are displayed in order
-        this.zSortedIndexes.sort((a, b) => {
+        this._zSortedIndexes.sort((a, b) => {
             return kernel.loadedModels[b].z - kernel.loadedModels[a].z;
         });
         
@@ -38,9 +56,9 @@ class GraphicEn{
         
         for(let i = 0; i < kernel.loadedModels.length; i++)
         {
-            if(kernel.loadedModels[this.zSortedIndexes[i]].active && kernel.loadedModels[this.zSortedIndexes[i]].display)
+            if(kernel.loadedModels[this._zSortedIndexes[i]].active && kernel.loadedModels[this._zSortedIndexes[i]].display)
             {
-                kernel.loadedModels[this.zSortedIndexes[i]].draw();
+                kernel.loadedModels[this._zSortedIndexes[i]].draw();
             }
         }
         
@@ -66,7 +84,7 @@ class GraphicEn{
                 this.lightCan.height
             );
             
-            this.lightChanged = false;
+            this._lightChanged = false;
         }
         
         this.fpsMeter();
@@ -96,18 +114,6 @@ class GraphicEn{
             this.backCan.width,
             this.backCan.height
         );
-    }
-    
-    setLightLuminosity(lum) //takes a number between 0 (darkest) and 1 (lightest)
-    {
-        this.lightLuminosity = 1 - lum;
-        this.lightChanged = true;
-    }
-    
-    setLightMask(ref)
-    {
-        this.lightMask = ref;
-        this.lightChanged = true;
     }
     
     fpsMeter()

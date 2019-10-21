@@ -57,7 +57,7 @@ class BabyDragon extends Monster {
     
     exit()
     {
-        this.changeState("left");
+        this.state = "left";
         this.moveLeft(this.enterXSpeed);
         
         if((this.x + this.anims[this.state].width) < (kernel.level.leftEdge - this.offScreenUnits))
@@ -73,7 +73,7 @@ class BabyDragon extends Monster {
         this.x = this.startX;
         this.y = this.startY;
         this.z = this.startZ;
-        this.changeState("left");
+        this.state = "left";
     }
     
     //movement-----------------------------------------------------
@@ -85,9 +85,7 @@ class BabyDragon extends Monster {
         if(monster.x + (monster.anims[monster.state].width / 2) <= kernel.level.leftEdge || (monster.x + (monster.anims[monster.state].width / 2) >= kernel.level.rightEdge))
         {
             monster.xSpeed = -monster.xSpeed;
-            monster.changeState(
-                (monster.state == "left") ? "right" : "left"
-            );
+            monster.state = (monster.state == "left") ? "right" : "left";
             
             monster.x = (monster.xSpeed > 0) ? 
                 ((kernel.level.leftEdge - (monster.anims[monster.state].width / 2)) + 1) :
@@ -116,7 +114,7 @@ class BabyDragon extends Monster {
         l.x = monster.x + (monster.anims[monster.state].width / 2) + xOffset;
         l.y = monster.y + monster.anims[monster.state].height + -yUnit(20);
         
-        l.changeState("drop");
+        l.state = "drop";
         l.active = true;
     }
     

@@ -110,7 +110,7 @@ class Falcon extends Monster {
     {
         if(this.y == this.startY)
         {
-            this.changeState("flapping");
+            this.state = "flapping";
         
             this.moveRight(this.enterXSpeed);
             
@@ -134,7 +134,7 @@ class Falcon extends Monster {
         this.z = this.startZ;
         this.xSpeed = 960;
         this.ySpeed = 1200;
-        this.changeState("flapping");
+        this.state = "flapping";
     }
     
     //movement-----------------------------------------------------
@@ -155,10 +155,10 @@ class Falcon extends Monster {
             if(monster.x + (monster.anims[monster.state].width / 2) > (kernel.level.rightEdge - kernel.level.leftEdge) / 2)
             {
                 monster.directionMultiplier = -1;
-                monster.changeState("left");
+                monster.state = "left";
             } else {
                 monster.directionMultiplier = 1;
-                monster.changeState("right");
+                monster.state = "right";
             }
             
             monster.nextAction();
@@ -178,7 +178,7 @@ class Falcon extends Monster {
             (mw + yDifference > px && mw + yDifference < px + pw)) //moving right
         {
             monster.directionMultiplier = -monster.directionMultiplier;
-            monster.changeState((monster.directionMultiplier == -1) ? "dropLeft" : "dropRight");
+            monster.state = (monster.directionMultiplier == -1) ? "dropLeft" : "dropRight";
             monster.nextAction();
         } else {
             monster.moveRight(monster.xSpeed * monster.directionMultiplier);
@@ -209,7 +209,7 @@ class Falcon extends Monster {
         if(monster.y <= monster.startY)
         {
             monster.y = monster.startY;
-            monster.changeState("flapping");
+            monster.state = "flapping";
             monster.nextAction();
         } else {
             monster.damageDealt = 0; //will be reset at stalking
@@ -253,7 +253,7 @@ class Falcon extends Monster {
                     thisModel.directionMultiplier = -thisModel.directionMultiplier;
                 }
                 
-                thisModel.changeState((thisModel.directionMultiplier == -1) ? "riseLeft" : "riseRight");
+                thisModel.state = (thisModel.directionMultiplier == -1) ? "riseLeft" : "riseRight";
                 thisModel.nextAction();
             }
         }

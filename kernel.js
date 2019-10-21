@@ -1,23 +1,59 @@
 class Kernel {
     constructor()
     {
-        this.isOnMobile = false; //is this a mobile app (such as through Cordova)?
+        this._isOnMobile = false; //is this a mobile app (such as through Cordova)?
         
-        this.fps = 24;
-        this.fpsLimit = 120;
-        this.lastTime = new Date(); //used when calculating fps and enforcing fps limit
+        this._fps = 24;
+        this._fpsLimit = 120;
+        this._lastTime = new Date(); //used when calculating fps and enforcing fps limit
         
-        this.totalActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
-        this.active = true;
+        this._totalActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
+        this._active = true;
         
         let filePath = window.location.pathname;
-        this.rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
+        this._rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
         
         this.loadedModels = []; //will hold all models loaded during loading
-        this.assetsStillLoading = 0; //increased when asset starts loading, decrease when done
+        this._assetsStillLoading = 0; //increased when asset starts loading, decrease when done
         this.loadedAssets = [];
+        
+        this._level;
+        this._gameEn;
+        this._graphicEn;
+        this._soundEn;
+        this._menuEn;
     }
     
+    //getters and setters ----------------------------------------------------------------------
+    get isOnMobile(){return this._isOnMobile;}
+    
+    get fps(){return this._fps;}
+    
+    get fpsLimit(){return this._fpsLimit;}
+    
+    get totalActiveMilliseconds(){return this._totalActiveMilliseconds;}
+    
+    get active(){return this._active;}
+    set active(newVal){this._active = newVal;}
+    
+    get rootPath(){return this._rootPath;}
+    
+    get assetsStillLoading(){return this._assetsStillLoading;}
+    set assetsStillLoading(newVal){this._assetsStillLoading = newVal;}
+    
+    get level(){return this._level;}
+    set level(newVal){this._level = newVal;}
+    
+    get gameEn(){return this._gameEn;}
+    
+    get graphicEn(){return this._graphicEn;}
+    
+    get soundEn(){return this._soundEn;}
+    
+    get menuEn(){return this._menuEn;}
+    
+    
+    // loading methods --------------------------------------------------------------------------
     load()
     {
         this.setCanvasSize();
@@ -30,10 +66,10 @@ class Kernel {
         //get models here so they can be picked up by the engines
         this.loadedModels = this.level.getModels();
         
-        this.gameEn = new GameEn();
-        this.graphicEn = new GraphicEn();
-        this.soundEn = new SoundEn();
-        this.menuEn = new MenuEn();
+        this._gameEn = new GameEn();
+        this._graphicEn = new GraphicEn();
+        this._soundEn = new SoundEn();
+        this._menuEn = new MenuEn();
         
         //do any extra setup that may need access to the engines
         this.level.loadSuper();
@@ -45,52 +81,6 @@ class Kernel {
             this.loadedModels[i].loadedIndex = i; //used for events
             this.loadedModels[i].loadSuper();
             this.loadedModels[i].load();
-        }
-    }
-    
-    run()
-    {
-        requestAnimationFrame(this.run.bind(this));
-        
-        //don't run unless it's time for next frame
-        let dt = new Date();
-        if((dt.getTime() - this.lastTime.getTime()) < (1000 / this.fpsLimit) || !this.active || this.assetsStillLoading > 0)
-        {
-            return;
-        }
-        
-        this.updateTotalTime();
-        
-        this.fps = 1000 / (dt.getTime() - this.lastTime.getTime());
-        
-        this.lastTime = dt;
-        
-        this.gameEn.run();
-        this.graphicEn.run();
-        this.soundEn.run();
-    }
-    
-    toggleGamePause()
-    {
-        if(this.active)
-        {
-            this.soundEn.pauseMusic();
-        } else {
-            this.soundEn.playMusic();
-        }
-        
-        this.active = !this.active;
-    }
-    
-    updateTotalTime()
-    {
-        let dt = new Date()
-        let timePassed = Math.floor(dt.getMilliseconds()) - Math.floor(this.lastTime.getMilliseconds());
-        
-        //if a millisecond has passed (or more, if it's been inactive)
-        if(timePassed >= 1)
-        {
-            this.totalActiveMilliseconds += timePassed;
         }
     }
     
@@ -184,5 +174,54 @@ class Kernel {
     defaultAssetCallback()
     {
         kernel.assetsStillLoading--;
+    }
+    
+    
+    
+    //running the game ---------------------------------------------------------------
+    run()
+    {
+        requestAnimationFrame(this.run.bind(this));
+        
+        //don't run unless it's time for next frame
+        let dt = new Date();
+        if((dt.getTime() - this._lastTime.getTime()) < (1000 / this._fpsLimit) || !this._active || this._assetsStillLoading > 0)
+        {
+            return;
+        }
+        
+        this.updateTotalTime();
+        
+        this._fps = 1000 / (dt.getTime() - this._lastTime.getTime());
+        
+        this._lastTime = dt;
+        
+        this._gameEn.run();
+        this._graphicEn.run();
+        this._soundEn.run();
+    }
+    
+    toggleGamePause()
+    {
+        if(this._active)
+        {
+            this._soundEn.pauseMusic();
+        } else {
+            this._soundEn.playMusic();
+        }
+        
+        this._active = !this._active;
+    }
+    
+    updateTotalTime()
+    {
+        let dt = new Date()
+        let timePassed = Math.floor(dt.getMilliseconds()) - Math.floor(this._lastTime.getMilliseconds());
+        
+        //if a millisecond has passed (or more, if it's been inactive)
+        if(timePassed >= 1)
+        {
+            this._totalActiveMilliseconds += timePassed;
+        }
     }
 }

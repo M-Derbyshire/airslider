@@ -7,31 +7,39 @@ class ZCalc
     constructor()
     {
         //vanishing point is set with vPointX and vPointY
-        this.vPointX;
-        this.vPointY;
+        this._vPointX;
+        this._vPointY;
         
-        this.vPointDepth; //the max z position
-        this.calcDepth; //used when calculating the depth
+        this._vPointDepth; //the max z position
+        this._calcDepth; //used when calculating the depth
     }
+    
+    //getters and setters -----------------------------------------
+    
+    get vPointX(){return this._vPointX;}
+    get vPointY(){return this._vPointY;}
+    get vPointDepth(){return this._vPointDepth;}
     
     setVanishPoint(x, y, depth)
     {
-        this.vPointX = x;
-        this.vPointY = y;
-        this.vPointDepth = depth;
-        this.calcDepth = (depth / 32);
+        this._vPointX = x;
+        this._vPointY = y;
+        this._vPointDepth = depth;
+        this._calcDepth = (depth / 32);
     }
+    
+    //-----------------------------------------------------------------
     
     x(xPos, zPos)
     {
-        if(zPos > this.vPointDepth || zPos < 0)
+        if(zPos > this._vPointDepth || zPos < 0)
         {
             return 0;
         } else {
             zPos = (zPos - 1) / 4;
             for(let i = 0; i <= zPos; i++)
             {
-                xPos += ((this.vPointX - xPos) / this.calcDepth);
+                xPos += ((this._vPointX - xPos) / this._calcDepth);
             }
             return xPos;
         }
@@ -39,14 +47,14 @@ class ZCalc
     
     y(yPos, zPos)
     {
-        if(zPos > this.vPointDepth || zPos < 0)
+        if(zPos > this._vPointDepth || zPos < 0)
         {
             return 0;
         } else {
             zPos = (zPos - 1) / 4;
             for(let i = 0; i <= zPos; i++)
             {
-                yPos += ((this.vPointY - yPos) / this.calcDepth);
+                yPos += ((this._vPointY - yPos) / this._calcDepth);
             }
             return yPos;
         }
@@ -54,14 +62,14 @@ class ZCalc
     
     width(width, zPos)
     {
-        if(zPos > this.vPointDepth || zPos < 0)
+        if(zPos > this._vPointDepth || zPos < 0)
         {
             return 0;
         } else {
             zPos = (zPos - 1) / 4;
             for(let i = 0; i <= zPos; i++)
             {
-                width -= (width / this.calcDepth);
+                width -= (width / this._calcDepth);
             }
             return width;
         }
@@ -69,14 +77,14 @@ class ZCalc
     
     height(height, zPos)
     {
-        if(zPos > this.vPointDepth || zPos < 0)
+        if(zPos > this._vPointDepth || zPos < 0)
         {
             return 0;
         } else {
             zPos = (zPos - 1) / 4;
             for(let i = 0; i <= zPos; i++)
             {
-                height -= (height / this.calcDepth);
+                height -= (height / this._calcDepth);
             }
             return height;
         }
@@ -84,7 +92,7 @@ class ZCalc
     
     speed(speed)
     {
-        return ((this.vPointDepth / 1000) * speed) / kernel.fps;
+        return ((this._vPointDepth / 1000) * speed) / kernel.fps;
     }
 }
 

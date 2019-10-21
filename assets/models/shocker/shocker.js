@@ -7,9 +7,9 @@ class Shocker extends Model
         
         this.color = color;
         this.mode = mode;
-        this.state = "shock";
-        this.active = false;
-        this.xSpeed = speedX; //this will be fed through xSpeed()
+        this._state = "shock";
+        this._active = false;
+        this._xSpeed = speedX; //this will be fed through xSpeed()
         this.homingTargetIndex = playerIndex;
         
         //set the damage this shocker will deal

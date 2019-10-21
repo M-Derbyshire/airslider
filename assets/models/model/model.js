@@ -2,23 +2,60 @@ class Model {
     
     //constructor is run before the engines are initialised (load() is run afterwards)
     constructor(){
-        this.state; //string with the current state of the model
+        this._state; //string with the current state of the model
         this.anims; //object of all the animations (returned by registerAnim())
-        this.active; //is this active
-        this.display = true; //should this be drawn
+        this._active; //is this active
+        this._display = true; //should this be drawn
         
-        this.x;
-        this.y;
-        this.z;
-        this.xSpeed;
-        this.ySpeed;
-        this.zSpeed;
+        this._x;
+        this._y;
+        this._z;
+        this._xSpeed;
+        this._ySpeed;
+        this._zSpeed;
         
         this.events = []; //will hold array of events objects
-        this.loadedIndex; //will hold current index in kernel.loadedModels
+        this._loadedIndex; //will hold current index in kernel.loadedModels
         
         this.damageDealt = 0;
     }
+    
+    //getters and setters --------------------------------------
+    
+    get width() {return this.anims[this._state].width;}
+    get height() {return this.anims[this._state].height;}
+    
+    get active() {return this._active;}
+    set active(newVal) {this._active = newVal;}
+    
+    get display() {return this._display;}
+    set display(newVal) {this._display = newVal;}
+    
+    get x() {return this._x;}
+    set x(x) {this._x = x;}
+    get y() {return this._y;}
+    set y(y) {this._y = y;}
+    get z() {return this._z;}
+    set z(z) {this._z = z;}
+    get xSpeed() {return this._xSpeed;}
+    set xSpeed(speed) {this._xSpeed = speed;}
+    get ySpeed() {return this._ySpeed;}
+    set ySpeed(speed) {this._ySpeed = speed;}
+    get zSpeed() {return this._zSpeed;}
+    set zSpeed(speed) {this._zSpeed = speed;}
+    
+    get loadedIndex() {return this._loadedIndex;}
+    set loadedIndex(newVal) {this._loadedIndex = newVal;}
+    
+    get state() {return this._state;}
+    set state(state)
+    {
+        this._x += this.anims[state].xOffset;
+        this._y += this.anims[state].yOffset;
+        this._state = state;
+    }
+    
+    //-----------------------------------------------------------
     
     //meant to be overridden
     load() {}
@@ -87,7 +124,7 @@ class Model {
                 this.anims[this.state].currentFrame = 0;
                 if(this.anims[this.state].nextAnim != "") //change the state if this shouldn't be looped
                 {
-                    this.changeState(this.anims[this.state].nextAnim);
+                    this.state = this.anims[this._state].nextAnim;
                 }
             }
             this.anims[this.state].waitCount = 0;
@@ -106,13 +143,6 @@ class Model {
             zCalc.width(this.anims[this.state].width, this.z), 
             zCalc.height(this.anims[this.state].height, this.z)
         );
-    }
-    
-    changeState(state)
-    {
-        this.x += this.anims[state].xOffset;
-        this.y += this.anims[state].yOffset;
-        this.state = state;
     }
     
     checkEvents()

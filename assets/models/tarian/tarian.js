@@ -3,8 +3,8 @@ class Tarian extends Model {
     {
         super(Model);
         
-        this.state = "forward";
-        this.active = true;
+        this._state = "forward";
+        this._active = true;
         this.health = 100;
         
         this.exploding = false;
@@ -95,13 +95,13 @@ class Tarian extends Model {
                 this.exploding = false;
                 this.lost = true;
             } else {
-                this.changeState("exploding");
+                this.state = "exploding";
             }
         }
         
         if(this.lost && this.state != "lost")
         {
-            this.changeState("lost");
+            this.state = "lost";
         }
         
         //this will run if Tarian is onscreen, but defeated
@@ -178,7 +178,7 @@ class Tarian extends Model {
         {
             if(this.state == "left")
             {
-                this.changeState("forward");
+                this.state = "forward";
             }
             
             this.x = kernel.level.leftEdge;
@@ -188,7 +188,7 @@ class Tarian extends Model {
         {
             if(this.state == "right")
             {
-                this.changeState("forward");
+                this.state = "forward";
             }
             
             this.x = kernel.level.rightEdge - this.anims[this.state].width;

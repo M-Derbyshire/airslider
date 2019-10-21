@@ -55,7 +55,7 @@ class LavaBall extends Model {
         if(this.y + this.anims[this.state].height >= kernel.graphicEn.gameCan.height && this.state == "drop")
         {
             this.y = kernel.graphicEn.gameCan.height - this.anims[this.state].height;
-            this.changeState("break");
+            this.state = "break";
         }
         
         if(this.state == "none")
@@ -73,7 +73,7 @@ class LavaBall extends Model {
         thisModel.z == otherModel.z &&
         thisModel.state == "drop")
         {
-            kernel.loadedModels[thisModel.loadedIndex].changeState("break");
+            kernel.loadedModels[thisModel.loadedIndex].state = "break";
         }
     }
 }

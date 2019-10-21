@@ -78,10 +78,10 @@ class NeonPidgeon extends Monster {
         if(this.y != this.startY)
         {
             //if not at correct height, don't leave yet
-            this.changeState("rising");
+            this.state = "rising";
             this.rise(kernel.loadedModels[this.loadedIndex]);
         } else {
-            this.changeState("flapping");
+            this.state = "flapping";
         
             this.moveLeft(this.exitXSpeed);
             
@@ -100,7 +100,7 @@ class NeonPidgeon extends Monster {
         this.x = this.startX;
         this.z = this.startZ;
         this.xSpeed = (this.specialLevel) ? -1080 : -960;
-        this.changeState("flapping");
+        this.state = "flapping";
     }
     
     //movement-----------------------------------------------------
@@ -127,7 +127,7 @@ class NeonPidgeon extends Monster {
             (monster.x <= kernel.loadedModels[monster.playerIndex].x + kernel.loadedModels[monster.playerIndex].anims[kernel.loadedModels[monster.playerIndex].state].width)))
         {
             monster.nextDrop = -1;
-            monster.changeState("falling");
+            monster.state = "falling";
             monster.nextAction();
         }
         
@@ -146,7 +146,7 @@ class NeonPidgeon extends Monster {
         if(monster.y <= monster.startY)
         {
             monster.y = monster.startY;
-            monster.changeState("flapping");
+            monster.state = "flapping";
             monster.nextAction();
         }
     }
@@ -179,7 +179,7 @@ class NeonPidgeon extends Monster {
             
             if(thisModel.state == "falling")
             {
-                kernel.loadedModels[thisModel.loadedIndex].changeState("rising");
+                kernel.loadedModels[thisModel.loadedIndex].state = "rising";
                 kernel.loadedModels[thisModel.loadedIndex].nextAction();
             }
         }
