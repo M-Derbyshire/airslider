@@ -59,11 +59,6 @@ class DamageFlash extends HUDComponent
         };
     }
     
-    imagesCallback()
-    {
-        kernel.assetsLoading--;
-    }
-    
     start(color)
     {
         if(this.opacity == 0)
