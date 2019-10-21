@@ -60,8 +60,8 @@ class Tarian extends Model {
         };
         
         this.z = 20;
-        this.x = (kernel.graphicEn.gameCan.width / 2) - (this.anims[this.state].width / 2);
-        this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
+        this.x = (kernel.graphicEn.gameCan.width / 2) - (this.width / 2);
+        this.y = (kernel.graphicEn.gameCan.height - this.height);
         
         this.accl = 800; // applied every tenth of a second
         this.deaccl = 100; // applied every tenth of a second
@@ -184,14 +184,14 @@ class Tarian extends Model {
             this.x = kernel.level.leftEdge;
             this.xSpeed = 0;
         }
-        if(this.x + this.anims[this.state].width > kernel.level.rightEdge)
+        if(this.x + this.width > kernel.level.rightEdge)
         {
             if(this.state == "right")
             {
                 this.state = "forward";
             }
             
-            this.x = kernel.level.rightEdge - this.anims[this.state].width;
+            this.x = kernel.level.rightEdge - this.width;
             this.xSpeed = 0;
         }
     }
@@ -200,10 +200,10 @@ class Tarian extends Model {
     {
         if (otherModel.active && 
         ((thisModel.z >= (otherModel.z - otherModel.zSpeed)) && (thisModel.z <= otherModel.z)) &&
-        (thisModel.x + thisModel.anims[thisModel.state].width >= otherModel.x) &&
-        (thisModel.x <= otherModel.x + otherModel.anims[otherModel.state].width) &&
-        (thisModel.y + thisModel.anims[thisModel.state].height >= otherModel.y) &&
-        (thisModel.y <= otherModel.y + otherModel.anims[otherModel.state].height))
+        (thisModel.x + thisModel.width >= otherModel.x) &&
+        (thisModel.x <= otherModel.x + otherModel.width) &&
+        (thisModel.y + thisModel.height >= otherModel.y) &&
+        (thisModel.y <= otherModel.y + otherModel.height))
         {
             if(thisModel.state != "exploding" && thisModel.state != "lost")
             {

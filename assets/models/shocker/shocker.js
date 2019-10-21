@@ -43,7 +43,7 @@ class Shocker extends Model
             })
         };
         
-        this.y = (kernel.graphicEn.gameCan.height - this.anims[this.state].height);
+        this.y = (kernel.graphicEn.gameCan.height - this.height);
         this.z = zCalc.vPointDepth;
         
         if(this.mode == "sweep")
@@ -70,8 +70,8 @@ class Shocker extends Model
             
             //sweep towards the player
             this.xSpeed = 
-            ((kernel.loadedModels[this.homingTargetIndex].x + (kernel.loadedModels[this.homingTargetIndex].anims[kernel.loadedModels[this.homingTargetIndex].state].width / 2)) - 
-            (this.x + (this.anims[this.state].width / 2))) / this.homingSpeed;
+            ((kernel.loadedModels[this.homingTargetIndex].x + (kernel.loadedModels[this.homingTargetIndex].width / 2)) - 
+            (this.x + (this.width / 2))) / this.homingSpeed;
         }
         
         this.z -= this.zSpeed; //not using this.moveOut(), as the levelspeed is being reset based on fps -- thus this is as well
@@ -86,7 +86,7 @@ class Shocker extends Model
     extraEvents()
     {
         //check for leaving the game area
-        if((this.x < kernel.level.leftEdge) || (this.x + this.anims[this.state].width > kernel.level.rightEdge))
+        if((this.x < kernel.level.leftEdge) || (this.x + this.width > kernel.level.rightEdge))
         {
             this.xSpeed = -this.xSpeed;
             this.x += xSpeed(this.xSpeed);

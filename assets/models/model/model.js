@@ -140,8 +140,8 @@ class Model {
             kernel.loadedAssets[this.nextFrame()][1], 
             zCalc.x(this.x, this.z), 
             zCalc.y(this.y, this.z), 
-            zCalc.width(this.anims[this.state].width, this.z), 
-            zCalc.height(this.anims[this.state].height, this.z)
+            zCalc.width(this.width, this.z), 
+            zCalc.height(this.height, this.z)
         );
     }
     

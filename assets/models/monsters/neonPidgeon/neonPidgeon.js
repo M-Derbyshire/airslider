@@ -64,7 +64,7 @@ class NeonPidgeon extends Monster {
     
     enter()
     {
-        if(kernel.level.rightEdge < (this.x + this.anims[this.state].width))
+        if(kernel.level.rightEdge < (this.x + this.width))
         {
             this.moveLeft(this.enterXSpeed);
         } else {
@@ -85,7 +85,7 @@ class NeonPidgeon extends Monster {
         
             this.moveLeft(this.exitXSpeed);
             
-            if((this.x + this.anims[this.state].width) < (kernel.level.leftEdge - this.offScreenUnits))
+            if((this.x + this.width) < (kernel.level.leftEdge - this.offScreenUnits))
             {
                 this.exiting = false;
                 this.active = false;
@@ -109,13 +109,13 @@ class NeonPidgeon extends Monster {
     {
         monster.x += xSpeed(monster.xSpeed);
         
-        if(monster.x <= kernel.level.leftEdge || monster.x + monster.anims[monster.state].width >= kernel.level.rightEdge)
+        if(monster.x <= kernel.level.leftEdge || monster.x + monster.width >= kernel.level.rightEdge)
         {
             monster.xSpeed = -monster.xSpeed;
             
             monster.x = (monster.xSpeed > 0) ? 
                 (kernel.level.leftEdge + 1) :
-                ((kernel.level.rightEdge - monster.anims[monster.state].width) - 1);
+                ((kernel.level.rightEdge - monster.width) - 1);
         }
         
         if(monster.nextDrop == -1)
@@ -123,8 +123,8 @@ class NeonPidgeon extends Monster {
             monster.nextDrop = getTotalMilliseconds() + monster.dropWaitOffset + Math.floor(Math.random() * monster.dropWaitRange);
         } else if((getTotalMilliseconds() >= monster.nextDrop) && 
             !monster.overlapping && 
-            ((monster.x + monster.anims[monster.state].width >= kernel.loadedModels[monster.playerIndex].x) && 
-            (monster.x <= kernel.loadedModels[monster.playerIndex].x + kernel.loadedModels[monster.playerIndex].anims[kernel.loadedModels[monster.playerIndex].state].width)))
+            ((monster.x + monster.width >= kernel.loadedModels[monster.playerIndex].x) && 
+            (monster.x <= kernel.loadedModels[monster.playerIndex].x + kernel.loadedModels[monster.playerIndex].width)))
         {
             monster.nextDrop = -1;
             monster.state = "falling";
@@ -155,8 +155,8 @@ class NeonPidgeon extends Monster {
     
     overlappingEvent(thisModel, otherModel)
     {
-        if(((thisModel.x + thisModel.anims[thisModel.state].width) >= otherModel.x) &&
-        (thisModel.x <= (otherModel.x + otherModel.anims[otherModel.state].width)))
+        if(((thisModel.x + thisModel.width) >= otherModel.x) &&
+        (thisModel.x <= (otherModel.x + otherModel.width)))
         {
             kernel.loadedModels[thisModel.loadedIndex].overlapping = true;
         }
@@ -164,17 +164,17 @@ class NeonPidgeon extends Monster {
     
     hitPlayerOrGroundEvent(thisModel, otherModel)
     {
-        if(((thisModel.x + thisModel.anims[thisModel.state].width >= otherModel.x) &&
-        (thisModel.x <= otherModel.x + otherModel.anims[otherModel.state].width) &&
-        (thisModel.y + thisModel.anims[thisModel.state].height >= otherModel.y) &&
-        (thisModel.y <= otherModel.y + otherModel.anims[otherModel.state].height)) || 
-        (thisModel.y + thisModel.anims[thisModel.state].height >= kernel.graphicEn.gameCan.height))
+        if(((thisModel.x + thisModel.width >= otherModel.x) &&
+        (thisModel.x <= otherModel.x + otherModel.width) &&
+        (thisModel.y + thisModel.height >= otherModel.y) &&
+        (thisModel.y <= otherModel.y + otherModel.height)) || 
+        (thisModel.y + thisModel.height >= kernel.graphicEn.gameCan.height))
         {
-            if(((thisModel.y + thisModel.anims[thisModel.state].height) > otherModel.y) && 
-            (thisModel.y + thisModel.anims[thisModel.state].height < kernel.graphicEn.gameCan.height))
+            if(((thisModel.y + thisModel.height) > otherModel.y) && 
+            (thisModel.y + thisModel.height < kernel.graphicEn.gameCan.height))
             {
                 //makes sure the player doesn't lose extra health if they collide from the side
-                kernel.loadedModels[thisModel.loadedIndex].y = otherModel.y - thisModel.anims[thisModel.state].height - 1;
+                kernel.loadedModels[thisModel.loadedIndex].y = otherModel.y - thisModel.height - 1;
             }
             
             if(thisModel.state == "falling")

@@ -97,7 +97,7 @@ class Falcon extends Monster {
     enter()
     {
         // move until centered above player
-        if(this.x + (this.anims[this.state].width / 2) < this.player.x + (this.player.anims[this.player.state].width / 2))
+        if(this.x + (this.width / 2) < this.player.x + (this.player.width / 2))
         {
             this.moveRight(this.enterXSpeed);
         } else {
@@ -145,14 +145,14 @@ class Falcon extends Monster {
         monster.damageDealt = monster.damageDealtOrig;
         
         //keep monster centered above player
-        monster.x = monster.player.x + (monster.player.anims[monster.player.state].width / 2) - (monster.anims[monster.state].width / 2);
+        monster.x = monster.player.x + (monster.player.width / 2) - (monster.width / 2);
         
         if(getTotalMilliseconds() - monster.lastSwoop >= monster.swoopWait)
         {
             monster.swoopWait = (Math.random() * 3000) + 1000; //between 1 and 4 seconds
             // will set the lastSwoop time after swooping has finished
             
-            if(monster.x + (monster.anims[monster.state].width / 2) > (kernel.level.rightEdge - kernel.level.leftEdge) / 2)
+            if(monster.x + (monster.width / 2) > (kernel.level.rightEdge - kernel.level.leftEdge) / 2)
             {
                 monster.directionMultiplier = -1;
                 monster.state = "left";
@@ -168,9 +168,9 @@ class Falcon extends Monster {
     strafe(monster)
     {
         let mx = monster.x;
-        let mw = monster.x + monster.anims[monster.state].width;
+        let mw = monster.x + monster.width;
         let px = kernel.loadedModels[monster.playerIndex].x;
-        let pw = kernel.loadedModels[monster.playerIndex].anims[kernel.loadedModels[monster.playerIndex].state].width;
+        let pw = kernel.loadedModels[monster.playerIndex].width;
         let yDifference = kernel.loadedModels[monster.playerIndex].y - monster.y;
         
         // if the position is correct for a swoop down
@@ -188,7 +188,7 @@ class Falcon extends Monster {
     swoopDown(monster)
     {
         //center of monster and player
-        let mc = monster.x + (monster.anims[monster.state].width / 2);
+        let mc = monster.x + (monster.width / 2);
         let pc = kernel.loadedModels[monster.playerIndex].x + (kernel.loadedModels[monster.playerIndex].width / 2);
         
         let directionChange = 5;
@@ -221,8 +221,8 @@ class Falcon extends Monster {
     reposition(monster)
     {
         //get player center and monster center; also pre-calculate the real speed of the monster
-        let pc = kernel.loadedModels[monster.playerIndex].x + (kernel.loadedModels[monster.playerIndex].anims[kernel.loadedModels[monster.playerIndex].state].width / 2)
-        let mc = monster.x + (monster.anims[monster.state].width / 2);
+        let pc = kernel.loadedModels[monster.playerIndex].x + (kernel.loadedModels[monster.playerIndex].width / 2)
+        let mc = monster.x + (monster.width / 2);
         let calcSpeed = xSpeed(monster.xSpeed);
         
         if(mc < pc + calcSpeed && mc > pc - calcSpeed)
@@ -239,16 +239,16 @@ class Falcon extends Monster {
     
     hitPlayerOrGroundEvent(thisModel, otherModel)
     {
-        if(((thisModel.x + thisModel.anims[thisModel.state].width >= otherModel.x) &&
-        (thisModel.x <= otherModel.x + otherModel.anims[otherModel.state].width) &&
-        (thisModel.y + thisModel.anims[thisModel.state].height >= otherModel.y) &&
-        (thisModel.y <= otherModel.y + otherModel.anims[otherModel.state].height)) || 
-        (thisModel.y + thisModel.anims[thisModel.state].height >= kernel.graphicEn.gameCan.height))
+        if(((thisModel.x + thisModel.width >= otherModel.x) &&
+        (thisModel.x <= otherModel.x + otherModel.width) &&
+        (thisModel.y + thisModel.height >= otherModel.y) &&
+        (thisModel.y <= otherModel.y + otherModel.height)) || 
+        (thisModel.y + thisModel.height >= kernel.graphicEn.gameCan.height))
         {
             if(thisModel.state == "dropLeft" || thisModel.state == "dropRight")
             {
                 // if the monster didn't collide with the ground
-                if(thisModel.y + thisModel.anims[thisModel.state].height < kernel.graphicEn.gameCan.height)
+                if(thisModel.y + thisModel.height < kernel.graphicEn.gameCan.height)
                 {
                     thisModel.directionMultiplier = -thisModel.directionMultiplier;
                 }

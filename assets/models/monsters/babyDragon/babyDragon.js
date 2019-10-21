@@ -47,7 +47,7 @@ class BabyDragon extends Monster {
     
     enter()
     {
-        if(kernel.level.rightEdge < (this.x + this.anims[this.state].width))
+        if(kernel.level.rightEdge < (this.x + this.width))
         {
             this.moveLeft(this.enterXSpeed);
         } else {
@@ -60,7 +60,7 @@ class BabyDragon extends Monster {
         this.state = "left";
         this.moveLeft(this.enterXSpeed);
         
-        if((this.x + this.anims[this.state].width) < (kernel.level.leftEdge - this.offScreenUnits))
+        if((this.x + this.width) < (kernel.level.leftEdge - this.offScreenUnits))
         {
             this.exiting = false;
             this.active = false;
@@ -82,14 +82,14 @@ class BabyDragon extends Monster {
     {
         monster.x += xSpeed(monster.xSpeed);
         
-        if(monster.x + (monster.anims[monster.state].width / 2) <= kernel.level.leftEdge || (monster.x + (monster.anims[monster.state].width / 2) >= kernel.level.rightEdge))
+        if(monster.x + (monster.width / 2) <= kernel.level.leftEdge || (monster.x + (monster.width / 2) >= kernel.level.rightEdge))
         {
             monster.xSpeed = -monster.xSpeed;
             monster.state = (monster.state == "left") ? "right" : "left";
             
             monster.x = (monster.xSpeed > 0) ? 
-                ((kernel.level.leftEdge - (monster.anims[monster.state].width / 2)) + 1) :
-                ((kernel.level.rightEdge - (monster.anims[monster.state].width / 2)) - 1);
+                ((kernel.level.leftEdge - (monster.width / 2)) + 1) :
+                ((kernel.level.rightEdge - (monster.width / 2)) - 1);
         }
         
         if(!kernel.loadedModels[monster.lavaBallIndex].active && monster.fireWeapon)
@@ -111,8 +111,8 @@ class BabyDragon extends Monster {
             xOffset = -xOffset - xUnit(25);
         }
         
-        l.x = monster.x + (monster.anims[monster.state].width / 2) + xOffset;
-        l.y = monster.y + monster.anims[monster.state].height + -yUnit(20);
+        l.x = monster.x + (monster.width / 2) + xOffset;
+        l.y = monster.y + monster.height + -yUnit(20);
         
         l.state = "drop";
         l.active = true;
