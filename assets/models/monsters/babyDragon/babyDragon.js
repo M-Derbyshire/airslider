@@ -80,7 +80,7 @@ class BabyDragon extends Monster {
     
     move(monster)
     {
-        monster.x += xSpeed(monster.xSpeed);
+        monster.moveRight(monster.xSpeed);
         
         if(monster.x + (monster.width / 2) <= kernel.level.leftEdge || (monster.x + (monster.width / 2) >= kernel.level.rightEdge))
         {

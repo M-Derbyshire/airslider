@@ -75,7 +75,7 @@ class Shocker extends Model
         }
         
         this.z -= this.zSpeed; //not using this.moveOut(), as the levelspeed is being reset based on fps -- thus this is as well
-        this.x += xSpeed(this.xSpeed);
+        this.moveRight(this.xSpeed);
         
         if(this.z < 0)
         {
@@ -89,7 +89,7 @@ class Shocker extends Model
         if((this.x < kernel.level.leftEdge) || (this.x + this.width > kernel.level.rightEdge))
         {
             this.xSpeed = -this.xSpeed;
-            this.x += xSpeed(this.xSpeed);
+            this.moveRight(this.xSpeed);
         }
     }
 }

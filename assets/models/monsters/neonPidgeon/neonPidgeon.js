@@ -107,7 +107,7 @@ class NeonPidgeon extends Monster {
     
     moveSideways(monster)
     {
-        monster.x += xSpeed(monster.xSpeed);
+        monster.moveRight(monster.xSpeed);
         
         if(monster.x <= kernel.level.leftEdge || monster.x + monster.width >= kernel.level.rightEdge)
         {
