@@ -1,9 +1,5 @@
 class ZCalc 
 {
-    //I'm going to say this right now:
-    //I don't know how I did it, but I did it.
-    // -- Darbs
-    
     constructor()
     {
         //vanishing point is set with vPointX and vPointY
@@ -11,7 +7,7 @@ class ZCalc
         this._vPointY;
         
         this._vPointDepth; //the max z position
-        this._calcDepth; //used when calculating the depth
+        this._calcDepth; //a precalculated value based on the depth set
     }
     
     //getters and setters -----------------------------------------
@@ -25,12 +21,12 @@ class ZCalc
         this._vPointX = x;
         this._vPointY = y;
         this._vPointDepth = depth;
-        this._calcDepth = (depth / 32);
+        this._calcDepth = (depth / 8); //precalculating this here.
     }
     
     //-----------------------------------------------------------------
     
-    speed(speed)
+    speed(speed) //this is used to keep the speed on the z-axis consistent (especially with the changing fps)
     {
         return ((this._vPointDepth / 1000) * speed) / kernel.fps;
     }
@@ -55,8 +51,8 @@ class ZCalc
         return this.dimension(zPos, height);
     }
     
-    //Takes the model's z position, then the model's x or y position for the axis,
-    //and then the vanishing point value for that axis.
+    //Takes the model's z position, the model's x or y position,
+    //and the vanishing point value for that axis.
     //Returns the scaled value for the position on that axis.
     position(zPos, axisPos, axisVPoint)
     {
@@ -64,8 +60,7 @@ class ZCalc
         {
             return 0;
         } else {
-            zPos = this.calculateLoopZPos(zPos)
-            for(let i = 0; i <= zPos; i++)
+            for(let i = 0; i < zPos; i++)
             {
                 axisPos += ((axisVPoint - axisPos) / this._calcDepth);
             }
@@ -80,21 +75,12 @@ class ZCalc
         {
             return 0;
         } else {
-            zPos = this.calculateLoopZPos(zPos)
-            for(let i = 0; i <= zPos; i++)
+            for(let i = 0; i < zPos; i++)
             {
                 dimension -= (dimension / this._calcDepth);
             }
             return dimension;
         }
-    }
-    
-    //Makes changes to the zPos that are needed before being used in the for loop.
-    //I apologise for not being able to go into more detail, but as I said at the top,
-    //the explanation for this has been lost to the depths of my subconcious.
-    calculateLoopZPos(zPos)
-    {
-        return (zPos - 1) / 4;
     }
 }
 
