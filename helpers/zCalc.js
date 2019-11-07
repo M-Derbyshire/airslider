@@ -7,7 +7,10 @@ class ZCalc
         this._vPointY;
         
         this._vPointDepth; //the max z position
-        this._calcDepth; //a precalculated value based on the depth set
+        
+        //A precalculated value based on the depth set
+        //(This is explained in the "Scaled Positions and Dimensions" section)
+        this._calcDepth;
     }
     
     //-------------------------- getters and setters ----------------------------
@@ -21,7 +24,10 @@ class ZCalc
         this._vPointX = x;
         this._vPointY = y;
         this._vPointDepth = depth;
-        this._calcDepth = depth / 8; //precalculating this here.
+        
+        //Precalculating this here. 
+        //It is explained in the "Scaled Positions and Dimensions" section below.
+        this._calcDepth = depth / 8; 
     }
     
     //---------------------------- Methods -------------------------------------
