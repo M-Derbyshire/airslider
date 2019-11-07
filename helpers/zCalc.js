@@ -29,9 +29,9 @@ class ZCalc
     //-------------------------- Z Axis Speed ----------------------------------
     
     //This is used to keep the speed on the z-axis consistent (so the changing fps is not a problem)
-    speed(speed)
+    speed(speed, fps)
     {
-        return ((this._vPointDepth / 1000) * speed) / kernel.fps;
+        return ((this._vPointDepth / 1000) * speed) / fps;
     }
     
     //------------------- Scaled Positions and Dimensions ---------------------

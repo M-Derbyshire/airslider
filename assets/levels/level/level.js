@@ -66,7 +66,7 @@ class Level
     {
         if(this.levelSpeed != 0)
         {
-            this.levelSpeed = zCalc.speed(this.levelSpeedRaw); //need to use this in monsters for death
+            this.levelSpeed = zCalc.speed(this.levelSpeedRaw, kernel.fps); //need to use this in monsters for death
         }
     }
     

@@ -182,11 +182,11 @@ class Model {
     
     moveIn(speed)
     {
-        this.z += zCalc.speed(speed);
+        this.z += zCalc.speed(speed, kernel.fps);
     }
     
     moveOut(speed)
     {
-        this.z -= zCalc.speed(speed);
+        this.z -= zCalc.speed(speed, kernel.fps);
     }
 }
