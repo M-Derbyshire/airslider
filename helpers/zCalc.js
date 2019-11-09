@@ -30,8 +30,6 @@ class ZCalc
         this._calcDepth = depth / 8; 
     }
     
-    //---------------------------- Methods -------------------------------------
-    
     //-------------------------- Z Axis Speed ----------------------------------
     
     //This is used to keep the speed on the z-axis consistent (so the changing fps is not a problem)
@@ -99,12 +97,17 @@ class ZCalc
         return this._dimension(zPos, height);
     }
     
+    _isOutOfView(zPos) //if the given z position is not viewable
+    {
+        return (zPos > this._vPointDepth || zPos < 0);
+    }
+    
     //Takes the model's z position, the model's x or y position,
     //and the vanishing point value for that axis.
     //Returns the scaled value for the position on that axis.
     _position(zPos, axisPos, axisVPoint)
     {
-        if(zPos > this._vPointDepth || zPos < 0)
+        if(this._isOutOfView(zPos))
         {
             return 0;
         } else {
@@ -119,7 +122,7 @@ class ZCalc
     //Same concept as above, except does this with the dimensions instead of the positions
     _dimension(zPos, dimension)
     {
-        if(zPos > this._vPointDepth || zPos < 0)
+        if(this._isOutOfView(zPos))
         {
             return 0;
         } else {
