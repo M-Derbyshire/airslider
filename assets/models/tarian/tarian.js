@@ -205,7 +205,7 @@ class Tarian extends Model {
         (thisModel.y + thisModel.height >= otherModel.y) &&
         (thisModel.y <= otherModel.y + otherModel.height))
         {
-            if(thisModel.state != "exploding" && thisModel.state != "lost")
+            if("damageDealt" in otherModel && otherModel.damageDealt > 0 && thisModel.state != "exploding" && thisModel.state != "lost")
             {
                 kernel.loadedModels[thisModel.loadedIndex].health -= otherModel.damageDealt;
                 if(kernel.loadedModels[thisModel.loadedIndex].health <= 0)
