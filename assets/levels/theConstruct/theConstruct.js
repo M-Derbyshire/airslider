@@ -21,9 +21,10 @@ class TheConstruct extends Level
         this.HUD.modelIndexes.push(0);
         
         // models.push(new NeonPidgeon(0));
-        models.push(new Falcon(0));
+        // models.push(new Falcon(0));
         // models.push(new LavaBall());
         // models.push(new BabyDragon(0, 1));
+        models.push(new Werewolf(0));
         this.monsterIndex = 1;
         
         for(let i = this.shockerIndexes.from; i <= this.shockerIndexes.to; i++)
@@ -53,10 +54,10 @@ class TheConstruct extends Level
         kernel.graphicEn.lightMask = this.tunnelLightMask;
         kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
         
-        this.createStartingTunnel([
-            this.newTunnelPart("#0000ff", 60),
-            this.newTunnelPart("#000000", 15)
-        ]);
+        // this.createStartingTunnel([
+        //     this.newTunnelPart("#0000ff", 60),
+        //     this.newTunnelPart("#000000", 15)
+        // ]);
     }
     
     act()
@@ -66,53 +67,28 @@ class TheConstruct extends Level
         //if outside/inside changes, change light mask
         this.checkLightMask();
         
-        if(getTotalSeconds() <= 37)
-        {
-            this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
-        }
+        // if(getTotalSeconds() <= 37)
+        // {
+        //     this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
+        // }
         
-        if(getTotalSeconds() <= 43)
-        {
-            //tunnel stuff
-            this.continueTunnel([
-                this.newTunnelPart("#0000ff", 60),
-                this.newTunnelPart("#000000", 15)
-            ]);
-        }
+        // if(getTotalSeconds() <= 43)
+        // {
+        //     //tunnel stuff
+        //     this.continueTunnel([
+        //         this.newTunnelPart("#0000ff", 60),
+        //         this.newTunnelPart("#000000", 15)
+        //     ]);
+        // }
         
-        if(getTotalSeconds() >= 43 && getTotalSeconds() <= 44 && this.tunnel[this.tunnel.length - 1].color !== "clear")
-        {
-            this.continueTunnel([
-                this.newTunnelPart("clear", 1)
-            ]);
-        }
-        
-        if(!this.outsideVisible && getTotalSeconds() >= 44 && getTotalSeconds() <= 45)
-        {
-            this.outsideVisible = true;
-        }
-        
-        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 45 && getTotalSeconds() <= 46 && !kernel.loadedModels[this.monsterIndex].entering)
+        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !kernel.loadedModels[this.monsterIndex].entering)
         {
             kernel.loadedModels[this.monsterIndex].start();
         }
         
-        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 75 && getTotalSeconds() <= 76 && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
+        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 30 && getTotalSeconds() <= 31 && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
         {
             kernel.loadedModels[this.monsterIndex].stop();
-        }
-        
-        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 83)
-        {
-            this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
-            
-            //tunnel stuff
-            this.continueTunnel([
-                this.newTunnelPart("#000000", 15),
-                this.newTunnelPart("#0000ff", 60),
-                this.newTunnelPart("#000000", 15),
-                this.newTunnelPart("clear", 60)
-            ]);
         }
     }
 }
