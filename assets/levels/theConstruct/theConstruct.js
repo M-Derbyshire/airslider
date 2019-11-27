@@ -54,10 +54,10 @@ class TheConstruct extends Level
         kernel.graphicEn.lightMask = this.tunnelLightMask;
         kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
         
-        // this.createStartingTunnel([
-        //     this.newTunnelPart("#0000ff", 60),
-        //     this.newTunnelPart("#000000", 15)
-        // ]);
+        this.createStartingTunnel([
+            this.newTunnelPart("#0000ff", 60),
+            this.newTunnelPart("#000000", 15)
+        ]);
     }
     
     act()
@@ -72,14 +72,11 @@ class TheConstruct extends Level
         //     this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
         // }
         
-        // if(getTotalSeconds() <= 43)
-        // {
-        //     //tunnel stuff
-        //     this.continueTunnel([
-        //         this.newTunnelPart("#0000ff", 60),
-        //         this.newTunnelPart("#000000", 15)
-        //     ]);
-        // }
+        //tunnel stuff
+        this.continueTunnel([
+            this.newTunnelPart("#0000ff", 60),
+            this.newTunnelPart("#000000", 15)
+        ]);
         
         if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !kernel.loadedModels[this.monsterIndex].entering)
         {
