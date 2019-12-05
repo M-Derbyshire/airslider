@@ -55,7 +55,8 @@ class DamageFlash extends HUDComponent
             red: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/red.png"),
             purple: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/purple.png"),
             none: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/none.png"),
-            fire: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/fire.png")
+            fire: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/fire.png"),
+            tooth: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/tooth.png")
         };
     }
     

@@ -68,13 +68,14 @@ class Tarian extends Model {
         this.topSpeed = 1000;
         this.xSpeed = 0;
         
-        this.zSpeed = 0; //used on failure
+        this.zSpeed = 35; //used on failure
         
         this.registerEvent([
             "Shocker", 
             "NeonPidgeon",
             "LavaBall",
-            "Falcon"
+            "Falcon",
+            "Werewolf"
         ], this.zCollisionEvent);
     }
     
@@ -108,8 +109,7 @@ class Tarian extends Model {
         if(this.state == "lost" && this.z >= 0)
         {
             this.state = "lost";
-            this.zSpeed -= 15;
-            this.moveOut(-this.zSpeed);
+            this.moveOut(this.zSpeed);
         }
         
         //if Tarian is offscreen after loss

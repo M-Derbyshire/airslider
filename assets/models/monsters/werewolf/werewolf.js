@@ -6,7 +6,8 @@ class Werewolf extends Monster {
         this.playerIndex = playerIndex;
         this.specialLevel = otherMonster;
         
-        this.damageDealt = 10;
+        this.damageDealtOrig = 2;
+        this.damageDealt = this.damageDealtOrig;
         this.color = "tooth";
     }
     
@@ -29,21 +30,21 @@ class Werewolf extends Monster {
             }),
         };
         
-        this.registerEvent(["Tarian"], this.hitPlayerOrGroundEvent);
+        this.registerEvent(["Tarian"], this.zCollisionEvent);
         
         this.actions = [
             this.sweep,
             this.moveUp
         ];
         
-        this.exitZSpeed = 30;
+        this.exitZSpeed = 50;
         this.state = "left";
         this.startY = (kernel.graphicEn.gameCan.height - this.height);
         this.startX = kernel.graphicEn.gameCan.width / 2;
         this.startZ = zCalc.vPointDepth;
         this.minXSpeed = 1000;
         this.maxXSpeed = 2000;
-        this.zSpeed = 120;
+        this.zSpeed = 12; // this will be multiplied by 10, as 120 was affecting Tarian's zCollision event
         
         //outLimit is how far back the monster will go, before moving forward
         //inLimit is the point the wolf will start it's sweeping again
@@ -66,7 +67,7 @@ class Werewolf extends Monster {
         this.state = this.setHeadDirection();
         
         //move
-        this.moveOut(this.exitZSpeed);
+        this.moveIn(this.exitZSpeed);
         
         if(this.z <= 0)
         {
@@ -121,7 +122,7 @@ class Werewolf extends Monster {
         monster.moveRight(monster.xSpeed * monster.directionMultiplier);
         
         //move monster on z axis
-        monster.moveOut(monster.zSpeed);
+        monster.moveOut(monster.zSpeed * 10);
         
         //should monster move forward to reset?
         if(monster.z <= monster.outLimit)
@@ -137,13 +138,14 @@ class Werewolf extends Monster {
         monster.state = monster.setHeadDirection();
         
         //move back in
-        monster.moveIn(monster.zSpeed);
+        monster.moveIn(monster.zSpeed * 10);
         
         //go back to sweep if need be
         if(monster.z >= monster.inLimit)
         {
             monster.xSpeed = monster.getNewSpeed();
             monster.z = monster.inLimit;
+            monster.damageDealt = monster.damageDealtOrig;
             monster.nextAction();
         }
     }
@@ -151,15 +153,21 @@ class Werewolf extends Monster {
     
     //events------------------------------------------------------------
     
-    hitPlayerOrGroundEvent(thisModel, otherModel)
+    zCollisionEvent(thisModel, otherModel)
     {
-        if(((thisModel.x + thisModel.width >= otherModel.x) &&
+        if (otherModel.active && 
+        ((thisModel.z >= (otherModel.z - otherModel.zSpeed)) && (thisModel.z <= otherModel.z)) &&
+        (thisModel.x + thisModel.width >= otherModel.x) &&
         (thisModel.x <= otherModel.x + otherModel.width) &&
         (thisModel.y + thisModel.height >= otherModel.y) &&
-        (thisModel.y <= otherModel.y + otherModel.height)) || 
-        (thisModel.y + thisModel.height >= kernel.graphicEn.gameCan.height))
+        (thisModel.y <= otherModel.y + otherModel.height))
         {
-            
+            if(thisModel.currentAction == 0 && !thisModel.exiting) //the index number of the current action method in the array in Monster class
+            {
+                kernel.loadedModels[thisModel.loadedIndex].z = otherModel.z + thisModel.zSpeed + 1;
+                kernel.loadedModels[thisModel.loadedIndex].damageDealt = 0; //in case it's still colliding (will be reset when it gets to the inLimit)
+                kernel.loadedModels[thisModel.loadedIndex].nextAction();
+            }
         }
     }
 }
