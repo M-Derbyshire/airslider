@@ -9,6 +9,9 @@ class TheConstruct extends Level
             from: 2,
             to: 17
         };
+        
+        this.tunnelSprite = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/theConstructTunnel.png");
+        this.tunnelSpriteLength = 70;
     }
     
     getModels()
@@ -57,8 +60,7 @@ class TheConstruct extends Level
         kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
         
         this.createStartingTunnel([
-            this.newTunnelPart("#0000ff", 60),
-            this.newTunnelPart("#000000", 15)
+            this.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
         ]);
     }
     
@@ -76,20 +78,19 @@ class TheConstruct extends Level
         
         //tunnel stuff
         this.continueTunnel([
-            this.newTunnelPart("#0000ff", 60),
-            this.newTunnelPart("#000000", 15)
+            this.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
         ]);
         
         if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !kernel.loadedModels[this.wolfIndex].entering)
         {
-            kernel.loadedModels[this.wolfIndex].start();
-            kernel.loadedModels[this.falconIndex].start();
+            //kernel.loadedModels[this.wolfIndex].start();
+            //kernel.loadedModels[this.falconIndex].start();
         }
         
         if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 30 && getTotalSeconds() <= 31 && !kernel.loadedModels[this.wolfIndex].exiting && kernel.loadedModels[this.wolfIndex].active)
         {
-            kernel.loadedModels[this.wolfIndex].stop();
-            kernel.loadedModels[this.falconIndex].stop();
+            //kernel.loadedModels[this.wolfIndex].stop();
+            //kernel.loadedModels[this.falconIndex].stop();
         }
     }
 }

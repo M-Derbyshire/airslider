@@ -220,9 +220,10 @@ class Level
                 
                 } else if((i + 2) % 3 == 0) //if this is every second in every 3 shockers
                 {
+                    // now on the right side
                     xPos = (Math.random() * (((this.rightEdge - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width) - this.leftEdge) / 2)) + ((this.rightEdge - this.leftEdge) / 2);
                 
-                } else //might as well be if this is first in every 3 shockers
+                } else //If this is first in every 3 shockers
                 {
                     // put where player is (x coordinate)
                     
@@ -253,58 +254,46 @@ class Level
     //tunnel[i].z - .length - .color - .active
     drawTunnel()
     {
-        if(this.tunnel.length > 0 && !this.tunnel[0].active)
-        {
-            this.tunnel[0].active = true;
-        }
-        
         for(let i = 0; i < this.tunnel.length; i++)
         {
-            if(this.tunnel[i].color == "clear")
-            {
-                kernel.graphicEn.gameCtx.clearRect(
-                    zCalc.x(0, this.tunnel[i].z),
-                    zCalc.y(0, this.tunnel[i].z),
-                    zCalc.width(kernel.graphicEn.gameCan.width, this.tunnel[i].z),
-                    zCalc.height(kernel.graphicEn.gameCan.height, this.tunnel[i].z)
-                );
-            } else {
-                kernel.graphicEn.gameCtx.fillStyle = this.tunnel[i].color;
-                kernel.graphicEn.gameCtx.fillRect(
-                    zCalc.x(0, this.tunnel[i].z),
-                    zCalc.y(0, this.tunnel[i].z),
-                    zCalc.width(kernel.graphicEn.gameCan.width, this.tunnel[i].z),
-                    zCalc.height(kernel.graphicEn.gameCan.height, this.tunnel[i].z)
-                );
-            }
-            
-            if((i < (this.tunnel.length - 1)) && !this.tunnel[i + 1].active && ((zCalc.vPointDepth - this.tunnel[i].z) >= this.tunnel[i].length))
-            {
-                this.tunnel[i + 1].active = true;
-                this.tunnel[i + 1].z = this.tunnel[i].z + this.tunnel[i].length;
-            }
-            
             if(this.tunnel[i].active)
             {
-                this.tunnel[i].z -= this.levelSpeed;
-            }
-            
-            //keep at 0 if need be
-            //needs to be last as array length may change
-            if(this.tunnel[i].z < 0)
-            {
-                this.tunnel[i].z = 0;
-                this.tunnel[i].active = false;
+                let tunnelPart = this.tunnel[i];
                 
-                //get rid of previous one
-                if(i != 0)
+                //move the image
+                tunnelPart.z -= this.levelSpeed;
+                
+                //draw the image (-1 is a clear piece)
+                if(tunnelPart.imageIndex > -1)
                 {
-                    this.tunnel.splice(i - 1, 1);
-                    i--;
-                } else if(this.tunnel[i].color == "clear")
+                    kernel.graphicEn.gameCtx.drawImage(
+                        kernel.loadedAssets[tunnelPart.imageIndex][1], 
+                        zCalc.x(0, tunnelPart.z), 
+                        zCalc.y(0, tunnelPart.z), 
+                        zCalc.width(kernel.graphicEn.gameCan.width, tunnelPart.z), 
+                        zCalc.height(kernel.graphicEn.gameCan.height, tunnelPart.z)
+                    );
+                }
+                
+                //if this is the second piece, and it's moved far enough, activate the next one
+                if(i == 1 && (tunnelPart.z + tunnelPart.length) <= zCalc.vPointDepth)
                 {
-                    this.tunnel.splice(i, 1);
-                    i--;
+                    this.tunnel[0].active = true;
+                    this.tunnel[0].z = tunnelPart.z + tunnelPart.length;
+                }
+                
+                //if this is the last piece, and it's out of the frame, it's no longer needed
+                if(this.tunnel.length > 1 && i == this.tunnel.length - 1)
+                {
+                    if(this.tunnel[i - 1].z <= 0) //if the one before this is moving out of frame
+                    {
+                        this.tunnel.pop(); // pop out this piece of the tunnel
+                    }
+                } else {
+                    if(tunnelPart.z + (tunnelPart.length * 3) <= 0)
+                    {
+                        this.tunnel.pop(); // pop out this piece of the tunnel
+                    }
                 }
             }
         }
@@ -313,42 +302,40 @@ class Level
     
     continueTunnel(newTunnelParts)
     {
-        if(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].active)
+        if(this.tunnel.length == 0 || this.tunnel[0].active)
         {
             for(let i = 0; i < newTunnelParts.length; i++)
             {
-                this.tunnel.push(newTunnelParts[i]);
+                this.tunnel.unshift(newTunnelParts[i]);
             }
         }
     }
     
-    //tunnel[i].z - .length - .color - .active
-    newTunnelPart(col, len = 1)
+    //tunnel[i].z - .length - .imageIndex - .active
+    newTunnelPart(image, length = 1)
     {
         return {
             z: zCalc.vPointDepth,
-            length: len,
-            color: col,
+            length: length,
+            imageIndex: image, //-1 is a clear piece of the tunnel
             active: false
         };
     }
     
     createStartingTunnel(parts)
     {
-        while(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].z < zCalc.vPointDepth)
+        while(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].z > 0)
         {
-            parts = JSON.parse(JSON.stringify(parts));
+            //parts = JSON.parse(JSON.stringify(parts));
             
             for(let i = 0; i < parts.length; i++)
             {
-                this.tunnel.push(parts[i]);
+                this.tunnel.unshift(parts[i]);
                 this.tunnel[this.tunnel.length - 1].active = true;
                 
                 if(this.tunnel.length > 1)
                 {
-                    this.tunnel[this.tunnel.length - 1].z = this.tunnel[this.tunnel.length - 2].z + this.tunnel[this.tunnel.length - 2].length;
-                } else {
-                    this.tunnel[this.tunnel.length - 1].z = 0;
+                    this.tunnel[this.tunnel.length - 1].z = this.tunnel[this.tunnel.length - 2].z - this.tunnel[this.tunnel.length - 2].length;
                 }
             }
         }
