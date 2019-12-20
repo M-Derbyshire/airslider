@@ -75,14 +75,14 @@ class Level
         if(kernel.graphicEn.lightMask != this.tunnelLightMask && 
             this.tunnel.length > 0 && 
             this.tunnel[0].z <= 0 &&
-            this.tunnel[Math.floor((this.tunnel.length / 4))].color != "clear")
+            this.tunnel[Math.floor((this.tunnel.length / 4))].imageIndex != -1)
         {
             kernel.graphicEn.lightMask = this.tunnelLightMask;
             kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
         }
         
         if(kernel.graphicEn.lightMask != this.outsideLightMask &&
-            (this.tunnel.length == 0 || this.tunnel[Math.floor(this.tunnel.length / 8)].color == "clear"))
+            (this.tunnel.length == 0 || this.tunnel[Math.floor(this.tunnel.length / 8)].imageIndex == -1))
         {
             kernel.graphicEn.lightMask = this.outsideLightMask;
             kernel.graphicEn.lightLuminosity = this.outsideLightBrightness;
@@ -268,10 +268,10 @@ class Level
                 {
                     kernel.graphicEn.gameCtx.drawImage(
                         kernel.loadedAssets[tunnelPart.imageIndex][1], 
-                        zCalc.x(0, tunnelPart.z), 
-                        zCalc.y(0, tunnelPart.z), 
-                        zCalc.width(kernel.graphicEn.gameCan.width, tunnelPart.z), 
-                        zCalc.height(kernel.graphicEn.gameCan.height, tunnelPart.z)
+                        zCalc.x(0, tunnelPart.z, true), 
+                        zCalc.y(0, tunnelPart.z, true), 
+                        zCalc.width(kernel.graphicEn.gameCan.width, tunnelPart.z, true), 
+                        zCalc.height(kernel.graphicEn.gameCan.height, tunnelPart.z, true)
                     );
                 }
                 
