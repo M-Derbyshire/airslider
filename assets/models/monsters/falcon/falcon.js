@@ -1,11 +1,9 @@
 class Falcon extends Monster {
-    constructor(playerIndex, otherMonsterIndex = -1)
+    constructor(playerIndex)
     {
         super(Monster);
         
         this.playerIndex = playerIndex;
-        this.specialLevel = (otherMonsterIndex >= 0);
-        this.wolfIndex = otherMonsterIndex;
         
         this.overlapping = false;
         

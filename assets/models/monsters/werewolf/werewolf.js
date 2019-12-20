@@ -1,10 +1,9 @@
 class Werewolf extends Monster {
-    constructor(playerIndex, otherMonster = false)
+    constructor(playerIndex)
     {
         super(Monster);
         
         this.playerIndex = playerIndex;
-        this.specialLevel = otherMonster;
         
         this.damageDealtOrig = 2;
         this.damageDealt = this.damageDealtOrig;

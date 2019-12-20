@@ -24,8 +24,10 @@ class TheConstruct extends Level
         // models.push(new Falcon(0));
         // models.push(new LavaBall());
         // models.push(new BabyDragon(0, 1));
+        this.wolfIndex = 1;
+        this.falconIndex = 2;
         models.push(new Werewolf(0));
-        this.monsterIndex = 1;
+        models.push(new Falcon(0));
         
         for(let i = this.shockerIndexes.from; i <= this.shockerIndexes.to; i++)
         {
@@ -78,14 +80,16 @@ class TheConstruct extends Level
             this.newTunnelPart("#000000", 15)
         ]);
         
-        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !kernel.loadedModels[this.monsterIndex].entering)
+        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !kernel.loadedModels[this.wolfIndex].entering)
         {
-            kernel.loadedModels[this.monsterIndex].start();
+            kernel.loadedModels[this.wolfIndex].start();
+            kernel.loadedModels[this.falconIndex].start();
         }
         
-        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 30 && getTotalSeconds() <= 31 && !kernel.loadedModels[this.monsterIndex].exiting && kernel.loadedModels[this.monsterIndex].active)
+        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 30 && getTotalSeconds() <= 31 && !kernel.loadedModels[this.wolfIndex].exiting && kernel.loadedModels[this.wolfIndex].active)
         {
-            kernel.loadedModels[this.monsterIndex].stop();
+            kernel.loadedModels[this.wolfIndex].stop();
+            kernel.loadedModels[this.falconIndex].stop();
         }
     }
 }
