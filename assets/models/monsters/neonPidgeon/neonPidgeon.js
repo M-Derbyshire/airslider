@@ -15,21 +15,21 @@ class NeonPidgeon extends Monster {
     {
         this.anims = {
             falling: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/monsters/neonPidgeon/anim/falling",
+                path: "/assets/models/monsters/neonPidgeon/anim/falling",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(250),
                 height: yUnit(200),
             }),
             flapping: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/monsters/neonPidgeon/anim/flapping",
+                path: "/assets/models/monsters/neonPidgeon/anim/flapping",
                 frameCount: 4,
                 fps: 24,
                 width: xUnit(250),
                 height: yUnit(200),
             }),
             rising: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/monsters/neonPidgeon/anim/rising",
+                path: "/assets/models/monsters/neonPidgeon/anim/rising",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(250),

@@ -50,13 +50,13 @@ class DamageFlash extends HUDComponent
     load()
     {
         this.images = {
-            yellow: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/yellow.png"),
-            orange: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/orange.png"),
-            red: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/red.png"),
-            purple: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/purple.png"),
-            none: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/none.png"),
-            fire: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/fire.png"),
-            tooth: kernel.loadImage(kernel.rootPath + "/assets/HUDs/components/damageFlash/images/tooth.png")
+            yellow: kernel.loadImage("/assets/HUDs/components/damageFlash/images/yellow.png"),
+            orange: kernel.loadImage("/assets/HUDs/components/damageFlash/images/orange.png"),
+            red: kernel.loadImage("/assets/HUDs/components/damageFlash/images/red.png"),
+            purple: kernel.loadImage("/assets/HUDs/components/damageFlash/images/purple.png"),
+            none: kernel.loadImage("/assets/HUDs/components/damageFlash/images/none.png"),
+            fire: kernel.loadImage("/assets/HUDs/components/damageFlash/images/fire.png"),
+            tooth: kernel.loadImage("/assets/HUDs/components/damageFlash/images/tooth.png")
         };
     }
     

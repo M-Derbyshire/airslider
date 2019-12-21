@@ -16,14 +16,14 @@ class LavaBall extends Model {
         
         this.anims = {
             drop: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/monsters/attacks/lavaBall/anim/drop",
+                path: "/assets/models/monsters/attacks/lavaBall/anim/drop",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(x),
                 height: yUnit(y)
             }),
             break: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/monsters/attacks/lavaBall/anim/break",
+                path: "/assets/models/monsters/attacks/lavaBall/anim/break",
                 frameCount: 4,
                 fps: 24,
                 width: xUnit(x),
@@ -31,7 +31,7 @@ class LavaBall extends Model {
                 nextAnim: "none"
             }),
             none: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/monsters/attacks/lavaBall/anim/drop",
+                path: "/assets/models/monsters/attacks/lavaBall/anim/drop",
                 frameCount: 1,
                 fps: 24,
                 width: 0,

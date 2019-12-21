@@ -118,6 +118,7 @@ class Kernel {
     
     loadImage(path, callback = this.defaultAssetCallback)
     {
+        path = this.prepareAssetPath(path);
         let assetIsHeld = this.checkAssetHeld(path);
         if(assetIsHeld)
         {
@@ -140,6 +141,7 @@ class Kernel {
     
     loadAudio(path, callback = this.defaultAssetCallback)
     {
+        path = this.prepareAssetPath(path);
         let assetIsHeld = this.checkAssetHeld(path);
         if(assetIsHeld)
         {
@@ -157,6 +159,11 @@ class Kernel {
         this.loadedAssets[this.loadedAssets.length - 1][1].src = path;
         
         return this.loadedAssets.length - 1;
+    }
+    
+    prepareAssetPath(path)
+    {
+        return this.rootPath + path;
     }
     
     checkAssetHeld(path)

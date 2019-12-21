@@ -20,14 +20,14 @@ class Tarian extends Model {
         //I've used exact values for the fps, so it will be consistent when changing game fps
         this.anims = {
             forward: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/tarian/anim/forward", 
+                path: "/assets/models/tarian/anim/forward", 
                 frameCount: 4,
                 fps: 24,
                 width: xUnit(120),
                 height: yUnit(170),
             }),
             left: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/tarian/anim/left", 
+                path: "/assets/models/tarian/anim/left", 
                 frameCount: 4, 
                 fps: 24, 
                 width: xUnit(170), 
@@ -35,7 +35,7 @@ class Tarian extends Model {
                 xOffset: -xUnit(40),
             }),
             right: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/tarian/anim/right", 
+                path: "/assets/models/tarian/anim/right", 
                 frameCount: 4,
                 fps: 24,
                 width: xUnit(170),
@@ -43,7 +43,7 @@ class Tarian extends Model {
                 xOffset: xUnit(40),
             }),
             exploding: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/tarian/anim/exploding",
+                path: "/assets/models/tarian/anim/exploding",
                 frameCount: 22,
                 fps: 24,
                 width: xUnit(120),
@@ -51,7 +51,7 @@ class Tarian extends Model {
                 nextAnim: "lost",
             }),
             lost: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/tarian/anim/lost",
+                path: "/assets/models/tarian/anim/lost",
                 frameCount: 3,
                 fps: 24,
                 width: xUnit(120),

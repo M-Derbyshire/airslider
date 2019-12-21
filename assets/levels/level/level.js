@@ -53,7 +53,7 @@ class Level
         this.levelSpeedRaw = this.initialLevelSpeedRaw; //Can be used if you need to check for a change in level speed, or to change it
         this.updateLevelSpeed();
         
-        this.tunnelLightMask = kernel.loadImage(kernel.rootPath + "/assets/levels/level/images/tunnelLightMask.png");
+        this.tunnelLightMask = kernel.loadImage("/assets/levels/level/images/tunnelLightMask.png");
         this.tunnelLightBrightness = 0.25;
     }
     

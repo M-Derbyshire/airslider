@@ -35,7 +35,7 @@ class Shocker extends Model
         
         this.anims = {
             shock: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/shocker/anim/" + this.color,
+                path: "/assets/models/shocker/anim/" + this.color,
                 frameCount: 3,
                 fps: 24,
                 width: width,

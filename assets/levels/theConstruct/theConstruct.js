@@ -39,18 +39,18 @@ class TheConstruct extends Level
     
     load()
     {
-        this.tunnelSprite = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/theConstructTunnel.png");
+        this.tunnelSprite = kernel.loadImage("/assets/levels/theConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
         
         this.setGround(
-            kernel.rootPath + "/assets/levels/theConstruct/images/ground.png",
+            "/assets/levels/theConstruct/images/ground.png",
             yUnit(50)
         );
         
-        this._background = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/testBackground.png");
+        this._background = kernel.loadImage("/assets/levels/theConstruct/images/testBackground.png");
         kernel.graphicEn.setStaticBackground(this._background);
         
-        this.outsideLightMask = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/testBackgroundMask.png");
+        this.outsideLightMask = kernel.loadImage("/assets/levels/theConstruct/images/testBackgroundMask.png");
         this.outsideLightBrightness = 0;
         
         this.outsideVisible = false;
@@ -83,14 +83,14 @@ class TheConstruct extends Level
         
         if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !kernel.loadedModels[this.wolfIndex].entering)
         {
-            //kernel.loadedModels[this.wolfIndex].start();
-            //kernel.loadedModels[this.falconIndex].start();
+            kernel.loadedModels[this.wolfIndex].start();
+            kernel.loadedModels[this.falconIndex].start();
         }
         
         if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 30 && getTotalSeconds() <= 31 && !kernel.loadedModels[this.wolfIndex].exiting && kernel.loadedModels[this.wolfIndex].active)
         {
-            //kernel.loadedModels[this.wolfIndex].stop();
-            //kernel.loadedModels[this.falconIndex].stop();
+            kernel.loadedModels[this.wolfIndex].stop();
+            kernel.loadedModels[this.falconIndex].stop();
         }
     }
 }

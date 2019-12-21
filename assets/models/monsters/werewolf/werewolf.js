@@ -14,14 +14,14 @@ class Werewolf extends Monster {
     {
         this.anims = {
             left: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/monsters/werewolf/anim/left",
+                path: "/assets/models/monsters/werewolf/anim/left",
                 frameCount: 2,
                 fps: 24,
                 width: xUnit(200),
                 height: yUnit(170),
             }),
             right: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/monsters/werewolf/anim/right",
+                path: "/assets/models/monsters/werewolf/anim/right",
                 frameCount: 2,
                 fps: 24,
                 width: xUnit(200),

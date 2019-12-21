@@ -11,14 +11,14 @@ class BabyDragon extends Monster {
     {
         this.anims = {
             left: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/monsters/babyDragon/anim/left",
+                path: "/assets/models/monsters/babyDragon/anim/left",
                 frameCount: 4,
                 fps: 24,
                 width: xUnit(400),
                 height: yUnit(300)
             }),
             right: this.registerAnim({
-                path: kernel.rootPath + "/assets/models/monsters/babyDragon/anim/right",
+                path: "/assets/models/monsters/babyDragon/anim/right",
                 frameCount: 4,
                 fps: 24,
                 width: xUnit(400),
