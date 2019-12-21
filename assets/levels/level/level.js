@@ -72,18 +72,15 @@ class Level
     
     checkLightMask()
     {
-        if(kernel.graphicEn.lightMask != this.tunnelLightMask && 
-            this.tunnel.length > 0 && 
-            this.tunnel[0].z <= 0 &&
-            this.tunnel[Math.floor((this.tunnel.length / 4))].imageIndex != -1)
+        if(
+            this.tunnel.length > 1 && 
+            this.tunnel[this.tunnel.length - 1].z <= 0 &&
+            this.tunnel[this.tunnel.length - 2].imageIndex != -1
+        )
         {
             kernel.graphicEn.lightMask = this.tunnelLightMask;
             kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
-        }
-        
-        if(kernel.graphicEn.lightMask != this.outsideLightMask &&
-            (this.tunnel.length == 0 || this.tunnel[Math.floor(this.tunnel.length / 8)].imageIndex == -1))
-        {
+        } else {
             kernel.graphicEn.lightMask = this.outsideLightMask;
             kernel.graphicEn.lightLuminosity = this.outsideLightBrightness;
         }

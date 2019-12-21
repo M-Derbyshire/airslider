@@ -78,11 +78,13 @@ class TheConstruct extends Level
         
         //tunnel stuff
         this.continueTunnel([
-            this.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
+            this.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+            this.newTunnelPart(-1, this.tunnelSpriteLength)
         ]);
         
         if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !kernel.loadedModels[this.wolfIndex].entering)
         {
+            this.outsideVisible = true;
             kernel.loadedModels[this.wolfIndex].start();
             kernel.loadedModels[this.falconIndex].start();
         }
