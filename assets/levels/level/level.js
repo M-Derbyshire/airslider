@@ -268,10 +268,10 @@ class Level
                 {
                     kernel.graphicEn.gameCtx.drawImage(
                         kernel.loadedAssets[tunnelPart.imageIndex][1], 
-                        zCalc.x(0, tunnelPart.z), 
-                        zCalc.y(0, tunnelPart.z), 
-                        zCalc.width(kernel.graphicEn.gameCan.width, tunnelPart.z), 
-                        zCalc.height(kernel.graphicEn.gameCan.height, tunnelPart.z)
+                        zCalc.x(0, tunnelPart.z, true), 
+                        zCalc.y(0, tunnelPart.z, true), 
+                        zCalc.width(kernel.graphicEn.gameCan.width, tunnelPart.z, true), 
+                        zCalc.height(kernel.graphicEn.gameCan.height, tunnelPart.z, true)
                     );
                 }
                 
@@ -291,16 +291,6 @@ class Level
                 {
                     if(this.tunnel[i - 1].z <= 0) //if the one before this is moving out of frame
                     {
-                        //if it's not being popped out, keep it there, 
-                        // as otherwise you don't get the last piece displayed
-                        kernel.graphicEn.gameCtx.drawImage(
-                            kernel.loadedAssets[tunnelPart.imageIndex][1], 
-                            0, 
-                            0, 
-                            kernel.graphicEn.gameCan.width, 
-                            kernel.graphicEn.gameCan.height
-                        );
-                        
                         this.tunnel.pop(); // pop out this piece of the tunnel
                     }
                 }
