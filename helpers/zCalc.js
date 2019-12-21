@@ -40,9 +40,11 @@ class ZCalc
     
     //------------------- Scaled Positions and Dimensions ---------------------
     
-    //   If the z position is less than 0, or greater than the vanishing point,
-    // then the sprite doesn't need to be displayed. Therefore, x, y, width and
-    // height will all return 0.
+    //   If the z position is greater than the vanishing point, then the sprite doesn't
+    // need to be displayed. The developer may also want it to not be displayed if the z 
+    // position is less than 0. If either is true (and the developer hasn't provided the bool
+    // value to these methods to allow negative values), then the x, y, width and
+    // height methods will all return 0.
 
     //   If not, then the display positions and dimensions for the sprite will 
     // need to be calculated, based on the model's position on the z axis.
@@ -62,6 +64,9 @@ class ZCalc
     //   Because of this, a new depth unit will need to be calculated for every 
     // point of the z axis. Therefore, we use a for loop over the zPos, and minus a
     // fresh depth unit from the dimension. Finally, we return the new dimension value.
+    
+    // The z position and returned dimension values are changed within the methods first,
+    // if negative z positions are allowed and one is provided.
 
     //   The depth unit is calculated by taking the new dimension value, and dividing
     // it by: (vanishingPointDepth / 8).
@@ -77,24 +82,27 @@ class ZCalc
     // 2 - The vanishing point's position is taken into account in the calculations, in order to 
     // make the sprite move towards/from it.
     
-    x(xPos, zPos)
+    // Again, there is a change to the z position and returned axis position if a negative values
+    // are allowed, and one is provided.
+    
+    x(xPos, zPos, showNegative = false)
     {
-        return this._position(zPos, xPos, this._vPointX);
+        return this._position(zPos, xPos, this._vPointX, showNegative);
     }
     
-    y(yPos, zPos)
+    y(yPos, zPos, showNegative = false)
     {
-        return this._position(zPos, yPos, this._vPointY);
+        return this._position(zPos, yPos, this._vPointY, showNegative);
     }
     
-    width(width, zPos)
+    width(width, zPos, showNegative = false)
     {
-        return this._dimension(zPos, width);
+        return this._dimension(zPos, width, showNegative);
     }
     
-    height(height, zPos)
+    height(height, zPos, showNegative = false)
     {
-        return this._dimension(zPos, height);
+        return this._dimension(zPos, height, showNegative);
     }
     
     _isOutOfView(zPos) //if the given z position is not viewable
@@ -105,32 +113,41 @@ class ZCalc
     //Takes the model's z position, the model's x or y position,
     //and the vanishing point value for that axis.
     //Returns the scaled value for the position on that axis.
-    _position(zPos, axisPos, axisVPoint)
+    _position(zPos, axisPos, axisVPoint, showNegative)
     {
-        if(this._isOutOfView(zPos))
+        if(!showNegative && this._isOutOfView(zPos))
         {
             return 0;
         } else {
+            let origZPos = zPos;
+            zPos = (showNegative && origZPos < 0) ? -zPos : zPos;
+            
             for(let i = 0; i < zPos; i++)
             {
                 axisPos += ((axisVPoint - axisPos) / this._calcDepth);
             }
-            return axisPos;
+            
+            return (showNegative && origZPos < 0) ? -axisPos : axisPos;
         }
     }
     
     //Same concept as above, except does this with the dimensions instead of the positions
-    _dimension(zPos, dimension)
+    _dimension(zPos, dimension, showNegative)
     {
-        if(this._isOutOfView(zPos))
+        if(!showNegative && this._isOutOfView(zPos))
         {
             return 0;
         } else {
+            let origZPos = zPos;
+            let origDimension = dimension;
+            zPos = (showNegative && origZPos < 0) ? -zPos : zPos;
+            
             for(let i = 0; i < zPos; i++)
             {
                 dimension -= (dimension / this._calcDepth);
             }
-            return dimension;
+            
+            return (showNegative && origZPos < 0) ? origDimension + (origDimension - dimension) : dimension;
         }
     }
 }
