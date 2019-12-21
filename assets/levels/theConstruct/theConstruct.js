@@ -9,9 +9,6 @@ class TheConstruct extends Level
             from: 2,
             to: 17
         };
-        
-        this.tunnelSprite = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/theConstructTunnel.png");
-        this.tunnelSpriteLength = 70;
     }
     
     getModels()
@@ -42,6 +39,11 @@ class TheConstruct extends Level
     
     load()
     {
+        this.tunnelSpriteMain = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/theConstructTunnelMain.png");
+        this.tunnelSpriteMainLength = 20;
+        this.tunnelSpriteBeam = kernel.loadImage(kernel.rootPath + "/assets/levels/theConstruct/images/theConstructTunnelBeam.png");
+        this.tunnelSpriteBeamLength = 15;
+        
         this.setGround(
             kernel.rootPath + "/assets/levels/theConstruct/images/ground.png",
             yUnit(50)
@@ -60,7 +62,8 @@ class TheConstruct extends Level
         kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
         
         this.createStartingTunnel([
-            this.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
+            this.newTunnelPart(this.tunnelSpriteMain, this.tunnelSpriteMainLength),
+            this.newTunnelPart(this.tunnelSpriteBeam, this.tunnelSpriteBeamLength)
         ]);
     }
     
@@ -78,7 +81,8 @@ class TheConstruct extends Level
         
         //tunnel stuff
         this.continueTunnel([
-            this.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
+            this.newTunnelPart(this.tunnelSpriteMain, this.tunnelSpriteMainLength),
+            this.newTunnelPart(this.tunnelSpriteBeam, this.tunnelSpriteBeamLength)
         ]);
         
         if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !kernel.loadedModels[this.wolfIndex].entering)

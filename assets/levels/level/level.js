@@ -268,18 +268,22 @@ class Level
                 {
                     kernel.graphicEn.gameCtx.drawImage(
                         kernel.loadedAssets[tunnelPart.imageIndex][1], 
-                        zCalc.x(0, tunnelPart.z, true), 
-                        zCalc.y(0, tunnelPart.z, true), 
-                        zCalc.width(kernel.graphicEn.gameCan.width, tunnelPart.z, true), 
-                        zCalc.height(kernel.graphicEn.gameCan.height, tunnelPart.z, true)
+                        zCalc.x(0, tunnelPart.z), 
+                        zCalc.y(0, tunnelPart.z), 
+                        zCalc.width(kernel.graphicEn.gameCan.width, tunnelPart.z), 
+                        zCalc.height(kernel.graphicEn.gameCan.height, tunnelPart.z)
                     );
                 }
                 
-                //if this is the second piece, and it's moved far enough, activate the next one
-                if(i == 1 && (tunnelPart.z + tunnelPart.length) <= zCalc.vPointDepth)
+                //if this is not the first piece, and it's moved far enough, activate the next one
+                if(
+                    i > 0 && 
+                    !this.tunnel[i - 1].active &&
+                    (tunnelPart.z + tunnelPart.length) <= zCalc.vPointDepth
+                )
                 {
-                    this.tunnel[0].active = true;
-                    this.tunnel[0].z = tunnelPart.z + tunnelPart.length;
+                    this.tunnel[i - 1].active = true;
+                    this.tunnel[i - 1].z = tunnelPart.z + tunnelPart.length;
                 }
                 
                 //if this is the last piece, and it's out of the frame, it's no longer needed
@@ -287,11 +291,16 @@ class Level
                 {
                     if(this.tunnel[i - 1].z <= 0) //if the one before this is moving out of frame
                     {
-                        this.tunnel.pop(); // pop out this piece of the tunnel
-                    }
-                } else {
-                    if(tunnelPart.z + (tunnelPart.length * 3) <= 0)
-                    {
+                        //if it's not being popped out, keep it there, 
+                        // as otherwise you don't get the last piece displayed
+                        kernel.graphicEn.gameCtx.drawImage(
+                            kernel.loadedAssets[tunnelPart.imageIndex][1], 
+                            0, 
+                            0, 
+                            kernel.graphicEn.gameCan.width, 
+                            kernel.graphicEn.gameCan.height
+                        );
+                        
                         this.tunnel.pop(); // pop out this piece of the tunnel
                     }
                 }
@@ -308,6 +317,9 @@ class Level
             {
                 this.tunnel.unshift(newTunnelParts[i]);
             }
+        } else if (!this.tunnel[this.tunnel.length - 1].active)
+        {
+            this.tunnel[this.tunnel.length - 1].active = true;
         }
     }
     
@@ -324,19 +336,19 @@ class Level
     
     createStartingTunnel(parts)
     {
-        while(this.tunnel.length == 0 || this.tunnel[this.tunnel.length - 1].z > 0)
+        let newZ = zCalc.vPointDepth;
+        while(this.tunnel.length < 2 || this.tunnel[this.tunnel.length - 2].z > 0)
         {
-            //parts = JSON.parse(JSON.stringify(parts));
+            parts = JSON.parse(JSON.stringify(parts)); //have to truly copy this, as otherwise they're references
             
-            for(let i = 0; i < parts.length; i++)
+            for(let i = parts.length - 1; i >= 0; i--)
             {
-                this.tunnel.unshift(parts[i]);
+                this.tunnel.push(parts[i]);
                 this.tunnel[this.tunnel.length - 1].active = true;
                 
-                if(this.tunnel.length > 1)
-                {
-                    this.tunnel[this.tunnel.length - 1].z = this.tunnel[this.tunnel.length - 2].z - this.tunnel[this.tunnel.length - 2].length;
-                }
+                // Set the Z to the previous item's Z, minus this one's length
+                newZ = newZ - this.tunnel[this.tunnel.length - 1].length;
+                this.tunnel[this.tunnel.length - 1].z = newZ;
             }
         }
     }
