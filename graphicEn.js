@@ -1,9 +1,11 @@
 class GraphicEn{
     constructor()
     {
+        this.kernel = Kernel.getInstance();
+        
         //used when making sure models are displayed in the right order based on their z-index
         this._zSortedIndexes = [];
-        for(let i = 0; i < kernel.loadedModels.length; i++)
+        for(let i = 0; i < this.kernel.loadedModels.length; i++)
         {
             this._zSortedIndexes.push(i);
         }
@@ -46,28 +48,28 @@ class GraphicEn{
     {
         //this will be used to make sure the models are displayed in order
         this._zSortedIndexes.sort((a, b) => {
-            return kernel.loadedModels[b].z - kernel.loadedModels[a].z;
+            return this.kernel.loadedModels[b].z - this.kernel.loadedModels[a].z;
         });
         
         //clear everything on the gameCan
         this.gameCtx.clearRect(0, 0, this.gameCan.width, this.gameCan.height);
         
-        kernel.level.drawBack();
+        this.kernel.level.drawBack();
         
-        for(let i = 0; i < kernel.loadedModels.length; i++)
+        for(let i = 0; i < this.kernel.loadedModels.length; i++)
         {
-            if(kernel.loadedModels[this._zSortedIndexes[i]].active && kernel.loadedModels[this._zSortedIndexes[i]].display)
+            if(this.kernel.loadedModels[this._zSortedIndexes[i]].active && this.kernel.loadedModels[this._zSortedIndexes[i]].display)
             {
-                kernel.loadedModels[this._zSortedIndexes[i]].draw();
+                this.kernel.loadedModels[this._zSortedIndexes[i]].draw();
             }
         }
         
-        kernel.level.drawFront();
+        this.kernel.level.drawFront();
         
-        if(kernel.level.HUD.update)
+        if(this.kernel.level.HUD.update)
         {
             this.infoCtx.clearRect(0, 0, this.infoCan.width, this.infoCan.height);
-            kernel.level.HUD.draw();
+            this.kernel.level.HUD.draw();
         }
         
         if(this.lightChanged)
@@ -77,7 +79,7 @@ class GraphicEn{
             this.lightCtx.globalAlpha = this.lightLuminosity;
             
             this.lightCtx.drawImage(
-                kernel.loadedAssets[this.lightMask][1],
+                this.kernel.loadedAssets[this.lightMask][1],
                 0,
                 0,
                 this.lightCan.width,
@@ -98,8 +100,8 @@ class GraphicEn{
             this.backCtx.fillRect(0, 0, this.backCan.width, this.backCan.height);
         } else {
             this.drawBackgroundFull(input); //in the unlikely event this has already loaded
-            kernel.loadedAssets[input][1].onload = () => {
-                kernel.defaultAssetCallback();
+            this.kernel.loadedAssets[input][1].onload = () => {
+                this.kernel.defaultAssetCallback();
                 this.drawBackgroundFull(input);
             };
         }
@@ -108,7 +110,7 @@ class GraphicEn{
     drawBackgroundFull(ref)
     {
         this.backCtx.drawImage(
-            kernel.loadedAssets[ref][1],
+            this.kernel.loadedAssets[ref][1],
             0,
             0,
             this.backCan.width,
@@ -119,11 +121,11 @@ class GraphicEn{
     fpsMeter()
     {
         this.infoCtx.clearRect(0, 0, this.infoCan.width, this.infoCan.height);
-        kernel.level.HUD.draw();
+        this.kernel.level.HUD.draw();
         
         let fontSize = 30
         this.infoCtx.font = fontSize + "px Arial";
         this.infoCtx.fillStyle = "blue";
-        this.infoCtx.fillText("FPS: " + kernel.fps, xUnit(10), yUnit(10) + fontSize);
+        this.infoCtx.fillText("FPS: " + this.kernel.fps, xUnit(10), yUnit(10) + fontSize);
     }
 }
