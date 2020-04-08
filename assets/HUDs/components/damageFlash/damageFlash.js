@@ -14,8 +14,8 @@ class DamageFlash extends HUDComponent
     draw()
     {
         this.flashSpeed = (this.flashSpeed >= 0) ? 
-            (this.flashSpeedDivider / kernel.fps) : 
-            -(this.flashSpeedDivider / kernel.fps);
+            (this.flashSpeedDivider / this.kernel.fps) : 
+            -(this.flashSpeedDivider / this.kernel.fps);
         
         if(this.opacity >= 1)
         {
@@ -33,30 +33,30 @@ class DamageFlash extends HUDComponent
                 this.flashSpeed = -this.flashSpeed;
             }
             
-            kernel.graphicEn.infoCtx.globalAlpha = this.opacity;
+            this.kernel.graphicEn.infoCtx.globalAlpha = this.opacity;
         
-            kernel.graphicEn.infoCtx.drawImage(
-                kernel.loadedAssets[this.images[this.color]][1],
+            this.kernel.graphicEn.infoCtx.drawImage(
+                this.kernel.loadedAssets[this.images[this.color]][1],
                 0,
                 0,
-                kernel.graphicEn.infoCan.width,
-                kernel.graphicEn.infoCan.height
+                this.kernel.graphicEn.infoCan.width,
+                this.kernel.graphicEn.infoCan.height
             );
             
-            kernel.graphicEn.infoCtx.globalAlpha = 1;
+            this.kernel.graphicEn.infoCtx.globalAlpha = 1;
         }
     }
     
     load()
     {
         this.images = {
-            yellow: kernel.loadImage("/assets/HUDs/components/damageFlash/images/yellow.png"),
-            orange: kernel.loadImage("/assets/HUDs/components/damageFlash/images/orange.png"),
-            red: kernel.loadImage("/assets/HUDs/components/damageFlash/images/red.png"),
-            purple: kernel.loadImage("/assets/HUDs/components/damageFlash/images/purple.png"),
-            none: kernel.loadImage("/assets/HUDs/components/damageFlash/images/none.png"),
-            fire: kernel.loadImage("/assets/HUDs/components/damageFlash/images/fire.png"),
-            tooth: kernel.loadImage("/assets/HUDs/components/damageFlash/images/tooth.png")
+            yellow: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/yellow.png"),
+            orange: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/orange.png"),
+            red: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/red.png"),
+            purple: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/purple.png"),
+            none: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/none.png"),
+            fire: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/fire.png"),
+            tooth: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/tooth.png")
         };
     }
     

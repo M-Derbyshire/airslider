@@ -15,7 +15,7 @@ class HealthBar extends HUDComponent
     
     draw()
     {
-        let health = kernel.loadedModels[kernel.level.HUD.modelIndexes[0]].health;
+        let health = this.kernel.loadedModels[this.kernel.level.HUD.modelIndexes[0]].health;
         
         this.ctx.lineCap = "round";
         

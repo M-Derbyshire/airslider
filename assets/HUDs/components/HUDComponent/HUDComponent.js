@@ -2,7 +2,9 @@ class HUDComponent
 {
     constructor()
     {
-        this.ctx = kernel.graphicEn.infoCtx;
+        this.kernel = Kernel.getInstance();
+        
+        this.ctx = this.kernel.graphicEn.infoCtx;
     }
     
     //meant to be overriden
