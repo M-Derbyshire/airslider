@@ -3,7 +3,7 @@ class ModelAnimationsManager {
     {
         this.model = model;
         this.kernel = kernel;
-        this.animations; //object of all the animations (returned by registerAnim())
+        this.animations;
     }
     
     registerAnimations(animations)
