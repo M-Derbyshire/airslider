@@ -2,6 +2,8 @@ class Level
 {
     constructor()
     {
+        this.kernel; //Set in the individual level's constructor (not here, due to how ES6 javascript works)
+        
         this._background = "white"; //use a color if nothing set in subclass (hence true on the next line)
         
         this.HUD; //the Heads Up Display for the level
@@ -42,18 +44,20 @@ class Level
     }
     
     //set things that can only be done after the engines are constructed
-    loadSuper()
+    loadSuper(kernel)
     {
-        this.leftEdge = 0;
-        this.rightEdge = kernel.graphicEn.gameCan.width;
+        this.kernel = kernel;
         
-        zCalc.setVanishPoint(kernel.graphicEn.gameCan.width / 2, kernel.graphicEn.gameCan.height / 2, 1000);
+        this.leftEdge = 0;
+        this.rightEdge = this.kernel.graphicEn.gameCan.width;
+        
+        zCalc.setVanishPoint(this.kernel.graphicEn.gameCan.width / 2, this.kernel.graphicEn.gameCan.height / 2, 1000);
         
         this.initialLevelSpeedRaw = 600;
         this.levelSpeedRaw = this.initialLevelSpeedRaw; //Can be used if you need to check for a change in level speed, or to change it
         this.updateLevelSpeed();
         
-        this.tunnelLightMask = kernel.loadImage("/assets/levels/level/images/tunnelLightMask.png");
+        this.tunnelLightMask = this.kernel.loadImage("/assets/levels/level/images/tunnelLightMask.png");
         this.tunnelLightBrightness = 0.25;
     }
     
@@ -66,7 +70,7 @@ class Level
     {
         if(this.levelSpeed != 0)
         {
-            this.levelSpeed = zCalc.speed(this.levelSpeedRaw, kernel.fps); //need to use this in monsters for death
+            this.levelSpeed = zCalc.speed(this.levelSpeedRaw, this.kernel.fps); //need to use this in monsters for death
         }
     }
     
@@ -78,11 +82,11 @@ class Level
             this.tunnel[this.tunnel.length - 2].imageIndex != -1
         )
         {
-            kernel.graphicEn.lightMask = this.tunnelLightMask;
-            kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
+            this.kernel.graphicEn.lightMask = this.tunnelLightMask;
+            this.kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
         } else {
-            kernel.graphicEn.lightMask = this.outsideLightMask;
-            kernel.graphicEn.lightLuminosity = this.outsideLightBrightness;
+            this.kernel.graphicEn.lightMask = this.outsideLightMask;
+            this.kernel.graphicEn.lightLuminosity = this.outsideLightBrightness;
         }
     }
     
@@ -115,22 +119,22 @@ class Level
     
     drawRoad()
     {
-        kernel.graphicEn.gameCtx.lineWidth = 1;
-        kernel.graphicEn.gameCtx.fillStyle = this.roadColor;
-        kernel.graphicEn.gameCtx.beginPath();
-        kernel.graphicEn.gameCtx.moveTo(0, kernel.graphicEn.gameCan.height);
-        kernel.graphicEn.gameCtx.lineTo(zCalc.vPointX, zCalc.vPointY);
-        kernel.graphicEn.gameCtx.lineTo(kernel.graphicEn.gameCan.width, kernel.graphicEn.gameCan.height);
-        kernel.graphicEn.gameCtx.fill();
+        this.kernel.graphicEn.gameCtx.lineWidth = 1;
+        this.kernel.graphicEn.gameCtx.fillStyle = this.roadColor;
+        this.kernel.graphicEn.gameCtx.beginPath();
+        this.kernel.graphicEn.gameCtx.moveTo(0, this.kernel.graphicEn.gameCan.height);
+        this.kernel.graphicEn.gameCtx.lineTo(zCalc.vPointX, zCalc.vPointY);
+        this.kernel.graphicEn.gameCtx.lineTo(this.kernel.graphicEn.gameCan.width, this.kernel.graphicEn.gameCan.height);
+        this.kernel.graphicEn.gameCtx.fill();
     }
     
     levelStop()
     {
         this.levelSpeedRaw = 0;
         
-        for(let i = 0; i < kernel.loadedModels.length; i++)
+        for(let i = 0; i < this.kernel.loadedModels.length; i++)
         {
-            kernel.loadedModels[i].levelStopped();
+            this.kernel.loadedModels[i].levelStopped();
         }
     }
     
@@ -138,7 +142,7 @@ class Level
     
     setGround(path, height)
     {
-        this.ground.ref = kernel.loadImage(path);
+        this.ground.ref = this.kernel.loadImage(path);
         this.ground.height = height;
         let distance = -1;
         
@@ -149,7 +153,7 @@ class Level
             if(distance == -1)
             {
                 //find the z distance between images
-                if(zCalc.y(kernel.graphicEn.gameCan.height, z) >= zCalc.y(kernel.graphicEn.gameCan.height, this.groundZ[this.groundZ.length - 1]) + zCalc.height(height, this.groundZ[this.groundZ.length - 1]))
+                if(zCalc.y(this.kernel.graphicEn.gameCan.height, z) >= zCalc.y(this.kernel.graphicEn.gameCan.height, this.groundZ[this.groundZ.length - 1]) + zCalc.height(height, this.groundZ[this.groundZ.length - 1]))
                 {
                     distance = this.groundZ[this.groundZ.length - 1] - z;
                     this.ground.distance = distance;
@@ -175,21 +179,21 @@ class Level
             
             this.ground.offset += (this.levelSpeed / 1000);
             
-            let y = zCalc.y(kernel.graphicEn.backCan.height, this.groundZ[i] - this.ground.offset);
-            let width = zCalc.width((kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset);
+            let y = zCalc.y(this.kernel.graphicEn.backCan.height, this.groundZ[i] - this.ground.offset);
+            let width = zCalc.width((this.kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset);
             let height = zCalc.height(this.ground.height, this.groundZ[i] - this.ground.offset);
             
-            kernel.graphicEn.backCtx.drawImage(
-                kernel.loadedAssets[this.ground.ref][1],
-                zCalc.x(0 - (kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset),
+            this.kernel.graphicEn.backCtx.drawImage(
+                this.kernel.loadedAssets[this.ground.ref][1],
+                zCalc.x(0 - (this.kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset),
                 y,
                 width,
                 height
             );
             
-            kernel.graphicEn.backCtx.drawImage(
-                kernel.loadedAssets[this.ground.ref][1],
-                zCalc.x(kernel.graphicEn.backCan.width, this.groundZ[i] - this.ground.offset),
+            this.kernel.graphicEn.backCtx.drawImage(
+                this.kernel.loadedAssets[this.ground.ref][1],
+                zCalc.x(this.kernel.graphicEn.backCan.width, this.groundZ[i] - this.ground.offset),
                 y,
                 width,
                 height
@@ -201,31 +205,31 @@ class Level
     {
         for(let i = fromIndex; i <= toIndex; i++)
         {
-            if((!kernel.loadedModels[i].active && i == fromIndex) || (!kernel.loadedModels[i].active && kernel.loadedModels[i - 1].active && (kernel.loadedModels[i - 1].z + (zCalc.vPointDepth / this.shockerCount) < zCalc.vPointDepth)))
+            if((!this.kernel.loadedModels[i].active && i == fromIndex) || (!this.kernel.loadedModels[i].active && this.kernel.loadedModels[i - 1].active && (this.kernel.loadedModels[i - 1].z + (zCalc.vPointDepth / this.shockerCount) < zCalc.vPointDepth)))
             {
                 // need to set some to be where the Tarian is, so player can't just stay in one place
                 let xPos;
                 
                 //player character
-                let px = kernel.loadedModels[0].x;
-                let pw = kernel.loadedModels[0].anims[kernel.loadedModels[0].state].width;
+                let px = this.kernel.loadedModels[0].x;
+                let pw = this.kernel.loadedModels[0].width;
                 
                 if((i + 1) % 3 == 0) //if this is every third in every 3 shockers
                 {
                     // put somewhere on left side of level
-                    xPos = (Math.random() * (((this.rightEdge - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width) - this.leftEdge) / 2)) + this.leftEdge;
+                    xPos = (Math.random() * (((this.rightEdge - this.kernel.loadedModels[i].width) - this.leftEdge) / 2)) + this.leftEdge;
                 
                 } else if((i + 2) % 3 == 0) //if this is every second in every 3 shockers
                 {
                     // now on the right side
-                    xPos = (Math.random() * (((this.rightEdge - kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width) - this.leftEdge) / 2)) + ((this.rightEdge - this.leftEdge) / 2);
+                    xPos = (Math.random() * (((this.rightEdge - this.kernel.loadedModels[i].width) - this.leftEdge) / 2)) + ((this.rightEdge - this.leftEdge) / 2);
                 
                 } else //If this is first in every 3 shockers
                 {
                     // put where player is (x coordinate)
                     
                     //shocker
-                    let sw = kernel.loadedModels[i].anims[kernel.loadedModels[i].state].width;
+                    let sw = this.kernel.loadedModels[i].width;
                     
                     // want their center points to line up
                     xPos = (px + (pw / 2)) - (sw / 2);
@@ -240,10 +244,10 @@ class Level
                     }
                 }
                 
-                kernel.loadedModels[i].z = zCalc.vPointDepth;
-                kernel.loadedModels[i].x = xPos;
+                this.kernel.loadedModels[i].z = zCalc.vPointDepth;
+                this.kernel.loadedModels[i].x = xPos;
                 
-                kernel.loadedModels[i].active = true;
+                this.kernel.loadedModels[i].active = true;
             }
         }
     }
@@ -263,12 +267,12 @@ class Level
                 //draw the image (-1 is a clear piece)
                 if(tunnelPart.imageIndex > -1)
                 {
-                    kernel.graphicEn.gameCtx.drawImage(
-                        kernel.loadedAssets[tunnelPart.imageIndex][1], 
+                    this.kernel.graphicEn.gameCtx.drawImage(
+                        this.kernel.loadedAssets[tunnelPart.imageIndex][1], 
                         zCalc.x(0, tunnelPart.z, true), 
                         zCalc.y(0, tunnelPart.z, true), 
-                        zCalc.width(kernel.graphicEn.gameCan.width, tunnelPart.z, true), 
-                        zCalc.height(kernel.graphicEn.gameCan.height, tunnelPart.z, true)
+                        zCalc.width(this.kernel.graphicEn.gameCan.width, tunnelPart.z, true), 
+                        zCalc.height(this.kernel.graphicEn.gameCan.height, tunnelPart.z, true)
                     );
                 }
                 

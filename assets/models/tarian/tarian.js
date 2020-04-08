@@ -60,8 +60,8 @@ class Tarian extends Model {
         });
         
         this.z = 20;
-        this.x = (kernel.graphicEn.gameCan.width / 2) - (this.width / 2);
-        this.y = (kernel.graphicEn.gameCan.height - this.height);
+        this.x = (this.kernel.graphicEn.gameCan.width / 2) - (this.width / 2);
+        this.y = (this.kernel.graphicEn.gameCan.height - this.height);
         
         this.accl = 800; // applied every tenth of a second
         this.deaccl = 100; // applied every tenth of a second
@@ -116,15 +116,15 @@ class Tarian extends Model {
         if(this.z <= 0)
         {
             this.active = false;
-            kernel.level.levelStop();
+            this.kernel.level.levelStop();
         }
     }
     
     movePlayer() //this will just use moveRight(), but can also feed in negative numbers
     {
-        if(kernel.totalActiveMilliseconds - this.lastSpeedChange >= 100) //1 tenth of a second
+        if(this.kernel.totalActiveMilliseconds - this.lastSpeedChange >= 100) //1 tenth of a second
         {
-            this.lastSpeedChange = kernel.totalActiveMilliseconds;
+            this.lastSpeedChange = this.kernel.totalActiveMilliseconds;
             
             let direction = 0;
             let speedChange = this.accl;
@@ -174,29 +174,29 @@ class Tarian extends Model {
     extraEvents()
     {
         //check for leaving the game area
-        if(this.x < kernel.level.leftEdge)
+        if(this.x < this.kernel.level.leftEdge)
         {
             if(this.state == "left")
             {
                 this.state = "forward";
             }
             
-            this.x = kernel.level.leftEdge;
+            this.x = this.kernel.level.leftEdge;
             this.xSpeed = 0;
         }
-        if(this.x + this.width > kernel.level.rightEdge)
+        if(this.x + this.width > this.kernel.level.rightEdge)
         {
             if(this.state == "right")
             {
                 this.state = "forward";
             }
             
-            this.x = kernel.level.rightEdge - this.width;
+            this.x = this.kernel.level.rightEdge - this.width;
             this.xSpeed = 0;
         }
     }
     
-    zCollisionEvent(thisModel, otherModel)
+    zCollisionEvent(thisModel, otherModel, kernel)
     {
         if (otherModel.active && 
         ((thisModel.z >= (otherModel.z - otherModel.zSpeed)) && (thisModel.z <= otherModel.z)) &&

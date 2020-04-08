@@ -38,8 +38,8 @@ class Werewolf extends Monster {
         
         this.exitZSpeed = 50;
         this.state = "left";
-        this.startY = (kernel.graphicEn.gameCan.height - this.height);
-        this.startX = kernel.graphicEn.gameCan.width / 2;
+        this.startY = (this.kernel.graphicEn.gameCan.height - this.height);
+        this.startX = this.kernel.graphicEn.gameCan.width / 2;
         this.startZ = zCalc.vPointDepth;
         this.minXSpeed = 1000;
         this.maxXSpeed = 2000;
@@ -48,7 +48,7 @@ class Werewolf extends Monster {
         //outLimit is how far back the monster will go, before moving forward
         //inLimit is the point the wolf will start it's sweeping again
         this.outLimit = 1;
-        this.inLimit = (kernel.loadedModels[this.playerIndex].z + 100);
+        this.inLimit = (this.kernel.loadedModels[this.playerIndex].z + 100);
         
         this.reset();
     }
@@ -89,7 +89,7 @@ class Werewolf extends Monster {
     setHeadDirection() //not an action, just a method they'll both use
     {
         //set the monsters facing direction
-        let player = kernel.loadedModels[this.playerIndex];
+        let player = this.kernel.loadedModels[this.playerIndex];
         if(this.x + (this.width / 2) >= player.x + (player.width / 2))
         {
             return "left";
@@ -109,13 +109,13 @@ class Werewolf extends Monster {
         monster.state = monster.setHeadDirection();
         
         //set monsters x movement direction and move it
-        if(monster.x < kernel.level.leftEdge)
+        if(monster.x < monster.kernel.level.leftEdge)
         {
-            monster.x = kernel.level.leftEdge;
+            monster.x = monster.kernel.level.leftEdge;
             monster.directionMultiplier = 1;
-        } else if (monster.x + monster.width > kernel.level.rightEdge)
+        } else if (monster.x + monster.width > monster.kernel.level.rightEdge)
         {
-            monster.x = kernel.level.rightEdge - monster.width;
+            monster.x = monster.kernel.level.rightEdge - monster.width;
             monster.directionMultiplier = -1;
         }
         monster.moveRight(monster.xSpeed * monster.directionMultiplier);
@@ -152,7 +152,7 @@ class Werewolf extends Monster {
     
     //events------------------------------------------------------------
     
-    zCollisionEvent(thisModel, otherModel)
+    zCollisionEvent(thisModel, otherModel, kernel)
     {
         if (otherModel.active && 
         ((thisModel.z >= (otherModel.z - otherModel.zSpeed)) && (thisModel.z <= otherModel.z)) &&

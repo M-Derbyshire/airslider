@@ -52,9 +52,9 @@ class LavaBall extends Model {
             this.moveDown(this.ySpeed);
         }
         
-        if(this.y + this.height >= kernel.graphicEn.gameCan.height && this.state == "drop")
+        if(this.y + this.height >= this.kernel.graphicEn.gameCan.height && this.state == "drop")
         {
-            this.y = kernel.graphicEn.gameCan.height - this.height;
+            this.y = this.kernel.graphicEn.gameCan.height - this.height;
             this.state = "break";
         }
         
@@ -64,7 +64,7 @@ class LavaBall extends Model {
         }
     }
     
-    hitPlayerEvent(thisModel, otherModel)
+    hitPlayerEvent(thisModel, otherModel, kernel)
     {
         if(((thisModel.x + thisModel.width >= otherModel.x) &&
         (thisModel.x <= otherModel.x + otherModel.width) &&

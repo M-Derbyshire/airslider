@@ -1,6 +1,6 @@
 class TheConstruct extends Level
 {
-    constructor()
+    constructor(kernel)
     {
         super(Level);
         
@@ -20,14 +20,13 @@ class TheConstruct extends Level
         controlConstructor.touchControls(0);
         this.HUD.modelIndexes.push(0);
         
-        // models.push(new NeonPidgeon(0));
+        models.push(new NeonPidgeon(0));
         // models.push(new Falcon(0));
+        // models.push(new BabyDragon(0, 2));
         // models.push(new LavaBall());
-        // models.push(new BabyDragon(0, 1));
-        this.wolfIndex = 1;
-        this.falconIndex = 2;
-        models.push(new Werewolf(0));
-        models.push(new Falcon(0));
+        // models.push(new Werewolf(0));
+        this.monsterIndex = 1;
+
         
         for(let i = this.shockerIndexes.from; i <= this.shockerIndexes.to; i++)
         {
@@ -39,7 +38,7 @@ class TheConstruct extends Level
     
     load()
     {
-        this.tunnelSprite = kernel.loadImage("/assets/levels/theConstruct/images/theConstructTunnel.png");
+        this.tunnelSprite = this.kernel.loadImage("/assets/levels/theConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
         
         this.setGround(
@@ -47,17 +46,17 @@ class TheConstruct extends Level
             yUnit(50)
         );
         
-        this._background = kernel.loadImage("/assets/levels/theConstruct/images/testBackground.png");
-        kernel.graphicEn.setStaticBackground(this._background);
+        this._background = this.kernel.loadImage("/assets/levels/theConstruct/images/testBackground.png");
+        this.kernel.graphicEn.setStaticBackground(this._background);
         
-        this.outsideLightMask = kernel.loadImage("/assets/levels/theConstruct/images/testBackgroundMask.png");
+        this.outsideLightMask = this.kernel.loadImage("/assets/levels/theConstruct/images/testBackgroundMask.png");
         this.outsideLightBrightness = 0;
         
         this.outsideVisible = false;
         
         //these are set in level
-        kernel.graphicEn.lightMask = this.tunnelLightMask;
-        kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
+        this.kernel.graphicEn.lightMask = this.tunnelLightMask;
+        this.kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
         
         this.createStartingTunnel([
             this.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
@@ -71,10 +70,10 @@ class TheConstruct extends Level
         //if outside/inside changes, change light mask
         this.checkLightMask();
         
-        // if(getTotalSeconds() <= 37)
-        // {
-        //     this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
-        // }
+        if(getTotalSeconds() <= 37)
+        {
+            this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
+        }
         
         //tunnel stuff
         this.continueTunnel([
@@ -82,17 +81,15 @@ class TheConstruct extends Level
             this.newTunnelPart(-1, this.tunnelSpriteLength)
         ]);
         
-        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !kernel.loadedModels[this.wolfIndex].entering)
+        if(this.kernel.level.levelSpeed > 0 && getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !this.kernel.loadedModels[this.monsterIndex].entering)
         {
             this.outsideVisible = true;
-            kernel.loadedModels[this.wolfIndex].start();
-            kernel.loadedModels[this.falconIndex].start();
+            this.kernel.loadedModels[this.monsterIndex].start();
         }
         
-        if(kernel.level.levelSpeed > 0 && getTotalSeconds() >= 30 && getTotalSeconds() <= 31 && !kernel.loadedModels[this.wolfIndex].exiting && kernel.loadedModels[this.wolfIndex].active)
+        if(this.kernel.level.levelSpeed > 0 && getTotalSeconds() >= 30 && getTotalSeconds() <= 31 && !this.kernel.loadedModels[this.monsterIndex].exiting && this.kernel.loadedModels[this.monsterIndex].active)
         {
-            kernel.loadedModels[this.wolfIndex].stop();
-            kernel.loadedModels[this.falconIndex].stop();
+            this.kernel.loadedModels[this.monsterIndex].stop();
         }
     }
 }

@@ -32,13 +32,13 @@ class BabyDragon extends Monster {
         
         this.offScreenUnits = 500;
         this.startY = yUnit(10),
-        this.startX = kernel.level.rightEdge + this.offScreenUnits;
+        this.startX = this.kernel.level.rightEdge + this.offScreenUnits;
         
-        this.startZ = kernel.loadedModels[this.playerIndex].z;
+        this.startZ = this.kernel.loadedModels[this.playerIndex].z;
         this.enterXSpeed = 90;
         
         //set the z of the lava ball
-        kernel.loadedModels[this.lavaBallIndex].z = this.startZ;
+        this.kernel.loadedModels[this.lavaBallIndex].z = this.startZ;
         
         this.reset();
     }
@@ -47,7 +47,7 @@ class BabyDragon extends Monster {
     
     enter()
     {
-        if(kernel.level.rightEdge < (this.x + this.width))
+        if(this.kernel.level.rightEdge < (this.x + this.width))
         {
             this.moveLeft(this.enterXSpeed);
         } else {
@@ -60,7 +60,7 @@ class BabyDragon extends Monster {
         this.state = "left";
         this.moveLeft(this.enterXSpeed);
         
-        if((this.x + this.width) < (kernel.level.leftEdge - this.offScreenUnits))
+        if((this.x + this.width) < (this.kernel.level.leftEdge - this.offScreenUnits))
         {
             this.exiting = false;
             this.active = false;
@@ -82,17 +82,17 @@ class BabyDragon extends Monster {
     {
         monster.moveRight(monster.xSpeed);
         
-        if(monster.x + (monster.width / 2) <= kernel.level.leftEdge || (monster.x + (monster.width / 2) >= kernel.level.rightEdge))
+        if(monster.x + (monster.width / 2) <= monster.kernel.level.leftEdge || (monster.x + (monster.width / 2) >= monster.kernel.level.rightEdge))
         {
             monster.xSpeed = -monster.xSpeed;
             monster.state = (monster.state == "left") ? "right" : "left";
             
             monster.x = (monster.xSpeed > 0) ? 
-                ((kernel.level.leftEdge - (monster.width / 2)) + 1) :
-                ((kernel.level.rightEdge - (monster.width / 2)) - 1);
+                ((monster.kernel.level.leftEdge - (monster.width / 2)) + 1) :
+                ((monster.kernel.level.rightEdge - (monster.width / 2)) - 1);
         }
         
-        if(!kernel.loadedModels[monster.lavaBallIndex].active && monster.fireWeapon)
+        if(!monster.kernel.loadedModels[monster.lavaBallIndex].active && monster.fireWeapon)
         {
             monster.dropBall(monster);
         }
@@ -101,7 +101,7 @@ class BabyDragon extends Monster {
     //attacks-----------------------------------------------------
     dropBall(monster)
     {
-        let l = kernel.loadedModels[monster.lavaBallIndex];
+        let l = monster.kernel.loadedModels[monster.lavaBallIndex];
         
         //center it
         let xOffset = -xUnit(65);

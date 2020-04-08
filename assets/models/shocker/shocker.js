@@ -4,7 +4,6 @@ class Shocker extends Model
     {
         super(Model);
         
-        
         this.color = color;
         this.mode = mode;
         this._state = "shock";
@@ -43,7 +42,7 @@ class Shocker extends Model
             })
         });
         
-        this.y = (kernel.graphicEn.gameCan.height - this.height);
+        this.y = (this.kernel.graphicEn.gameCan.height - this.height);
         this.z = zCalc.vPointDepth;
         
         if(this.mode == "sweep")
@@ -55,11 +54,11 @@ class Shocker extends Model
     
     act()
     {
-        if(kernel.level.levelSpeed == 0) //updates zSpeed
+        if(this.kernel.level.levelSpeed == 0) //updates zSpeed
         {
-            this.zSpeed = -(zCalc.speed(kernel.level.initialLevelSpeedRaw, kernel.fps) / 1.5);
+            this.zSpeed = -(zCalc.speed(this.kernel.level.initialLevelSpeedRaw, this.kernel.fps) / 1.5);
         } else {
-            this.zSpeed = kernel.level.levelSpeed / 1.5;
+            this.zSpeed = this.kernel.level.levelSpeed / 1.5;
         }
         
         if(this.mode == "home")
@@ -70,7 +69,7 @@ class Shocker extends Model
             
             //sweep towards the player
             this.xSpeed = 
-            ((kernel.loadedModels[this.homingTargetIndex].x + (kernel.loadedModels[this.homingTargetIndex].width / 2)) - 
+            ((this.kernel.loadedModels[this.homingTargetIndex].x + (this.kernel.loadedModels[this.homingTargetIndex].width / 2)) - 
             (this.x + (this.width / 2))) / this.homingSpeed;
         }
         
@@ -86,7 +85,7 @@ class Shocker extends Model
     extraEvents()
     {
         //check for leaving the game area
-        if((this.x < kernel.level.leftEdge) || (this.x + this.width > kernel.level.rightEdge))
+        if((this.x < this.kernel.level.leftEdge) || (this.x + this.width > this.kernel.level.rightEdge))
         {
             this.xSpeed = -this.xSpeed;
             this.moveRight(this.xSpeed);

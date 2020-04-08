@@ -32,9 +32,9 @@ class Monster extends Model {
     
     act()
     {
-        if(kernel.level.levelSpeedRaw < this.realZSpeedRaw && this.active)
+        if(this.kernel.level.levelSpeedRaw < this.realZSpeedRaw && this.active)
         {
-            this.z += (zCalc.speed(this.realZSpeedRaw, kernel.fps) - zCalc.speed(kernel.level.levelSpeed, kernel.fps));
+            this.z += (zCalc.speed(this.realZSpeedRaw, this.kernel.fps) - zCalc.speed(this.kernel.level.levelSpeed, this.kernel.fps));
             this.fireWeapon = false;
             
             if(this.z >= zCalc.vPointDepth)
@@ -55,7 +55,7 @@ class Monster extends Model {
             return;
         }
         
-        this.actions[this.currentAction](kernel.loadedModels[this.loadedIndex]); //run the current action
+        this.actions[this.currentAction](this.kernel.loadedModels[this.loadedIndex]); //run the current action
     }
     
     start()
@@ -69,10 +69,12 @@ class Monster extends Model {
         this.exiting = true;
     }
     
-    loadSuper() //this is overriding the model method (which, as it stands now, is empty)
+    loadSuper(kernel) //this is overriding the model method
     {
+        this.kernel = kernel;
+        this.animationManager = new ModelAnimationsManager(this);
         this.fireWeapon = true;
-        this.realZSpeedRaw = kernel.level.levelSpeedRaw;
+        this.realZSpeedRaw = this.kernel.level.levelSpeedRaw;
     }
     
     //meant to be overridden

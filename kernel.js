@@ -72,14 +72,14 @@ class Kernel {
         this._menuEn = new MenuEn();
         
         //do any extra setup that may need access to the engines
-        this.level.loadSuper();
+        this.level.loadSuper(kernel);
         this.level.load();
         this.level.HUD.loadSuper();
         this.level.HUD.load();
         for(let i = 0; i < this.loadedModels.length; i++)
         {
             this.loadedModels[i].loadedIndex = i; //used for events
-            this.loadedModels[i].loadSuper();
+            this.loadedModels[i].loadSuper(this);
             this.loadedModels[i].load();
         }
     }

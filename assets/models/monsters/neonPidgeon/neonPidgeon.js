@@ -50,8 +50,8 @@ class NeonPidgeon extends Monster {
         this.exitXSpeed = 240;
         this.offScreenUnits = (this.specialLevel) ? xUnit(500) : xUnit(800);
         this.startY = (this.specialLevel) ? yUnit(250) : yUnit(150);
-        this.startX = kernel.level.rightEdge + this.offScreenUnits;
-        this.startZ = kernel.loadedModels[this.playerIndex].z;
+        this.startX = this.kernel.level.rightEdge + this.offScreenUnits;
+        this.startZ = this.kernel.loadedModels[this.playerIndex].z;
         this.ySpeed = 1200;
         this.dropWaitOffset = 2000; //5 seconds
         this.dropWaitRange = 2000; //4 seconds
@@ -64,7 +64,7 @@ class NeonPidgeon extends Monster {
     
     enter()
     {
-        if(kernel.level.rightEdge < (this.x + this.width))
+        if(this.kernel.level.rightEdge < (this.x + this.width))
         {
             this.moveLeft(this.enterXSpeed);
         } else {
@@ -79,13 +79,13 @@ class NeonPidgeon extends Monster {
         {
             //if not at correct height, don't leave yet
             this.state = "rising";
-            this.rise(kernel.loadedModels[this.loadedIndex]);
+            this.rise(this.kernel.loadedModels[this.loadedIndex]);
         } else {
             this.state = "flapping";
         
             this.moveLeft(this.exitXSpeed);
             
-            if((this.x + this.width) < (kernel.level.leftEdge - this.offScreenUnits))
+            if((this.x + this.width) < (this.kernel.level.leftEdge - this.offScreenUnits))
             {
                 this.exiting = false;
                 this.active = false;
@@ -109,13 +109,13 @@ class NeonPidgeon extends Monster {
     {
         monster.moveRight(monster.xSpeed);
         
-        if(monster.x <= kernel.level.leftEdge || monster.x + monster.width >= kernel.level.rightEdge)
+        if(monster.x <= monster.kernel.level.leftEdge || monster.x + monster.width >= monster.kernel.level.rightEdge)
         {
             monster.xSpeed = -monster.xSpeed;
             
             monster.x = (monster.xSpeed > 0) ? 
-                (kernel.level.leftEdge + 1) :
-                ((kernel.level.rightEdge - monster.width) - 1);
+                (monster.kernel.level.leftEdge + 1) :
+                ((monster.kernel.level.rightEdge - monster.width) - 1);
         }
         
         if(monster.nextDrop == -1)
@@ -123,8 +123,8 @@ class NeonPidgeon extends Monster {
             monster.nextDrop = getTotalMilliseconds() + monster.dropWaitOffset + Math.floor(Math.random() * monster.dropWaitRange);
         } else if((getTotalMilliseconds() >= monster.nextDrop) && 
             !monster.overlapping && 
-            ((monster.x + monster.width >= kernel.loadedModels[monster.playerIndex].x) && 
-            (monster.x <= kernel.loadedModels[monster.playerIndex].x + kernel.loadedModels[monster.playerIndex].width)))
+            ((monster.x + monster.width >= monster.kernel.loadedModels[monster.playerIndex].x) && 
+            (monster.x <= monster.kernel.loadedModels[monster.playerIndex].x + monster.kernel.loadedModels[monster.playerIndex].width)))
         {
             monster.nextDrop = -1;
             monster.state = "falling";
@@ -153,7 +153,7 @@ class NeonPidgeon extends Monster {
     
     //events------------------------------------------------------------
     
-    overlappingEvent(thisModel, otherModel)
+    overlappingEvent(thisModel, otherModel, kernel)
     {
         if(((thisModel.x + thisModel.width) >= otherModel.x) &&
         (thisModel.x <= (otherModel.x + otherModel.width)))
@@ -162,7 +162,7 @@ class NeonPidgeon extends Monster {
         }
     }
     
-    hitPlayerOrGroundEvent(thisModel, otherModel)
+    hitPlayerOrGroundEvent(thisModel, otherModel, kernel)
     {
         if(((thisModel.x + thisModel.width >= otherModel.x) &&
         (thisModel.x <= otherModel.x + otherModel.width) &&

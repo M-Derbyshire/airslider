@@ -2,10 +2,16 @@ class Model {
     
     //constructor is run before the engines are initialised (load() is run afterwards)
     constructor(){
+        
+        //Set kernel in the loadSuper() method, as it gets used in the inidivual model's load(),
+        //and loadSuper() is run first. Due to the way ES6 JS works, you cannot set this in this
+        //constructor, as you cannot pass an argument to a subclass constructor on to its parent. 
+        this.kernel;
+        
         this._state; //string with the current state of the model
         this._active; //is this active
         this._display = true; //should this be drawn
-        this.animationManager = new ModelAnimationsManager(this);
+        this.animationManager; //Set this in loadSuper(), as requires the model's kernel reference
         
         this._x;
         this._y;
@@ -15,7 +21,7 @@ class Model {
         this._zSpeed;
         
         this.events = []; //will hold array of events objects
-        this._loadedIndex; //will hold current index in kernel.loadedModels
+        this._loadedIndex; //will hold current index in this.kernel.loadedModels
         
         this.damageDealt = 0;
     }
@@ -64,14 +70,15 @@ class Model {
     
     loadSuper()
     {
-        
+        this.kernel = kernel;
+        this.animationManager = new ModelAnimationsManager(this);
     }
     
     //takes models array related to event, and action (which is a function) 
     registerEvent(relatedModels, action)
     {
         this.events.push({
-            models: kernel.loadedModels.filter((model, index) => {
+            models: this.kernel.loadedModels.filter((model, index) => {
                 if(relatedModels.includes(model.constructor.name) && index != this.loadedIndex)
                 {
                     return true;
@@ -91,7 +98,7 @@ class Model {
         this.events.forEach((event) => {
             for(let i = 0; i < event.models.length; i++)
             {
-                event.check(kernel.loadedModels[this.loadedIndex], event.models[i]);
+                event.check(this.kernel.loadedModels[this.loadedIndex], event.models[i], this.kernel);
             }
         });
         
@@ -123,11 +130,11 @@ class Model {
     
     moveIn(speed)
     {
-        this.z += zCalc.speed(speed, kernel.fps);
+        this.z += zCalc.speed(speed, this.kernel.fps);
     }
     
     moveOut(speed)
     {
-        this.z -= zCalc.speed(speed, kernel.fps);
+        this.z -= zCalc.speed(speed, this.kernel.fps);
     }
 }
