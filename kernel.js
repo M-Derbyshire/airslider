@@ -1,6 +1,23 @@
+// This class provides a Singleton instance
+// So, other than the first time, you should use Kernel.getInstance()
 class Kernel {
+    
+    static instance = null; //The single instance of Kernel
+    static getInstance()
+    {
+        return this.instance;
+    }
+    
     constructor()
     {
+        if(Kernel.instance !== null)
+        {
+            return Kernel.instance;
+        }
+        Kernel.instance = this;
+        
+        
+        
         this._isOnMobile = false; //is this a mobile app (such as through Cordova)?
         
         this._fps = 24;
@@ -72,14 +89,14 @@ class Kernel {
         this._menuEn = new MenuEn();
         
         //do any extra setup that may need access to the engines
-        this.level.loadSuper(kernel);
+        this.level.loadSuper();
         this.level.load();
         this.level.HUD.loadSuper();
         this.level.HUD.load();
         for(let i = 0; i < this.loadedModels.length; i++)
         {
             this.loadedModels[i].loadedIndex = i; //used for events
-            this.loadedModels[i].loadSuper(this);
+            this.loadedModels[i].loadSuper();
             this.loadedModels[i].load();
         }
     }

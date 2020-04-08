@@ -2,7 +2,7 @@ class Level
 {
     constructor()
     {
-        this.kernel; //Set in the individual level's constructor (not here, due to how ES6 javascript works)
+        this.kernel = Kernel.getInstance();
         
         this._background = "white"; //use a color if nothing set in subclass (hence true on the next line)
         
@@ -44,10 +44,8 @@ class Level
     }
     
     //set things that can only be done after the engines are constructed
-    loadSuper(kernel)
+    loadSuper()
     {
-        this.kernel = kernel;
-        
         this.leftEdge = 0;
         this.rightEdge = this.kernel.graphicEn.gameCan.width;
         

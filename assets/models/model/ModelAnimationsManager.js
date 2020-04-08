@@ -2,7 +2,7 @@ class ModelAnimationsManager {
     constructor(model)
     {
         this.model = model;
-        this.kernel = this.model.kernel;
+        this.kernel = Kernel.getInstance();
         this.animations;
     }
     

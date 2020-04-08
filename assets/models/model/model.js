@@ -3,15 +3,12 @@ class Model {
     //constructor is run before the engines are initialised (load() is run afterwards)
     constructor(){
         
-        //Set kernel in the loadSuper() method, as it gets used in the inidivual model's load(),
-        //and loadSuper() is run first. Due to the way ES6 JS works, you cannot set this in this
-        //constructor, as you cannot pass an argument to a subclass constructor on to its parent. 
-        this.kernel;
+        this.kernel = Kernel.getInstance();
+        this.animationManager = new ModelAnimationsManager(this);
         
         this._state; //string with the current state of the model
         this._active; //is this active
         this._display = true; //should this be drawn
-        this.animationManager; //Set this in loadSuper(), as requires the model's kernel reference
         
         this._x;
         this._y;
@@ -70,8 +67,7 @@ class Model {
     
     loadSuper()
     {
-        this.kernel = kernel;
-        this.animationManager = new ModelAnimationsManager(this);
+        
     }
     
     //takes models array related to event, and action (which is a function) 
