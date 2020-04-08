@@ -13,29 +13,29 @@ class NeonPidgeon extends Monster {
     
     load()
     {
-        this.anims = {
-            falling: this.registerAnim({
+        this.animationManager.registerAnimations({
+            falling: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/neonPidgeon/anim/falling",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(250),
                 height: yUnit(200),
             }),
-            flapping: this.registerAnim({
+            flapping: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/neonPidgeon/anim/flapping",
                 frameCount: 4,
                 fps: 24,
                 width: xUnit(250),
                 height: yUnit(200),
             }),
-            rising: this.registerAnim({
+            rising: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/neonPidgeon/anim/rising",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(250),
                 height: yUnit(200),
             }),
-        };
+        });
         
         this.registerEvent(["NeonPidgeon"], this.overlappingEvent);
         this.registerEvent(["Tarian"], this.hitPlayerOrGroundEvent);

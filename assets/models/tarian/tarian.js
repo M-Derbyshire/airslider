@@ -18,15 +18,15 @@ class Tarian extends Model {
     load()
     {
         //I've used exact values for the fps, so it will be consistent when changing game fps
-        this.anims = {
-            forward: this.registerAnim({
+        this.animationManager.registerAnimations({
+            forward: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/forward", 
                 frameCount: 4,
                 fps: 24,
                 width: xUnit(120),
                 height: yUnit(170),
             }),
-            left: this.registerAnim({
+            left: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/left", 
                 frameCount: 4, 
                 fps: 24, 
@@ -34,7 +34,7 @@ class Tarian extends Model {
                 height: yUnit(170), 
                 xOffset: -xUnit(40),
             }),
-            right: this.registerAnim({
+            right: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/right", 
                 frameCount: 4,
                 fps: 24,
@@ -42,7 +42,7 @@ class Tarian extends Model {
                 height: yUnit(170),
                 xOffset: xUnit(40),
             }),
-            exploding: this.registerAnim({
+            exploding: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/exploding",
                 frameCount: 22,
                 fps: 24,
@@ -50,14 +50,14 @@ class Tarian extends Model {
                 height: yUnit(170),
                 nextAnim: "lost",
             }),
-            lost: this.registerAnim({
+            lost: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/lost",
                 frameCount: 3,
                 fps: 24,
                 width: xUnit(120),
                 height: yUnit(170),
-            }),
-        };
+            })
+        });
         
         this.z = 20;
         this.x = (kernel.graphicEn.gameCan.width / 2) - (this.width / 2);

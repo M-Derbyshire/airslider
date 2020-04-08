@@ -14,57 +14,57 @@ class Falcon extends Monster {
     
     load()
     {
-        this.anims = {
-            dropLeft: this.registerAnim({
+        this.animationManager.registerAnimations({
+            dropLeft: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/dropping/left",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(175),
                 height: yUnit(300),
             }),
-            dropRight: this.registerAnim({
+            dropRight: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/dropping/right",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(175),
                 height: yUnit(300),
             }),
-            flapping: this.registerAnim({
+            flapping: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/flapping",
                 frameCount: 8,
                 fps: 24,
                 width: xUnit(350),
                 height: yUnit(200),
             }),
-            left: this.registerAnim({
+            left: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/left",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(350),
                 height: yUnit(200),
             }),
-            right: this.registerAnim({
+            right: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/right",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(350),
                 height: yUnit(200),
             }),
-            riseLeft: this.registerAnim({
+            riseLeft: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/rising/left",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(170),
                 height: yUnit(300),
             }),
-            riseRight: this.registerAnim({
+            riseRight: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/rising/right",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(170),
                 height: yUnit(300),
             }),
-        };
+        });
         
         this.registerEvent(["Tarian"], this.hitPlayerOrGroundEvent);
         

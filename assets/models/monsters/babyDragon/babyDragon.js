@@ -9,22 +9,22 @@ class BabyDragon extends Monster {
     
     load()
     {
-        this.anims = {
-            left: this.registerAnim({
+        this.animationManager.registerAnimations({
+            left: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/babyDragon/anim/left",
                 frameCount: 4,
                 fps: 24,
                 width: xUnit(400),
                 height: yUnit(300)
             }),
-            right: this.registerAnim({
+            right: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/babyDragon/anim/right",
                 frameCount: 4,
                 fps: 24,
                 width: xUnit(400),
                 height: yUnit(300)
             })
-        };
+        });
         
         this.actions = [
             this.move

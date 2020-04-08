@@ -12,22 +12,22 @@ class Werewolf extends Monster {
     
     load()
     {
-        this.anims = {
-            left: this.registerAnim({
+        this.animationManager.registerAnimations({
+            left: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/werewolf/anim/left",
                 frameCount: 2,
                 fps: 24,
                 width: xUnit(200),
                 height: yUnit(170),
             }),
-            right: this.registerAnim({
+            right: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/werewolf/anim/right",
                 frameCount: 2,
                 fps: 24,
                 width: xUnit(200),
                 height: yUnit(170),
             }),
-        };
+        });
         
         this.registerEvent(["Tarian"], this.zCollisionEvent);
         

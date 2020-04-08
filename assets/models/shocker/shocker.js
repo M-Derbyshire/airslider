@@ -33,15 +33,15 @@ class Shocker extends Model
     {
         let width = (this.color == "purple") ? xUnit(300) : xUnit(100);
         
-        this.anims = {
-            shock: this.registerAnim({
+        this.animationManager.registerAnimations({
+            shock: this.animationManager.createAnimation({
                 path: "/assets/models/shocker/anim/" + this.color,
                 frameCount: 3,
                 fps: 24,
                 width: width,
                 height: yUnit(340),
             })
-        };
+        });
         
         this.y = (kernel.graphicEn.gameCan.height - this.height);
         this.z = zCalc.vPointDepth;

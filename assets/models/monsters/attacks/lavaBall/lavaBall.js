@@ -14,15 +14,15 @@ class LavaBall extends Model {
         let x = 30; //fed into xUnit and yUnit when setting up anims
         let y = 40;
         
-        this.anims = {
-            drop: this.registerAnim({
+        this.animationManager.registerAnimations({
+            drop: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/attacks/lavaBall/anim/drop",
                 frameCount: 1,
                 fps: 24,
                 width: xUnit(x),
                 height: yUnit(y)
             }),
-            break: this.registerAnim({
+            break: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/attacks/lavaBall/anim/break",
                 frameCount: 4,
                 fps: 24,
@@ -30,14 +30,14 @@ class LavaBall extends Model {
                 height: yUnit(y),
                 nextAnim: "none"
             }),
-            none: this.registerAnim({
+            none: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/attacks/lavaBall/anim/drop",
                 frameCount: 1,
                 fps: 24,
                 width: 0,
                 height: 0
             }),
-        };
+        });
         
         this.state = "drop";
         this.registerEvent(["Tarian"], this.hitPlayerEvent);
