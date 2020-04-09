@@ -5,7 +5,13 @@ class Kernel {
     static instance = null; //The single instance of Kernel
     static getInstance()
     {
-        return this.instance;
+        //The Kernel constructor will return the single instance
+        //if it has already been created, and if not then it will create
+        //it. We want the same behaviour for this method. The only
+        //actual reason for this method is language -- it's better
+        //that people know you're "getting" the "instance", then thinking
+        //you are truly making something "new".
+        return new Kernel();
     }
     
     constructor()
