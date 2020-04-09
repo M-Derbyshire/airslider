@@ -50,7 +50,7 @@ class ModelAnimationsManager {
     
     getNextFrame()
     {
-        this.animations[this.model.state].nextCount = Math.floor(kernel.fps / this.animations[this.model.state].fps);
+        this.animations[this.model.state].nextCount = Math.floor(this.kernel.fps / this.animations[this.model.state].fps);
         
         //change the frame to the next one
         if(this.animations[this.model.state].waitCount >= this.animations[this.model.state].nextCount)
