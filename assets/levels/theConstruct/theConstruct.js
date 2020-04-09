@@ -16,9 +16,6 @@ class TheConstruct extends Level
         let models = [];
         
         models.push(new Tarian()); //add main character (has to be 0)
-        controlConstructor.keyboardControls(0);
-        controlConstructor.touchControls(0);
-        this.HUD.modelIndexes.push(0);
         
         models.push(new NeonPidgeon(0));
         // models.push(new Falcon(0));

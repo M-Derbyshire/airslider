@@ -39,6 +39,8 @@ class Kernel {
         this._graphicEn;
         this._soundEn;
         this._menuEn;
+        
+        this._controlInitialiser;
     }
     
     //getters and setters ----------------------------------------------------------------------
@@ -58,6 +60,8 @@ class Kernel {
     get assetsStillLoading(){return this._assetsStillLoading;}
     set assetsStillLoading(newVal){this._assetsStillLoading = newVal;}
     
+    get controlInitialiser() {return this._controlInitialiser;}
+    
     get level(){return this._level;}
     set level(newVal){this._level = newVal;}
     
@@ -74,6 +78,7 @@ class Kernel {
     load()
     {
         this.setCanvasSize();
+        this._controlInitialiser = new ControlsInitialiser();
     }
     
     loadLevel(Level)

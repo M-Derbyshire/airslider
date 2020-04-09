@@ -4,6 +4,8 @@ class Level
     {
         this.kernel = Kernel.getInstance();
         
+        this.controlInitialiser = new ControlsInitialiser();
+        
         this._background = "white"; //use a color if nothing set in subclass (hence true on the next line)
         
         this.HUD; //the Heads Up Display for the level
@@ -57,6 +59,13 @@ class Level
         
         this.tunnelLightMask = this.kernel.loadImage("/assets/levels/level/images/tunnelLightMask.png");
         this.tunnelLightBrightness = 0.25;
+        
+        //Setup the controls
+        //The main character in this game is always index 0
+        this.kernel.controlInitialiser.keyboardControls(0);
+        this.kernel.controlInitialiser.touchControls(0);
+        
+        this.HUD.modelIndexes.push(0);
     }
     
     //meant to be overridden
