@@ -90,9 +90,9 @@ class Kernel {
         
         this._controlInitialiser = new ControlsInitialiser();
         this._helpers = {
-            zCalc = new ZCalc(),
-            time = new TimeHelper(),
-            unit = new UnitHelper()
+            zCalc: new ZCalc(),
+            time: new TimeHelper(),
+            unit: new UnitHelper()
         };
     }
     
