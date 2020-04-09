@@ -1,4 +1,4 @@
-class TimeHelpers
+class TimeHelper
 {
     constructor()
     {

@@ -47,6 +47,7 @@ class Kernel {
         this._menuEn;
         
         this._controlInitialiser;
+        this._helpers;
     }
     
     //getters and setters ----------------------------------------------------------------------
@@ -68,6 +69,8 @@ class Kernel {
     
     get controlInitialiser() {return this._controlInitialiser;}
     
+    get helpers() {return this._helpers;}
+    
     get level(){return this._level;}
     set level(newVal){this._level = newVal;}
     
@@ -84,7 +87,13 @@ class Kernel {
     load()
     {
         this.setCanvasSize();
+        
         this._controlInitialiser = new ControlsInitialiser();
+        this._helpers = {
+            zCalc = new ZCalc(),
+            time = new TimeHelpers(),
+            unit = new UnitHelper()
+        };
     }
     
     loadLevel(Level)

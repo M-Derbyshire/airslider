@@ -151,5 +151,3 @@ class ZCalc
         }
     }
 }
-
-var zCalc = new ZCalc();

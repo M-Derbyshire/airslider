@@ -1,4 +1,4 @@
-class UnitHelpers
+class UnitHelper
 {
     constructor()
     {
