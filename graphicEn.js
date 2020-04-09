@@ -127,6 +127,6 @@ class GraphicEn{
         let fontSize = 30
         this.infoCtx.font = fontSize + "px Arial";
         this.infoCtx.fillStyle = "blue";
-        this.infoCtx.fillText("FPS: " + this.kernel.fps, this.helpers.xUnit(10), this.helpers.yUnit(10) + fontSize);
+        this.infoCtx.fillText("FPS: " + this.kernel.fps, this.kernel.helpers.xUnit(10), this.kernel.helpers.yUnit(10) + fontSize);
     }
 }
