@@ -122,8 +122,8 @@ class NeonPidgeon extends Monster {
         
         if(monster.nextDrop == -1)
         {
-            monster.nextDrop = this.helpers.time.getTotalMilliseconds() + monster.dropWaitOffset + Math.floor(Math.random() * monster.dropWaitRange);
-        } else if((this.helpers.time.getTotalMilliseconds() >= monster.nextDrop) && 
+            monster.nextDrop = monster.helpers.time.getTotalMilliseconds() + monster.dropWaitOffset + Math.floor(Math.random() * monster.dropWaitRange);
+        } else if((monster.helpers.time.getTotalMilliseconds() >= monster.nextDrop) && 
             !monster.overlapping && 
             ((monster.x + monster.width >= monster.kernel.loadedModels[monster.playerIndex].x) && 
             (monster.x <= monster.kernel.loadedModels[monster.playerIndex].x + monster.kernel.loadedModels[monster.playerIndex].width)))
