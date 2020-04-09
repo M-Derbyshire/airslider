@@ -52,7 +52,7 @@ class Level
         this.leftEdge = 0;
         this.rightEdge = this.kernel.graphicEn.gameCan.width;
         
-        zCalc.setVanishPoint(this.kernel.graphicEn.gameCan.width / 2, this.kernel.graphicEn.gameCan.height / 2, 1000);
+        this.helpers.zCalc.setVanishPoint(this.kernel.graphicEn.gameCan.width / 2, this.kernel.graphicEn.gameCan.height / 2, 1000);
         
         this.initialLevelSpeedRaw = 600;
         this.levelSpeedRaw = this.initialLevelSpeedRaw; //Can be used if you need to check for a change in level speed, or to change it
