@@ -18,11 +18,11 @@ class UnitHelper
 
     xSpeed(speed)
     {
-        return xUnit(speed) / this.kernel.fps;
+        return this.xUnit(speed) / this.kernel.fps;
     }
 
     ySpeed(speed)
     {
-        return yUnit(speed) / this.kernel.fps;
+        return this.yUnit(speed) / this.kernel.fps;
     }   
 }
