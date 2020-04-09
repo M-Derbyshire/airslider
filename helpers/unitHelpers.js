@@ -1,20 +1,28 @@
-//helpers to create relative positioning/sizings
-//they give you 1000 units (both ways) to play with
-function xUnit(unit)
+class UnitHelpers
 {
-    return (kernel.graphicEn.gameCan.width / 1000) * unit;
-}
-function yUnit(unit)
-{
-    return (kernel.graphicEn.gameCan.height / 1000) * unit;
-}
+    constructor()
+    {
+        this.kernel = Kernel.getInstance();
+    }
+    
+    //helpers to create relative positioning/sizings
+    //they give you 1000 units (both ways) to play with
+    xUnit(unit)
+    {
+        return (this.kernel.graphicEn.gameCan.width / 1000) * unit;
+    }
+    yUnit(unit)
+    {
+        return (this.kernel.graphicEn.gameCan.height / 1000) * unit;
+    }
 
-function xSpeed(speed)
-{
-    return xUnit(speed) / kernel.fps;
-}
+    xSpeed(speed)
+    {
+        return xUnit(speed) / this.kernel.fps;
+    }
 
-function ySpeed(speed)
-{
-    return yUnit(speed) / kernel.fps;
+    ySpeed(speed)
+    {
+        return yUnit(speed) / this.kernel.fps;
+    }   
 }
