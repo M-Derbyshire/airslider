@@ -1,6 +1,6 @@
 class TheConstruct extends Level
 {
-    constructor(kernel)
+    constructor()
     {
         super(Level);
         
@@ -40,7 +40,7 @@ class TheConstruct extends Level
         
         this.setGround(
             "/assets/levels/theConstruct/images/ground.png",
-            yUnit(50)
+            this.helpers.unit.yUnit(50)
         );
         
         this._background = this.kernel.loadImage("/assets/levels/theConstruct/images/testBackground.png");
@@ -67,7 +67,7 @@ class TheConstruct extends Level
         //if outside/inside changes, change light mask
         this.checkLightMask();
         
-        if(getTotalSeconds() <= 37)
+        if(this.helpers.time.getTotalSeconds() <= 37)
         {
             this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
         }
@@ -78,13 +78,13 @@ class TheConstruct extends Level
             this.newTunnelPart(-1, this.tunnelSpriteLength)
         ]);
         
-        if(this.kernel.level.levelSpeed > 0 && getTotalSeconds() >= 0 && getTotalSeconds() <= 1 && !this.kernel.loadedModels[this.monsterIndex].entering)
+        if(this.kernel.level.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this.helpers.time.getTotalSeconds() <= 1 && !this.kernel.loadedModels[this.monsterIndex].entering)
         {
             this.outsideVisible = true;
             this.kernel.loadedModels[this.monsterIndex].start();
         }
         
-        if(this.kernel.level.levelSpeed > 0 && getTotalSeconds() >= 30 && getTotalSeconds() <= 31 && !this.kernel.loadedModels[this.monsterIndex].exiting && this.kernel.loadedModels[this.monsterIndex].active)
+        if(this.kernel.level.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 30 && this.helpers.time.getTotalSeconds() <= 31 && !this.kernel.loadedModels[this.monsterIndex].exiting && this.kernel.loadedModels[this.monsterIndex].active)
         {
             this.kernel.loadedModels[this.monsterIndex].stop();
         }

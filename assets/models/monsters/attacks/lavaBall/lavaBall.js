@@ -19,15 +19,15 @@ class LavaBall extends Model {
                 path: "/assets/models/monsters/attacks/lavaBall/anim/drop",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(x),
-                height: yUnit(y)
+                width: this.helpers.unit.xUnit(x),
+                height: this.helpers.unit.yUnit(y)
             }),
             break: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/attacks/lavaBall/anim/break",
                 frameCount: 4,
                 fps: 24,
-                width: xUnit(x),
-                height: yUnit(y),
+                width: this.helpers.unit.xUnit(x),
+                height: this.helpers.unit.yUnit(y),
                 nextAnim: "none"
             }),
             none: this.animationManager.createAnimation({

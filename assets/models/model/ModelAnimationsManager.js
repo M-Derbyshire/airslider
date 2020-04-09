@@ -3,6 +3,7 @@ class ModelAnimationsManager {
     {
         this.model = model;
         this.kernel = Kernel.getInstance();
+        this.helpers = this.kernel.helpers;
         this.animations;
     }
     
@@ -40,10 +41,10 @@ class ModelAnimationsManager {
     {
         this.kernel.graphicEn.gameCtx.drawImage(
             this.kernel.loadedAssets[this.getNextFrame()][1], 
-            zCalc.x(this.model.x, this.model.z), 
-            zCalc.y(this.model.y, this.model.z), 
-            zCalc.width(this.model.width, this.model.z), 
-            zCalc.height(this.model.height, this.model.z)
+            this.helpers.zCalc.x(this.model.x, this.model.z), 
+            this.helpers.zCalc.y(this.model.y, this.model.z), 
+            this.helpers.zCalc.width(this.model.width, this.model.z), 
+            this.helpers.zCalc.height(this.model.height, this.model.z)
         );
     }
     

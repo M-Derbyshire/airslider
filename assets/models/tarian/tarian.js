@@ -17,45 +17,47 @@ class Tarian extends Model {
     
     load()
     {
+        let unitHelper = this.helpers.unit;
+        
         //I've used exact values for the fps, so it will be consistent when changing game fps
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/forward", 
                 frameCount: 4,
                 fps: 24,
-                width: xUnit(120),
-                height: yUnit(170),
+                width: unitHelper.xUnit(120),
+                height: unitHelper.yUnit(170),
             }),
             left: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/left", 
                 frameCount: 4, 
                 fps: 24, 
-                width: xUnit(170), 
-                height: yUnit(170), 
-                xOffset: -xUnit(40),
+                width: unitHelper.xUnit(170), 
+                height: unitHelper.yUnit(170), 
+                xOffset: -unitHelper.xUnit(40),
             }),
             right: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/right", 
                 frameCount: 4,
                 fps: 24,
-                width: xUnit(170),
-                height: yUnit(170),
-                xOffset: xUnit(40),
+                width: unitHelper.xUnit(170),
+                height: unitHelper.yUnit(170),
+                xOffset: unitHelper.xUnit(40),
             }),
             exploding: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/exploding",
                 frameCount: 22,
                 fps: 24,
-                width: xUnit(120),
-                height: yUnit(170),
+                width: unitHelper.xUnit(120),
+                height: unitHelper.yUnit(170),
                 nextAnim: "lost",
             }),
             lost: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/lost",
                 frameCount: 3,
                 fps: 24,
-                width: xUnit(120),
-                height: yUnit(170),
+                width: unitHelper.xUnit(120),
+                height: unitHelper.yUnit(170),
             })
         });
         
@@ -223,10 +225,10 @@ class Tarian extends Model {
     
     flash()
     {
-        if(this.lastFlashChange == 0 || this.lastFlashChange + this.flashSpeed < getTotalMilliseconds())
+        if(this.lastFlashChange == 0 || this.lastFlashChange + this.flashSpeed < this.helpers.time.getTotalMilliseconds())
         {
             this.display = !this.display;
-            this.lastFlashChange = getTotalMilliseconds();
+            this.lastFlashChange = this.helpers.time.getTotalMilliseconds();
         }
     }
 }

@@ -13,27 +13,29 @@ class NeonPidgeon extends Monster {
     
     load()
     {
+        let unitHelper = this.helpers.unit;
+        
         this.animationManager.registerAnimations({
             falling: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/neonPidgeon/anim/falling",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(250),
-                height: yUnit(200),
+                width: unitHelper.xUnit(250),
+                height: unitHelper.yUnit(200),
             }),
             flapping: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/neonPidgeon/anim/flapping",
                 frameCount: 4,
                 fps: 24,
-                width: xUnit(250),
-                height: yUnit(200),
+                width: unitHelper.xUnit(250),
+                height: unitHelper.yUnit(200),
             }),
             rising: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/neonPidgeon/anim/rising",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(250),
-                height: yUnit(200),
+                width: unitHelper.xUnit(250),
+                height: unitHelper.yUnit(200),
             }),
         });
         
@@ -48,8 +50,8 @@ class NeonPidgeon extends Monster {
         
         this.enterXSpeed = 90;
         this.exitXSpeed = 240;
-        this.offScreenUnits = (this.specialLevel) ? xUnit(500) : xUnit(800);
-        this.startY = (this.specialLevel) ? yUnit(250) : yUnit(150);
+        this.offScreenUnits = (this.specialLevel) ? unitHelper.xUnit(500) : unitHelper.xUnit(800);
+        this.startY = (this.specialLevel) ? unitHelper.yUnit(250) : unitHelper.yUnit(150);
         this.startX = this.kernel.level.rightEdge + this.offScreenUnits;
         this.startZ = this.kernel.loadedModels[this.playerIndex].z;
         this.ySpeed = 1200;
@@ -69,7 +71,7 @@ class NeonPidgeon extends Monster {
             this.moveLeft(this.enterXSpeed);
         } else {
             this.entering = false;
-            this.nextDrop = getTotalMilliseconds() + this.initialDropWait;
+            this.nextDrop = this.helpers.time.getTotalMilliseconds() + this.initialDropWait;
         }
     }
     
@@ -120,8 +122,8 @@ class NeonPidgeon extends Monster {
         
         if(monster.nextDrop == -1)
         {
-            monster.nextDrop = getTotalMilliseconds() + monster.dropWaitOffset + Math.floor(Math.random() * monster.dropWaitRange);
-        } else if((getTotalMilliseconds() >= monster.nextDrop) && 
+            monster.nextDrop = this.helpers.time.getTotalMilliseconds() + monster.dropWaitOffset + Math.floor(Math.random() * monster.dropWaitRange);
+        } else if((this.helpers.time.getTotalMilliseconds() >= monster.nextDrop) && 
             !monster.overlapping && 
             ((monster.x + monster.width >= monster.kernel.loadedModels[monster.playerIndex].x) && 
             (monster.x <= monster.kernel.loadedModels[monster.playerIndex].x + monster.kernel.loadedModels[monster.playerIndex].width)))

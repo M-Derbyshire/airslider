@@ -14,55 +14,57 @@ class Falcon extends Monster {
     
     load()
     {
+        let unitHelper = this.helpers.unit;
+        
         this.animationManager.registerAnimations({
             dropLeft: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/dropping/left",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(175),
-                height: yUnit(300),
+                width: unitHelper.xUnit(175),
+                height: unitHelper.yUnit(300),
             }),
             dropRight: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/dropping/right",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(175),
-                height: yUnit(300),
+                width: unitHelper.xUnit(175),
+                height: unitHelper.yUnit(300),
             }),
             flapping: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/flapping",
                 frameCount: 8,
                 fps: 24,
-                width: xUnit(350),
-                height: yUnit(200),
+                width: unitHelper.xUnit(350),
+                height: unitHelper.yUnit(200),
             }),
             left: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/left",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(350),
-                height: yUnit(200),
+                width: unitHelper.xUnit(350),
+                height: unitHelper.yUnit(200),
             }),
             right: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/right",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(350),
-                height: yUnit(200),
+                width: unitHelper.xUnit(350),
+                height: unitHelper.yUnit(200),
             }),
             riseLeft: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/rising/left",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(170),
-                height: yUnit(300),
+                width: unitHelper.xUnit(170),
+                height: unitHelper.yUnit(300),
             }),
             riseRight: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/rising/right",
                 frameCount: 1,
                 fps: 24,
-                width: xUnit(170),
-                height: yUnit(300),
+                width: unitHelper.xUnit(170),
+                height: unitHelper.yUnit(300),
             }),
         });
         
@@ -79,13 +81,13 @@ class Falcon extends Monster {
         this.player = this.kernel.loadedModels[this.playerIndex];
         
         this.enterXSpeed = 140;
-        this.offScreenUnits = xUnit(800);
-        this.startY = yUnit(75);
+        this.offScreenUnits = unitHelper.xUnit(800);
+        this.startY = unitHelper.yUnit(75);
         this.startX = this.kernel.level.leftEdge - this.offScreenUnits;
         this.startZ = this.kernel.loadedModels[this.playerIndex].z;
         this.ySpeed = 1200;
-        this.dropWaitOffset = secondsToFrames(5);
-        this.dropWaitRange = secondsToFrames(5);
+        this.dropWaitOffset = this.helpers.time.secondsToFrames(5);
+        this.dropWaitRange = this.helpers.time.secondsToFrames(5);
         
         this.reset();
     }
@@ -99,7 +101,7 @@ class Falcon extends Monster {
         {
             this.moveRight(this.enterXSpeed);
         } else {
-            this.lastSwoop = getTotalMilliseconds();
+            this.lastSwoop = this.helpers.time.getTotalMilliseconds();
             this.entering = false;
         }
     }
@@ -145,7 +147,7 @@ class Falcon extends Monster {
         //keep monster centered above player
         monster.x = monster.player.x + (monster.player.width / 2) - (monster.width / 2);
         
-        if(getTotalMilliseconds() - monster.lastSwoop >= monster.swoopWait)
+        if(this.helpers.time.getTotalMilliseconds() - monster.lastSwoop >= monster.swoopWait)
         {
             monster.swoopWait = (Math.random() * 3000) + 1000; //between 1 and 4 seconds
             // will set the lastSwoop time after swooping has finished
@@ -221,11 +223,11 @@ class Falcon extends Monster {
         //get player center and monster center; also pre-calculate the real speed of the monster
         let pc = monster.kernel.loadedModels[monster.playerIndex].x + (monster.kernel.loadedModels[monster.playerIndex].width / 2)
         let mc = monster.x + (monster.width / 2);
-        let calcSpeed = xSpeed(monster.xSpeed);
+        let calcSpeed = this.helpers.time.xSpeed(monster.xSpeed);
         
         if(mc < pc + calcSpeed && mc > pc - calcSpeed)
         {
-            monster.lastSwoop = getTotalMilliseconds();
+            monster.lastSwoop = this.helpers.time.getTotalMilliseconds();
             monster.nextAction();
         } else {
             monster.directionMultiplier = (pc < mc) ? -1 : 1;

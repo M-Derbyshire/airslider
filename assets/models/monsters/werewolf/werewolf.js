@@ -17,15 +17,15 @@ class Werewolf extends Monster {
                 path: "/assets/models/monsters/werewolf/anim/left",
                 frameCount: 2,
                 fps: 24,
-                width: xUnit(200),
-                height: yUnit(170),
+                width: this.helpers.unit.xUnit(200),
+                height: this.helpers.unit.yUnit(170),
             }),
             right: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/werewolf/anim/right",
                 frameCount: 2,
                 fps: 24,
-                width: xUnit(200),
-                height: yUnit(170),
+                width: this.helpers.unit.xUnit(200),
+                height: this.helpers.unit.yUnit(170),
             }),
         });
         
@@ -40,7 +40,7 @@ class Werewolf extends Monster {
         this.state = "left";
         this.startY = (this.kernel.graphicEn.gameCan.height - this.height);
         this.startX = this.kernel.graphicEn.gameCan.width / 2;
-        this.startZ = zCalc.vPointDepth;
+        this.startZ = this.helpers.zCalc.vPointDepth;
         this.minXSpeed = 1000;
         this.maxXSpeed = 2000;
         this.zSpeed = 12; // this will be multiplied by 10, as 120 was affecting Tarian's zCollision event

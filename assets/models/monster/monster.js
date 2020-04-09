@@ -34,10 +34,10 @@ class Monster extends Model {
     {
         if(this.kernel.level.levelSpeedRaw < this.realZSpeedRaw && this.active)
         {
-            this.z += (zCalc.speed(this.realZSpeedRaw, this.kernel.fps) - zCalc.speed(this.kernel.level.levelSpeed, this.kernel.fps));
+            this.z += (this.helpers.zCalc.speed(this.realZSpeedRaw, this.kernel.fps) - this.helpers.zCalc.speed(this.kernel.level.levelSpeed, this.kernel.fps));
             this.fireWeapon = false;
             
-            if(this.z >= zCalc.vPointDepth)
+            if(this.z >= this.helpers.zCalc.vPointDepth)
             {
                 this.active = false;
             }
@@ -71,7 +71,6 @@ class Monster extends Model {
     
     loadSuper() //this is overriding the model method
     {
-        this.animationManager = new ModelAnimationsManager(this);
         this.fireWeapon = true;
         this.realZSpeedRaw = this.kernel.level.levelSpeedRaw;
     }
