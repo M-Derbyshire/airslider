@@ -217,7 +217,7 @@ class Kernel {
     
     defaultAssetCallback()
     {
-        kernel.assetsStillLoading--;
+        Kernel.getInstance().assetsStillLoading--;
     }
     
     
