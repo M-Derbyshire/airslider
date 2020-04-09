@@ -4,6 +4,7 @@ class Model {
     constructor(){
         
         this.kernel = Kernel.getInstance();
+        this.helpers = this.kernel.helpers;
         this.animationManager = new ModelAnimationsManager(this);
         
         this._state; //string with the current state of the model
@@ -106,31 +107,31 @@ class Model {
     
     moveLeft(speed)
     {
-        this.x -= xSpeed(speed);
+        this.x -= this.helpers.unit.xSpeed(speed);
     }
     
     moveRight(speed)
     {
-        this.x += xSpeed(speed);
+        this.x += this.helpers.unit.xSpeed(speed);
     }
     
     moveUp(speed)
     {
-        this.y -= ySpeed(speed);
+        this.y -= this.helpers.unit.ySpeed(speed);
     }
     
     moveDown(speed)
     {
-        this.y += ySpeed(speed);
+        this.y += this.helpers.unit.ySpeed(speed);
     }
     
     moveIn(speed)
     {
-        this.z += zCalc.speed(speed, this.kernel.fps);
+        this.z += this.helpers.zCalc.speed(speed, this.kernel.fps);
     }
     
     moveOut(speed)
     {
-        this.z -= zCalc.speed(speed, this.kernel.fps);
+        this.z -= this.helpers.zCalc.speed(speed, this.kernel.fps);
     }
 }

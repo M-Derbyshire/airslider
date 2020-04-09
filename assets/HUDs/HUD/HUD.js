@@ -3,6 +3,7 @@ class HUD
     constructor()
     {
         this.kernel = Kernel.getInstance();
+        this.helpers = this.kernel.helpers;
         
         this.update = true; //does the HUD need updating? Initially true, so it will get drawn in the first frame
         this.components = []; //HUD components included

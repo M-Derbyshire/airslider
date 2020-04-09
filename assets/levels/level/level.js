@@ -3,6 +3,7 @@ class Level
     constructor()
     {
         this.kernel = Kernel.getInstance();
+        this.helpers = this.kernel.helpers;
         
         this.controlInitialiser = new ControlsInitialiser();
         
@@ -77,7 +78,7 @@ class Level
     {
         if(this.levelSpeed != 0)
         {
-            this.levelSpeed = zCalc.speed(this.levelSpeedRaw, this.kernel.fps); //need to use this in monsters for death
+            this.levelSpeed = this.helpers.zCalc.speed(this.levelSpeedRaw, this.kernel.fps); //need to use this in monsters for death
         }
     }
     
@@ -130,7 +131,7 @@ class Level
         this.kernel.graphicEn.gameCtx.fillStyle = this.roadColor;
         this.kernel.graphicEn.gameCtx.beginPath();
         this.kernel.graphicEn.gameCtx.moveTo(0, this.kernel.graphicEn.gameCan.height);
-        this.kernel.graphicEn.gameCtx.lineTo(zCalc.vPointX, zCalc.vPointY);
+        this.kernel.graphicEn.gameCtx.lineTo(this.helpers.zCalc.vPointX, this.helpers.zCalc.vPointY);
         this.kernel.graphicEn.gameCtx.lineTo(this.kernel.graphicEn.gameCan.width, this.kernel.graphicEn.gameCan.height);
         this.kernel.graphicEn.gameCtx.fill();
     }
@@ -153,14 +154,14 @@ class Level
         this.ground.height = height;
         let distance = -1;
         
-        this.groundZ.push(zCalc.vPointDepth);
+        this.groundZ.push(this.helpers.zCalc.vPointDepth);
         
-        for(let z = zCalc.vPointDepth; z >= 0; z--)
+        for(let z = this.helpers.zCalc.vPointDepth; z >= 0; z--)
         {
             if(distance == -1)
             {
                 //find the z distance between images
-                if(zCalc.y(this.kernel.graphicEn.gameCan.height, z) >= zCalc.y(this.kernel.graphicEn.gameCan.height, this.groundZ[this.groundZ.length - 1]) + zCalc.height(height, this.groundZ[this.groundZ.length - 1]))
+                if(this.helpers.zCalc.y(this.kernel.graphicEn.gameCan.height, z) >= this.helpers.zCalc.y(this.kernel.graphicEn.gameCan.height, this.groundZ[this.groundZ.length - 1]) + this.helpers.zCalc.height(height, this.groundZ[this.groundZ.length - 1]))
                 {
                     distance = this.groundZ[this.groundZ.length - 1] - z;
                     this.ground.distance = distance;
@@ -186,13 +187,13 @@ class Level
             
             this.ground.offset += (this.levelSpeed / 1000);
             
-            let y = zCalc.y(this.kernel.graphicEn.backCan.height, this.groundZ[i] - this.ground.offset);
-            let width = zCalc.width((this.kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset);
-            let height = zCalc.height(this.ground.height, this.groundZ[i] - this.ground.offset);
+            let y = this.helpers.zCalc.y(this.kernel.graphicEn.backCan.height, this.groundZ[i] - this.ground.offset);
+            let width = this.helpers.zCalc.width((this.kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset);
+            let height = this.helpers.zCalc.height(this.ground.height, this.groundZ[i] - this.ground.offset);
             
             this.kernel.graphicEn.backCtx.drawImage(
                 this.kernel.loadedAssets[this.ground.ref][1],
-                zCalc.x(0 - (this.kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset),
+                this.helpers.zCalc.x(0 - (this.kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset),
                 y,
                 width,
                 height
@@ -200,7 +201,7 @@ class Level
             
             this.kernel.graphicEn.backCtx.drawImage(
                 this.kernel.loadedAssets[this.ground.ref][1],
-                zCalc.x(this.kernel.graphicEn.backCan.width, this.groundZ[i] - this.ground.offset),
+                this.helpers.zCalc.x(this.kernel.graphicEn.backCan.width, this.groundZ[i] - this.ground.offset),
                 y,
                 width,
                 height
@@ -212,7 +213,7 @@ class Level
     {
         for(let i = fromIndex; i <= toIndex; i++)
         {
-            if((!this.kernel.loadedModels[i].active && i == fromIndex) || (!this.kernel.loadedModels[i].active && this.kernel.loadedModels[i - 1].active && (this.kernel.loadedModels[i - 1].z + (zCalc.vPointDepth / this.shockerCount) < zCalc.vPointDepth)))
+            if((!this.kernel.loadedModels[i].active && i == fromIndex) || (!this.kernel.loadedModels[i].active && this.kernel.loadedModels[i - 1].active && (this.kernel.loadedModels[i - 1].z + (this.helpers.zCalc.vPointDepth / this.shockerCount) < this.helpers.zCalc.vPointDepth)))
             {
                 // need to set some to be where the Tarian is, so player can't just stay in one place
                 let xPos;
@@ -251,7 +252,7 @@ class Level
                     }
                 }
                 
-                this.kernel.loadedModels[i].z = zCalc.vPointDepth;
+                this.kernel.loadedModels[i].z = this.helpers.zCalc.vPointDepth;
                 this.kernel.loadedModels[i].x = xPos;
                 
                 this.kernel.loadedModels[i].active = true;
@@ -276,10 +277,10 @@ class Level
                 {
                     this.kernel.graphicEn.gameCtx.drawImage(
                         this.kernel.loadedAssets[tunnelPart.imageIndex][1], 
-                        zCalc.x(0, tunnelPart.z, true), 
-                        zCalc.y(0, tunnelPart.z, true), 
-                        zCalc.width(this.kernel.graphicEn.gameCan.width, tunnelPart.z, true), 
-                        zCalc.height(this.kernel.graphicEn.gameCan.height, tunnelPart.z, true)
+                        this.helpers.zCalc.x(0, tunnelPart.z, true), 
+                        this.helpers.zCalc.y(0, tunnelPart.z, true), 
+                        this.helpers.zCalc.width(this.kernel.graphicEn.gameCan.width, tunnelPart.z, true), 
+                        this.helpers.zCalc.height(this.kernel.graphicEn.gameCan.height, tunnelPart.z, true)
                     );
                 }
                 
@@ -287,7 +288,7 @@ class Level
                 if(
                     i > 0 && 
                     !this.tunnel[i - 1].active &&
-                    (tunnelPart.z + tunnelPart.length) <= zCalc.vPointDepth
+                    (tunnelPart.z + tunnelPart.length) <= this.helpers.zCalc.vPointDepth
                 )
                 {
                     this.tunnel[i - 1].active = true;
@@ -325,7 +326,7 @@ class Level
     newTunnelPart(image, length = 1)
     {
         return {
-            z: zCalc.vPointDepth,
+            z: this.helpers.zCalc.vPointDepth,
             length: length,
             imageIndex: image, //-1 is a clear piece of the tunnel
             active: false
@@ -334,7 +335,7 @@ class Level
     
     createStartingTunnel(parts)
     {
-        let newZ = zCalc.vPointDepth;
+        let newZ = this.helpers.zCalc.vPointDepth;
         while(this.tunnel.length < 2 || this.tunnel[this.tunnel.length - 2].z > 0)
         {
             parts = JSON.parse(JSON.stringify(parts)); //have to truly copy this, as otherwise they're references
