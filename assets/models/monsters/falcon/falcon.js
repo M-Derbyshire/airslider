@@ -147,7 +147,7 @@ class Falcon extends Monster {
         //keep monster centered above player
         monster.x = monster.player.x + (monster.player.width / 2) - (monster.width / 2);
         
-        if(this.helpers.time.getTotalMilliseconds() - monster.lastSwoop >= monster.swoopWait)
+        if(monster.helpers.time.getTotalMilliseconds() - monster.lastSwoop >= monster.swoopWait)
         {
             monster.swoopWait = (Math.random() * 3000) + 1000; //between 1 and 4 seconds
             // will set the lastSwoop time after swooping has finished
@@ -223,11 +223,11 @@ class Falcon extends Monster {
         //get player center and monster center; also pre-calculate the real speed of the monster
         let pc = monster.kernel.loadedModels[monster.playerIndex].x + (monster.kernel.loadedModels[monster.playerIndex].width / 2)
         let mc = monster.x + (monster.width / 2);
-        let calcSpeed = this.helpers.time.xSpeed(monster.xSpeed);
+        let calcSpeed = monster.helpers.unit.xSpeed(monster.xSpeed);
         
         if(mc < pc + calcSpeed && mc > pc - calcSpeed)
         {
-            monster.lastSwoop = this.helpers.time.getTotalMilliseconds();
+            monster.lastSwoop = monster.helpers.time.getTotalMilliseconds();
             monster.nextAction();
         } else {
             monster.directionMultiplier = (pc < mc) ? -1 : 1;
