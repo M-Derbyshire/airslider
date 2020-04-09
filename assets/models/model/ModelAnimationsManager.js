@@ -30,7 +30,7 @@ class ModelAnimationsManager {
         
         for(let i = 0; i < anim.frameCount; i++)
         {
-            anim.frames[i] = kernel.loadImage(anim.path + "/" + i + ".png");
+            anim.frames[i] = this.kernel.loadImage(anim.path + "/" + i + ".png");
         }
         
         return anim;
@@ -54,9 +54,9 @@ class ModelAnimationsManager {
         //change the frame to the next one
         if(this.animations[this.model.state].waitCount >= this.animations[this.model.state].nextCount)
         {
-            if(this.animations[this.model.state].fps > kernel.fps)
+            if(this.animations[this.model.state].fps > this.kernel.fps)
             {
-                this.animations[this.model.state].currentFrame += Math.floor(this.animations[this.model.state].fps / kernel.fps);
+                this.animations[this.model.state].currentFrame += Math.floor(this.animations[this.model.state].fps / this.kernel.fps);
             } else {
                 this.animations[this.model.state].currentFrame++;
             }
