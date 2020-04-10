@@ -106,7 +106,7 @@ class Level
             this.ground.draw(this.levelSpeed);
         }
         
-        // this.tunnel.draw(this.levelSpeed);
+        this.tunnel.draw(this.levelSpeed);
         this.road.draw(this.roadColor);
     }
     
