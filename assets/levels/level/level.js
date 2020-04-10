@@ -14,6 +14,8 @@ class Level
         
         this.ground = new LevelGround();
         
+        this.tunnel = new LevelTunnel();
+        
         this._background = "white"; //use a color if nothing set in subclass (hence true on the next line)
         
         this.HUD; //the Heads Up Display for the level
@@ -25,8 +27,6 @@ class Level
         
         this.monsterIndex;
         
-        this.tunnel = [];
-        
         this._musicRef;
         
         this.outsideVisible = false;
@@ -35,7 +35,6 @@ class Level
         this.tunnelLightBrightness;
         this.outsideLightMask;
         this.outsideLightBrightness;
-        this.lightChanged = false;
         
         this.levelSpeed;
         this.levelSpeedRaw;
@@ -107,7 +106,7 @@ class Level
             this.ground.draw();
         }
         
-        this.drawTunnel();
+        this.tunnel.draw(this.levelSpeed);
         this.road.draw(this.roadColor);
     }
     
@@ -128,100 +127,6 @@ class Level
         for(let i = 0; i < this.kernel.loadedModels.length; i++)
         {
             this.kernel.loadedModels[i].levelStopped();
-        }
-    }
-    
-    //level sections ---------------------------------------
-    
-    //tunnel[i].z - .length - .color - .active
-    drawTunnel()
-    {
-        for(let i = 0; i < this.tunnel.length; i++)
-        {
-            if(this.tunnel[i].active)
-            {
-                let tunnelPart = this.tunnel[i];
-                
-                //move the image
-                tunnelPart.z -= this.levelSpeed;
-                
-                //draw the image (-1 is a clear piece)
-                if(tunnelPart.imageIndex > -1)
-                {
-                    this.kernel.graphicEn.gameCtx.drawImage(
-                        this.kernel.loadedAssets[tunnelPart.imageIndex][1], 
-                        this.helpers.zCalc.x(0, tunnelPart.z, true), 
-                        this.helpers.zCalc.y(0, tunnelPart.z, true), 
-                        this.helpers.zCalc.width(this.kernel.graphicEn.gameCan.width, tunnelPart.z, true), 
-                        this.helpers.zCalc.height(this.kernel.graphicEn.gameCan.height, tunnelPart.z, true)
-                    );
-                }
-                
-                //if this is not the first piece, and it's moved far enough, activate the next one
-                if(
-                    i > 0 && 
-                    !this.tunnel[i - 1].active &&
-                    (tunnelPart.z + tunnelPart.length) <= this.helpers.zCalc.vPointDepth
-                )
-                {
-                    this.tunnel[i - 1].active = true;
-                    this.tunnel[i - 1].z = tunnelPart.z + tunnelPart.length;
-                }
-                
-                //if this is the last piece, and it's out of the frame, it's no longer needed
-                if(this.tunnel.length > 1 && i == this.tunnel.length - 1)
-                {
-                    if(this.tunnel[i - 1].z <= 0) //if the one before this is moving out of frame
-                    {
-                        this.tunnel.pop(); // pop out this piece of the tunnel
-                    }
-                }
-            }
-        }
-    }
-    
-    
-    continueTunnel(newTunnelParts)
-    {
-        if(this.tunnel.length == 0 || this.tunnel[0].active)
-        {
-            for(let i = 0; i < newTunnelParts.length; i++)
-            {
-                this.tunnel.unshift(newTunnelParts[i]);
-            }
-        } else if (!this.tunnel[this.tunnel.length - 1].active)
-        {
-            this.tunnel[this.tunnel.length - 1].active = true;
-        }
-    }
-    
-    //tunnel[i].z - .length - .imageIndex - .active
-    newTunnelPart(image, length = 1)
-    {
-        return {
-            z: this.helpers.zCalc.vPointDepth,
-            length: length,
-            imageIndex: image, //-1 is a clear piece of the tunnel
-            active: false
-        };
-    }
-    
-    createStartingTunnel(parts)
-    {
-        let newZ = this.helpers.zCalc.vPointDepth;
-        while(this.tunnel.length < 2 || this.tunnel[this.tunnel.length - 2].z > 0)
-        {
-            parts = JSON.parse(JSON.stringify(parts)); //have to truly copy this, as otherwise they're references
-            
-            for(let i = parts.length - 1; i >= 0; i--)
-            {
-                this.tunnel.push(parts[i]);
-                this.tunnel[this.tunnel.length - 1].active = true;
-                
-                // Set the Z to the previous item's Z, minus this one's length
-                newZ = newZ - this.tunnel[this.tunnel.length - 1].length;
-                this.tunnel[this.tunnel.length - 1].z = newZ;
-            }
         }
     }
 }
