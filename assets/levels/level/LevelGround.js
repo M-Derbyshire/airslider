@@ -56,7 +56,7 @@ class LevelGround
                 this.ground.offset = 0;
             }
             
-            this.ground.offset += (levelSpeed / 1000);
+            this.ground.offset += (levelSpeed / 250);
             
             let y = this.helpers.zCalc.y(this.kernel.graphicEn.backCan.height, this.groundZ[i] - this.ground.offset);
             let width = this.helpers.zCalc.width((this.kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset);
