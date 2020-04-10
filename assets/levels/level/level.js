@@ -7,12 +7,13 @@ class Level
         
         this.controlInitialiser = new ControlsInitialiser();
         
+        this.road = new LevelRoad();
+        this.roadColor = "#999999";
+        
         this._background = "white"; //use a color if nothing set in subclass (hence true on the next line)
         
         this.HUD; //the Heads Up Display for the level
         this.HUD = new MainHUD();
-        
-        this.roadColor = "#999999";
         
         this.shockerCount;
         
@@ -111,7 +112,7 @@ class Level
         }
         
         this.drawTunnel();
-        this.drawRoad();
+        this.road.draw(this.roadColor);
     }
     
     drawFront()
@@ -122,18 +123,6 @@ class Level
         {
             this.extraDrawFront();
         }
-    }
-    
-    
-    drawRoad()
-    {
-        this.kernel.graphicEn.gameCtx.lineWidth = 1;
-        this.kernel.graphicEn.gameCtx.fillStyle = this.roadColor;
-        this.kernel.graphicEn.gameCtx.beginPath();
-        this.kernel.graphicEn.gameCtx.moveTo(0, this.kernel.graphicEn.gameCan.height);
-        this.kernel.graphicEn.gameCtx.lineTo(this.helpers.zCalc.vPointX, this.helpers.zCalc.vPointY);
-        this.kernel.graphicEn.gameCtx.lineTo(this.kernel.graphicEn.gameCan.width, this.kernel.graphicEn.gameCan.height);
-        this.kernel.graphicEn.gameCtx.fill();
     }
     
     levelStop()
