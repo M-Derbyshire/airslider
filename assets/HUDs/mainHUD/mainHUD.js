@@ -17,6 +17,8 @@ class MainHUD extends HUD
             unitHelper.yUnit(60)
         ));
         
+        //This is not in the component array, as needs to be called
+        //by the player's character model
         this.damageFlash = new DamageFlash();
         
         this.loadComponents();
