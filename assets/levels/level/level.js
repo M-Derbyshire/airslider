@@ -12,6 +12,8 @@ class Level
         
         this.shockerManager = new ShockerManager();
         
+        this.ground = new LevelGround();
+        
         this._background = "white"; //use a color if nothing set in subclass (hence true on the next line)
         
         this.HUD; //the Heads Up Display for the level
@@ -27,14 +29,6 @@ class Level
         
         this._musicRef;
         
-        this.ground = {
-            ref: 0,
-            height: 0,
-            distance: 0,
-            offset: 0
-        };
-        
-        this.groundZ = [];
         this.outsideVisible = false;
         
         this.tunnelLightMask;
@@ -110,7 +104,7 @@ class Level
         
         if(this.outsideVisible)
         {
-            this.drawGround();
+            this.ground.draw();
         }
         
         this.drawTunnel();
@@ -138,67 +132,6 @@ class Level
     }
     
     //level sections ---------------------------------------
-    
-    setGround(path, height)
-    {
-        this.ground.ref = this.kernel.loadImage(path);
-        this.ground.height = height;
-        let distance = -1;
-        
-        this.groundZ.push(this.helpers.zCalc.vPointDepth);
-        
-        for(let z = this.helpers.zCalc.vPointDepth; z >= 0; z--)
-        {
-            if(distance == -1)
-            {
-                //find the z distance between images
-                if(this.helpers.zCalc.y(this.kernel.graphicEn.gameCan.height, z) >= this.helpers.zCalc.y(this.kernel.graphicEn.gameCan.height, this.groundZ[this.groundZ.length - 1]) + this.helpers.zCalc.height(height, this.groundZ[this.groundZ.length - 1]))
-                {
-                    distance = this.groundZ[this.groundZ.length - 1] - z;
-                    this.ground.distance = distance;
-                    this.groundZ.push(z + 1);
-                }
-            } else {
-                if(this.groundZ[this.groundZ.length - 1] - z == distance)
-                {
-                    this.groundZ.push(z + 1);
-                }
-            }
-        }
-    }
-    
-    drawGround()
-    {
-        for(let i = 0; i < this.groundZ.length; i++)
-        {
-            if(this.ground.offset > this.ground.distance)
-            {
-                this.ground.offset = 0;
-            }
-            
-            this.ground.offset += (this.levelSpeed / 1000);
-            
-            let y = this.helpers.zCalc.y(this.kernel.graphicEn.backCan.height, this.groundZ[i] - this.ground.offset);
-            let width = this.helpers.zCalc.width((this.kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset);
-            let height = this.helpers.zCalc.height(this.ground.height, this.groundZ[i] - this.ground.offset);
-            
-            this.kernel.graphicEn.backCtx.drawImage(
-                this.kernel.loadedAssets[this.ground.ref][1],
-                this.helpers.zCalc.x(0 - (this.kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset),
-                y,
-                width,
-                height
-            );
-            
-            this.kernel.graphicEn.backCtx.drawImage(
-                this.kernel.loadedAssets[this.ground.ref][1],
-                this.helpers.zCalc.x(this.kernel.graphicEn.backCan.width, this.groundZ[i] - this.ground.offset),
-                y,
-                width,
-                height
-            );
-        }
-    }
     
     //tunnel[i].z - .length - .color - .active
     drawTunnel()

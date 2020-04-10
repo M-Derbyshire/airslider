@@ -35,7 +35,7 @@ class TheConstruct extends Level
         this.tunnelSprite = this.kernel.loadImage("/assets/levels/theConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
         
-        this.setGround(
+        this.ground.set(
             "/assets/levels/theConstruct/images/ground.png",
             this.helpers.unit.yUnit(50)
         );
