@@ -3,12 +3,6 @@ class TheConstruct extends Level
     constructor()
     {
         super(Level);
-        
-        this.shockerCount = 15; //this is actually required, as you can change it to change difficulty during the level
-        this.shockerIndexes = {
-            from: 2,
-            to: 17
-        };
     }
     
     getModels()
@@ -24,8 +18,11 @@ class TheConstruct extends Level
         // models.push(new Werewolf(0));
         this.monsterIndex = 1;
 
+        this.shockerManager.setShockerModelRange(2, 17);
+        this.shockerManager.setCurrentShockerCount(15);
         
-        for(let i = this.shockerIndexes.from; i <= this.shockerIndexes.to; i++)
+        let shockerRange = this.shockerManager.shockerModelRange;
+        for(let i = shockerRange.from; i <= shockerRange.to; i++)
         {
             models.push(new Shocker("yellow", "static"));
         }
@@ -69,7 +66,7 @@ class TheConstruct extends Level
         
         if(this.helpers.time.getTotalSeconds() <= 37)
         {
-            this.sendShockers(this.shockerIndexes.from, this.shockerIndexes.to);
+            this.shockerManager.sendShockers();
         }
         
         //tunnel stuff

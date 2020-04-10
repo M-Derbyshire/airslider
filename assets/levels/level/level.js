@@ -10,17 +10,18 @@ class Level
         this.road = new LevelRoad();
         this.roadColor = "#999999";
         
+        this.shockerManager = new ShockerManager();
+        
         this._background = "white"; //use a color if nothing set in subclass (hence true on the next line)
         
         this.HUD; //the Heads Up Display for the level
         this.HUD = new MainHUD();
         
-        this.shockerCount;
-        
-        this.monsterIndex;
-        
+        //The edges of the playable area
         this.leftEdge;
         this.rightEdge;
+        
+        this.monsterIndex;
         
         this.tunnel = [];
         
@@ -52,6 +53,7 @@ class Level
     {
         this.leftEdge = 0;
         this.rightEdge = this.kernel.graphicEn.gameCan.width;
+        this.shockerManager.setAreaEdges(this.leftEdge, this.rightEdge);
         
         this.helpers.zCalc.setVanishPoint(this.kernel.graphicEn.gameCan.width / 2, this.kernel.graphicEn.gameCan.height / 2, 1000);
         
@@ -195,57 +197,6 @@ class Level
                 width,
                 height
             );
-        }
-    }
-    
-    sendShockers(fromIndex, toIndex)
-    {
-        for(let i = fromIndex; i <= toIndex; i++)
-        {
-            if((!this.kernel.loadedModels[i].active && i == fromIndex) || (!this.kernel.loadedModels[i].active && this.kernel.loadedModels[i - 1].active && (this.kernel.loadedModels[i - 1].z + (this.helpers.zCalc.vPointDepth / this.shockerCount) < this.helpers.zCalc.vPointDepth)))
-            {
-                // need to set some to be where the Tarian is, so player can't just stay in one place
-                let xPos;
-                
-                //player character
-                let px = this.kernel.loadedModels[0].x;
-                let pw = this.kernel.loadedModels[0].width;
-                
-                if((i + 1) % 3 == 0) //if this is every third in every 3 shockers
-                {
-                    // put somewhere on left side of level
-                    xPos = (Math.random() * (((this.rightEdge - this.kernel.loadedModels[i].width) - this.leftEdge) / 2)) + this.leftEdge;
-                
-                } else if((i + 2) % 3 == 0) //if this is every second in every 3 shockers
-                {
-                    // now on the right side
-                    xPos = (Math.random() * (((this.rightEdge - this.kernel.loadedModels[i].width) - this.leftEdge) / 2)) + ((this.rightEdge - this.leftEdge) / 2);
-                
-                } else //If this is first in every 3 shockers
-                {
-                    // put where player is (x coordinate)
-                    
-                    //shocker
-                    let sw = this.kernel.loadedModels[i].width;
-                    
-                    // want their center points to line up
-                    xPos = (px + (pw / 2)) - (sw / 2);
-                    
-                    //now make sure they are within the bounds of the level
-                    if(xPos < this.leftEdge)
-                    {
-                        xPos = this.leftEdge;
-                    } else if (xPos + sw > this.rightEdge)
-                    {
-                        xPos = this.rightEdge - sw;
-                    }
-                }
-                
-                this.kernel.loadedModels[i].z = this.helpers.zCalc.vPointDepth;
-                this.kernel.loadedModels[i].x = xPos;
-                
-                this.kernel.loadedModels[i].active = true;
-            }
         }
     }
     
