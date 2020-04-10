@@ -1,6 +1,6 @@
 class HealthBar extends HUDComponent
 {
-    constructor(x, y, width, height)
+    constructor(x, y, width, height, targetModelIndex)
     {
         super(HUDComponent);
         
@@ -9,13 +9,15 @@ class HealthBar extends HUDComponent
         this.width = width;
         this.height = height;
         
+        this.targetIndex = targetModelIndex;
+        
         this.backColor = "#000044";
         this.barColor = "#ff0000";
     }
     
     draw()
     {
-        let health = this.kernel.loadedModels[this.kernel.level.HUD.modelIndexes[0]].health;
+        let health = this.kernel.loadedModels[this.targetIndex].health;
         
         this.ctx.lineCap = "round";
         

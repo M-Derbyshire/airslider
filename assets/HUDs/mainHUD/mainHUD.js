@@ -14,7 +14,8 @@ class MainHUD extends HUD
             unitHelper.xUnit(100), 
             unitHelper.yUnit(50), 
             unitHelper.xUnit(800), 
-            unitHelper.yUnit(60)
+            unitHelper.yUnit(60),
+            0 //Will always be the index of the player's model
         ));
         
         //This is not in the component array, as needs to be called
