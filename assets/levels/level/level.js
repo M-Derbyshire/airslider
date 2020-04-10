@@ -103,7 +103,7 @@ class Level
         
         if(this.outsideVisible)
         {
-            this.ground.draw();
+            this.ground.draw(this.levelSpeed);
         }
         
         this.tunnel.draw(this.levelSpeed);
