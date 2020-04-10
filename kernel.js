@@ -46,7 +46,6 @@ class Kernel {
         this._soundEn;
         this._menuEn;
         
-        this._controlInitialiser;
         this._helpers;
     }
     
@@ -67,8 +66,6 @@ class Kernel {
     get assetsStillLoading(){return this._assetsStillLoading;}
     set assetsStillLoading(newVal){this._assetsStillLoading = newVal;}
     
-    get controlInitialiser() {return this._controlInitialiser;}
-    
     get helpers() {return this._helpers;}
     
     get level(){return this._level;}
@@ -88,7 +85,6 @@ class Kernel {
     {
         this.setCanvasSize();
         
-        this._controlInitialiser = new ControlsInitialiser();
         this._helpers = {
             zCalc: new ZCalc(),
             time: new TimeHelper(),

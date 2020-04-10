@@ -63,8 +63,8 @@ class Level
         
         //Setup the controls
         //The main character in this game is always index 0
-        this.kernel.controlInitialiser.keyboardControls(0);
-        this.kernel.controlInitialiser.touchControls(0);
+        this.controlInitialiser.keyboardControls(0);
+        this.controlInitialiser.touchControls(0);
         
         this.HUD.modelIndexes.push(0);
     }
