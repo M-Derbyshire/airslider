@@ -31,6 +31,7 @@ class Kernel {
         this._lastTime = new Date(); //used when calculating fps and enforcing fps limit
         
         this._totalActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
+        this._totalInactiveMilliseconds = 0;
         this._active = true;
         
         let filePath = window.location.pathname;
@@ -57,6 +58,7 @@ class Kernel {
     get fpsLimit(){return this._fpsLimit;}
     
     get totalActiveMilliseconds(){return this._totalActiveMilliseconds;}
+    get totalInactiveMilliseconds(){return this._totalInactiveMilliseconds;}
     
     get active(){return this._active;}
     set active(newVal){this._active = newVal;}
@@ -225,20 +227,22 @@ class Kernel {
         
         //don't run unless it's time for next frame
         let dt = new Date();
-        if((dt.getTime() - this._lastTime.getTime()) < (1000 / this._fpsLimit) || !this._active || this._assetsStillLoading > 0)
+        if((dt.getTime() - this._lastTime.getTime()) < (1000 / this._fpsLimit) || this._assetsStillLoading > 0)
         {
             return;
         }
         
-        this.updateTotalTime();
-        
         this._fps = 1000 / (dt.getTime() - this._lastTime.getTime());
         
+        this.updateTotalTime(dt);
         this._lastTime = dt;
         
-        this._gameEn.run();
-        this._graphicEn.run();
-        this._soundEn.run();
+        if(this.active)
+        {
+            this._gameEn.run();
+            this._graphicEn.run();
+            this._soundEn.run();
+        }
     }
     
     toggleGamePause()
@@ -253,15 +257,20 @@ class Kernel {
         this._active = !this._active;
     }
     
-    updateTotalTime()
+    updateTotalTime(currentDateTime)
     {
-        let dt = new Date()
-        let timePassed = Math.floor(dt.getMilliseconds()) - Math.floor(this._lastTime.getMilliseconds());
+        let timePassed = Math.floor(currentDateTime.getMilliseconds()) - Math.floor(this._lastTime.getMilliseconds());
         
-        //if a millisecond has passed (or more, if it's been inactive)
         if(timePassed >= 1)
         {
-            this._totalActiveMilliseconds += timePassed;
+            if(this._active)
+            {
+                this._totalActiveMilliseconds += timePassed;
+            }
+            else
+            {
+                this._totalInactiveMilliseconds += timePassed;
+            }
         }
     }
 }
