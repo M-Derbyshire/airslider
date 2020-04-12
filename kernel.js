@@ -153,44 +153,39 @@ class Kernel {
     
     loadImage(path, callback = this.defaultAssetCallback)
     {
-        path = this.prepareAssetPath(path);
-        let assetIsHeld = this.checkAssetHeld(path);
-        if(assetIsHeld)
-        {
-            return assetIsHeld;
-        }
-        
-        //wil not run if above finds something
-        this.assetsStillLoading++;
-        this.loadedAssets.push([
-            path,
-            new Image()
-        ]); 
-        
-        this.loadedAssets[this.loadedAssets.length - 1][1].onload = callback;
-        
-        this.loadedAssets[this.loadedAssets.length - 1][1].src = path;
-        
-        return this.loadedAssets.length - 1;
+        return this.loadAsset(new Image, path, callback);
     }
     
     loadAudio(path, callback = this.defaultAssetCallback)
     {
+        return this.loadAsset(new Audio, path, callback);
+    }
+    
+    //Loads the asset, or finds it if already loaded, then returns the index number
+    loadAsset(obj, path, callback)
+    {
         path = this.prepareAssetPath(path);
-        let assetIsHeld = this.checkAssetHeld(path);
+        let assetIsHeld = this.checkAssetHeld(path); //Returns either the index number, or false
         if(assetIsHeld)
         {
             return assetIsHeld;
         }
         
-        //wil not run if above finds something
         this.assetsStillLoading++;
         this.loadedAssets.push([
             path,
-            new Audio()
+            obj
         ]); 
         
-        this.loadedAssets[this.loadedAssets.length - 1][1].addEventListener("canplaythrough", callback);
+        if(obj instanceof Image)
+        {
+            this.loadedAssets[this.loadedAssets.length - 1][1].onload = callback;
+        }
+        else if(obj instanceof Audio)
+        {
+            this.loadedAssets[this.loadedAssets.length - 1][1].addEventListener("canplaythrough", callback);
+        }
+        
         this.loadedAssets[this.loadedAssets.length - 1][1].src = path;
         
         return this.loadedAssets.length - 1;
