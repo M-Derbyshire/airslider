@@ -24,13 +24,19 @@ class LevelTunnel
     createStartingTunnel(parts)
     {
         let newZ = this.helpers.zCalc.vPointDepth;
+        
+        //Make a whole tunnel full of the provided parts
         while(this.tunnel.length < 2 || this.tunnel[this.tunnel.length - 2].z > 0)
         {
-            parts = JSON.parse(JSON.stringify(parts)); //have to truly copy this, as otherwise they're references
+            //Need to make copies of all of these parts 
+            //(so we can use them multiple times at different z positions)
+            const partsCopy = parts.map((part) => {
+                return { ...part };
+            });
             
-            for(let i = parts.length - 1; i >= 0; i--)
+            for(let i = partsCopy.length - 1; i >= 0; i--)
             {
-                this.tunnel.push(parts[i]);
+                this.tunnel.push(partsCopy[i]);
                 this.tunnel[this.tunnel.length - 1].active = true;
                 
                 // Set the Z to the previous item's Z, minus this one's length
