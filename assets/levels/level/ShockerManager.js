@@ -55,8 +55,12 @@ class ShockerManager
         for(let i = this._fromIndex; i <= this._toIndex; i++)
         {
             //If this is the first shocker and it's not active,
-            //or this isn't active but the one before it is (and the one before 
-            //has moved far enough to warrant this one now being sent)
+            //or this isn't active but the one before it is (And the one before 
+            //has moved far enough to warrant this one now being sent.
+            // How far these need to go before the next is sent depends on
+            // _shockerCount. It will try to ensure a consistent amount of shockers
+            // being sent, so the lower/higher the shockerCount, the longer/shorter
+            // the distance between them, making the game easier/harder.)
             if((!this.kernel.loadedModels[i].active && i == this._fromIndex) || 
                 (!this.kernel.loadedModels[i].active && this.kernel.loadedModels[i - 1].active && 
                     (this.kernel.loadedModels[i - 1].z + 
@@ -83,7 +87,7 @@ class ShockerManager
                 {
                     // put where player is (x coordinate)
                     
-                    //shocker
+                    
                     let shockerWidth = this.kernel.loadedModels[i].width;
                     
                     // want their center points to line up
