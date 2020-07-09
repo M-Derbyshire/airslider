@@ -68,7 +68,6 @@ class Falcon extends Monster {
             }),
         });
         
-        this.registerEvent(["Tarian"], this.hitPlayerOrGroundEvent);
         
         this.actions = [
             this.stalking,
@@ -237,25 +236,18 @@ class Falcon extends Monster {
     
     //events------------------------------------------------------------
     
-    hitPlayerOrGroundEvent(thisModel, otherModel, kernel)
+    hitPlayerOrGroundEventAction(otherModel)
     {
-        if(((thisModel.x + thisModel.width >= otherModel.x) &&
-        (thisModel.x <= otherModel.x + otherModel.width) &&
-        (thisModel.y + thisModel.height >= otherModel.y) &&
-        (thisModel.y <= otherModel.y + otherModel.height)) || 
-        (thisModel.y + thisModel.height >= kernel.graphicEn.gameCan.height))
+        if(this.state == "dropLeft" || this.state == "dropRight")
         {
-            if(thisModel.state == "dropLeft" || thisModel.state == "dropRight")
+            // if the monster didn't collide with the ground
+            if(this.y + this.height < this.kernel.graphicEn.gameCan.height)
             {
-                // if the monster didn't collide with the ground
-                if(thisModel.y + thisModel.height < kernel.graphicEn.gameCan.height)
-                {
-                    thisModel.directionMultiplier = -thisModel.directionMultiplier;
-                }
-                
-                thisModel.state = (thisModel.directionMultiplier == -1) ? "riseLeft" : "riseRight";
-                thisModel.nextAction();
+                this.directionMultiplier = -this.directionMultiplier;
             }
+            
+            this.state = (this.directionMultiplier == -1) ? "riseLeft" : "riseRight";
+            this.nextAction();
         }
     }
 }
