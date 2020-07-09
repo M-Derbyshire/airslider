@@ -83,6 +83,12 @@ class Shocker extends Model
         }
     }
     
+    zCollisionEventAction(otherModel)
+    {
+        //This method doesn't need to do anything.
+        //However, in order to register the event, this needs to exist
+    }
+    
     extraEvents()
     {
         //check for leaving the game area

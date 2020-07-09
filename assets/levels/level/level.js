@@ -7,6 +7,8 @@ class Level
         
         this.controlInitialiser = new ControlsInitialiser();
         
+        this._eventManager = new EventManager(new EventCheckContainer, new ModelExtraEventManager);
+        
         this.road = new LevelRoad();
         this.roadColor = "#999999";
         
@@ -44,6 +46,31 @@ class Level
     //set things that can only be done after the engines are constructed
     loadSuper()
     {
+        //These are the events that are valid across all levels
+        this._eventManager.registerEventsArray([
+            { 
+                eventCheckMethodName: "zCollisionEventCheck",
+                class1: Tarian,
+                class1EventActionName: "zCollisionEventAction",
+                class2: Shocker,
+                class2EventActionName: "zCollisionEventAction"
+            },
+            { 
+                eventCheckMethodName: "neonPidgeonHitPlayerOrGroundEventCheck",
+                class1: NeonPidgeon,
+                class1EventActionName: "neonPidgeonHitPlayerOrGroundEventAction",
+                class2: Tarian,
+                class2EventActionName: "zCollisionEventAction"
+            },
+            { 
+                eventCheckMethodName: "neonPidgeonOverlappingEventCheck",
+                class1: NeonPidgeon,
+                class1EventActionName: "neonPidgeonOverlappingEventAction",
+                class2: Tarian,
+                class2EventActionName: "" //Doesn't have one, and doesn't try to call one
+            }
+        ]);
+        
         this.leftEdge = 0;
         this.rightEdge = this.kernel.graphicEn.gameCan.width;
         this.shockerManager.setAreaEdges(this.leftEdge, this.rightEdge);
@@ -118,6 +145,11 @@ class Level
         {
             this.extraDrawFront();
         }
+    }
+    
+    checkForEvents()
+    {
+        this._eventManager.checkForEvents();
     }
     
     levelStop()

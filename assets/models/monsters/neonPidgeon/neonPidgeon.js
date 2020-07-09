@@ -39,9 +39,6 @@ class NeonPidgeon extends Monster {
             }),
         });
         
-        this.registerEvent(["NeonPidgeon"], this.overlappingEvent);
-        this.registerEvent(["Tarian"], this.hitPlayerOrGroundEvent);
-        
         this.actions = [
             this.moveSideways,
             this.drop,
@@ -155,35 +152,24 @@ class NeonPidgeon extends Monster {
     
     //events------------------------------------------------------------
     
-    overlappingEvent(thisModel, otherModel, kernel)
+    neonPidgeonOverlappingEventAction(otherModel)
     {
-        if(((thisModel.x + thisModel.width) >= otherModel.x) &&
-        (thisModel.x <= (otherModel.x + otherModel.width)))
-        {
-            kernel.loadedModels[thisModel.loadedIndex].overlapping = true;
-        }
+        this.overlapping = true;
     }
     
-    hitPlayerOrGroundEvent(thisModel, otherModel, kernel)
+    neonPidgeonHitPlayerOrGroundEventAction(otherModel)
     {
-        if(((thisModel.x + thisModel.width >= otherModel.x) &&
-        (thisModel.x <= otherModel.x + otherModel.width) &&
-        (thisModel.y + thisModel.height >= otherModel.y) &&
-        (thisModel.y <= otherModel.y + otherModel.height)) || 
-        (thisModel.y + thisModel.height >= kernel.graphicEn.gameCan.height))
+        if(((this.y + this.height) > otherModel.y) && 
+            (this.y + this.height < this.kernel.graphicEn.gameCan.height))
         {
-            if(((thisModel.y + thisModel.height) > otherModel.y) && 
-            (thisModel.y + thisModel.height < kernel.graphicEn.gameCan.height))
-            {
-                //makes sure the player doesn't lose extra health if they collide from the side
-                kernel.loadedModels[thisModel.loadedIndex].y = otherModel.y - thisModel.height - 1;
-            }
-            
-            if(thisModel.state == "falling")
-            {
-                kernel.loadedModels[thisModel.loadedIndex].state = "rising";
-                kernel.loadedModels[thisModel.loadedIndex].nextAction();
-            }
+            //makes sure the player doesn't lose extra health if they collide from the side
+            this.y = otherModel.y - this.height - 1;
+        }
+        
+        if(this.state == "falling" )
+        {
+            this.state = "rising";
+            this.nextAction();
         }
     }
 }

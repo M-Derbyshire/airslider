@@ -66,7 +66,7 @@ class TheConstruct extends Level
         
         if(this.helpers.time.getTotalSeconds() <= 37)
         {
-            this.shockerManager.sendShockers();
+            //this.shockerManager.sendShockers();
         }
         
         //tunnel stuff

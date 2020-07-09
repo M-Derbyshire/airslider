@@ -18,7 +18,6 @@ class Model {
         this._ySpeed;
         this._zSpeed;
         
-        this.events = []; //will hold array of events objects
         this._loadedIndex; //will hold current index in this.kernel.loadedModels
         
         this.damageDealt = 0;
@@ -71,34 +70,13 @@ class Model {
         
     }
     
-    //takes models array related to event, and action (which is a function) 
-    registerEvent(relatedModels, action)
-    {
-        this.events.push({
-            models: this.kernel.loadedModels.filter((model, index) => {
-                if(relatedModels.includes(model.constructor.name) && index != this.loadedIndex)
-                {
-                    return true;
-                }
-            }),
-            check: action
-        });
-    }
-    
     draw()
     {
         this.animationManager.drawNextFrame();
     }
     
-    checkEvents()
+    checkForExtraEvents()
     {
-        this.events.forEach((event) => {
-            for(let i = 0; i < event.models.length; i++)
-            {
-                event.check(this.kernel.loadedModels[this.loadedIndex], event.models[i], this.kernel);
-            }
-        });
-        
         if(this.extraEvents)
         {
             this.extraEvents();

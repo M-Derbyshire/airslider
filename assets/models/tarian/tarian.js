@@ -71,14 +71,6 @@ class Tarian extends Model {
         this.xSpeed = 0;
         
         this.zSpeed = 35; //used on failure
-        
-        this.registerEvent([
-            "Shocker", 
-            "NeonPidgeon",
-            "LavaBall",
-            "Falcon",
-            "Werewolf"
-        ], this.zCollisionEvent);
     }
     
     act()
@@ -198,28 +190,20 @@ class Tarian extends Model {
         }
     }
     
-    zCollisionEvent(thisModel, otherModel, kernel)
+    zCollisionEventAction(otherModel)
     {
-        if (otherModel.active && 
-        ((thisModel.z >= (otherModel.z - otherModel.zSpeed)) && (thisModel.z <= otherModel.z)) &&
-        (thisModel.x + thisModel.width >= otherModel.x) &&
-        (thisModel.x <= otherModel.x + otherModel.width) &&
-        (thisModel.y + thisModel.height >= otherModel.y) &&
-        (thisModel.y <= otherModel.y + otherModel.height))
+        if("damageDealt" in otherModel && otherModel.damageDealt > 0 && this.state != "exploding" && this.state != "lost")
         {
-            if("damageDealt" in otherModel && otherModel.damageDealt > 0 && thisModel.state != "exploding" && thisModel.state != "lost")
+            this.health -= otherModel.damageDealt;
+            if(this.health <= 0)
             {
-                kernel.loadedModels[thisModel.loadedIndex].health -= otherModel.damageDealt;
-                if(kernel.loadedModels[thisModel.loadedIndex].health <= 0)
-                {
-                    kernel.loadedModels[thisModel.loadedIndex].health = 0;
-                    kernel.loadedModels[thisModel.loadedIndex].exploding = true;
-                    kernel.loadedModels[thisModel.loadedIndex].display = true;
-                }
-                
-                kernel.level.HUD.damageFlash.start(otherModel.color);
-                kernel.level.HUD.update = true;
+                this.health = 0;
+                this.exploding = true;
+                this.display = true;
             }
+            
+            this.kernel.level.HUD.damageFlash.start(otherModel.color);
+            this.kernel.level.HUD.update = true;
         }
     }
     
