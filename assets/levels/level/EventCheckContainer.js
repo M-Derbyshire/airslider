@@ -27,7 +27,7 @@ class EventCheckContainer
         }
     }
     
-    
+    //NeonPidgeon events
     neonPidgeonHitPlayerOrGroundEventCheck(modelA, modelAActionMethodName, modelB, modelBActionMethodName)
     {
         if((modelA.x + modelA.width >= modelB.x) &&
@@ -53,4 +53,7 @@ class EventCheckContainer
             modelA[modelAActionMethodName](modelB);
         }
     }
+    
+    
+    
 }

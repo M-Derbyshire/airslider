@@ -68,6 +68,13 @@ class Level
                 class1EventActionName: "neonPidgeonOverlappingEventAction",
                 class2: Tarian,
                 class2EventActionName: "" //Doesn't have one, and doesn't try to call one
+            },
+            { 
+                eventCheckMethodName: "zCollisionEventCheck",
+                class1: Tarian,
+                class1EventActionName: "zCollisionEventAction",
+                class2: LavaBall,
+                class2EventActionName: "hitPlayerEventAction"
             }
         ]);
         

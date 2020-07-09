@@ -40,7 +40,6 @@ class LavaBall extends Model {
         });
         
         this.state = "drop";
-        this.registerEvent(["Tarian"], this.hitPlayerEvent);
         
         this.ySpeed = 2160;
     }
@@ -64,16 +63,21 @@ class LavaBall extends Model {
         }
     }
     
-    hitPlayerEvent(thisModel, otherModel, kernel)
+    hitPlayerEventAction(otherModel)
     {
-        if(((thisModel.x + thisModel.width >= otherModel.x) &&
-        (thisModel.x <= otherModel.x + otherModel.width) &&
-        (thisModel.y + thisModel.height >= otherModel.y) &&
-        (thisModel.y <= otherModel.y + otherModel.height)) && 
-        thisModel.z == otherModel.z &&
-        thisModel.state == "drop")
+        // if(((thisModel.x + thisModel.width >= otherModel.x) &&
+        // (thisModel.x <= otherModel.x + otherModel.width) &&
+        // (thisModel.y + thisModel.height >= otherModel.y) &&
+        // (thisModel.y <= otherModel.y + otherModel.height)) && 
+        // thisModel.z == otherModel.z &&
+        // thisModel.state == "drop")
+        // {
+        //     kernel.loadedModels[thisModel.loadedIndex].state = "break";
+        // }
+        
+        if(this.state == "drop")
         {
-            kernel.loadedModels[thisModel.loadedIndex].state = "break";
+            this.state = "break";
         }
     }
 }

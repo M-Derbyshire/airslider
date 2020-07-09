@@ -118,9 +118,4 @@ class BabyDragon extends Monster {
         l.state = "drop";
         l.active = true;
     }
-    
-    //events------------------------------------------------------------
-    
-    //none for this monster
-    //events are for the lava ball
 }
