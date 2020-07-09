@@ -157,7 +157,7 @@ class NeonPidgeon extends Monster {
         this.overlapping = true;
     }
     
-    neonPidgeonHitPlayerOrGroundEventAction(otherModel)
+    hitPlayerOrGroundEventAction(otherModel)
     {
         if(((this.y + this.height) > otherModel.y) && 
             (this.y + this.height < this.kernel.graphicEn.gameCan.height))

@@ -27,8 +27,7 @@ class EventCheckContainer
         }
     }
     
-    //NeonPidgeon events
-    neonPidgeonHitPlayerOrGroundEventCheck(modelA, modelAActionMethodName, modelB, modelBActionMethodName)
+    hitPlayerOrGroundEventCheck(modelA, modelAActionMethodName, modelB, modelBActionMethodName)
     {
         if((modelA.x + modelA.width >= modelB.x) &&
         (modelA.x <= modelB.x + modelB.width) &&
@@ -44,6 +43,7 @@ class EventCheckContainer
         }
     }
     
+    //NeonPidgeon events
     neonPidgeonOverlappingEventCheck(modelA, modelAActionMethodName, modelB, modelBActionMethodName)
     {
         if(((modelA.x + modelA.width) >= modelB.x) &&

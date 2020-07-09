@@ -56,9 +56,9 @@ class Level
                 class2EventActionName: "zCollisionEventAction"
             },
             { 
-                eventCheckMethodName: "neonPidgeonHitPlayerOrGroundEventCheck",
+                eventCheckMethodName: "hitPlayerOrGroundEventCheck",
                 class1: NeonPidgeon,
-                class1EventActionName: "neonPidgeonHitPlayerOrGroundEventAction",
+                class1EventActionName: "hitPlayerOrGroundEventAction",
                 class2: Tarian,
                 class2EventActionName: "zCollisionEventAction"
             },
@@ -75,7 +75,14 @@ class Level
                 class1EventActionName: "zCollisionEventAction",
                 class2: LavaBall,
                 class2EventActionName: "hitPlayerEventAction"
-            }
+            },
+            { 
+                eventCheckMethodName: "hitPlayerOrGroundEventCheck",
+                class1: Falcon,
+                class1EventActionName: "hitPlayerOrGroundEventAction",
+                class2: Tarian,
+                class2EventActionName: "zCollisionEventAction"
+            },
         ]);
         
         this.leftEdge = 0;
