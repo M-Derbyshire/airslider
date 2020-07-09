@@ -83,6 +83,13 @@ class Level
                 class2: Tarian,
                 class2EventActionName: "zCollisionEventAction"
             },
+            { 
+                eventCheckMethodName: "zCollisionEventCheck",
+                class1: Tarian,
+                class1EventActionName: "zCollisionEventAction",
+                class2: Werewolf,
+                class2EventActionName: "zCollisionEventAction"
+            },
         ]);
         
         this.leftEdge = 0;

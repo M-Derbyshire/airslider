@@ -29,8 +29,6 @@ class Werewolf extends Monster {
             }),
         });
         
-        this.registerEvent(["Tarian"], this.zCollisionEvent);
-        
         this.actions = [
             this.sweep,
             this.moveUp
@@ -152,21 +150,13 @@ class Werewolf extends Monster {
     
     //events------------------------------------------------------------
     
-    zCollisionEvent(thisModel, otherModel, kernel)
+    zCollisionEventAction(otherModel)
     {
-        if (otherModel.active && 
-        ((thisModel.z >= (otherModel.z - otherModel.zSpeed)) && (thisModel.z <= otherModel.z)) &&
-        (thisModel.x + thisModel.width >= otherModel.x) &&
-        (thisModel.x <= otherModel.x + otherModel.width) &&
-        (thisModel.y + thisModel.height >= otherModel.y) &&
-        (thisModel.y <= otherModel.y + otherModel.height))
+        if(this.currentAction == 0 && !this.exiting) //the index number of the current action method in the array in Monster class
         {
-            if(thisModel.currentAction == 0 && !thisModel.exiting) //the index number of the current action method in the array in Monster class
-            {
-                kernel.loadedModels[thisModel.loadedIndex].z = otherModel.z + thisModel.zSpeed + 1;
-                kernel.loadedModels[thisModel.loadedIndex].damageDealt = 0; //in case it's still colliding (will be reset when it gets to the inLimit)
-                kernel.loadedModels[thisModel.loadedIndex].nextAction();
-            }
+            this.z = otherModel.z + this.zSpeed + 1;
+            this.damageDealt = 0; //in case it's still colliding (will be reset when it gets to the inLimit)
+            this.nextAction();
         }
     }
 }
