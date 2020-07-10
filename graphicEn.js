@@ -33,7 +33,7 @@ class GraphicEn{
     setStaticBackground(input, useColor = false)
     {
         this._background = input;
-        this._useColorForBackground = false;
+        this._useColorForBackground = useColor;
     }
     
     //----------------------------------------------------------
@@ -86,7 +86,7 @@ class GraphicEn{
     {
         if(this._useColorForBackground)
         {
-            this.gameCtx.fillStyle = this._useColorForBackground;
+            this.gameCtx.fillStyle = this._background;
             this.gameCtx.fillRect(0, 0, this.gameCan.width, this.gameCan.height);
         } else {
             this.gameCtx.drawImage(
