@@ -5,11 +5,7 @@ class GraphicEn{
         this.helpers = this.kernel.helpers;
         
         //used when making sure models are displayed in the right order based on their z-index
-        this._zSortedIndexes = [];
-        for(let i = 0; i < this.kernel.loadedModels.length; i++)
-        {
-            this._zSortedIndexes.push(i);
-        }
+        this._zSortedIndexes = [...Array(this.kernel.loadedModels.length).keys()];
         
         this.gameCan = document.getElementById("gameCan");
         this.gameCtx = this.gameCan.getContext("2d");
