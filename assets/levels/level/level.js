@@ -16,7 +16,7 @@ class Level
         
         this.ground = new LevelGround();
         
-        this.tunnel = new LevelTunnel();
+        this.tunnelManager = new LevelTunnel();
         
         this._background = "white"; //use a color if nothing set in subclass (hence true on the next line)
         
@@ -129,9 +129,9 @@ class Level
     checkLightMask()
     {
         if(
-            this.tunnel.length > 1 && 
-            this.tunnel[this.tunnel.length - 1].z <= 0 &&
-            this.tunnel[this.tunnel.length - 2].imageIndex != -1
+            this.tunnelManager.tunnel.length > 1 && 
+            this.tunnelManager.tunnel[this.tunnelManager.tunnel.length - 1].z <= 0 &&
+            this.tunnelManager.tunnel[this.tunnelManager.tunnel.length - 2].imageIndex !== -1
         )
         {
             this.kernel.graphicEn.lightMask = this.tunnelLightMask;
@@ -154,7 +154,7 @@ class Level
             this.ground.draw(this.levelSpeed);
         }
         
-        this.tunnel.draw(this.levelSpeed);
+        this.tunnelManager.draw(this.levelSpeed);
         this.road.draw(this.roadColor);
     }
     

@@ -52,8 +52,8 @@ class TheConstruct extends Level
         this.kernel.graphicEn.lightMask = this.tunnelLightMask;
         this.kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
         
-        this.tunnel.createStartingTunnel([
-            this.tunnel.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+        this.tunnelManager.createStartingTunnel([
+            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
         ]);
     }
     
@@ -70,9 +70,9 @@ class TheConstruct extends Level
         }
         
         //tunnel stuff
-        this.tunnel.continueTunnel([
-            this.tunnel.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-            this.tunnel.newTunnelPart(-1, this.tunnelSpriteLength)
+        this.tunnelManager.continueTunnel([
+            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+            this.tunnelManager.newTunnelPart(-1, this.tunnelSpriteLength)
         ]);
         
         if(this.kernel.level.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this.helpers.time.getTotalSeconds() <= 1 && !this.kernel.loadedModels[this.monsterIndex].entering)
