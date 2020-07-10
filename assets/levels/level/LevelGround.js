@@ -71,22 +71,22 @@ class LevelGround
             
             this.ground.offset += (levelSpeed / 250);
             
-            let y = this.helpers.zCalc.y(this.kernel.graphicEn.backCan.height, this.groundZ[i] - this.ground.offset);
-            let width = this.helpers.zCalc.width((this.kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset);
+            let y = this.helpers.zCalc.y(this.kernel.graphicEn.gameCan.height, this.groundZ[i] - this.ground.offset);
+            let width = this.helpers.zCalc.width((this.kernel.graphicEn.gameCan.width * 2), this.groundZ[i] - this.ground.offset);
             let height = this.helpers.zCalc.height(this.ground.height, this.groundZ[i] - this.ground.offset);
             
             //Need to draw it once on the left, then again on the right
-            this.kernel.graphicEn.backCtx.drawImage(
+            this.kernel.graphicEn.gameCtx.drawImage(
                 this.kernel.loadedAssets[this.ground.ref][1],
-                this.helpers.zCalc.x(0 - (this.kernel.graphicEn.backCan.width * 2), this.groundZ[i] - this.ground.offset),
+                this.helpers.zCalc.x(0 - (this.kernel.graphicEn.gameCan.width * 2), this.groundZ[i] - this.ground.offset),
                 y,
                 width,
                 height
             );
             
-            this.kernel.graphicEn.backCtx.drawImage(
+            this.kernel.graphicEn.gameCtx.drawImage(
                 this.kernel.loadedAssets[this.ground.ref][1],
-                this.helpers.zCalc.x(this.kernel.graphicEn.backCan.width, this.groundZ[i] - this.ground.offset),
+                this.helpers.zCalc.x(this.kernel.graphicEn.gameCan.width, this.groundZ[i] - this.ground.offset),
                 y,
                 width,
                 height

@@ -33,17 +33,17 @@ class DamageFlash extends HUDComponent
                 this.flashSpeed = -this.flashSpeed;
             }
             
-            this.kernel.graphicEn.infoCtx.globalAlpha = this.opacity;
+            this.ctx.globalAlpha = this.opacity;
         
-            this.kernel.graphicEn.infoCtx.drawImage(
+            this.ctx.drawImage(
                 this.kernel.loadedAssets[this.images[this.color]][1],
                 0,
                 0,
-                this.kernel.graphicEn.infoCan.width,
-                this.kernel.graphicEn.infoCan.height
+                this.kernel.graphicEn.gameCan.width,
+                this.kernel.graphicEn.gameCan.height
             );
             
-            this.kernel.graphicEn.infoCtx.globalAlpha = 1;
+            this.ctx.globalAlpha = 1;
         }
     }
     

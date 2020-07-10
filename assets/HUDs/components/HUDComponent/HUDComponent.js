@@ -5,7 +5,7 @@ class HUDComponent
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
         
-        this.ctx = this.kernel.graphicEn.infoCtx;
+        this.ctx = this.kernel.graphicEn.gameCtx;
     }
     
     //meant to be overriden
