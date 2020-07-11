@@ -77,7 +77,7 @@ class LevelGround
             
             //Need to draw it once on the left, then again on the right
             this.kernel.graphicEn.gameCtx.drawImage(
-                this.kernel.loadedAssets[this.ground.ref][1],
+                this.kernel.loadedAssets[this.ground.ref].asset,
                 this.helpers.zCalc.x(0 - (this.kernel.graphicEn.gameCan.width * 2), this.groundZ[i] - this.ground.offset),
                 y,
                 width,
@@ -85,7 +85,7 @@ class LevelGround
             );
             
             this.kernel.graphicEn.gameCtx.drawImage(
-                this.kernel.loadedAssets[this.ground.ref][1],
+                this.kernel.loadedAssets[this.ground.ref].asset,
                 this.helpers.zCalc.x(this.kernel.graphicEn.gameCan.width, this.groundZ[i] - this.ground.offset),
                 y,
                 width,

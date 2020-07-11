@@ -76,7 +76,7 @@ class LevelTunnel
                 if(tunnelPart.imageIndex > -1)
                 {
                     this.kernel.graphicEn.gameCtx.drawImage(
-                        this.kernel.loadedAssets[tunnelPart.imageIndex][1], 
+                        this.kernel.loadedAssets[tunnelPart.imageIndex].asset, 
                         this.helpers.zCalc.x(0, tunnelPart.z, true), 
                         this.helpers.zCalc.y(0, tunnelPart.z, true), 
                         this.helpers.zCalc.width(this.kernel.graphicEn.gameCan.width, tunnelPart.z, true), 

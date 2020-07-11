@@ -10,7 +10,7 @@ class SoundEn{
     //getters and setters -----------------------------------
     set musicRef(ref)
     {
-        this._music = this.kernel.loadedAssets[ref][1];
+        this._music = this.kernel.loadedAssets[ref].asset;
     }
     
     set musicRepeat(repeat)
@@ -49,14 +49,14 @@ class SoundEn{
     {
         //position needs to be reset so sounds will restart
         //if they're triggered mid-way through playing
-        this.kernel.loadedAssets[ref][1].currentTime = 0;
-        this.kernel.loadedAssets[ref][1].loop = loop;
-        this.kernel.loadedAssets[ref][1].play();
+        this.kernel.loadedAssets[ref].asset.currentTime = 0;
+        this.kernel.loadedAssets[ref].asset.loop = loop;
+        this.kernel.loadedAssets[ref].asset.play();
     }
     
     stopSound(ref)
     {
         //sound position will be reset in playSound() method
-        this.kernel.loadedAssets[ref][1].pause();
+        this.kernel.loadedAssets[ref].asset.pause();
     }
 }

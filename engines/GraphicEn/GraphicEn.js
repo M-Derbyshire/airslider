@@ -90,7 +90,7 @@ class GraphicEn{
             this.gameCtx.fillRect(0, 0, this.gameCan.width, this.gameCan.height);
         } else {
             this.gameCtx.drawImage(
-                this.kernel.loadedAssets[this._background][1],
+                this.kernel.loadedAssets[this._background].asset,
                 0,
                 0,
                 this.gameCan.width,
@@ -103,7 +103,7 @@ class GraphicEn{
     {
         this.gameCtx.globalAlpha = this.lightLuminosity;
         this.gameCtx.drawImage(
-            this.kernel.loadedAssets[this.lightMask][1],
+            this.kernel.loadedAssets[this.lightMask].asset,
             0,
             0,
             this.gameCan.width,

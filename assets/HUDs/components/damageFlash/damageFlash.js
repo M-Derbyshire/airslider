@@ -36,7 +36,7 @@ class DamageFlash extends HUDComponent
             this.ctx.globalAlpha = this.opacity;
         
             this.ctx.drawImage(
-                this.kernel.loadedAssets[this.images[this.color]][1],
+                this.kernel.loadedAssets[this.images[this.color]].asset,
                 0,
                 0,
                 this.kernel.graphicEn.gameCan.width,

@@ -172,21 +172,21 @@ class Kernel {
         }
         
         this.assetsStillLoading++;
-        this.loadedAssets.push([
+        this.loadedAssets.push({
             path,
-            obj
-        ]); 
+            asset: obj
+        }); 
         
         if(obj instanceof Image)
         {
-            this.loadedAssets[this.loadedAssets.length - 1][1].onload = callback;
+            this.loadedAssets[this.loadedAssets.length - 1].asset.onload = callback;
         }
         else if(obj instanceof Audio)
         {
-            this.loadedAssets[this.loadedAssets.length - 1][1].addEventListener("canplaythrough", callback);
+            this.loadedAssets[this.loadedAssets.length - 1].asset.addEventListener("canplaythrough", callback);
         }
         
-        this.loadedAssets[this.loadedAssets.length - 1][1].src = path;
+        this.loadedAssets[this.loadedAssets.length - 1].asset.src = path;
         
         return this.loadedAssets.length - 1;
     }
@@ -200,7 +200,7 @@ class Kernel {
     {
         for(let i = 0; i < this.loadedAssets.length; i++)
         {
-            if(this.loadedAssets[i][0] == path)
+            if(this.loadedAssets[i].path == path)
             {
                 return i;
             }
