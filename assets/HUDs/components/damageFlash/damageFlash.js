@@ -63,7 +63,7 @@ class DamageFlash extends HUDComponent
     //This is called by the player's model, and starts the flash going
     start(color)
     {
-        if(this.opacity == 0)
+        if(this.opacity === 0)
         {
             this.color = color;
             this.opacity += this.flashSpeed;

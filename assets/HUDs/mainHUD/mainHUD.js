@@ -30,10 +30,8 @@ class MainHUD extends HUD
     
     extraDraw()
     {
+        //This is not in the component array, as needs to be called
+        //by the player's character model
         this.damageFlash.draw();
-        if(this.damageFlash.opacity > 0)
-        {
-            this.update = true;
-        }
     }
 }
