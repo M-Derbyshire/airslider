@@ -39,7 +39,8 @@ class Werewolf extends Monster {
         
         this.setYPositionFromBottom(this.height);
         this.startY = this.y;
-        this.startX = this.kernel.graphicEn.gameCan.width / 2;
+        this.centerXPosition();
+        this.startX = this.x
         this.startZ = this.helpers.zCalc.vPointDepth;
         this.minXSpeed = 1000;
         this.maxXSpeed = 2000;

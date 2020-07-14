@@ -116,11 +116,11 @@ class Model {
     
     centerXPosition()
     {
-        this.x = (this.helpers.unit.unitsWithinCamera.x / 2) - (this.helpers.unit.xUnit(this.width) / 2);
+        this.x = (this.helpers.unit.unitsWithinCamera / 2) - (this.helpers.unit.xUnit(this.width) / 2);
     }
     
     setYPositionFromBottom(pos)
     {
-        this.y = (this.helpers.unit.unitsWithinCamera.y - pos);
+        this.y = (this.helpers.unit.unitsWithinCamera - pos);
     }
 }

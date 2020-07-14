@@ -11,8 +11,8 @@ class TheConstruct extends Level
         
         models.push(new Tarian()); //add main character (has to be 0)
         
-        // models.push(new NeonPidgeon(0));
-        models.push(new Falcon(0));
+        models.push(new NeonPidgeon(0));
+        // models.push(new Falcon(0));
         // models.push(new BabyDragon(0, 2));
         // models.push(new LavaBall());
         // models.push(new Werewolf(0));

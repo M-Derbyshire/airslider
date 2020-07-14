@@ -92,7 +92,7 @@ class Kernel {
         this._helpers = {
             zCalc: new ZCalc(unitsWithinCamera),
             time: new TimeHelper(),
-            unit: new UnitHelper(unitsWithinCamera, unitsWithinCamera)
+            unit: new UnitHelper(unitsWithinCamera)
         };
     }
     

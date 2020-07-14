@@ -158,7 +158,7 @@ class NeonPidgeon extends Monster {
     hitPlayerOrGroundEventAction(otherModel)
     {
         if(((this.y + this.height) > otherModel.y) && 
-            (this.y + this.height < this.helpers.unit.unitsWithinCamera.y))
+            (this.y + this.height < this.helpers.unit.unitsWithinCamera))
         {
             //makes sure the player doesn't lose extra health if they collide from the side
             this.y = otherModel.y - this.height - 1;

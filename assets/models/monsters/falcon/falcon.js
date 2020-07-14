@@ -14,8 +14,6 @@ class Falcon extends Monster {
     
     load()
     {
-        let unitHelper = this.helpers.unit;
-        
         this.animationManager.registerAnimations({
             dropLeft: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/dropping/left",
@@ -240,7 +238,7 @@ class Falcon extends Monster {
         if(this.state == "dropLeft" || this.state == "dropRight")
         {
             // if the monster didn't collide with the ground
-            if(this.y + this.height < this.helpers.unit.unitsWithinCamera.y)
+            if(this.y + this.height < this.helpers.unit.unitsWithinCamera)
             {
                 this.directionMultiplier = -this.directionMultiplier;
             }
