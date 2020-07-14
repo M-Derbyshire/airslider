@@ -21,50 +21,50 @@ class Falcon extends Monster {
                 path: "/assets/models/monsters/falcon/anim/dropping/left",
                 frameCount: 1,
                 fps: 24,
-                width: unitHelper.xUnit(175),
-                height: unitHelper.yUnit(300),
+                width: 175,
+                height: 300,
             }),
             dropRight: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/dropping/right",
                 frameCount: 1,
                 fps: 24,
-                width: unitHelper.xUnit(175),
-                height: unitHelper.yUnit(300),
+                width: 175,
+                height: 300,
             }),
             flapping: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/flapping",
                 frameCount: 8,
                 fps: 24,
-                width: unitHelper.xUnit(350),
-                height: unitHelper.yUnit(200),
+                width: 350,
+                height: 200,
             }),
             left: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/left",
                 frameCount: 1,
                 fps: 24,
-                width: unitHelper.xUnit(350),
-                height: unitHelper.yUnit(200),
+                width: 350,
+                height: 200,
             }),
             right: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/right",
                 frameCount: 1,
                 fps: 24,
-                width: unitHelper.xUnit(350),
-                height: unitHelper.yUnit(200),
+                width: 350,
+                height: 200,
             }),
             riseLeft: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/rising/left",
                 frameCount: 1,
                 fps: 24,
-                width: unitHelper.xUnit(170),
-                height: unitHelper.yUnit(300),
+                width: 170,
+                height: 300,
             }),
             riseRight: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/rising/right",
                 frameCount: 1,
                 fps: 24,
-                width: unitHelper.xUnit(170),
-                height: unitHelper.yUnit(300),
+                width: 170,
+                height: 300,
             }),
         });
         
@@ -80,11 +80,10 @@ class Falcon extends Monster {
         this.player = this.kernel.loadedModels[this.playerIndex];
         
         this.enterXSpeed = 140;
-        this.offScreenUnits = unitHelper.xUnit(800);
-        this.startY = unitHelper.yUnit(75);
+        this.offScreenUnits = 800;
+        this.startY = 75;
         this.startX = this.kernel.level.leftEdge - this.offScreenUnits;
         this.startZ = this.kernel.loadedModels[this.playerIndex].z;
-        this.ySpeed = 1200;
         this.dropWaitOffset = this.helpers.time.secondsToFrames(5);
         this.dropWaitRange = this.helpers.time.secondsToFrames(5);
         
@@ -127,7 +126,7 @@ class Falcon extends Monster {
     {
         this.lastSwoop = -1;
         this.directionMultiplier = 1; //1 for right, -1 for left
-        this.swoopWait = 6000; // 6 seconds for first one
+        this.swoopWait = 6000; // 6 seconds for first one (will be changed with random() later)
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
@@ -241,7 +240,7 @@ class Falcon extends Monster {
         if(this.state == "dropLeft" || this.state == "dropRight")
         {
             // if the monster didn't collide with the ground
-            if(this.y + this.height < this.kernel.graphicEn.gameCan.height)
+            if(this.y + this.height < this.helpers.unit.unitsWithinCamera.y)
             {
                 this.directionMultiplier = -this.directionMultiplier;
             }

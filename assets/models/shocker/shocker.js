@@ -31,7 +31,7 @@ class Shocker extends Model
     load()
     {
         let unitHelper = this.helpers.unit;
-        let width = (this.color == "purple") ? unitHelper.xUnit(300) : unitHelper.xUnit(100);
+        let width = (this.color == "purple") ? 300 : 100;
         
         this.animationManager.registerAnimations({
             shock: this.animationManager.createAnimation({
@@ -39,11 +39,11 @@ class Shocker extends Model
                 frameCount: 3,
                 fps: 24,
                 width: width,
-                height: unitHelper.yUnit(340),
+                height: 340,
             })
         });
         
-        this.y = (this.kernel.graphicEn.gameCan.height - this.height);
+        this.setYPositionFromBottom(this.height);
         this.z = this.helpers.zCalc.vPointDepth;
         
         if(this.mode == "sweep")

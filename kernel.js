@@ -87,10 +87,12 @@ class Kernel {
     {
         this.setCanvasSize();
         
+        let unitsWithinCamera = 1000;
+        
         this._helpers = {
-            zCalc: new ZCalc(),
+            zCalc: new ZCalc(unitsWithinCamera),
             time: new TimeHelper(),
-            unit: new UnitHelper()
+            unit: new UnitHelper(unitsWithinCamera, unitsWithinCamera)
         };
     }
     

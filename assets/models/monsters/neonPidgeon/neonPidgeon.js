@@ -13,29 +13,27 @@ class NeonPidgeon extends Monster {
     
     load()
     {
-        let unitHelper = this.helpers.unit;
-        
         this.animationManager.registerAnimations({
             falling: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/neonPidgeon/anim/falling",
                 frameCount: 1,
                 fps: 24,
-                width: unitHelper.xUnit(250),
-                height: unitHelper.yUnit(200),
+                width: 250,
+                height: 200,
             }),
             flapping: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/neonPidgeon/anim/flapping",
                 frameCount: 4,
                 fps: 24,
-                width: unitHelper.xUnit(250),
-                height: unitHelper.yUnit(200),
+                width: 250,
+                height: 200,
             }),
             rising: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/neonPidgeon/anim/rising",
                 frameCount: 1,
                 fps: 24,
-                width: unitHelper.xUnit(250),
-                height: unitHelper.yUnit(200),
+                width: 250,
+                height: 200,
             }),
         });
         
@@ -47,11 +45,11 @@ class NeonPidgeon extends Monster {
         
         this.enterXSpeed = 90;
         this.exitXSpeed = 240;
-        this.offScreenUnits = (this.specialLevel) ? unitHelper.xUnit(500) : unitHelper.xUnit(800);
-        this.startY = (this.specialLevel) ? unitHelper.yUnit(250) : unitHelper.yUnit(150);
+        this.offScreenUnits = (this.specialLevel) ? 500 : 800;
+        this.startY = (this.specialLevel) ? 250 : 150;
         this.startX = this.kernel.level.rightEdge + this.offScreenUnits;
         this.startZ = this.kernel.loadedModels[this.playerIndex].z;
-        this.ySpeed = 1200;
+        this.ySpeed = 1800;
         this.dropWaitOffset = 2000; //5 seconds
         this.dropWaitRange = 2000; //4 seconds
         this.initialDropWait = 8000;
@@ -160,7 +158,7 @@ class NeonPidgeon extends Monster {
     hitPlayerOrGroundEventAction(otherModel)
     {
         if(((this.y + this.height) > otherModel.y) && 
-            (this.y + this.height < this.kernel.graphicEn.gameCan.height))
+            (this.y + this.height < this.helpers.unit.unitsWithinCamera.y))
         {
             //makes sure the player doesn't lose extra health if they collide from the side
             this.y = otherModel.y - this.height - 1;

@@ -1,7 +1,9 @@
 class ZCalc 
 {
-    constructor()
+    constructor(unitsWithinCamera)
     {
+        this._unitsWithinCamera = unitsWithinCamera;
+        
         //vanishing point is set with vPointX and vPointY
         this._vPointX;
         this._vPointY;
@@ -35,7 +37,7 @@ class ZCalc
     //This is used to keep the speed on the z-axis consistent (so the changing fps is not a problem)
     speed(speed, fps)
     {
-        return ((this._vPointDepth / 1000) * speed) / fps;
+        return ((this._vPointDepth / this._unitsWithinCamera) * speed) / fps;
     }
     
     //------------------- Scaled Positions and Dimensions ---------------------

@@ -43,10 +43,10 @@ class ModelAnimationsManager {
         //Draw the image, taking into account the z-axis when setting the size/positions
         this.kernel.graphicEn.gameCtx.drawImage(
             this.kernel.loadedAssets[this.getNextFrameIndex()].asset, 
-            this.helpers.zCalc.x(this.model.x, this.model.z), 
-            this.helpers.zCalc.y(this.model.y, this.model.z), 
-            this.helpers.zCalc.width(this.model.width, this.model.z), 
-            this.helpers.zCalc.height(this.model.height, this.model.z)
+            this.helpers.zCalc.x(this.helpers.unit.xUnit(this.model.x), this.model.z), 
+            this.helpers.zCalc.y(this.helpers.unit.yUnit(this.model.y), this.model.z), 
+            this.helpers.zCalc.width(this.helpers.unit.xUnit(this.model.width), this.model.z), 
+            this.helpers.zCalc.height(this.helpers.unit.yUnit(this.model.height), this.model.z)
         );
     }
     

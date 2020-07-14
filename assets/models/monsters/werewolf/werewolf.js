@@ -17,15 +17,15 @@ class Werewolf extends Monster {
                 path: "/assets/models/monsters/werewolf/anim/left",
                 frameCount: 2,
                 fps: 24,
-                width: this.helpers.unit.xUnit(200),
-                height: this.helpers.unit.yUnit(170),
+                width: 200,
+                height: 170,
             }),
             right: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/werewolf/anim/right",
                 frameCount: 2,
                 fps: 24,
-                width: this.helpers.unit.xUnit(200),
-                height: this.helpers.unit.yUnit(170),
+                width: 200,
+                height: 170,
             }),
         });
         
@@ -36,7 +36,9 @@ class Werewolf extends Monster {
         
         this.exitZSpeed = 50;
         this.state = "left";
-        this.startY = (this.kernel.graphicEn.gameCan.height - this.height);
+        
+        this.setYPositionFromBottom(this.height);
+        this.startY = this.y;
         this.startX = this.kernel.graphicEn.gameCan.width / 2;
         this.startZ = this.helpers.zCalc.vPointDepth;
         this.minXSpeed = 1000;

@@ -11,23 +11,23 @@ class LavaBall extends Model {
     
     load()
     {
-        let x = 30; //fed into xUnit and yUnit when setting up anims
-        let y = 40;
+        let ballWidth = 30;
+        let ballHeight = 40;
         
         this.animationManager.registerAnimations({
             drop: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/attacks/lavaBall/anim/drop",
                 frameCount: 1,
                 fps: 24,
-                width: this.helpers.unit.xUnit(x),
-                height: this.helpers.unit.yUnit(y)
+                width: ballWidth,
+                height: ballHeight
             }),
             break: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/attacks/lavaBall/anim/break",
                 frameCount: 4,
                 fps: 24,
-                width: this.helpers.unit.xUnit(x),
-                height: this.helpers.unit.yUnit(y),
+                width: ballWidth,
+                height: ballHeight,
                 nextAnim: "none"
             }),
             none: this.animationManager.createAnimation({
@@ -51,9 +51,9 @@ class LavaBall extends Model {
             this.moveDown(this.ySpeed);
         }
         
-        if(this.y + this.height >= this.kernel.graphicEn.gameCan.height && this.state == "drop")
+        if(this.y + this.height >= this.kernel.helpers.unit.unitsWithinCamera.y && this.state == "drop")
         {
-            this.y = this.kernel.graphicEn.gameCan.height - this.height;
+            this.setYPositionFromBottom(this.height);
             this.state = "break";
         }
         
@@ -65,16 +65,6 @@ class LavaBall extends Model {
     
     hitPlayerEventAction(otherModel)
     {
-        // if(((thisModel.x + thisModel.width >= otherModel.x) &&
-        // (thisModel.x <= otherModel.x + otherModel.width) &&
-        // (thisModel.y + thisModel.height >= otherModel.y) &&
-        // (thisModel.y <= otherModel.y + otherModel.height)) && 
-        // thisModel.z == otherModel.z &&
-        // thisModel.state == "drop")
-        // {
-        //     kernel.loadedModels[thisModel.loadedIndex].state = "break";
-        // }
-        
         if(this.state == "drop")
         {
             this.state = "break";

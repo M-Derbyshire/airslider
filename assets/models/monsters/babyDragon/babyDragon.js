@@ -14,15 +14,15 @@ class BabyDragon extends Monster {
                 path: "/assets/models/monsters/babyDragon/anim/left",
                 frameCount: 4,
                 fps: 24,
-                width: this.helpers.unit.xUnit(400),
-                height: this.helpers.unit.yUnit(300)
+                width: 400,
+                height: 300
             }),
             right: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/babyDragon/anim/right",
                 frameCount: 4,
                 fps: 24,
-                width: this.helpers.unit.xUnit(400),
-                height: this.helpers.unit.yUnit(300)
+                width: 400,
+                height: 300
             })
         });
         
@@ -31,7 +31,7 @@ class BabyDragon extends Monster {
         ];
         
         this.offScreenUnits = 500;
-        this.startY = this.helpers.unit.yUnit(10),
+        this.startY = 10,
         this.startX = this.kernel.level.rightEdge + this.offScreenUnits;
         
         this.startZ = this.kernel.loadedModels[this.playerIndex].z;
@@ -102,18 +102,17 @@ class BabyDragon extends Monster {
     dropBall(monster)
     {
         let l = monster.kernel.loadedModels[monster.lavaBallIndex];
-        let unitHelper = this.helpers.unit;
         
         //center it
-        let xOffset = -unitHelper.xUnit(65);
+        let xOffset = -65;
         
         if(monster.state == "right")
         {
-            xOffset = -xOffset - unitHelper.xUnit(25);
+            xOffset = -xOffset - 25;
         }
         
         l.x = monster.x + (monster.width / 2) + xOffset;
-        l.y = monster.y + monster.height + -unitHelper.yUnit(20);
+        l.y = monster.y + monster.height + -20;
         
         l.state = "drop";
         l.active = true;

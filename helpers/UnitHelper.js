@@ -1,19 +1,24 @@
 class UnitHelper
 {
-    constructor()
+    constructor(unitsWithinCameraX, unitsWithinCameraY)
     {
         this.kernel = Kernel.getInstance();
+        this.unitsWithinCamera = {
+            x: unitsWithinCameraX,
+            y: unitsWithinCameraY
+        };
     }
     
-    //helpers to create relative positioning/sizings
-    //they give you 1000 units (both ways) to play with
+    //helpers to create relative positioning/sizings.
+    //They give you a certain amount of units (both ways) 
+    //within the camera size.
     xUnit(unit)
     {
-        return (this.kernel.graphicEn.gameCan.width / 1000) * unit;
+        return (this.kernel.graphicEn.gameCan.width / this.unitsWithinCamera.x) * unit;
     }
     yUnit(unit)
     {
-        return (this.kernel.graphicEn.gameCan.height / 1000) * unit;
+        return (this.kernel.graphicEn.gameCan.height / this.unitsWithinCamera.y) * unit;
     }
 
     xSpeed(speed)

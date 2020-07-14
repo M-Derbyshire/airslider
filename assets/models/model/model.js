@@ -112,4 +112,15 @@ class Model {
     {
         this.z -= this.helpers.zCalc.speed(speed, this.kernel.fps);
     }
+    
+    
+    centerXPosition()
+    {
+        this.x = (this.helpers.unit.unitsWithinCamera.x / 2) - (this.helpers.unit.xUnit(this.width) / 2);
+    }
+    
+    setYPositionFromBottom(pos)
+    {
+        this.y = (this.helpers.unit.unitsWithinCamera.y - pos);
+    }
 }

@@ -93,7 +93,7 @@ class Level
         ]);
         
         this.leftEdge = 0;
-        this.rightEdge = this.kernel.graphicEn.gameCan.width;
+        this.rightEdge = this.helpers.unit.unitsWithinCamera.x;
         this.shockerManager.setAreaEdges(this.leftEdge, this.rightEdge);
         
         this.helpers.zCalc.setVanishPoint(this.kernel.graphicEn.gameCan.width / 2, this.kernel.graphicEn.gameCan.height / 2, 1000);

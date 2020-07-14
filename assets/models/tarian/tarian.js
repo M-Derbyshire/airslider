@@ -17,60 +17,58 @@ class Tarian extends Model {
     
     load()
     {
-        let unitHelper = this.helpers.unit;
-        
         //I've used exact values for the fps, so it will be consistent when changing game fps
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/forward", 
                 frameCount: 4,
                 fps: 24,
-                width: unitHelper.xUnit(120),
-                height: unitHelper.yUnit(170),
+                width: 120,
+                height: 170,
             }),
             left: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/left", 
                 frameCount: 4, 
                 fps: 24, 
-                width: unitHelper.xUnit(170), 
-                height: unitHelper.yUnit(170), 
-                xOffset: -unitHelper.xUnit(40),
+                width: 170, 
+                height: 170, 
+                xOffset: -40,
             }),
             right: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/right", 
                 frameCount: 4,
                 fps: 24,
-                width: unitHelper.xUnit(170),
-                height: unitHelper.yUnit(170),
-                xOffset: unitHelper.xUnit(40),
+                width: 170,
+                height: 170,
+                xOffset: 40,
             }),
             exploding: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/exploding",
                 frameCount: 22,
                 fps: 24,
-                width: unitHelper.xUnit(120),
-                height: unitHelper.yUnit(170),
+                width: 120,
+                height: 170,
                 nextAnim: "lost",
             }),
             lost: this.animationManager.createAnimation({
                 path: "/assets/models/tarian/anim/lost",
                 frameCount: 3,
                 fps: 24,
-                width: unitHelper.xUnit(120),
-                height: unitHelper.yUnit(170),
+                width: 120,
+                height: 170,
             })
         });
         
         this.z = 20;
-        this.x = (this.kernel.graphicEn.gameCan.width / 2) - (this.width / 2);
-        this.y = (this.kernel.graphicEn.gameCan.height - this.height);
+        this.centerXPosition();
+        this.setYPositionFromBottom(this.height);
         
-        this.accl = 800; // applied every tenth of a second
-        this.deaccl = 100; // applied every tenth of a second
+        this.accl = 800;
+        this.deaccl = 100;
         this.topSpeed = 1000;
         this.xSpeed = 0;
         
-        this.zSpeed = 35; //used on failure
+        this.zSpeed = 35; //used when state is "lost"
     }
     
     act()
