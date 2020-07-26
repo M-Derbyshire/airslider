@@ -2,11 +2,13 @@ class ZCalc
 {
     constructor(unitsWithinCamera)
     {
+        this.kernel = Kernel.getInstance();
+        
         this._unitsWithinCamera = unitsWithinCamera;
         
         //vanishing point is set with vPointX and vPointY
-        this._vPointX;
-        this._vPointY;
+        this._vPointXUnits;
+        this._vPointYUnits;
         
         this._vPointDepth; //the max z position
         
@@ -17,14 +19,18 @@ class ZCalc
     
     //-------------------------- getters and setters ----------------------------
     
-    get vPointX(){return this._vPointX;}
-    get vPointY(){return this._vPointY;}
+    get vPointX(){return this.kernel.graphicEn.camera.positions.canvas.x +
+         this.kernel.helpers.unit.xUnit(this._vPointXUnits);}
+         
+    get vPointY(){return this.kernel.graphicEn.camera.positions.canvas.y + 
+        this.kernel.helpers.unit.yUnit(this._vPointYUnits);}
+    
     get vPointDepth(){return this._vPointDepth;}
     
-    setVanishPoint(x, y, depth)
+    setVanishPoint(xUnits, yUnits, depth)
     {
-        this._vPointX = x;
-        this._vPointY = y;
+        this._vPointXUnits = xUnits;
+        this._vPointYUnits = yUnits;
         this._vPointDepth = depth;
         
         //Precalculating this here. 
@@ -89,12 +95,12 @@ class ZCalc
     
     x(xPos, zPos, showNegative = false)
     {
-        return this._position(zPos, xPos, this._vPointX, showNegative);
+        return this._position(zPos, xPos, this.vPointX, showNegative);
     }
     
     y(yPos, zPos, showNegative = false)
     {
-        return this._position(zPos, yPos, this._vPointY, showNegative);
+        return this._position(zPos, yPos, this.vPointY, showNegative);
     }
     
     width(width, zPos, showNegative = false)
@@ -121,7 +127,8 @@ class ZCalc
         {
             return 0;
         } else {
-            let origZPos = zPos;
+            const origZPos = zPos;
+            const origPosition = axisPos
             zPos = (showNegative && origZPos < 0) ? -zPos : zPos;
             
             for(let i = 0; i < zPos; i++)
@@ -129,7 +136,8 @@ class ZCalc
                 axisPos += ((axisVPoint - axisPos) / this._calcDepth);
             }
             
-            return (showNegative && origZPos < 0) ? -axisPos : axisPos;
+            //return (showNegative && origZPos < 0) ? -axisPos : axisPos;
+            return (showNegative && origZPos < 0) ? origPosition + (origPosition - axisPos) : axisPos;
         }
     }
     
@@ -140,8 +148,8 @@ class ZCalc
         {
             return 0;
         } else {
-            let origZPos = zPos;
-            let origDimension = dimension;
+            const origZPos = zPos;
+            const origDimension = dimension;
             zPos = (showNegative && origZPos < 0) ? -zPos : zPos;
             
             for(let i = 0; i < zPos; i++)
