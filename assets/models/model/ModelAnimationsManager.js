@@ -9,7 +9,8 @@ class ModelAnimationsManager {
     
     registerAnimations(animations)
     {
-        //animations will be an array of animations, created with the below createAnimation() method
+        //animations will be an object of animations (the property names are the state names),
+        //created with the below createAnimation() method.
         this.animations = animations;
     }
     
@@ -40,11 +41,13 @@ class ModelAnimationsManager {
     
     drawNextFrame()
     {
+        const camera = this.kernel.graphicEn.camera;
+        
         //Draw the image, taking into account the z-axis when setting the size/positions
         this.kernel.graphicEn.gameCtx.drawImage(
             this.kernel.loadedAssets[this.getNextFrameIndex()].asset, 
-            this.helpers.zCalc.x(this.helpers.unit.xUnit(this.model.x), this.model.z), 
-            this.helpers.zCalc.y(this.helpers.unit.yUnit(this.model.y), this.model.z), 
+            this.helpers.zCalc.x(this.helpers.unit.xUnit(camera.unitCameraPositionCalc.x(this.model.x)) + camera.positions.canvas.x, this.model.z), 
+            this.helpers.zCalc.y(this.helpers.unit.yUnit(camera.unitCameraPositionCalc.y(this.model.y)) + camera.positions.canvas.y, this.model.z), 
             this.helpers.zCalc.width(this.helpers.unit.xUnit(this.model.width), this.model.z), 
             this.helpers.zCalc.height(this.helpers.unit.yUnit(this.model.height), this.model.z)
         );

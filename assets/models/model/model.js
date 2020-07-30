@@ -121,6 +121,6 @@ class Model {
     
     setYPositionFromBottom(pos)
     {
-        this.y = (this.helpers.unit.unitsWithinCamera - pos);
+        this.y = this.kernel.unitsWithinCamera - pos;
     }
 }

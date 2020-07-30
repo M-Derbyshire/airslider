@@ -40,17 +40,28 @@ class TheConstruct extends Level
             this.helpers.unit.yUnit(50)
         );
         
-        this._background = this.kernel.loadImage("/assets/levels/theConstruct/images/testBackground.png");
-        this.kernel.graphicEn.setStaticBackground(this._background);
         
-        this.outsideLightMask = this.kernel.loadImage("/assets/levels/theConstruct/images/testBackgroundMask.png");
-        this.outsideLightBrightness = 0;
+        
+        const unitsWithinCamera = this.kernel.unitsWithinCamera;
+        let frame = new Frame(0, 0, unitsWithinCamera, unitsWithinCamera);
+        
+        const frameBackgroundIndex = frame.loadBackground("/assets/levels/theConstruct/images/testBackground.png");
+        frame.setBackgroundImage(frameBackgroundIndex);
+        
+        this.outsideLightMaskIndex = frame.loadLightMask(
+            "/assets/levels/theConstruct/images/testBackgroundMask.png",
+            0
+        );
+        this.tunnelLightMaskIndex = frame.loadLightMask(
+            "/assets/levels/level/images/tunnelLightMask.png",
+            0.25
+        );
+        
+        this.frameIndex = this.kernel.graphicEn.frameManager.addFrame(frame);
+        
+        
         
         this.outsideVisible = false;
-        
-        //these are set in level
-        this.kernel.graphicEn.lightMask = this.tunnelLightMask;
-        this.kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
         
         this.tunnelManager.createStartingTunnel([
             this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),

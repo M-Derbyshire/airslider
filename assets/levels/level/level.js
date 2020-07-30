@@ -18,8 +18,6 @@ class Level
         
         this.tunnelManager = new LevelTunnel();
         
-        this._background = "white"; //use a color if nothing set in subclass (hence true on the next line)
-        
         this.HUD; //the Heads Up Display for the level
         this.HUD = new MainHUD();
         
@@ -33,10 +31,10 @@ class Level
         
         this.outsideVisible = false;
         
-        this.tunnelLightMask;
-        this.tunnelLightBrightness;
-        this.outsideLightMask;
-        this.outsideLightBrightness;
+        this.frameIndex;
+        
+        this.tunnelLightMaskIndex;
+        this.outsideLightMaskIndex;
         
         this.levelSpeed;
         this.levelSpeedRaw;
@@ -96,14 +94,11 @@ class Level
         this.rightEdge = this.helpers.unit.unitsWithinCamera;
         this.shockerManager.setAreaEdges(this.leftEdge, this.rightEdge);
         
-        this.helpers.zCalc.setVanishPoint(this.kernel.graphicEn.gameCan.width / 2, this.kernel.graphicEn.gameCan.height / 2, 1000);
+        this.helpers.zCalc.setVanishPoint(this.helpers.unit.unitsWithinCamera / 2, this.helpers.unit.unitsWithinCamera / 2, 1000);
         
         this.initialLevelSpeedRaw = 600;
         this.levelSpeedRaw = this.initialLevelSpeedRaw; //Can be used if you need to check for a change in level speed, or to change it
         this.updateLevelSpeed();
-        
-        this.tunnelLightMask = this.kernel.loadImage("/assets/levels/level/images/tunnelLightMask.png");
-        this.tunnelLightBrightness = 0.25;
         
         //Setup the controls
         //The main character in this game is always index 0
@@ -134,11 +129,13 @@ class Level
             this.tunnelManager.tunnel[this.tunnelManager.tunnel.length - 2].imageIndex !== -1
         )
         {
-            this.kernel.graphicEn.lightMask = this.tunnelLightMask;
-            this.kernel.graphicEn.lightLuminosity = this.tunnelLightBrightness;
+            this.kernel.graphicEn.frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
+                this.tunnelLightMaskIndex
+            );
         } else {
-            this.kernel.graphicEn.lightMask = this.outsideLightMask;
-            this.kernel.graphicEn.lightLuminosity = this.outsideLightBrightness;
+            this.kernel.graphicEn.frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
+                this.outsideLightMaskIndex
+            );
         }
     }
     

@@ -9,14 +9,7 @@ class MainHUD extends HUD
     
     load()
     {
-        let unitHelper = this.helpers.unit;
-        this.components.push(new HealthBar(
-            unitHelper.xUnit(100), 
-            unitHelper.yUnit(50), 
-            unitHelper.xUnit(800), 
-            unitHelper.yUnit(60),
-            0 //Will always be the index of the player's model
-        ));
+        this.components.push(new HealthBar(100, 50, 800, 60, 0)); //0 will always be the player's index
         
         //This is not in the component array, as needs to be called
         //by the player's character model

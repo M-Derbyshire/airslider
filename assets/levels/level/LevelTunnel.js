@@ -63,6 +63,8 @@ class LevelTunnel
     //tunnel[i].z - .length - .color - .active
     draw(levelSpeed)
     {
+        const cameraCanvasPositions = this.kernel.graphicEn.camera.positions.canvas;
+        
         for(let i = 0; i < this.tunnel.length; i++)
         {
             if(this.tunnel[i].active)
@@ -77,10 +79,10 @@ class LevelTunnel
                 {
                     this.kernel.graphicEn.gameCtx.drawImage(
                         this.kernel.loadedAssets[tunnelPart.imageIndex].asset, 
-                        this.helpers.zCalc.x(0, tunnelPart.z, true), 
-                        this.helpers.zCalc.y(0, tunnelPart.z, true), 
-                        this.helpers.zCalc.width(this.kernel.graphicEn.gameCan.width, tunnelPart.z, true), 
-                        this.helpers.zCalc.height(this.kernel.graphicEn.gameCan.height, tunnelPart.z, true)
+                        this.helpers.zCalc.x(cameraCanvasPositions.x, tunnelPart.z, true), 
+                        this.helpers.zCalc.y(cameraCanvasPositions.y, tunnelPart.z, true), 
+                        this.helpers.zCalc.width(cameraCanvasPositions.width, tunnelPart.z, true), 
+                        this.helpers.zCalc.height(cameraCanvasPositions.height, tunnelPart.z, true)
                     );
                 }
                 
@@ -96,7 +98,7 @@ class LevelTunnel
                 }
                 
                 //if this is the last piece, and it's out of the frame, it's no longer needed
-                if(this.tunnel.length > 1 && i == this.tunnel.length - 1)
+                if(this.tunnel.length > 1 && i === this.tunnel.length - 1)
                 {
                     if(this.tunnel[i - 1].z <= 0) //if the one before this is moving out of frame
                     {

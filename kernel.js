@@ -30,6 +30,8 @@ class Kernel {
         this._fpsLimit = 120;
         this._lastTime = new Date(); //used when calculating fps and enforcing fps limit
         
+        this.unitsWithinCamera = 1000; //how many drawSpace x/y units are there within the camera's size
+        
         this._totalActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
         this._totalInactiveMilliseconds = 0;
         this._active = true;
@@ -85,14 +87,10 @@ class Kernel {
     // loading methods --------------------------------------------------------------------------
     load()
     {
-        this.setCanvasSize();
-        
-        let unitsWithinCamera = 1000;
-        
         this._helpers = {
-            zCalc: new ZCalc(unitsWithinCamera),
+            zCalc: new ZCalc(this.unitsWithinCamera),
             time: new TimeHelper(),
-            unit: new UnitHelper(unitsWithinCamera)
+            unit: new UnitHelper(this.unitsWithinCamera)
         };
     }
     
@@ -118,38 +116,6 @@ class Kernel {
             this.loadedModels[i].loadedIndex = i; //used for events
             this.loadedModels[i].loadSuper();
             this.loadedModels[i].load();
-        }
-    }
-    
-    setCanvasSize(aspectHorizontal = 17, aspectVertical = 9, canvases = document.getElementsByTagName("canvas"))
-    {
-        let width;
-        let height;
-        let dpi = window.devicePixelRatio || 1;
-        
-        // set the width and height of the canvases based on the aspect ratio
-        //if aspect ratio is stretched out of window, correct it
-        let widthRatio = aspectHorizontal / aspectVertical;
-        if((window.innerWidth / widthRatio) > window.innerHeight)
-        {
-            height = window.innerHeight;
-            width = height * widthRatio;
-        } else {
-            height = window.innerWidth / widthRatio;
-            width = window.innerWidth;
-        }
-        
-        let x = (window.innerWidth - width) / 2;
-        let y = (window.innerHeight - height) / 2;
-        
-        for(let i = 0; i < canvases.length; i++)
-        {
-            canvases[i].style.left = x + "px";
-            canvases[i].style.top = y + "px";
-            canvases[i].width = width * dpi;
-            canvases[i].height = height * dpi;
-            canvases[i].style.width = width + "px";
-            canvases[i].style.height = height + "px";
         }
     }
     

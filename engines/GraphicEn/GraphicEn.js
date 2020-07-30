@@ -9,58 +9,46 @@ class GraphicEn{
         
         this.gameCan = document.getElementById("gameCan");
         this.gameCtx = this.gameCan.getContext("2d");
+        this.camera = new Camera(this.gameCan, this.gameCtx);
+        this.frameManager = new FrameManager(this.camera);
         
-        this._lightLuminosity = 0;
-        this._lightMask;
+        //These will be set on the first frame, in the run() method, by the cavas-size-change handler
+        this._lastFrameCanvasWidth = 0;
+        this._lastFrameCanvasHeight = 0;
         
-        this._background;
-        this._useColorForBackground = false;
+        this.setCanvasCorrectWidthHeight(); //Needs to be ran first, so other objects can use these dimensions on startup
     }
     
-    //getters and setters --------------------------------------
-    get lightLuminosity() {return this._lightLuminosity;}
-    set lightLuminosity(lum) //takes a number between 0 (darkest) and 1 (lightest)
-    {
-        this._lightLuminosity = 1 - lum;
-    }
-    
-    get lightMask() {return this._lightMask;}
-    set lightMask(ref)
-    {
-        this._lightMask = ref;
-    }
-    
-    setStaticBackground(input, useColor = false)
-    {
-        this._background = input;
-        this._useColorForBackground = useColor;
-    }
     
     //----------------------------------------------------------
     
     run()
     {
-        
+        //Need to do this, rather than use an event listener, as the onResize listener
+        //doesn't react to a change of size if the size is set in percentages (so, if
+        //100% size, that value doesn't actually change, even if the window size does).
+        if(this.canvasSizeHasChanged()) this.setCanvasCorrectWidthHeight();
         
         //clear everything on the gameCan
         this.gameCtx.clearRect(0, 0, this.gameCan.width, this.gameCan.height);
         
-        //Draw the parts of the screen that are behind the models
-        this.drawBackgroundFull();
         
+        //Draw the parts of the screen that are behind the models
+        this.camera.drawBack();
+        this.frameManager.determineFramesToDraw();
+        this.frameManager.drawFramesBack();
         this.kernel.level.drawBack();
+        
         
         this.drawModels();
         
-        //Finally, draw everything that needs to be drawn on top of the models
+        
+        //Draw everything that needs to be drawn on top of the models
         this.kernel.level.drawFront();
-        
-        this.drawLightMask();
-        
+        this.frameManager.drawFramesFront();
         this.kernel.level.HUD.draw();
-        
-        //Leave this here if you want to see the game's current FPS.
-        this.fpsMeter();
+        this.fpsMeter(); //Leave this here if you want to see the game's current FPS.
+        this.camera.drawFront();
     }
     
     
@@ -71,52 +59,68 @@ class GraphicEn{
             return this.kernel.loadedModels[b].z - this.kernel.loadedModels[a].z;
         });
         
+        let modelToDraw
         
         for(let i = 0; i < this.kernel.loadedModels.length; i++)
         {
-            if(this.kernel.loadedModels[this._zSortedIndexes[i]].active && this.kernel.loadedModels[this._zSortedIndexes[i]].display)
+            modelToDraw = this.kernel.loadedModels[this._zSortedIndexes[i]];
+            
+            if(this.camera.isOnCamera(
+                        modelToDraw.x, 
+                        modelToDraw.y, 
+                        modelToDraw.width, 
+                        modelToDraw.height, 
+                        modelToDraw.z) && modelToDraw.active && modelToDraw.display)
             {
-                this.kernel.loadedModels[this._zSortedIndexes[i]].draw();
+                modelToDraw.draw();
             }
         }
     }
     
-    
-    drawBackgroundFull()
-    {
-        if(this._useColorForBackground)
-        {
-            this.gameCtx.fillStyle = this._background;
-            this.gameCtx.fillRect(0, 0, this.gameCan.width, this.gameCan.height);
-        } else {
-            this.gameCtx.drawImage(
-                this.kernel.loadedAssets[this._background].asset,
-                0,
-                0,
-                this.gameCan.width,
-                this.gameCan.height
-            );
-        }
-    }
-    
-    drawLightMask()
-    {
-        this.gameCtx.globalAlpha = this.lightLuminosity;
-        this.gameCtx.drawImage(
-            this.kernel.loadedAssets[this.lightMask].asset,
-            0,
-            0,
-            this.gameCan.width,
-            this.gameCan.height
-        );
-        this.gameCtx.globalAlpha = 1;
-    }
     
     fpsMeter()
     {
         let fontSize = 30
         this.gameCtx.font = fontSize + "px Arial";
         this.gameCtx.fillStyle = "blue";
-        this.gameCtx.fillText("FPS: " + this.kernel.fps, this.helpers.unit.xUnit(10), this.helpers.unit.yUnit(10) + fontSize);
+        this.gameCtx.fillText(
+            "FPS: " + this.kernel.fps, 
+            this.helpers.unit.xUnit(10), 
+            (this.camera.positions.canvas.y + this.helpers.unit.yUnit(10) + fontSize)
+        );
+    }
+    
+    
+    canvasSizeHasChanged()
+    {
+        //slice() is used here to remove the "px"
+        const currentWidth = window.getComputedStyle(this.gameCan).width.slice(0, -2);
+        const currentHeight = window.getComputedStyle(this.gameCan).height.slice(0, -2);
+        
+        if(currentWidth !== this._lastFrameCanvasWidth || currentHeight !== this._lastFrameCanvasHeight)
+        {
+            this._lastFrameCanvasWidth = currentWidth;
+            this._lastFrameCanvasHeight = currentHeight
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
+    
+    setCanvasCorrectWidthHeight()
+    {
+        //Need to change the styling for the canvas, based on the DPI,
+        //to avoid it being stretched and blurry.
+        
+        //getComputedStyle is used incase the canvas size is in %. Slice takes off the "px".
+        //.width and .height are not the same as .style.width and .style.height, and if they
+        //are less than the style values, the image can be blurry (we also need to take into
+        //account the devicePixelRatio)
+        this.gameCan.width = window.getComputedStyle(this.gameCan).width.slice(0, -2) * (window.devicePixelRatio || 1);
+        this.gameCan.height = window.getComputedStyle(this.gameCan).height.slice(0, -2) * (window.devicePixelRatio || 1);
+        
+        this.camera.setCameraSize();
     }
 }

@@ -17,6 +17,7 @@ class LevelGround
     
     set(path, height)
     {
+        const canvasPositions = this.kernel.graphicEn.camera.positions.canvas; //Can't set in constructor as graphicEn hasn't been initialised
         this.ground.ref = this.kernel.loadImage(path);
         this.ground.height = height;
         let distance = -1;
@@ -32,7 +33,7 @@ class LevelGround
                 //This takes the height of the image into account to figure out if the top of this
                 //ground image would now be at the bottom of the last image, if drawn at this 
                 //z-position.
-                if(this.helpers.zCalc.y(this.kernel.graphicEn.gameCan.height, z) >= this.helpers.zCalc.y(this.kernel.graphicEn.gameCan.height, this.groundZ[this.groundZ.length - 1]) + this.helpers.zCalc.height(height, this.groundZ[this.groundZ.length - 1]))
+                if(this.helpers.zCalc.y(canvasPositions.height, z) >= this.helpers.zCalc.y(canvasPositions.height, this.groundZ[this.groundZ.length - 1]) + this.helpers.zCalc.height(height, this.groundZ[this.groundZ.length - 1]))
                 {
                     distance = this.groundZ[this.groundZ.length - 1] - z;
                     this.ground.distance = distance;
@@ -56,6 +57,8 @@ class LevelGround
     //like they are just continuing to move towards the camera.
     draw(levelSpeed)
     {
+        const camera = this.kernel.graphicEn.camera;
+        
         for(let i = 0; i < this.groundZ.length; i++)
         {
             //The offset is subtracted from the starting z position of the image,
@@ -71,14 +74,14 @@ class LevelGround
             
             this.ground.offset += (levelSpeed / 250);
             
-            let y = this.helpers.zCalc.y(this.kernel.graphicEn.gameCan.height, this.groundZ[i] - this.ground.offset);
-            let width = this.helpers.zCalc.width((this.kernel.graphicEn.gameCan.width * 2), this.groundZ[i] - this.ground.offset);
+            let y = this.helpers.zCalc.y(camera.positions.canvas.y + camera.positions.canvas.height, this.groundZ[i] - this.ground.offset);
+            let width = this.helpers.zCalc.width((camera.positions.canvas.x + camera.positions.canvas.width * 2), this.groundZ[i] - this.ground.offset);
             let height = this.helpers.zCalc.height(this.ground.height, this.groundZ[i] - this.ground.offset);
             
             //Need to draw it once on the left, then again on the right
             this.kernel.graphicEn.gameCtx.drawImage(
                 this.kernel.loadedAssets[this.ground.ref].asset,
-                this.helpers.zCalc.x(0 - (this.kernel.graphicEn.gameCan.width * 2), this.groundZ[i] - this.ground.offset),
+                this.helpers.zCalc.x(camera.positions.canvas.x - (camera.positions.canvas.x + camera.positions.canvas.width * 2), this.groundZ[i] - this.ground.offset),
                 y,
                 width,
                 height
@@ -86,7 +89,7 @@ class LevelGround
             
             this.kernel.graphicEn.gameCtx.drawImage(
                 this.kernel.loadedAssets[this.ground.ref].asset,
-                this.helpers.zCalc.x(this.kernel.graphicEn.gameCan.width, this.groundZ[i] - this.ground.offset),
+                this.helpers.zCalc.x(camera.positions.canvas.x + camera.positions.canvas.width, this.groundZ[i] - this.ground.offset),
                 y,
                 width,
                 height
