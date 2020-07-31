@@ -21,7 +21,6 @@ class HUD
     {
         for(let i = 0; i < this.components.length; i++)
         {
-            this.components[i].loadSuper();
             this.components[i].load();
         }
     }

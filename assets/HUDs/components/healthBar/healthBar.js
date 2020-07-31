@@ -15,6 +15,11 @@ class HealthBar extends HUDComponent
         this.barColor = "#ff0000";
     }
     
+    load()
+    {
+        super.load();
+    }
+    
     draw()
     {
         const health = this.kernel.loadedModels[this.targetIndex].health;

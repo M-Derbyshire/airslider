@@ -8,12 +8,11 @@ class HUDComponent
         this.ctx = this.kernel.graphicEn.gameCtx;
     }
     
-    //meant to be overriden
-    draw(){}
-    load(){}
-    
-    loadSuper()
+    load()
     {
         
     }
+    
+    //meant to be overriden
+    draw(){}
 }

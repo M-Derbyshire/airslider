@@ -49,6 +49,8 @@ class DamageFlash extends HUDComponent
     
     load()
     {
+        super.load();
+        
         this.images = {
             yellow: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/yellow.png"),
             orange: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/orange.png"),

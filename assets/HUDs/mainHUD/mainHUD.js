@@ -17,7 +17,6 @@ class MainHUD extends HUD
         
         this.loadComponents();
         
-        this.damageFlash.loadSuper();
         this.damageFlash.load();
     }
     
