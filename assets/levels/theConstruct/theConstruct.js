@@ -32,6 +32,8 @@ class TheConstruct extends Level
     
     load()
     {
+        super.load();
+        
         this.tunnelSprite = this.kernel.loadImage("/assets/levels/theConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
         

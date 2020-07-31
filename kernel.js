@@ -107,7 +107,6 @@ class Kernel {
         this._menuEn = new MenuEn();
         
         //do any extra setup that may need access to the engines
-        this.level.loadSuper();
         this.level.load();
         this.level.HUD.load();
         for(let i = 0; i < this.loadedModels.length; i++)

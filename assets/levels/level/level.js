@@ -42,7 +42,7 @@ class Level
     }
     
     //set things that can only be done after the engines are constructed
-    loadSuper()
+    load()
     {
         //These are the events that are valid across all levels
         this._eventManager.registerEventsArray([
@@ -110,7 +110,6 @@ class Level
     
     //meant to be overridden
     getModels(){}
-    load(){}
     act(){}
     
     updateLevelSpeed()
