@@ -9,6 +9,8 @@ class BabyDragon extends Monster {
     
     load()
     {
+        super.load();
+        
         this.animationManager.registerAnimations({
             left: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/babyDragon/anim/left",

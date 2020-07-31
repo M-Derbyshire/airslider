@@ -17,6 +17,8 @@ class Tarian extends Model {
     
     load()
     {
+        super.load();
+        
         //I've used exact values for the fps, so it will be consistent when changing game fps
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({

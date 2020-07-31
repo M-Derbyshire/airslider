@@ -14,6 +14,8 @@ class Falcon extends Monster {
     
     load()
     {
+        super.load();
+        
         this.animationManager.registerAnimations({
             dropLeft: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/falcon/anim/dropping/left",

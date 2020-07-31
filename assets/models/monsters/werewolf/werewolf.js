@@ -12,6 +12,8 @@ class Werewolf extends Monster {
     
     load()
     {
+        super.load();
+        
         this.animationManager.registerAnimations({
             left: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/werewolf/anim/left",

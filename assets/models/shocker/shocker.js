@@ -30,6 +30,8 @@ class Shocker extends Model
     
     load()
     {
+        super.load();
+        
         let width = (this.color == "purple") ? 300 : 100;
         
         this.animationManager.registerAnimations({

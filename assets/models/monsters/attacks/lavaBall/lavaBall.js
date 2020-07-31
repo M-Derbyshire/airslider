@@ -11,6 +11,8 @@ class LavaBall extends Model {
     
     load()
     {
+        super.load();
+        
         let ballWidth = 30;
         let ballHeight = 40;
         

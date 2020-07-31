@@ -13,6 +13,8 @@ class NeonPidgeon extends Monster {
     
     load()
     {
+        super.load();
+        
         this.animationManager.registerAnimations({
             falling: this.animationManager.createAnimation({
                 path: "/assets/models/monsters/neonPidgeon/anim/falling",

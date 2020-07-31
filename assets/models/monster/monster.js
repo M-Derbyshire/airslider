@@ -69,8 +69,10 @@ class Monster extends Model {
         this.exiting = true;
     }
     
-    loadSuper() //this is overriding the model method
+    load() //this is overriding the model method
     {
+        super.load();
+        
         this.fireWeapon = true;
         this.realZSpeedRaw = this.kernel.level.levelSpeedRaw;
     }

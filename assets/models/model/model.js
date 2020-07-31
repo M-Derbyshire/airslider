@@ -61,11 +61,12 @@ class Model {
     //-----------------------------------------------------------
     
     //meant to be overridden
-    load() {}
     levelStopped() {}
     act() {}
     
-    loadSuper()
+    
+    
+    load()
     {
         
     }

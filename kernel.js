@@ -111,8 +111,7 @@ class Kernel {
         this.level.HUD.load();
         for(let i = 0; i < this.loadedModels.length; i++)
         {
-            this.loadedModels[i].loadedIndex = i; //used for events
-            this.loadedModels[i].loadSuper();
+            this.loadedModels[i].loadedIndex = i;
             this.loadedModels[i].load();
         }
     }
