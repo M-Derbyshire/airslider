@@ -9,13 +9,10 @@ class HUD
         this.modelIndexes = []; //indexes of models used by this HUD
     }
     
-    loadSuper()
+    load()
     {
         
     }
-    
-    //meant to be overriden
-    load(){}
     
     loadComponents()
     {

@@ -9,6 +9,8 @@ class MainHUD extends HUD
     
     load()
     {
+        super.load();
+        
         this.components.push(new HealthBar(100, 50, 800, 60, 0)); //0 will always be the player's index
         
         //This is not in the component array, as needs to be called
