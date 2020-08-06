@@ -47,8 +47,10 @@ class GraphicEn{
         this.kernel.level.drawFront();
         this.frameManager.drawFramesFront();
         this.kernel.level.HUD.draw();
-        this.fpsMeter(); //Leave this here if you want to see the game's current FPS.
         this.camera.drawFront();
+        
+        //Leave this here if you want to see the game's current FPS.
+        this.fpsMeter();
     }
     
     
@@ -83,11 +85,7 @@ class GraphicEn{
         let fontSize = 30
         this.gameCtx.font = fontSize + "px Arial";
         this.gameCtx.fillStyle = "blue";
-        this.gameCtx.fillText(
-            "FPS: " + this.kernel.fps, 
-            this.helpers.unit.xUnit(10), 
-            (this.camera.positions.canvas.y + this.helpers.unit.yUnit(10) + fontSize)
-        );
+        this.gameCtx.fillText("FPS: " + this.kernel.fps, 10, (10 + fontSize));
     }
     
     
