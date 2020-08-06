@@ -80,11 +80,11 @@ class GraphicEn{
     }
     
     
-    fpsMeter()
+    fpsMeter(color = "blue")
     {
         let fontSize = 30
         this.gameCtx.font = fontSize + "px Arial";
-        this.gameCtx.fillStyle = "blue";
+        this.gameCtx.fillStyle = color;
         this.gameCtx.fillText("FPS: " + this.kernel.fps, 10, (10 + fontSize));
     }
     
