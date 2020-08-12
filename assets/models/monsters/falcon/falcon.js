@@ -130,7 +130,11 @@ class Falcon extends Monster {
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
-        this.xSpeed = 960;
+        
+        //This means that if the player moves in the same direction 
+        //during strafe(), the monster doesn't end up off screen.
+        this.xSpeed = this.kernel.loadedModels[this.playerIndex].topSpeed * 2.5;
+        
         this.ySpeed = 1200;
         this.state = "flapping";
     }
@@ -139,7 +143,7 @@ class Falcon extends Monster {
     
     stalking(monster)
     {
-        //reset the damage
+        //Reset the damage (It's set to 0 in swoopUp() to avoid extra damage)
         monster.damageDealt = monster.damageDealtOrig;
         
         //keep monster centered above player
@@ -165,41 +169,46 @@ class Falcon extends Monster {
     
     strafe(monster)
     {
-        let mx = monster.x;
-        let mw = monster.x + monster.width;
-        let px = monster.kernel.loadedModels[monster.playerIndex].x;
-        let pw = monster.kernel.loadedModels[monster.playerIndex].width;
-        let yDifference = monster.kernel.loadedModels[monster.playerIndex].y - monster.y;
+        // Center of monster in drop animations
+        // Width/height should be the same for both dropLeft and dropRight anims.
+        const monsterDropLeftAnim = monster.animationManager.animations.dropLeft;
+        const monsterSwoopXCenter = monster.x + (monsterDropLeftAnim.width / 2);
+        const monsterSwoopYcenter = monster.y + (monsterDropLeftAnim.height / 2);
         
-        // if the position is correct for a swoop down
-        if((mx - yDifference > px && mx - yDifference < px + pw) || //moving left
-            (mw + yDifference > px && mw + yDifference < px + pw)) //moving right
+        
+        const player = monster.kernel.loadedModels[monster.playerIndex];
+        const playerXCenter = player.x + (player.width / 2);
+        const playerYCenter = player.y + (player.height / 2);
+        
+        // Always a positive when in the air.
+        const yDifference = playerYCenter - monsterSwoopYcenter; 
+        
+        // Need this to always be positive, so we can just see if it's greater
+        // than the yDifference for either direction.
+        let xDifference = playerXCenter - monsterSwoopXCenter;
+        if(xDifference < 0) xDifference = -xDifference;
+        
+        //Monster will switch to swooping down with the same speed for x and y.
+        //So, if the xDifference and yDifference match, it's time to swoop, 
+        //as it's correctly aimed at the player.
+        if(xDifference >= yDifference)
         {
             monster.directionMultiplier = -monster.directionMultiplier;
             monster.state = (monster.directionMultiplier == -1) ? "dropLeft" : "dropRight";
             monster.nextAction();
-        } else {
+        } 
+        else 
+        {
             monster.moveRight(monster.xSpeed * monster.directionMultiplier);
         }
     }
     
     swoopDown(monster)
     {
-        //center of monster and player
-        let mc = monster.x + (monster.width / 2);
-        let pc = monster.kernel.loadedModels[monster.playerIndex].x + (monster.kernel.loadedModels[monster.playerIndex].width / 2);
-        
-        let directionChange = 5;
-        
-        //check which is further: x difference or y difference
-        if((mc - pc) * -monster.directionMultiplier > monster.kernel.loadedModels[monster.playerIndex].y - monster.y)
-        {
-            monster.moveRight((monster.xSpeed + directionChange) * monster.directionMultiplier);
-            monster.moveDown(monster.ySpeed);
-        } else {
-            monster.moveRight(monster.xSpeed * monster.directionMultiplier);
-            monster.moveDown(monster.ySpeed + directionChange);
-        }
+        //y speed is used for both x and y movement, so it's diagonal.
+        //This is important to make sure the falcon hits the target
+        monster.moveRight(monster.ySpeed * monster.directionMultiplier);
+        monster.moveDown(monster.ySpeed);
     }
     
     swoopUp(monster)
@@ -212,23 +221,25 @@ class Falcon extends Monster {
         } else {
             monster.damageDealt = 0; //will be reset at stalking
             monster.moveUp(monster.ySpeed);
-            monster.moveRight((monster.xSpeed * 0.75) * monster.directionMultiplier);
+            
+            //0.75 makes the movement angle match the angle on the animation sprite
+            monster.moveRight((monster.ySpeed * 0.75) * monster.directionMultiplier);
         }
     }
     
     reposition(monster)
     {
         //get player center and monster center; also pre-calculate the real speed of the monster
-        let pc = monster.kernel.loadedModels[monster.playerIndex].x + (monster.kernel.loadedModels[monster.playerIndex].width / 2)
-        let mc = monster.x + (monster.width / 2);
-        let calcSpeed = monster.helpers.unit.xSpeed(monster.xSpeed);
+        const playerCenter = monster.kernel.loadedModels[monster.playerIndex].x + (monster.kernel.loadedModels[monster.playerIndex].width / 2)
+        const monsterCenter = monster.x + (monster.width / 2);
+        const calcSpeed = monster.helpers.unit.xSpeed(monster.xSpeed);
         
-        if(mc < pc + calcSpeed && mc > pc - calcSpeed)
+        if(monsterCenter < playerCenter + calcSpeed && monsterCenter > playerCenter - calcSpeed)
         {
             monster.lastSwoop = monster.helpers.time.getTotalMilliseconds();
             monster.nextAction();
         } else {
-            monster.directionMultiplier = (pc < mc) ? -1 : 1;
+            monster.directionMultiplier = (playerCenter < monsterCenter) ? -1 : 1;
             monster.moveRight(monster.xSpeed * monster.directionMultiplier);
         }
     }
