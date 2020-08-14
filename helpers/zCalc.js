@@ -6,10 +6,9 @@ class ZCalc
         
         this._unitsWithinCamera = unitsWithinCamera;
         
-        //vanishing point is set with vPointX and vPointY
-        this._vPointXUnits;
-        this._vPointYUnits;
-        
+        //Vanishing point settings
+        this._vPointX;
+        this._vPointY;
         this._vPointDepth; //the max z position
         
         //A precalculated value based on the depth set
@@ -19,18 +18,19 @@ class ZCalc
     
     //-------------------------- getters and setters ----------------------------
     
-    get vPointX(){return this.kernel.graphicEn.camera.positions.canvas.x +
-         this.kernel.helpers.unit.xUnit(this._vPointXUnits);}
+    get vPointX(){return this._vPointX;}
          
-    get vPointY(){return this.kernel.graphicEn.camera.positions.canvas.y + 
-        this.kernel.helpers.unit.yUnit(this._vPointYUnits);}
+    get vPointY(){return this._vPointY;}
     
     get vPointDepth(){return this._vPointDepth;}
     
-    setVanishPoint(xUnits, yUnits, depth)
-    {
-        this._vPointXUnits = xUnits;
-        this._vPointYUnits = yUnits;
+    //Set the exact canvas position, and how many units you want in depth 
+    //(models will move along the z-axis faster if you set the depth to a smaller 
+    //amount, and vice-versa).
+    setVanishPoint(canvasXPos, canvasYPos, depth = 1000)
+     {
+        this._vPointX = canvasXPos;
+        this._vPointY = canvasYPos;
         this._vPointDepth = depth;
         
         //Precalculating this here. 

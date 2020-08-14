@@ -94,7 +94,10 @@ class Level
         this.rightEdge = this.helpers.unit.unitsWithinCamera;
         this.shockerManager.setAreaEdges(this.leftEdge, this.rightEdge);
         
-        this.helpers.zCalc.setVanishPoint(this.helpers.unit.unitsWithinCamera / 2, this.helpers.unit.unitsWithinCamera / 2, 1000);
+        this.helpers.zCalc.setVanishPoint(
+            this.kernel.graphicEn.gameCan.width / 2, 
+            this.kernel.graphicEn.gameCan.height / 2
+        );
         
         this.initialLevelSpeedRaw = 600;
         this.levelSpeedRaw = this.initialLevelSpeedRaw; //Can be used if you need to check for a change in level speed, or to change it
