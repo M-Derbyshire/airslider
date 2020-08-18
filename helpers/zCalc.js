@@ -11,6 +11,12 @@ class ZCalc
         this._vPointY;
         this._vPointDepth; //the max z position
         
+        //The vanishing point is defined in literal canvas positions,
+        //so these functions will be used to calculate the new values
+        //on a screen resize.
+        this._calcVPointX = () => {};
+        this._calcVPointY = () => {};
+        
         //A precalculated value based on the depth set
         //(This is explained in the "Scaled Positions and Dimensions" section)
         this._calcDepth;
@@ -24,18 +30,27 @@ class ZCalc
     
     get vPointDepth(){return this._vPointDepth;}
     
-    //Set the exact canvas position, and how many units you want in depth 
-    //(models will move along the z-axis faster if you set the depth to a smaller 
-    //amount, and vice-versa).
-    setVanishPoint(canvasXPos, canvasYPos, depth = 1000)
+    //Provide functions that will set the exact canvas position (these should be called 
+    //by the graphic engine if the canvas is resized.). Also, provide how many units you 
+    //want in depth (models will move along the z-axis faster if you set the depth to a 
+    //smaller amount, and vice-versa).
+    setVanishPoint(canvasXPosCalcFunction, canvasYPosCalcFunction, depth = 1000)
      {
-        this._vPointX = canvasXPos;
-        this._vPointY = canvasYPos;
+        this._calcVPointX = canvasXPosCalcFunction;
+        this._calcVPointY = canvasYPosCalcFunction;
+        
+        this.resetVanishPointPosition();
         this._vPointDepth = depth;
         
         //Precalculating this here. 
         //It is explained in the "Scaled Positions and Dimensions" section below.
         this._calcDepth = depth / 8; 
+    }
+    
+    resetVanishPointPosition()
+    {
+        this._vPointX = this._calcVPointX();
+        this._vPointY = this._calcVPointY();
     }
     
     //-------------------------- Z Axis Speed ----------------------------------

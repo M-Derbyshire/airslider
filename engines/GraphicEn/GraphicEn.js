@@ -121,5 +121,6 @@ class GraphicEn{
         this.gameCan.height = window.getComputedStyle(this.gameCan).height.slice(0, -2) * (window.devicePixelRatio || 1);
         
         this.camera.setCameraSize();
+        this.helpers.zCalc.resetVanishPointPosition();
     }
 }

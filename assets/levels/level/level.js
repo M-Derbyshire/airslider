@@ -95,8 +95,8 @@ class Level
         this.shockerManager.setAreaEdges(this.leftEdge, this.rightEdge);
         
         this.helpers.zCalc.setVanishPoint(
-            this.kernel.graphicEn.gameCan.width / 2, 
-            this.kernel.graphicEn.gameCan.height / 2
+            () => { return this.kernel.graphicEn.gameCan.width / 2; }, 
+            () => { return this.kernel.graphicEn.gameCan.height / 2; }
         );
         
         this.initialLevelSpeedRaw = 600;
