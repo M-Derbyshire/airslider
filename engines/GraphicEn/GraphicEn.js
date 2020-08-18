@@ -17,7 +17,6 @@ class GraphicEn{
         this._lastFrameCanvasHeight = 0;
         
         this.setCanvasCorrectWidthHeight(); //Needs to be ran first, so other objects can use these dimensions on startup
-        this.helpers.unit.setDimensions(this.camera.positions.canvas.width, this.camera.positions.canvas.height);
     }
     
     
@@ -120,7 +119,9 @@ class GraphicEn{
         this.gameCan.width = window.getComputedStyle(this.gameCan).width.slice(0, -2) * (window.devicePixelRatio || 1);
         this.gameCan.height = window.getComputedStyle(this.gameCan).height.slice(0, -2) * (window.devicePixelRatio || 1);
         
+        //It should be noted that this should be ran on loading as well (it is the first setting of the below)
         this.camera.setCameraSize();
         this.helpers.zCalc.resetVanishPointPosition();
+        this.helpers.unit.setDimensions(this.camera.positions.canvas.width, this.camera.positions.canvas.height);
     }
 }
