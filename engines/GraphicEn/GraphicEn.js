@@ -17,6 +17,7 @@ class GraphicEn{
         this._lastFrameCanvasHeight = 0;
         
         this.setCanvasCorrectWidthHeight(); //Needs to be ran first, so other objects can use these dimensions on startup
+        this.helpers.unit.setDimensions(this.camera.positions.canvas.width, this.camera.positions.canvas.height);
     }
     
     

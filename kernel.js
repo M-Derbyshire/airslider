@@ -23,7 +23,6 @@ class Kernel {
         Kernel.instance = this;
         
         
-        
         this._isOnMobile = false; //is this a mobile app (such as through Cordova)?
         
         this._fps = 24;

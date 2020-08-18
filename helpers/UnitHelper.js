@@ -4,7 +4,20 @@ class UnitHelper
     {
         this.kernel = Kernel.getInstance();
         this.unitsWithinCamera = unitsWithinCamera;
+        
+        //These will need to be set with setDimensions()
+        this._camera = { 
+            canvasHeight: 0, 
+            canvasWidth: 0 
+        };
     }
+    
+    setDimensions(cameraCanvasWidth, cameraCanvasHeight)
+    {
+        this._camera.canvasWidth = cameraCanvasWidth;
+        this._camera.canvasHeight = cameraCanvasHeight;
+    }
+    
     
     //helpers to create relative positioning/sizings.
     //They give you a certain amount of units (both ways) 
@@ -14,11 +27,11 @@ class UnitHelper
     
     xUnit(unit)
     {
-        return ((this.kernel.graphicEn.camera.positions.canvas.width / this.unitsWithinCamera) * unit);
+        return ((this._camera.canvasWidth / this.unitsWithinCamera) * unit);
     }
     yUnit(unit)
     {
-        return ((this.kernel.graphicEn.camera.positions.canvas.height / this.unitsWithinCamera) * unit);
+        return ((this._camera.canvasHeight / this.unitsWithinCamera) * unit);
     }
     
     
