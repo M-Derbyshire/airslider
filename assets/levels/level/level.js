@@ -91,7 +91,7 @@ class Level
         ]);
         
         this.leftEdge = 0;
-        this.rightEdge = this.helpers.unit.unitsWithinCamera;
+        this.rightEdge = this.kernel.unitsWithinCamera;
         this.shockerManager.setAreaEdges(this.leftEdge, this.rightEdge);
         
         this.helpers.zCalc.setVanishPoint(
