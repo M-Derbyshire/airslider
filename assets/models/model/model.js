@@ -71,9 +71,9 @@ class Model {
         
     }
     
-    loadAnimationsManager(camera)
+    loadAnimationsManager(canvasCtx, camera)
     {
-        this.animationManager.load(camera);
+        this.animationManager.load(canvasCtx, camera);
     }
     
     draw()

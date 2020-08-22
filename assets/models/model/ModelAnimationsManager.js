@@ -4,14 +4,18 @@ class ModelAnimationsManager {
         this.model = model;
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
-        this._camera; //Set in load()
+        
+        //Set in load()
+        this._camera;
+        this._canvasCtx;
         
         this.animations;
     }
     
-    load(camera)
+    load(canvasCtx, camera)
     {
         this._camera = camera;
+        this._canvasCtx = canvasCtx;
     }
     
     registerAnimations(animations)
@@ -49,7 +53,7 @@ class ModelAnimationsManager {
     drawNextFrame()
     {
         //Draw the image, taking into account the z-axis when setting the size/positions
-        this.kernel.graphicEn.gameCtx.drawImage(
+        this._canvasCtx.drawImage(
             this.kernel.loadedAssets[this.getNextFrameIndex()].asset, 
             this.helpers.zCalc.x(this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(this.model.x)) + this._camera.canvasPositionX, this.model.z), 
             this.helpers.zCalc.y(this.helpers.unit.yUnit(this._camera.unitCameraPositionCalc.y(this.model.y)) + this._camera.canvasPositionY, this.model.z), 
