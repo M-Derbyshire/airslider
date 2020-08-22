@@ -76,7 +76,7 @@ class Frame {
     {
         if(this._lightMask > -1)
         {
-            const camera = this.kernel.graphicEn.camera;
+            const camera = this._camera;
             
             this.kernel.graphicEn.gameCtx.drawImage(
                 this.kernel.loadedAssets[this._loadedBackgrounds[this._background]].asset,
