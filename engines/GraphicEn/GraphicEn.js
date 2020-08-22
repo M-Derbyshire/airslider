@@ -61,7 +61,7 @@ class GraphicEn{
             return this.kernel.loadedModels[b].z - this.kernel.loadedModels[a].z;
         });
         
-        let modelToDraw
+        let modelToDraw;
         
         for(let i = 0; i < this.kernel.loadedModels.length; i++)
         {
