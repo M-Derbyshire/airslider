@@ -10,9 +10,9 @@ class Werewolf extends Monster {
         this.color = "tooth";
     }
     
-    load()
+    load(levelLeftEdge, levelRightEdge)
     {
-        super.load();
+        super.load(levelLeftEdge, levelRightEdge);
         
         this.animationManager.registerAnimations({
             left: this.animationManager.createAnimation({
@@ -112,13 +112,13 @@ class Werewolf extends Monster {
         monster.state = monster.setHeadDirection();
         
         //set monsters x movement direction and move it
-        if(monster.x < monster.kernel.level.leftEdge)
+        if(monster.x < monster._levelLeftEdge)
         {
-            monster.x = monster.kernel.level.leftEdge;
+            monster.x = monster._levelLeftEdge;
             monster.directionMultiplier = 1;
-        } else if (monster.x + monster.width > monster.kernel.level.rightEdge)
+        } else if (monster.x + monster.width > monster._levelRightEdge)
         {
-            monster.x = monster.kernel.level.rightEdge - monster.width;
+            monster.x = monster._levelRightEdge - monster.width;
             monster.directionMultiplier = -1;
         }
         monster.moveRight(monster.xSpeed * monster.directionMultiplier);

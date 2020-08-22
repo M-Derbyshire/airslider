@@ -111,7 +111,7 @@ class Kernel {
         for(let i = 0; i < this.loadedModels.length; i++)
         {
             this.loadedModels[i].loadedIndex = i;
-            this.loadedModels[i].load();
+            this.loadedModels[i].load(this.level.leftEdge, this.level.rightEdge);
             this.loadedModels[i].loadAnimationsManager(this._graphicEn.gameCtx, this._graphicEn.camera);
         }
     }

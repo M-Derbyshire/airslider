@@ -7,6 +7,10 @@ class Model {
         this.helpers = this.kernel.helpers;
         this.animationManager = new ModelAnimationsManager(this);
         
+        // Set in load
+        this._levelLeftEdge;
+        this._levelRightEdge;
+        
         this._state; //string with the current state of the model
         this._active; //is this active
         this._display = true; //should this be drawn
@@ -66,9 +70,10 @@ class Model {
     
     
     
-    load()
+    load(levelLeftEdge, levelRightEdge)
     {
-        
+        this._levelLeftEdge = levelLeftEdge;
+        this._levelRightEdge = levelRightEdge;
     }
     
     loadAnimationsManager(canvasCtx, camera)

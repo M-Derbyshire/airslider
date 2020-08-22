@@ -7,9 +7,9 @@ class BabyDragon extends Monster {
         this.lavaBallIndex = lavaBallIndex;
     }
     
-    load()
+    load(levelLeftEdge, levelRightEdge)
     {
-        super.load();
+        super.load(levelLeftEdge, levelRightEdge);
         
         this.animationManager.registerAnimations({
             left: this.animationManager.createAnimation({
@@ -34,7 +34,7 @@ class BabyDragon extends Monster {
         
         this.offScreenUnits = 500;
         this.startY = 10,
-        this.startX = this.kernel.level.rightEdge + this.offScreenUnits;
+        this.startX = this._levelRightEdge + this.offScreenUnits;
         
         this.startZ = this.kernel.loadedModels[this.playerIndex].z;
         this.enterXSpeed = 90;
@@ -49,7 +49,7 @@ class BabyDragon extends Monster {
     
     enter()
     {
-        if(this.kernel.level.rightEdge < (this.x + this.width))
+        if(this._levelRightEdge < (this.x + this.width))
         {
             this.moveLeft(this.enterXSpeed);
         } else {
@@ -62,7 +62,7 @@ class BabyDragon extends Monster {
         this.state = "left";
         this.moveLeft(this.enterXSpeed);
         
-        if((this.x + this.width) < (this.kernel.level.leftEdge - this.offScreenUnits))
+        if((this.x + this.width) < (this._levelLeftEdge - this.offScreenUnits))
         {
             this.exiting = false;
             this.active = false;
@@ -84,14 +84,14 @@ class BabyDragon extends Monster {
     {
         monster.moveRight(monster.xSpeed);
         
-        if(monster.x + (monster.width / 2) <= monster.kernel.level.leftEdge || (monster.x + (monster.width / 2) >= monster.kernel.level.rightEdge))
+        if(monster.x + (monster.width / 2) <= monster._levelLeftEdge || (monster.x + (monster.width / 2) >= monster._levelRightEdge))
         {
             monster.xSpeed = -monster.xSpeed;
             monster.state = (monster.state == "left") ? "right" : "left";
             
             monster.x = (monster.xSpeed > 0) ? 
-                ((monster.kernel.level.leftEdge - (monster.width / 2)) + 1) :
-                ((monster.kernel.level.rightEdge - (monster.width / 2)) - 1);
+                ((monster._levelLeftEdge - (monster.width / 2)) + 1) :
+                ((monster._levelRightEdge - (monster.width / 2)) - 1);
         }
         
         if(!monster.kernel.loadedModels[monster.lavaBallIndex].active && monster.fireWeapon)

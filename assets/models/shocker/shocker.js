@@ -28,9 +28,9 @@ class Shocker extends Model
         }
     }
     
-    load()
+    load(levelLeftEdge, levelRightEdge)
     {
-        super.load();
+        super.load(levelLeftEdge, levelRightEdge);
         
         let width = (this.color == "purple") ? 300 : 100;
         
@@ -93,7 +93,7 @@ class Shocker extends Model
     extraEvents()
     {
         //check for leaving the game area
-        if((this.x < this.kernel.level.leftEdge) || (this.x + this.width > this.kernel.level.rightEdge))
+        if((this.x < this._levelLeftEdge) || (this.x + this.width > this._levelRightEdge))
         {
             this.xSpeed = -this.xSpeed;
             this.moveRight(this.xSpeed);

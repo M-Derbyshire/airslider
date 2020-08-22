@@ -12,9 +12,9 @@ class Falcon extends Monster {
         this.color = "none";
     }
     
-    load()
+    load(levelLeftEdge, levelRightEdge)
     {
-        super.load();
+        super.load(levelLeftEdge, levelRightEdge);
         
         this.animationManager.registerAnimations({
             dropLeft: this.animationManager.createAnimation({
@@ -82,7 +82,7 @@ class Falcon extends Monster {
         this.enterXSpeed = 140;
         this.offScreenUnits = 800;
         this.startY = 75;
-        this.startX = this.kernel.level.leftEdge - this.offScreenUnits;
+        this.startX = this._levelLeftEdge - this.offScreenUnits;
         this.startZ = this.kernel.loadedModels[this.playerIndex].z;
         this.dropWaitOffset = this.helpers.time.secondsToFrames(5);
         this.dropWaitRange = this.helpers.time.secondsToFrames(5);
@@ -112,7 +112,7 @@ class Falcon extends Monster {
         
             this.moveRight(this.enterXSpeed);
             
-            if(this.x > (this.kernel.level.rightEdge + this.offScreenUnits))
+            if(this.x > (this._levelRightEdge + this.offScreenUnits))
             {
                 this.exiting = false;
                 this.active = false;
@@ -154,7 +154,7 @@ class Falcon extends Monster {
             monster.swoopWait = (Math.random() * 3000) + 1000; //between 1 and 4 seconds
             // will set the lastSwoop time after swooping has finished
             
-            if(monster.x + (monster.width / 2) > (monster.kernel.level.rightEdge - monster.kernel.level.leftEdge) / 2)
+            if(monster.x + (monster.width / 2) > (monster._levelRightEdge - monster._levelLeftEdge) / 2)
             {
                 monster.directionMultiplier = -1;
                 monster.state = "left";

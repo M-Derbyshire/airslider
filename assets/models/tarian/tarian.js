@@ -15,9 +15,9 @@ class Tarian extends Model {
         this.lastSpeedChange = 0; //used when changing the speed
     }
     
-    load()
+    load(levelLeftEdge, levelRightEdge)
     {
-        super.load();
+        super.load(levelLeftEdge, levelRightEdge);
         
         //I've used exact values for the fps, so it will be consistent when changing game fps
         this.animationManager.registerAnimations({
@@ -168,24 +168,24 @@ class Tarian extends Model {
     extraEvents()
     {
         //check for leaving the game area
-        if(this.x < this.kernel.level.leftEdge)
+        if(this.x < this._levelLeftEdge)
         {
             if(this.state == "left")
             {
                 this.state = "forward";
             }
             
-            this.x = this.kernel.level.leftEdge;
+            this.x = this._levelLeftEdge;
             this.xSpeed = 0;
         }
-        if(this.x + this.width > this.kernel.level.rightEdge)
+        if(this.x + this.width > this._levelRightEdge)
         {
             if(this.state == "right")
             {
                 this.state = "forward";
             }
             
-            this.x = this.kernel.level.rightEdge - this.width;
+            this.x = this._levelRightEdge - this.width;
             this.xSpeed = 0;
         }
     }
