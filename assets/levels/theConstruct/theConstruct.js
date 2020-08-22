@@ -38,6 +38,7 @@ class TheConstruct extends Level
         this.tunnelSpriteLength = 60;
         
         this.ground.set(
+            canvasCtx,
             camera,
             "/assets/levels/theConstruct/images/ground.png",
             this.helpers.unit.yUnit(50)

@@ -5,7 +5,9 @@ class LevelGround
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
         
-        this._camera; //Set in load
+        //Set in set()
+        this._camera;
+        this._canvasCtx;
         
         this.ground = {
             ref: 0, //The image's index in the loadedAssets array
@@ -17,9 +19,10 @@ class LevelGround
         this.groundZ = []; //The z-axis positions of each of the ground images
     }
     
-    set(camera, path, height)
+    set(canvasCtx, camera, path, height)
     {
         this._camera = camera;
+        this._canvasCtx = canvasCtx;
         
         //Can't set in constructor as graphicEn hasn't been initialised
         const canvasPositions = { 
@@ -88,7 +91,7 @@ class LevelGround
             let height = this.helpers.zCalc.height(this.ground.height, this.groundZ[i] - this.ground.offset);
             
             //Need to draw it once on the left, then again on the right
-            this.kernel.graphicEn.gameCtx.drawImage(
+            this._canvasCtx.drawImage(
                 this.kernel.loadedAssets[this.ground.ref].asset,
                 this.helpers.zCalc.x(this._camera.canvasPositionX - (this._camera.canvasPositionX + this._camera.canvasPositionWidth * 2), this.groundZ[i] - this.ground.offset),
                 y,
@@ -96,7 +99,7 @@ class LevelGround
                 height
             );
             
-            this.kernel.graphicEn.gameCtx.drawImage(
+            this._canvasCtx.drawImage(
                 this.kernel.loadedAssets[this.ground.ref].asset,
                 this.helpers.zCalc.x(this._camera.canvasPositionX + this._camera.canvasPositionWidth, this.groundZ[i] - this.ground.offset),
                 y,
