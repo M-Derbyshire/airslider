@@ -91,13 +91,13 @@ class TheConstruct extends Level
             this.tunnelManager.newTunnelPart(-1, this.tunnelSpriteLength)
         ]);
         
-        if(this.kernel.level.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this.helpers.time.getTotalSeconds() <= 1 && !this.kernel.loadedModels[this.monsterIndex].entering)
+        if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this.helpers.time.getTotalSeconds() <= 1 && !this.kernel.loadedModels[this.monsterIndex].entering)
         {
             this.outsideVisible = true;
             this.kernel.loadedModels[this.monsterIndex].start();
         }
         
-        if(this.kernel.level.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 30 && this.helpers.time.getTotalSeconds() <= 31 && !this.kernel.loadedModels[this.monsterIndex].exiting && this.kernel.loadedModels[this.monsterIndex].active)
+        if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 30 && this.helpers.time.getTotalSeconds() <= 31 && !this.kernel.loadedModels[this.monsterIndex].exiting && this.kernel.loadedModels[this.monsterIndex].active)
         {
             this.kernel.loadedModels[this.monsterIndex].stop();
         }
