@@ -30,9 +30,11 @@ class TheConstruct extends Level
         return models;
     }
     
-    load(canvasCtx, camera)
+    load(canvasCtx, camera, frameManager)
     {
         super.load();
+        
+        this._frameManager = frameManager;
         
         this.tunnelSprite = this.kernel.loadImage("/assets/levels/theConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
@@ -47,6 +49,8 @@ class TheConstruct extends Level
         this.tunnelManager.load(camera);
         this.road.load(canvasCtx, camera);
         
+        
+        //Setup the frame for the level
         const unitsWithinCamera = this.kernel.unitsWithinCamera;
         let frame = new Frame(canvasCtx, camera, 0, 0, unitsWithinCamera, unitsWithinCamera);
         
@@ -62,8 +66,7 @@ class TheConstruct extends Level
             0.25
         );
         
-        this.frameIndex = this.kernel.graphicEn.frameManager.addFrame(frame);
-        
+        this.frameIndex = this._frameManager.addFrame(frame);
         
         
         this.outsideVisible = false;

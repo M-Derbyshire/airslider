@@ -8,6 +8,7 @@ class Level
         this.controlInitialiser = new ControlsInitialiser();
         
         this._eventManager = new EventManager(new EventCheckContainer, new ModelExtraEventManager);
+        this._frameManager; //Set in subclass load method
         
         this.road = new LevelRoad();
         this.roadColor = "#999999";
@@ -131,11 +132,11 @@ class Level
             this.tunnelManager.tunnel[this.tunnelManager.tunnel.length - 2].imageIndex !== -1
         )
         {
-            this.kernel.graphicEn.frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
+            this._frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
                 this.tunnelLightMaskIndex
             );
         } else {
-            this.kernel.graphicEn.frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
+            this._frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
                 this.outsideLightMaskIndex
             );
         }
