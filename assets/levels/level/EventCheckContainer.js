@@ -37,7 +37,7 @@ class EventCheckContainer
             modelA[modelAActionMethodName](modelB);
             modelB[modelBActionMethodName](modelA);
         }
-        else if(modelA.y + modelA.height >= this.kernel.helpers.unit.unitsWithinCamera)
+        else if(modelA.y + modelA.height >= this.kernel.unitsWithinCamera)
         {
             modelA[modelAActionMethodName](modelB);
         }
