@@ -251,7 +251,7 @@ class Falcon extends Monster {
         if(this.state == "dropLeft" || this.state == "dropRight")
         {
             // if the monster didn't collide with the ground
-            if(this.y + this.height < this.helpers.unit.unitsWithinCamera)
+            if(this.y + this.height < this.kernel.unitsWithinCamera)
             {
                 this.directionMultiplier = -this.directionMultiplier;
             }

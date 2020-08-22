@@ -53,7 +53,7 @@ class LavaBall extends Model {
             this.moveDown(this.ySpeed);
         }
         
-        if(this.y + this.height >= this.kernel.helpers.unit.unitsWithinCamera && this.state == "drop")
+        if(this.y + this.height >= this.kernel.unitsWithinCamera && this.state == "drop")
         {
             this.setYPositionFromBottom(this.height);
             this.state = "break";
