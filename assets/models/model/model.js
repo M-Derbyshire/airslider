@@ -71,6 +71,11 @@ class Model {
         
     }
     
+    loadAnimationsManager(camera)
+    {
+        this.animationManager.load(camera);
+    }
+    
     draw()
     {
         this.animationManager.drawNextFrame();

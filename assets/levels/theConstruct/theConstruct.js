@@ -30,7 +30,7 @@ class TheConstruct extends Level
         return models;
     }
     
-    load()
+    load(camera)
     {
         super.load();
         
@@ -38,14 +38,16 @@ class TheConstruct extends Level
         this.tunnelSpriteLength = 60;
         
         this.ground.set(
+            camera,
             "/assets/levels/theConstruct/images/ground.png",
             this.helpers.unit.yUnit(50)
         );
         
-        
+        this.tunnelManager.load(camera);
+        this.road.load(camera);
         
         const unitsWithinCamera = this.kernel.unitsWithinCamera;
-        let frame = new Frame(0, 0, unitsWithinCamera, unitsWithinCamera);
+        let frame = new Frame(camera, 0, 0, unitsWithinCamera, unitsWithinCamera);
         
         const frameBackgroundIndex = frame.loadBackground("/assets/levels/theConstruct/images/testBackground.png");
         frame.setBackgroundImage(frameBackgroundIndex);

@@ -5,12 +5,15 @@ class HUDComponent
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
         
-        this.ctx = this.kernel.graphicEn.gameCtx;
+        //Set in load(). 
+        this._ctx; //The canvas context
+        this._camera;
     }
     
-    load()
+    load(canvasCtx, camera)
     {
-        
+        this._ctx = canvasCtx;
+        this._camera = camera;
     }
     
     //meant to be overriden

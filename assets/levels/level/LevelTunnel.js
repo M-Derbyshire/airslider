@@ -4,8 +4,14 @@ class LevelTunnel
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
+        this._camera; //set in load()
         
         this.tunnel = [];
+    }
+    
+    load(camera)
+    {
+        this._camera = camera;
     }
     
     
@@ -63,8 +69,6 @@ class LevelTunnel
     //tunnel[i].z - .length - .color - .active
     draw(levelSpeed)
     {
-        const cameraCanvasPositions = this.kernel.graphicEn.camera.positions.canvas;
-        
         for(let i = 0; i < this.tunnel.length; i++)
         {
             if(this.tunnel[i].active)
@@ -79,10 +83,10 @@ class LevelTunnel
                 {
                     this.kernel.graphicEn.gameCtx.drawImage(
                         this.kernel.loadedAssets[tunnelPart.imageIndex].asset, 
-                        this.helpers.zCalc.x(cameraCanvasPositions.x, tunnelPart.z, true), 
-                        this.helpers.zCalc.y(cameraCanvasPositions.y, tunnelPart.z, true), 
-                        this.helpers.zCalc.width(cameraCanvasPositions.width, tunnelPart.z, true), 
-                        this.helpers.zCalc.height(cameraCanvasPositions.height, tunnelPart.z, true)
+                        this.helpers.zCalc.x(this._camera.canvasPositionX, tunnelPart.z, true), 
+                        this.helpers.zCalc.y(this._camera.canvasPositionY, tunnelPart.z, true), 
+                        this.helpers.zCalc.width(this._camera.canvasPositionWidth, tunnelPart.z, true), 
+                        this.helpers.zCalc.height(this._camera.canvasPositionHeight, tunnelPart.z, true)
                     );
                 }
                 

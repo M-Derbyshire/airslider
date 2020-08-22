@@ -33,23 +33,23 @@ class DamageFlash extends HUDComponent
                 this.flashSpeed = -this.flashSpeed;
             }
             
-            this.ctx.globalAlpha = this.opacity;
+            this._ctx.globalAlpha = this.opacity;
         
-            this.ctx.drawImage(
+            this._ctx.drawImage(
                 this.kernel.loadedAssets[this.images[this.color]].asset,
-                this.kernel.graphicEn.camera.positions.canvas.x,
-                this.kernel.graphicEn.camera.positions.canvas.y,
-                this.kernel.graphicEn.camera.positions.canvas.width,
-                this.kernel.graphicEn.camera.positions.canvas.height
+                this._camera.canvasPositionX,
+                this._camera.canvasPositionY,
+                this._camera.canvasPositionWidth,
+                this._camera.canvasPositionHeight
             );
             
-            this.ctx.globalAlpha = 1;
+            this._ctx.globalAlpha = 1;
         }
     }
     
-    load()
+    load(canvasCtx, camera)
     {
-        super.load();
+        super.load(canvasCtx, camera);
         
         this.images = {
             yellow: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/yellow.png"),

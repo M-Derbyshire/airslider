@@ -9,7 +9,7 @@ class Camera {
         this._canvasCtx = canvasCtx;
         
         
-        this.positions = {
+        this._positions = {
             //The canvas attribute is the positioning of the camera on the canvas
             //(any canvas space outside of this will be filled in by the drawLetterbox() method).
             //These are stored as actual canvas position values (not in game units)
@@ -23,8 +23,8 @@ class Camera {
         //Used by frame/model drawing to determine where to actually draw 
         //on canvas (based on camera position)
         this.unitCameraPositionCalc = {
-            x: (xUnit) => (xUnit - this.positions.drawSpace.x),
-            y: (yUnit) => (yUnit - this.positions.drawSpace.y)
+            x: (xUnit) => (xUnit - this._positions.drawSpace.x),
+            y: (yUnit) => (yUnit - this._positions.drawSpace.y)
         };
         
         this._aspectRatioHorizontal = aspectRatioHorizontal;
@@ -36,6 +36,13 @@ class Camera {
         this._letterBoxColor = "#000000";
     }
     
+    
+    get canvasPositionX() { return this._positions.canvas.x; }
+    get canvasPositionY() { return this._positions.canvas.y; }
+    get canvasPositionWidth() { return this._positions.canvas.width; }
+    get canvasPositionHeight() { return this._positions.canvas.height; }
+    get drawSpacePositionX() { return this._positions.drawSpace.x; }
+    get drawSpacePositionY() { return this._positions.drawSpace.y; }
     
     setCameraSize()
     {
@@ -57,7 +64,7 @@ class Camera {
         const x = (this._canvas.width - width) / 2;
         const y = (this._canvas.height - height) / 2;
         
-        this.positions.canvas = { x, y, width, height };
+        this._positions.canvas = { x, y, width, height };
     }
     
     setColors(emptySpaceColor, letterBoxColor)
@@ -73,16 +80,16 @@ class Camera {
         //The drawspace is the total space within the level, rather
         //than on camera (it is given in units).
         
-        const objectRealX = this.helpers.zCalc.x(this.helpers.unit.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this.positions.canvas.x, zPosition);
-        const objectRealY = this.helpers.zCalc.y(this.helpers.unit.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this.positions.canvas.y, zPosition);
+        const objectRealX = this.helpers.zCalc.x(this.helpers.unit.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this._positions.canvas.x, zPosition);
+        const objectRealY = this.helpers.zCalc.y(this.helpers.unit.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this._positions.canvas.y, zPosition);
         const objectRealWidth = this.helpers.zCalc.width(this.helpers.unit.xUnit(widthUnits), zPosition);
         const objectRealHeight = this.helpers.zCalc.height(this.helpers.unit.yUnit(heightUnits), zPosition);
         
         return (
-            (objectRealX + objectRealWidth >= this.positions.canvas.x &&
-                objectRealX <= this.positions.canvas.x + this.positions.canvas.width) &&
-            (objectRealY + objectRealHeight >= this.positions.canvas.y &&
-                objectRealY <= this.positions.canvas.y + this.positions.canvas.height)
+            (objectRealX + objectRealWidth >= this._positions.canvas.x &&
+                objectRealX <= this._positions.canvas.x + this._positions.canvas.width) &&
+            (objectRealY + objectRealHeight >= this._positions.canvas.y &&
+                objectRealY <= this._positions.canvas.y + this._positions.canvas.height)
         );
     }
     
@@ -109,29 +116,29 @@ class Camera {
     {
         this._canvasCtx.fillStyle = this._letterBoxColor;
         
-        if(this.positions.canvas.y > 0)
+        if(this._positions.canvas.y > 0)
         {
             //Top letterbox bar
-            this._canvasCtx.rect(0, 0, this._canvas.width, this.positions.canvas.y);
+            this._canvasCtx.rect(0, 0, this._canvas.width, this._positions.canvas.y);
             
             //Bottom letterbox bar
             this._canvasCtx.rect(
                 0, 
-                this.positions.canvas.y + this.positions.canvas.height,
+                this._positions.canvas.y + this._positions.canvas.height,
                 this._canvas.width, 
-                this.positions.canvas.y
+                this._positions.canvas.y
             );
         }
         else
         {
             //Left letterbox bar
-            this._canvasCtx.rect(0, 0, this.positions.canvas.x, this._canvas.height);
+            this._canvasCtx.rect(0, 0, this._positions.canvas.x, this._canvas.height);
             
             //Right letterbox bar
             this._canvasCtx.rect( 
-                this.positions.canvas.x + this.positions.canvas.width,
+                this._positions.canvas.x + this._positions.canvas.width,
                 0,
-                this.positions.canvas.x,
+                this._positions.canvas.x,
                 this._canvas.height
             );
         }
@@ -143,21 +150,21 @@ class Camera {
     
     moveLeft(speed)
     {
-        this.positions.drawSpace.x -= this.helpers.unit.xSpeed(speed);
+        this._positions.drawSpace.x -= this.helpers.unit.xSpeed(speed);
     }
     
     moveRight(speed)
     {
-        this.positions.drawSpace.x += this.helpers.unit.xSpeed(speed);
+        this._positions.drawSpace.x += this.helpers.unit.xSpeed(speed);
     }
     
     moveUp(speed)
     {
-        this.positions.drawSpace.y -= this.helpers.unit.ySpeed(speed);
+        this._positions.drawSpace.y -= this.helpers.unit.ySpeed(speed);
     }
     
     moveDown(speed)
     {
-        this.positions.drawSpace.y += this.helpers.unit.ySpeed(speed);
+        this._positions.drawSpace.y += this.helpers.unit.ySpeed(speed);
     }
 }

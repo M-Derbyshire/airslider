@@ -4,7 +4,14 @@ class ModelAnimationsManager {
         this.model = model;
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
+        this._camera; //Set in load()
+        
         this.animations;
+    }
+    
+    load(camera)
+    {
+        this._camera = camera;
     }
     
     registerAnimations(animations)
@@ -41,13 +48,11 @@ class ModelAnimationsManager {
     
     drawNextFrame()
     {
-        const camera = this.kernel.graphicEn.camera;
-        
         //Draw the image, taking into account the z-axis when setting the size/positions
         this.kernel.graphicEn.gameCtx.drawImage(
             this.kernel.loadedAssets[this.getNextFrameIndex()].asset, 
-            this.helpers.zCalc.x(this.helpers.unit.xUnit(camera.unitCameraPositionCalc.x(this.model.x)) + camera.positions.canvas.x, this.model.z), 
-            this.helpers.zCalc.y(this.helpers.unit.yUnit(camera.unitCameraPositionCalc.y(this.model.y)) + camera.positions.canvas.y, this.model.z), 
+            this.helpers.zCalc.x(this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(this.model.x)) + this._camera.canvasPositionX, this.model.z), 
+            this.helpers.zCalc.y(this.helpers.unit.yUnit(this._camera.unitCameraPositionCalc.y(this.model.y)) + this._camera.canvasPositionY, this.model.z), 
             this.helpers.zCalc.width(this.helpers.unit.xUnit(this.model.width), this.model.z), 
             this.helpers.zCalc.height(this.helpers.unit.yUnit(this.model.height), this.model.z)
         );

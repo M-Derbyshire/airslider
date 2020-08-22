@@ -122,6 +122,6 @@ class GraphicEn{
         //It should be noted that this should be ran on loading as well (it is the first setting of the below)
         this.camera.setCameraSize();
         this.helpers.zCalc.resetVanishPointPosition();
-        this.helpers.unit.setDimensions(this.camera.positions.canvas.width, this.camera.positions.canvas.height);
+        this.helpers.unit.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
     }
 }
