@@ -43,7 +43,7 @@ class Level
     }
     
     //set things that can only be done after the engines are constructed
-    load()
+    load(canvas)
     {
         //These are the events that are valid across all levels
         this._eventManager.registerEventsArray([
@@ -96,8 +96,8 @@ class Level
         this.shockerManager.setAreaEdges(this.leftEdge, this.rightEdge);
         
         this.helpers.zCalc.setVanishPoint(
-            () => { return this.kernel.graphicEn.gameCan.width / 2; }, 
-            () => { return this.kernel.graphicEn.gameCan.height / 2; }
+            () => { return canvas.width / 2; }, 
+            () => { return canvas.height / 2; }
         );
         
         this.initialLevelSpeedRaw = 600;

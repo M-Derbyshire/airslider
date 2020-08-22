@@ -30,9 +30,9 @@ class TheConstruct extends Level
         return models;
     }
     
-    load(canvasCtx, camera, frameManager)
+    load(canvas, canvasCtx, camera, frameManager)
     {
-        super.load();
+        super.load(canvas);
         
         this._frameManager = frameManager;
         
