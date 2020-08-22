@@ -30,7 +30,7 @@ class TheConstruct extends Level
         return models;
     }
     
-    load(camera)
+    load(canvasCtx, camera)
     {
         super.load();
         
@@ -47,7 +47,7 @@ class TheConstruct extends Level
         this.road.load(camera);
         
         const unitsWithinCamera = this.kernel.unitsWithinCamera;
-        let frame = new Frame(camera, 0, 0, unitsWithinCamera, unitsWithinCamera);
+        let frame = new Frame(canvasCtx, camera, 0, 0, unitsWithinCamera, unitsWithinCamera);
         
         const frameBackgroundIndex = frame.loadBackground("/assets/levels/theConstruct/images/testBackground.png");
         frame.setBackgroundImage(frameBackgroundIndex);

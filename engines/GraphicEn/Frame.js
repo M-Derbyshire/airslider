@@ -1,12 +1,13 @@
 class Frame {
     
     //x, y, width and height are all unit values
-    constructor(camera, x, y, width, height)
+    constructor(canvasCtx, camera, x, y, width, height)
     {
         this.kernel = Kernel.getInstance();
         this.unitHelpers = this.kernel.helpers.unit;
         
         this._camera = camera;
+        this._canvasCtx = canvasCtx;
         
         this.x = x;
         this.y = y;
@@ -60,15 +61,15 @@ class Frame {
         {
             const lightMaskInfo = this._loadedLightMasks[this._lightMask];
         
-            this.kernel.graphicEn.gameCtx.globalAlpha = lightMaskInfo.luminosity;
-            this.kernel.graphicEn.gameCtx.drawImage(
+            this._canvasCtx.globalAlpha = lightMaskInfo.luminosity;
+            this._canvasCtx.drawImage(
                 this.kernel.loadedAssets[lightMaskInfo.imageIndex].asset,
                 this.unitHelpers.xUnit(xUnitPos) + this._camera.canvasPositionX,
                 this.unitHelpers.yUnit(yUnitPos) + this._camera.canvasPositionY,
                 this.unitHelpers.xUnit(this.width),
                 this.unitHelpers.yUnit(this.height)
             );
-            this.kernel.graphicEn.gameCtx.globalAlpha = 1;
+            this._canvasCtx.globalAlpha = 1;
         }
     }
     
@@ -78,7 +79,7 @@ class Frame {
         {
             const camera = this._camera;
             
-            this.kernel.graphicEn.gameCtx.drawImage(
+            this._canvasCtx.drawImage(
                 this.kernel.loadedAssets[this._loadedBackgrounds[this._background]].asset,
                 this.unitHelpers.xUnit(xUnitPos) + this._camera.canvasPositionX,
                 this.unitHelpers.yUnit(yUnitPos) + this._camera.canvasPositionY,
