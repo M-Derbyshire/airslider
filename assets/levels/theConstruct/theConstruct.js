@@ -44,7 +44,7 @@ class TheConstruct extends Level
         );
         
         this.tunnelManager.load(camera);
-        this.road.load(camera);
+        this.road.load(canvasCtx, camera);
         
         const unitsWithinCamera = this.kernel.unitsWithinCamera;
         let frame = new Frame(canvasCtx, camera, 0, 0, unitsWithinCamera, unitsWithinCamera);
