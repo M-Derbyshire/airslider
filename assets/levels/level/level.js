@@ -19,8 +19,8 @@ class Level
         
         this.tunnelManager = new LevelTunnel();
         
-        this.HUD; //the Heads Up Display for the level
-        this.HUD = new MainHUD();
+        this._HUD; //the Heads Up Display for the level
+        this._HUD = new MainHUD();
         
         //The edges of the playable area
         this.leftEdge;
@@ -109,8 +109,15 @@ class Level
         this.controlInitialiser.keyboardControls(0);
         this.controlInitialiser.touchControls(0);
         
-        this.HUD.modelIndexes.push(0);
+        this._HUD.modelIndexes.push(0);
     }
+    
+    loadHUD(canvasCtx, camera)
+    {
+        this._HUD.load(canvasCtx, camera);
+    }
+    
+    get HUD() { return this._HUD; }
     
     //meant to be overridden
     getModels(){}
