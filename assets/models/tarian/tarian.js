@@ -202,7 +202,7 @@ class Tarian extends Model {
                 this.display = true;
             }
             
-            this.kernel.level.HUD.damageFlash.start(otherModel.color);
+            this.kernel.level.HUD.startDamageFlash(otherModel.color);
         }
     }
     

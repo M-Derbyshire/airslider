@@ -21,4 +21,9 @@ class MainHUD extends HUD
     }
     
     get damageFlash() { return this.components[this._damageFlashIndex]; }
+    
+    startDamageFlash(color)
+    {
+        this.components[this._damageFlashIndex].start(color);
+    }
 }
