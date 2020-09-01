@@ -39,8 +39,7 @@ class Kernel {
         this._rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
         
         this.loadedModels = []; //will hold all models loaded during loading
-        this._assetsStillLoading = 0; //increased when asset starts loading, decrease when done
-        this.loadedAssets = [];
+        this._assetHandler = new AssetHandler(this._rootPath);
         
         this._level;
         this._gameEn;
@@ -66,13 +65,12 @@ class Kernel {
     
     get rootPath(){return this._rootPath;}
     
-    get assetsStillLoading(){return this._assetsStillLoading;}
-    set assetsStillLoading(newVal){this._assetsStillLoading = newVal;}
-    
     get helpers() {return this._helpers;}
     
     get level(){return this._level;}
     set level(newVal){this._level = newVal;}
+    
+    get loadedAssets(){return this._assetHandler.loadedAssets;}
     
     get gameEn(){return this._gameEn;}
     
@@ -116,68 +114,15 @@ class Kernel {
         }
     }
     
-    loadImage(path, callback = this.defaultAssetCallback)
+    loadImage(path, callback = this._assetHandler.getDefaultAssetCallback())
     {
-        return this.loadAsset(new Image, path, callback);
+        return this._assetHandler.loadAsset(new Image, path, callback);
     }
     
-    loadAudio(path, callback = this.defaultAssetCallback)
+    loadAudio(path, callback = this._assetHandler.getDefaultAssetCallback())
     {
-        return this.loadAsset(new Audio, path, callback);
+        return this._assetHandler.loadAsset(new Audio, path, callback);
     }
-    
-    //Loads the asset, or finds it if already loaded, then returns the index number
-    loadAsset(obj, path, callback)
-    {
-        path = this.prepareAssetPath(path);
-        let assetIsHeld = this.checkAssetHeld(path); //Returns either the index number, or false
-        if(assetIsHeld)
-        {
-            return assetIsHeld;
-        }
-        
-        this.assetsStillLoading++;
-        this.loadedAssets.push({
-            path,
-            asset: obj
-        }); 
-        
-        if(obj instanceof Image)
-        {
-            this.loadedAssets[this.loadedAssets.length - 1].asset.onload = callback;
-        }
-        else if(obj instanceof Audio)
-        {
-            this.loadedAssets[this.loadedAssets.length - 1].asset.addEventListener("canplaythrough", callback);
-        }
-        
-        this.loadedAssets[this.loadedAssets.length - 1].asset.src = path;
-        
-        return this.loadedAssets.length - 1;
-    }
-    
-    prepareAssetPath(path)
-    {
-        return this.rootPath + path;
-    }
-    
-    checkAssetHeld(path)
-    {
-        for(let i = 0; i < this.loadedAssets.length; i++)
-        {
-            if(this.loadedAssets[i].path == path)
-            {
-                return i;
-            }
-        }
-        return false;
-    }
-    
-    defaultAssetCallback()
-    {
-        Kernel.getInstance().assetsStillLoading--;
-    }
-    
     
     
     //running the game ---------------------------------------------------------------
@@ -187,7 +132,7 @@ class Kernel {
         
         //don't run unless it's time for next frame
         let dt = new Date();
-        if((dt.getTime() - this._lastTime.getTime()) < (1000 / this._fpsLimit) || this._assetsStillLoading > 0)
+        if((dt.getTime() - this._lastTime.getTime()) < (1000 / this._fpsLimit) || this._assetHandler.assetsStillLoading > 0)
         {
             return;
         }
