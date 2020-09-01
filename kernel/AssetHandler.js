@@ -12,13 +12,12 @@ class AssetHandler
     
     defaultAssetCallback()
     {
-        // Kernel.getInstance()._assetHandler.assetsStillLoading--;
-        this._assetsStillLoading--;
+        Kernel.getInstance().assetHandler.assetsStillLoading--;
     }
     
     getDefaultAssetCallback()
     {
-        return this.defaultAssetCallback();
+        return this.defaultAssetCallback;
     }
     
     
@@ -35,7 +34,7 @@ class AssetHandler
             return assetIsHeld;
         }
         
-        this.assetsStillLoading++;
+        this._assetsStillLoading++;
         this.loadedAssets.push({
             path,
             asset: obj

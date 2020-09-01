@@ -71,6 +71,7 @@ class Kernel {
     set level(newVal){this._level = newVal;}
     
     get loadedAssets(){return this._assetHandler.loadedAssets;}
+    get assetHandler(){return this._assetHandler;}
     
     get gameEn(){return this._gameEn;}
     
