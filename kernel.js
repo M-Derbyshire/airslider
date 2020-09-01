@@ -2,7 +2,7 @@
 // So, other than the first time, you should use Kernel.getInstance()
 class Kernel {
     
-    static instance = null; //The single instance of Kernel
+    static _instance = null; //The single instance of Kernel
     static getInstance()
     {
         //The Kernel constructor will return the single instance
@@ -16,11 +16,11 @@ class Kernel {
     
     constructor()
     {
-        if(Kernel.instance !== null)
+        if(Kernel._instance !== null)
         {
-            return Kernel.instance;
+            return Kernel._instance;
         }
-        Kernel.instance = this;
+        Kernel._instance = this;
         
         
         this._isOnMobile = false; //is this a mobile app (such as through Cordova)?
