@@ -142,6 +142,9 @@ class ZCalc
         {
             return 0;
         } else {
+			
+			//The for loop below needs a positive zPos, so if zPos is negative,
+			//make it positive (we'll flip it back later).
             const origZPos = zPos;
             const origPosition = axisPos
             zPos = (showNegative && origZPos < 0) ? -zPos : zPos;
@@ -151,7 +154,7 @@ class ZCalc
                 axisPos += ((axisVPoint - axisPos) / this._calcDepth);
             }
             
-            //return (showNegative && origZPos < 0) ? -axisPos : axisPos;
+            //If the zPos was made positive, flip the result back to negative.
             return (showNegative && origZPos < 0) ? origPosition + (origPosition - axisPos) : axisPos;
         }
     }
@@ -163,6 +166,9 @@ class ZCalc
         {
             return 0;
         } else {
+			
+			//The for loop below needs a positive zPos, so if zPos is negative,
+			//make it positive (we'll flip it back later).
             const origZPos = zPos;
             const origDimension = dimension;
             zPos = (showNegative && origZPos < 0) ? -zPos : zPos;
@@ -172,6 +178,7 @@ class ZCalc
                 dimension -= (dimension / this._calcDepth);
             }
             
+			//If the zPos was made positive, flip the result back to negative.
             return (showNegative && origZPos < 0) ? origDimension + (origDimension - dimension) : dimension;
         }
     }
