@@ -3,10 +3,7 @@ class GraphicEn{
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
-        
-        //used when making sure models are displayed in the right order based on their z-index
-        this._zSortedIndexes = [...this.kernel.loadedModels.keys()];
-        
+		
         this.gameCan = document.getElementById("gameCan");
         this.gameCtx = this.gameCan.getContext("2d");
         this.camera = new Camera(this.gameCan, this.gameCtx);
@@ -56,18 +53,16 @@ class GraphicEn{
     
     drawModels()
     {
-        //This will make sure the models are displayed in order (based on their Z index)
-        this._zSortedIndexes.sort((a, b) => {
-            return this.kernel.loadedModels[b].z - this.kernel.loadedModels[a].z;
-        });
+		//We need to make sure the models are drawn ordered by z-index.
+		//Array.sort() will affect the original array (which needs to stay in order,
+		//as indexes may be used by other classes to reference models). Therefore, we
+		//create a new array first.
+		const zSortedModels = [...this.kernel.loadedModels];
+		zSortedModels.sort((a, b) => b.z - a.z);
         
-        let modelToDraw;
-        
-        for(let i = 0; i < this.kernel.loadedModels.length; i++)
-        {
-            modelToDraw = this.kernel.loadedModels[this._zSortedIndexes[i]];
-            
-            if(this.camera.isOnCamera(
+		zSortedModels.forEach(modelToDraw => {
+			
+			if(this.camera.isOnCamera(
                         modelToDraw.x, 
                         modelToDraw.y, 
                         modelToDraw.width, 
@@ -76,7 +71,8 @@ class GraphicEn{
             {
                 modelToDraw.draw();
             }
-        }
+			
+		});
     }
     
     
