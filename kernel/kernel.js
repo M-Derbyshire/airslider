@@ -48,6 +48,10 @@ class Kernel {
         this._menuEn;
         
         this._helpers;
+		
+		this._gameCanvasElementID = "gameCan"; //Will eventually be set by a setting
+		this._gameCanvas = document.getElementById(this.gameCanvasElementID);
+		this._gameContext = this.gameCanvas.getContext("2d");
     }
     
     //getters and setters ----------------------------------------------------------------------
@@ -80,6 +84,10 @@ class Kernel {
     get soundEn(){return this._soundEn;}
     
     get menuEn(){return this._menuEn;}
+	
+	get gameCanvasElementID(){return this._gameCanvasElementID;}
+	get gameCanvas(){return this._gameCanvas;}
+	get gameContext(){return this._gameContext;}
     
     
     // loading methods --------------------------------------------------------------------------
@@ -100,18 +108,18 @@ class Kernel {
         this.loadedModels = this.level.getModels();
         
         this._gameEn = new GameEn();
-        this._graphicEn = new GraphicEn();
+        this._graphicEn = new GraphicEn(this.gameCanvas, this.gameContext);
         this._soundEn = new SoundEn();
         this._menuEn = new MenuEn();
         
         //do any extra setup that may need access to the engines
-        this.level.load(this._graphicEn.gameCan, this._graphicEn.gameCtx, this._graphicEn.camera, this._graphicEn.frameManager);
-        this.level.loadHUD(this._graphicEn.gameCtx, this._graphicEn.camera);
+        this.level.load(this.gameCanvas, this.gameContext, this._graphicEn.camera, this._graphicEn.frameManager);
+        this.level.loadHUD(this.gameContext, this._graphicEn.camera);
         for(let i = 0; i < this.loadedModels.length; i++)
         {
             this.loadedModels[i].loadedIndex = i;
             this.loadedModels[i].load(this.level.leftEdge, this.level.rightEdge);
-            this.loadedModels[i].loadAnimationsManager(this._graphicEn.gameCtx, this._graphicEn.camera);
+            this.loadedModels[i].loadAnimationsManager(this.gameContext, this._graphicEn.camera);
         }
     }
     

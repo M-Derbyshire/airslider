@@ -1,11 +1,11 @@
 class GraphicEn{
-    constructor()
+    constructor(gameCanvas, gameContext)
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
 		
-        this.gameCan = document.getElementById("gameCan");
-        this.gameCtx = this.gameCan.getContext("2d");
+        this.gameCan = gameCanvas;
+        this.gameCtx = gameContext;
         this.camera = new Camera(this.gameCan, this.gameCtx);
         this.frameManager = new FrameManager(this.camera);
         
