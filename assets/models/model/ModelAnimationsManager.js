@@ -53,12 +53,17 @@ class ModelAnimationsManager {
     drawNextFrame()
     {
         //Draw the image, taking into account the z-axis when setting the size/positions
+		const preZCalcX = this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(this.model.x)) + this._camera.canvasPositionX;
+		const preZCalcY = this.helpers.unit.yUnit(this._camera.unitCameraPositionCalc.y(this.model.y)) + this._camera.canvasPositionY;
+		const preZCalcWidth = this.helpers.unit.xUnit(this.model.width);
+		const preZCalcHeight = this.helpers.unit.yUnit(this.model.height);
+		
         this._canvasCtx.drawImage(
             this.kernel.loadedAssets[this.getNextFrameIndex()].asset, 
-            this.helpers.zCalc.x(this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(this.model.x)) + this._camera.canvasPositionX, this.model.z), 
-            this.helpers.zCalc.y(this.helpers.unit.yUnit(this._camera.unitCameraPositionCalc.y(this.model.y)) + this._camera.canvasPositionY, this.model.z), 
-            this.helpers.zCalc.width(this.helpers.unit.xUnit(this.model.width), this.model.z), 
-            this.helpers.zCalc.height(this.helpers.unit.yUnit(this.model.height), this.model.z)
+            this.helpers.zCalc.x(preZCalcX, this.model.z), 
+            this.helpers.zCalc.y(preZCalcY, this.model.z), 
+            this.helpers.zCalc.width(preZCalcWidth, this.model.z), 
+            this.helpers.zCalc.height(preZCalcHeight, this.model.z)
         );
     }
     
