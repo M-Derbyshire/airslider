@@ -9,30 +9,31 @@ class ZCalc
         //Vanishing point settings
         this._vPointX;
         this._vPointY;
-        this._vPointDepth; //The depth of the vanishing point
-		this._depthLimit; //The point along the z-axis where we should stop drawing
+        this._vPointDepth; //the max z position
         
         //The vanishing point is defined in literal canvas positions,
         //so these functions will be used to calculate the new values
-        //whenever the canvas is resized.
+        //on a screen resize.
         this._calcVPointX = () => {};
         this._calcVPointY = () => {};
+        
+        //A precalculated value based on the depth set
+        //(This is explained in the "Scaled Positions and Dimensions" section)
+        this._calcDepth;
     }
     
-    //-------------------------- Getters and Setters ----------------------------
+    //-------------------------- getters and setters ----------------------------
     
     get vPointX(){return this._vPointX;}
          
     get vPointY(){return this._vPointY;}
     
     get vPointDepth(){return this._vPointDepth;}
-	
-	get depthLimit(){return this._depthLimit;}
     
-    //Use this to provide functions that will set the exact canvas position (these should 
-	//be called by the graphic engine if the canvas is resized.). Also, provide how many 
-	//units you want in depth (models will move along the z-axis faster if you set the depth 
-	//to a smaller amount, and vice-versa).
+    //Provide functions that will set the exact canvas position (these should be called 
+    //by the graphic engine if the canvas is resized.). Also, provide how many units you 
+    //want in depth (models will move along the z-axis faster if you set the depth to a 
+    //smaller amount, and vice-versa).
     setVanishPoint(canvasXPosCalcFunction, canvasYPosCalcFunction, depth = 1000)
      {
         this._calcVPointX = canvasXPosCalcFunction;
@@ -40,7 +41,10 @@ class ZCalc
         
         this.resetVanishPointPosition();
         this._vPointDepth = depth;
-		this._depthLimit = depth * 0.9;
+        
+        //Precalculating this here. 
+        //It is explained in the "Scaled Positions and Dimensions" section below.
+        this._calcDepth = depth / 8; 
     }
     
     resetVanishPointPosition()
@@ -56,45 +60,53 @@ class ZCalc
     {
         return ((this._vPointDepth / this._unitsWithinCamera) * speed) / fps;
     }
-	
-	
-    /*
-		------------------- Scaled Positions and Dimensions ---------------------
-		
-		This class is designed to provide the ability to create sprite-scaling games,
-		by providing position/dimension values, based on a given z-index position.
-		
-		***********
-		Problem: "The Oatmeal Effect":
-		***********
-		
-		Originally, the solution for doing this was to create a single unit of change
-		for each position/dimension (a "depth unit"), and then multiply that by the z 
-		position:
-		
-		-------------------------------------------------------------------------
-		//For X and Y:
-		const depthUnit = (vanishingPointX - xPosition) / vanishingPointDepth;
-        return xPosition + (zPosition * depthUnit);
-		
-		//And for Width and Height:
-		const depthUnit = width / vanishingPointDepth;
-        return width - (zPosition * depthUnit);
-		-------------------------------------------------------------------------
-		
-		However, the problem with this solution is something called "the oatmeal effect". 
-		This is where the movement of the sprite being drawn appears to increase as it 
-		moves further along the z-axis. To solve this problem, you need to create a new Z 
-		position and then use that. But, rather than this new Z position being the correct 
-		position, it will be increased or decreased based on a curve. This curve is created 
-		by a "quadratic function" (See the comments in this._getCurvedChange for more info 
-		on how this works.).
-		
-		This solves the problem, however it does mean that the sprites will never reach the 
-		vanishing point (just a quirk of it -- in fact, they actually start to move backwards 
-		slightly past a certain depth). Because of these quirks, the this._isOutOfView method 
-		will use this.depthLimit value to determine when the sprites should no longer be drawn.
-	*/
+    
+    //------------------- Scaled Positions and Dimensions ---------------------
+    
+    //   If the z position is greater than the vanishing point, then the sprite doesn't
+    // need to be displayed. The developer may also want it to not be displayed if the z 
+    // position is less than 0. If either is true (and the developer hasn't provided the bool
+    // value to these methods to allow negative values), then the x, y, width and
+    // height methods will all return 0.
+
+    //   If not, then the display positions and dimensions for the sprite will 
+    // need to be calculated, based on the model's position on the z axis.
+
+    // Calculating the dimensions:
+    //   The original solution to this was to divide the dimension by the vanishing
+    // point's depth, in order to get a "depth unit" (the amount of change for one 
+    // z axis move). The method would then return: dimension - (zPos * depthUnit).
+
+    //   However, the problem with this solution was that, with every move on the
+    // z axis, the dimension was getting smaller and smaller. Think of it like this:
+    // 25% of 100 is 25. 100 - 25 = 75 (a 25% change);
+    // 75 - 25 = 50 (a 33.333% change on the 75);
+    // 50 - 25 = 25 (a 50% change on the 50); etc.
+    //   Therefore, as the model increased its z axis, its movement seemed to speed up.
+
+    //   Because of this, a new depth unit will need to be calculated for every 
+    // point of the z axis. Therefore, we use a for loop over the zPos, and minus a
+    // fresh depth unit from the dimension. Finally, we return the new dimension value.
+    
+    // The z position and returned dimension values are changed within the methods first,
+    // if negative z positions are allowed and one is provided.
+
+    //   The depth unit is calculated by taking the new dimension value, and dividing
+    // it by: (vanishingPointDepth / 8).
+    //   The reason for the division on the vanishing point depth (which is pre-calculated
+    // into this._calcDepth) is because, even though the speed of movement will appear
+    // consistent, the continuous reduction of the dimension means that, if you just divided by the
+    // vanishing point depth, the dimension would never reach 0 when at the deepest depth. 
+    //   Dividing by 8 was settled on through trial and error.
+
+    // Calculating the positions (x/y):
+    //   This is essentially the same procedure as with the dimensions, except for 2 differences:
+    // 1 - The position value is increased, not decreased.
+    // 2 - The vanishing point's position is taken into account in the calculations, in order to 
+    // make the sprite move towards/from it.
+    
+    // Again, there is a change to the z position and returned axis position if a negative values
+    // are allowed, and one is provided.
     
     x(xPos, zPos, showNegative = false)
     {
@@ -108,12 +120,17 @@ class ZCalc
     
     width(width, zPos, showNegative = false)
     {
-        return this._dimension(zPos, width, this.vPointX, showNegative);
+        return this._dimension(zPos, width, showNegative);
     }
     
     height(height, zPos, showNegative = false)
     {
-        return this._dimension(zPos, height, this.vPointY, showNegative);
+        return this._dimension(zPos, height, showNegative);
+    }
+    
+    _isOutOfView(zPos) //if the given z position is not viewable
+    {
+        return (zPos > this._vPointDepth || zPos < 0);
     }
     
     //Takes the model's z position, the model's x or y position,
@@ -121,82 +138,48 @@ class ZCalc
     //Returns the scaled value for the position on that axis.
     _position(zPos, axisPos, axisVPoint, showNegative)
     {
-        if(this._isOutOfView(zPos, showNegative))
+        if(!showNegative && this._isOutOfView(zPos))
         {
             return 0;
         } else {
 			
-			const totalMovementSpace = axisVPoint - axisPos;
-			return axisPos + this._getChange(zPos, totalMovementSpace, showNegative);
-			
+			//The for loop below needs a positive zPos, so if zPos is negative,
+			//make it positive (we'll flip it back later).
+            const origZPos = zPos;
+            const origPosition = axisPos
+            zPos = (showNegative && origZPos < 0) ? -zPos : zPos;
+            
+            for(let i = 0; i < zPos; i++)
+            {
+                axisPos += ((axisVPoint - axisPos) / this._calcDepth);
+            }
+            
+            //If the zPos was made positive, flip the result back to negative.
+            return (showNegative && origZPos < 0) ? origPosition + (origPosition - axisPos) : axisPos;
         }
     }
     
     //Same concept as above, except does this with the dimensions instead of the positions
-    _dimension(zPos, dimension, axisVPoint, showNegative)
+    _dimension(zPos, dimension, showNegative)
     {
-        if(this._isOutOfView(zPos, showNegative))
+        if(!showNegative && this._isOutOfView(zPos))
         {
             return 0;
         } else {
 			
-			return dimension - this._getChange(zPos, dimension, showNegative);
-			
+			//The for loop below needs a positive zPos, so if zPos is negative,
+			//make it positive (we'll flip it back later).
+            const origZPos = zPos;
+            const origDimension = dimension;
+            zPos = (showNegative && origZPos < 0) ? -zPos : zPos;
+            
+            for(let i = 0; i < zPos; i++)
+            {
+                dimension -= (dimension / this._calcDepth);
+            }
+            
+			//If the zPos was made positive, flip the result back to negative.
+            return (showNegative && origZPos < 0) ? origDimension + (origDimension - dimension) : dimension;
         }
     }
-	
-	_isOutOfView(zPos, showNegative) //if the given z position is not viewable
-    {
-        return (zPos > this.depthLimit || (!showNegative && zPos < 0));
-    }
-	
-	_getChange(zPos, totalChangeSpace, showNegative)
-	{
-		//The change methods needs a positive zPos (we'll flip the result afterwards)
-		const zPosFlipped = (showNegative && zPos < 0);
-		if(zPosFlipped) zPos -= zPos;
-		
-		const change = this._getCurvedChange(zPos, totalChangeSpace);
-		
-		//If the zPos was flipped to positive, flip the result to negative.
-        return zPosFlipped ? -change : change;
-	}
-	
-	_getCurvedChange(zPos, totalChangeSpace)
-	{
-		/*
-			The curve that this change is based on is created by a "quadratic function". 
-			Please see the below videos for an explanation of how these work: 
-				
-			https://www.youtube.com/watch?v=KRwb4YhQPwA
-			https://www.youtube.com/watch?v=5yecNfFyvF8&t=318s
-			
-			As per the 2nd video, we are coming up with the "vertex form" of the curve 
-			defined by the below Curve-Vertex and Curve-Later-Point (a point somewhere else 
-			on the curve).
-			
-			The below point settings are the ones I find work best for greatly reducing 
-			the oatmeal effect. That being said, they won't actually take you up to the 
-			vanishing point.
-			
-			Also, before getting to the farthest point it can, this actually starts to move 
-			you back a little. This is why the depthLimit is set in this.setVanishPoint.
-		*/
-		
-		const curveVertexMain = this.depthLimit;
-		
-		//Define the curve
-		const curveVertexX = curveVertexMain;
-		const curveVertexY = curveVertexMain;
-		const curveLaterPointX = this.vPointDepth * 2.3;
-		const curveLaterPointY = -this.vPointDepth;
-		
-		//Get the new z-position, using the curve
-		const leadingCoefficient = (curveLaterPointY - curveVertexY) / Math.pow(curveLaterPointX - curveVertexX, 2);
-		const curvedZPos = (leadingCoefficient * Math.pow(zPos - curveVertexX, 2)) + curveVertexY;
-		
-		const zUnit = totalChangeSpace / this.vPointDepth; //create a "z unit" (a single unit of movement on the z axis)
-		return curvedZPos * zUnit;
-		
-	}
 }
