@@ -128,9 +128,9 @@ class ZCalc
         return this._dimension(zPos, height, showNegative);
     }
     
-    _isOutOfView(zPos) //if the given z position is not viewable
+    _isOutOfView(zPos, showNegative) //if the given z position is not viewable
     {
-        return (zPos > this._vPointDepth || zPos < 0);
+        return (zPos > this.vPointDepth || (!showNegative && zPos < 0));
     }
     
     //Takes the model's z position, the model's x or y position,
@@ -138,7 +138,7 @@ class ZCalc
     //Returns the scaled value for the position on that axis.
     _position(zPos, axisPos, axisVPoint, showNegative)
     {
-        if(!showNegative && this._isOutOfView(zPos))
+        if(this._isOutOfView(zPos, showNegative))
         {
             return 0;
         } else {
@@ -162,7 +162,7 @@ class ZCalc
     //Same concept as above, except does this with the dimensions instead of the positions
     _dimension(zPos, dimension, showNegative)
     {
-        if(!showNegative && this._isOutOfView(zPos))
+        if(this._isOutOfView(zPos, showNegative))
         {
             return 0;
         } else {
