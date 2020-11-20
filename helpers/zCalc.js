@@ -17,9 +17,9 @@ class ZCalc
         this._calcVPointX = () => {};
         this._calcVPointY = () => {};
         
-        //A precalculated value based on the depth set
-        //(This is explained in the "Scaled Positions and Dimensions" section)
-        this._calcDepth;
+        //A precalculated value based on the depth
+        //(This is explained in the "Scaled Positions and Dimensions" section.).
+        this._shrunkDepth;
     }
     
     //-------------------------- getters and setters ----------------------------
@@ -30,10 +30,9 @@ class ZCalc
     
     get vPointDepth(){return this._vPointDepth;}
     
-    //Provide functions that will set the exact canvas position (these should be called 
-    //by the graphic engine if the canvas is resized.). Also, provide how many units you 
-    //want in depth (models will move along the z-axis faster if you set the depth to a 
-    //smaller amount, and vice-versa).
+    //Here you can provide the functions that will set the exact canvas position (these 
+	//should be called by the graphic engine if the canvas is resized.). Also, you can 
+	//provide how many units you want in depth.
     setVanishPoint(canvasXPosCalcFunction, canvasYPosCalcFunction, depth = 1000)
      {
         this._calcVPointX = canvasXPosCalcFunction;
@@ -44,7 +43,7 @@ class ZCalc
         
         //Precalculating this here. 
         //It is explained in the "Scaled Positions and Dimensions" section below.
-        this._calcDepth = depth / 8; 
+        this._shrunkDepth = depth / 8; 
     }
     
     resetVanishPointPosition()
@@ -108,78 +107,78 @@ class ZCalc
     // Again, there is a change to the z position and returned axis position if a negative values
     // are allowed, and one is provided.
     
-    x(xPos, zPos, showNegative = false)
+    x(xPosition, zPosition, showNegative = false)
     {
-        return this._position(zPos, xPos, this.vPointX, showNegative);
+        return this._position(zPosition, xPosition, this.vPointX, showNegative);
     }
     
-    y(yPos, zPos, showNegative = false)
+    y(yPosition, zPosition, showNegative = false)
     {
-        return this._position(zPos, yPos, this.vPointY, showNegative);
+        return this._position(zPosition, yPosition, this.vPointY, showNegative);
     }
     
-    width(width, zPos, showNegative = false)
+    width(width, zPosition, showNegative = false)
     {
-        return this._dimension(zPos, width, showNegative);
+        return this._dimension(zPosition, width, showNegative);
     }
     
-    height(height, zPos, showNegative = false)
+    height(height, zPosition, showNegative = false)
     {
-        return this._dimension(zPos, height, showNegative);
+        return this._dimension(zPosition, height, showNegative);
     }
     
-    _isOutOfView(zPos, showNegative) //if the given z position is not viewable
+    _isOutOfView(zPosition, showNegative) //if the given z position is not viewable
     {
-        return (zPos > this.vPointDepth || (!showNegative && zPos < 0));
+        return (zPosition > this.vPointDepth || (!showNegative && zPosition < 0));
     }
-    
+	
     //Takes the model's z position, the model's x or y position,
     //and the vanishing point value for that axis.
     //Returns the scaled value for the position on that axis.
-    _position(zPos, axisPos, axisVPoint, showNegative)
+    _position(zPosition, axisPosition, axisVPoint, showNegative)
     {
-        if(this._isOutOfView(zPos, showNegative))
+        if(this._isOutOfView(zPosition, showNegative))
         {
             return 0;
         } else {
 			
 			//The for loop below needs a positive zPos, so if zPos is negative,
 			//make it positive (we'll flip it back later).
-            const origZPos = zPos;
-            const origPosition = axisPos
-            zPos = (showNegative && origZPos < 0) ? -zPos : zPos;
+            const originalZPosition = zPosition;
+            const originalPosition = axisPosition;
+            zPosition = (originalZPosition < 0) ? -zPosition : zPosition;
             
-            for(let i = 0; i < zPos; i++)
+            for(let i = 0; i < zPosition; i++)
             {
-                axisPos += ((axisVPoint - axisPos) / this._calcDepth);
+                axisPosition += ((axisVPoint - axisPosition) / this._shrunkDepth);
             }
             
             //If the zPos was made positive, flip the result back to negative.
-            return (showNegative && origZPos < 0) ? origPosition + (origPosition - axisPos) : axisPos;
+            return (originalZPosition < 0) ? originalPosition + (originalPosition - axisPosition) : axisPosition;
         }
     }
     
     //Same concept as above, except does this with the dimensions instead of the positions
-    _dimension(zPos, dimension, showNegative)
+    _dimension(zPosition, dimension, showNegative)
     {
-        if(this._isOutOfView(zPos, showNegative))
+        if(this._isOutOfView(zPosition, showNegative))
         {
             return 0;
         } else {
 			
 			//The for loop below needs a positive zPos, so if zPos is negative,
 			//make it positive (we'll flip it back later).
-            const origZPos = zPos;
-            const origDimension = dimension;
-            zPos = (showNegative && origZPos < 0) ? -zPos : zPos;
+            const originalZPosition = zPosition;
+            const originalDimension = dimension;
+            zPosition = (originalZPosition < 0) ? -zPosition : zPosition;
             
-            for(let i = 0; i < zPos; i++)
+            for(let i = 0; i < zPosition; i++)
             {
-                dimension -= (dimension / this._calcDepth);
+                dimension -= (dimension / this._shrunkDepth);
             }
             
 			//If the zPos was made positive, flip the result back to negative.
-            return (showNegative && origZPos < 0) ? origDimension + (origDimension - dimension) : dimension;
+            return (originalZPosition < 0) ? originalDimension + (originalDimension - dimension) : dimension;
         }
     }
 }
