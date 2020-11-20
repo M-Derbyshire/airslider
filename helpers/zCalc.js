@@ -154,7 +154,7 @@ class ZCalc
 	{
 		//The change methods needs a positive zPos (we'll flip the result afterwards)
 		const zPosFlipped = (showNegative && zPos < 0);
-		if(zPosFlipped) zPos = -zPos;
+		if(zPosFlipped) zPos -= zPos;
 		
 		const change = this._getCurvedChange(zPos, totalChangeSpace);
 		
