@@ -25,8 +25,8 @@ class Kernel {
         
         this._isOnMobile = false; //is this a mobile app (such as through Cordova)?
         
-        this._fps = 24;
-        this._fpsLimit = 120;
+        this._fps = 60;
+        this._fpsLimit = 70;
         this._lastTime = new Date(); //used when calculating fps and enforcing fps limit
         
         this.unitsWithinCamera = 1000; //how many drawSpace x/y units are there within the camera's size
