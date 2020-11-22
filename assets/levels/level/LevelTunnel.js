@@ -101,13 +101,10 @@ class LevelTunnel
                     this.tunnel[i - 1].z = tunnelPart.z + tunnelPart.length;
                 }
                 
-                //if this is the last piece, and it's out of the frame, it's no longer needed
-                if(this.tunnel.length > 1 && i === this.tunnel.length - 1)
+                //if this piece is out of the frame, it's no longer needed.
+                if(i === this.tunnel.length - 1 && this.tunnel[i].z + this.tunnel[i].length < 0)
                 {
-                    if(this.tunnel[i - 1].z <= 0) //if the one before this is moving out of frame
-                    {
-                        this.tunnel.pop(); // pop out this piece of the tunnel
-                    }
+                    this.tunnel.pop(); // pop out this piece of the tunnel
                 }
             }
         }
