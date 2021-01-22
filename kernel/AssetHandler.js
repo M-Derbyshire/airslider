@@ -12,7 +12,8 @@ class AssetHandler
     
     defaultAssetCallback()
     {
-        Kernel.getInstance().assetHandler.assetsStillLoading--;
+		//Need to bind this when using this on an asset
+        this.assetsStillLoading--;
     }
     
     getDefaultAssetCallback()
@@ -27,9 +28,11 @@ class AssetHandler
     //and a callback to run when the asset has loaded.
     loadAsset(obj, path, callback)
     {
+		const boundCallback = callback.bind(this);
         path = this.prepareAssetPath(path);
-        let assetIsHeld = this.checkAssetHeld(path); //Returns either the index number, or false
-        if(assetIsHeld)
+        const assetIsHeld = this.checkAssetHeld(path); //Returns either the index number, or false
+        
+		if(assetIsHeld)
         {
             return assetIsHeld;
         }
@@ -42,11 +45,11 @@ class AssetHandler
         
         if(obj instanceof Image)
         {
-            this.loadedAssets[this.loadedAssets.length - 1].asset.onload = callback;
+            this.loadedAssets[this.loadedAssets.length - 1].asset.onload = boundCallback;
         }
         else if(obj instanceof Audio)
         {
-            this.loadedAssets[this.loadedAssets.length - 1].asset.addEventListener("canplaythrough", callback);
+            this.loadedAssets[this.loadedAssets.length - 1].asset.addEventListener("canplaythrough", boundCallback);
         }
         
         this.loadedAssets[this.loadedAssets.length - 1].asset.src = path;
