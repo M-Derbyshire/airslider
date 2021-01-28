@@ -12,14 +12,14 @@ class TheConstruct extends Level
         models.push(new Tarian()); //add main character (has to be 0)
         
         // models.push(new NeonPidgeon(0));
-        models.push(new Falcon(0));
+        // models.push(new Falcon(0));
         // models.push(new BabyDragon(0, 2));
         // models.push(new LavaBall());
         // models.push(new Werewolf(0));
-        this.monsterIndex = 1;
+        // this.monsterIndex = 1;
 
-        this.shockerManager.setShockerModelRange(2, 17);
-        this.shockerManager.setCurrentShockerCount(15);
+        this.shockerManager.setShockerModelRange(1, 40);
+        this.shockerManager.setCurrentShockerCount(40);
         
         let shockerRange = this.shockerManager.shockerModelRange;
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
@@ -69,11 +69,11 @@ class TheConstruct extends Level
         this.frameIndex = this._frameManager.addFrame(frame);
         
         
-        this.outsideVisible = false;
+        this.outsideVisible = true;
         
-        this.tunnelManager.createStartingTunnel([
-            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-        ]);
+        // this.tunnelManager.createStartingTunnel([
+        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+        // ]);
     }
     
     act()
@@ -83,28 +83,20 @@ class TheConstruct extends Level
         //if outside/inside changes, change light mask
         this.checkLightMask();
         
-        if(this.helpers.time.getTotalSeconds() <= 37)
-        {
-            // this.shockerManager.sendShockers();
-        }
+        // if(this.helpers.time.getTotalSeconds() <= 37)
+        // {
+        //     this.shockerManager.sendShockers();
+        // }
         
         //tunnel stuff
-        this.tunnelManager.continueTunnel([
-            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-            this.tunnelManager.newTunnelPart(-1, this.tunnelSpriteLength)
-        ]);
+        // this.tunnelManager.continueTunnel([
+        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+        //     this.tunnelManager.newTunnelPart(-1, this.tunnelSpriteLength)
+        // ]);
         
         if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this._levelSection < 1)
         {
 			this._levelSection = 1;
-            this.outsideVisible = true;
-            this.kernel.loadedModels[this.monsterIndex].start();
-        }
-        
-        if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 30 && this._levelSection < 2)
-        {
-			this._levelSection = 2;
-            this.kernel.loadedModels[this.monsterIndex].stop();
         }
     }
 }
