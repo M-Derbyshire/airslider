@@ -22,6 +22,9 @@ class Level
         this._HUD; //the Heads Up Display for the level
         this._HUD = new MainHUD();
         
+		//The section the level is currently on
+		this._levelSection = 0;
+		
         //The edges of the playable area
         this.leftEdge;
         this.rightEdge;
