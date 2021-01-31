@@ -6,20 +6,16 @@
 */
 class ModelXPositionPatternManager
 {
-	//modelInitialAnimationName is the name of the animation on the 
-	//models to be used to determine the width of the models.
-	constructor(modelInitialAnimationName)
+	constructor()
 	{
 		this._kernel = Kernel.getInstance();
-		
-		this._modelAnimationName = modelInitialAnimationName;
 		
 		//This will be an object with 2 properties: "from" and "to".
 		//This represents the range of index numbers in the loaded models 
 		//	array, for the models that can be used by this to make patterns
 		this._modelIndexRange;
 		
-		//The patterns to be sent.
+		//The patterns to be sent. See addRepeatingPattern method.
 		this._activePatterns = [];
 	}
 	
