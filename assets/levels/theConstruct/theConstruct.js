@@ -26,6 +26,8 @@ class TheConstruct extends Level
         {
             models.push(new Shocker("yellow", "static"));
         }
+		
+		this.patternManager.setModelIndexRange(shockerRange.from, shockerRange.to);
         
         return models;
     }
@@ -74,6 +76,8 @@ class TheConstruct extends Level
         // this.tunnelManager.createStartingTunnel([
         //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
         // ]);
+		
+		this.patternManager
     }
     
     act()
@@ -97,6 +101,28 @@ class TheConstruct extends Level
         if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this._levelSection < 1)
         {
 			this._levelSection = 1;
+			
+			const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
+			
+			this.patternManager.addRepeatingPattern(10, 10000, [
+				{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
+				{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
+				{ fromPosition: levelCenter, toPosition: levelCenter },
+				{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
+				{ fromPosition: levelCenter+100, toPosition: levelCenter+100 }
+			]);
+			// this.patternManager.addRepeatingPattern(10, 10000, [
+			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
+			// 	{ fromPosition: levelCenter-80, toPosition: levelCenter+80 },
+			// 	{ fromPosition: levelCenter-60, toPosition: levelCenter+60 },
+			// 	{ fromPosition: levelCenter-40, toPosition: levelCenter+40 },
+			// 	{ fromPosition: levelCenter-20, toPosition: levelCenter+20 },
+			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
+			// 	{ fromPosition: levelCenter-20, toPosition: levelCenter+20 },
+			// 	{ fromPosition: levelCenter-40, toPosition: levelCenter+40 },
+			// 	{ fromPosition: levelCenter-60, toPosition: levelCenter+60 },
+			// 	{ fromPosition: levelCenter-80, toPosition: levelCenter+80 }
+			// ]);
         }
     }
 }
