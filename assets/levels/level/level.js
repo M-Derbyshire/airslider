@@ -14,6 +14,7 @@ class Level
         this.roadColor = "#999999";
         
         this.shockerManager = new ShockerManager();
+		this.patternManager = new ModelXPositionPatternManager();
         
         this.ground = new LevelGround();
         
