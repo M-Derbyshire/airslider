@@ -18,8 +18,8 @@ class TheConstruct extends Level
         // models.push(new Werewolf(0));
         // this.monsterIndex = 1;
 
-        this.shockerManager.setShockerModelRange(1, 40);
-        this.shockerManager.setCurrentShockerCount(40);
+        this.shockerManager.setShockerModelRange(1, 400);
+        this.shockerManager.setCurrentShockerCount(400);
         
         let shockerRange = this.shockerManager.shockerModelRange;
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
@@ -106,14 +106,20 @@ class TheConstruct extends Level
 			
 			const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
 			
-			this.patternManager.addRepeatingPattern(10, 10000, [
+			this.patternManager.addRepeatingPattern(50, 10000, [
 				{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
 				{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
 				{ fromPosition: levelCenter, toPosition: levelCenter },
 				{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
-				{ fromPosition: levelCenter+100, toPosition: levelCenter+100 }
+				{ fromPosition: levelCenter+100, toPosition: levelCenter+100 },
+				{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
+				{ fromPosition: levelCenter, toPosition: levelCenter },
+				{ fromPosition: levelCenter-50, toPosition: levelCenter-50 }
 			]);
-			// this.patternManager.addRepeatingPattern(10, 10000, [
+			this.patternManager.addRepeatingPattern(50, 10000, [
+				{ fromPosition: 0, toPosition: 0 }
+			]);
+			// this.patternManager.addRepeatingPattern(50, 10000, [
 			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
 			// 	{ fromPosition: levelCenter-80, toPosition: levelCenter+80 },
 			// 	{ fromPosition: levelCenter-60, toPosition: levelCenter+60 },

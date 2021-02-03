@@ -14,7 +14,7 @@ class Level
         this.roadColor = "#999999";
         
         this.shockerManager = new ShockerManager();
-		this.patternManager = new ModelXPositionPatternManager(this.helpers.zCalc.vPointDepth);
+		this.patternManager = new ModelXPositionPatternManager();
         
         this.ground = new LevelGround();
         
@@ -114,6 +114,8 @@ class Level
         this.controlInitialiser.touchControls(0);
         
         this._HUD.modelIndexes.push(0);
+		
+		this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
     }
     
     loadHUD(canvasCtx, camera)
