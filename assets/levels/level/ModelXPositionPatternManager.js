@@ -10,6 +10,8 @@ class ModelXPositionPatternManager
 	{
 		this._kernel = Kernel.getInstance();
 		
+		this._dateTime = new Date();
+		
 		//This will be an object with 2 properties: "from" and "to".
 		//This represents the range of index numbers in the loaded models 
 		//	array, for the models that can be used by this to make patterns
@@ -43,7 +45,11 @@ class ModelXPositionPatternManager
 	//a single model will be placed at that position.
 	addRepeatingPattern(zAxisGap, repeatForMS, pattern)
 	{
-		
+		this._activePatterns.push({
+			zGap: zAxisGap,
+			activeUntil: this._dateTime.getTime() + repeatForMS,
+			positions: pattern
+		});
 	}
 	
 	
