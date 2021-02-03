@@ -86,6 +86,8 @@ class TheConstruct extends Level
         
         //if outside/inside changes, change light mask
         this.checkLightMask();
+		
+		this.patternManager.sendPatterns();
         
         // if(this.helpers.time.getTotalSeconds() <= 37)
         // {

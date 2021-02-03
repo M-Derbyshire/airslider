@@ -45,4 +45,11 @@ class ModelXPositionPatternManager
 	{
 		
 	}
+	
+	
+	//Run all currently active patterns
+	sendPatterns()
+	{
+		
+	}
 }
