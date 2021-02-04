@@ -27,7 +27,9 @@ class TheConstruct extends Level
             models.push(new Shocker("yellow", "static"));
         }
 		
-		this.patternManager.setModelIndexRange(shockerRange.from, shockerRange.to);
+		const modelWidth = 100; //Set explicitly here, as shocker not yet loaded
+		const patternMinXGap = 10;
+		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth, patternMinXGap);
         
         return models;
     }
@@ -76,8 +78,6 @@ class TheConstruct extends Level
         // this.tunnelManager.createStartingTunnel([
         //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
         // ]);
-		
-		this.patternManager
     }
     
     act()

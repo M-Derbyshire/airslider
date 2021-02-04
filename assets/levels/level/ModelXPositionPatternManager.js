@@ -18,16 +18,24 @@ class ModelXPositionPatternManager
 		//	array, for the models that can be used by this to make patterns
 		this._modelIndexRange;
 		
+		this._modelWidth; //The width of the model animation being used
+		this._patternMinXGap; //The minimum gap between models placed along the x-axis
+		
 		//The patterns to be sent. See addRepeatingPattern method.
 		this._activePatterns = [];
 		
-		//Incremented when positioning models (less than 0 means not set)
+		//Incremented when positioning the models (less than 0 means not set)
 		this._nextIndexInModelRange = -1;
 	}
 	
 	
-	//Set the range of models in the models array to be used to create patterns
-	setModelIndexRange(fromIndex, toIndex)
+	//Set the range of models in the models array to be used to create patterns.
+	//Also provide the width of these models (it is on the caller to make sure these 
+	//models all have the same width on the animation they'll be using -- really, 
+	//this class is designed with the intention of using the same model).
+	//The patternMinXGap parameter is The minimum gap between models placed along 
+	//the x-axis.
+	setPatternDefaults(fromIndex, toIndex, modelWidth, patternMinXGap)
 	{
 		this._nextIndexInModelRange = fromIndex;
 		
@@ -35,8 +43,12 @@ class ModelXPositionPatternManager
 			from: fromIndex,
 			to: toIndex
 		};
+		
+		this._modelWidth = modelWidth;
+		this._patternMinXGap = patternMinXGap;
 	}
 	
+	//Set the starting position for models on the z-axis
 	setStartingZPosition(zPos)
 	{
 		this._startingZPos = zPos;
@@ -45,12 +57,12 @@ class ModelXPositionPatternManager
 	
 	//Adds a pattern to the queue, to be repeated for the given milliseconds.
 	//The "pattern" property is an array of objects. 
-	//Each object will have 2 properties: "fromPosition" and "toPosition" 
+	//Each "pattern" object will have 2 properties: "fromPosition" and "toPosition" 
 	//(representing the x-axis positions of the start and end of that line of 
 	//the pattern).
-	//The array, as a whole, represents the multiple lines (being sent down 
-	//the z-axis) that make up the pattern. The zAxisGap property sets the 
-	//distance between each model in the pattern, on the z-axis.
+	//The array, as a whole, represents the multiple patterns (being sent down 
+	//the z-axis). The zAxisGap property sets the distance between each model in 
+	//the pattern, on the z-axis.
 	
 	//NOTE: If the "fromPosition" and "toPosition" values are the same, then 
 	//a single model will be placed at that position.
@@ -61,8 +73,8 @@ class ModelXPositionPatternManager
 			zGap: zAxisGap,
 			activeUntil: dateTime.getTime() + repeatForMS,
 			positions: pattern,
-			nextPosition: 0, //The next index in the positions array
-			lastModelIndexUsed: -1 //The last model sent for this pattern. Less than 0 means not set
+			nextPosition: 0, //The next index in the above positions array that needs to be processed
+			lastModelIndexUsed: -1 //The last model thatw as used in this pattern. Less than 0 means not set
 		});
 	}
 	
@@ -70,10 +82,14 @@ class ModelXPositionPatternManager
 	//Run all currently active patterns.
 	//If _nextIndexInModelRange is less than 0 (meaning not set), this will do nothing.
 	//If not enough models are provided, this will go back to the first (it is up to the 
-	//caller to make sure this has enough models for the pattern).
+	//caller to make sure this has enough models for the patterns).
 	sendPatterns()
 	{
 		if(this._nextIndexInModelRange < 0) return;
+		
+		//When placing models, their center should be in the given position.
+		//This helps us do that (minus it from the position).
+		const modelCenterOffset = this._modelWidth / 2;
 		
 		//Action the active patterns
 		this._activePatterns.forEach(pattern => {
@@ -88,17 +104,19 @@ class ModelXPositionPatternManager
 				currentModel.z = this._startingZPos;
 				currentModel.active = true;
 				
-				const modelCenterOffset = currentModel.width / 2;
-				
 				const currentLineInPattern = pattern.positions[pattern.nextPosition];
 				pattern.nextPosition = 
 					(pattern.nextPosition === pattern.positions.length - 1) ? 0 : pattern.nextPosition + 1;
+				
+				
 				
 				//If we only need to draw one model
 				if(currentLineInPattern.fromPosition === currentLineInPattern.toPosition)
 				{
 					currentModel.x = currentLineInPattern.fromPosition - modelCenterOffset;
 				}
+				
+				
 			}
 			
 		});
