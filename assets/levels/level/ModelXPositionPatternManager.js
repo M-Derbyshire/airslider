@@ -94,28 +94,32 @@ class ModelXPositionPatternManager
 		//Action the active patterns
 		this._activePatterns.forEach(pattern => {
 			
-			//Is it time to send the next model?
+			//Is it time to send the next line of models?
 			const lastIndex = pattern.lastModelIndexUsed;
 			if(lastIndex < 0 || this._kernel.loadedModels[lastIndex].z <= (this._startingZPos - pattern.zGap))
 			{
-				pattern.lastModelIndexUsed = this._getNextModelIndexInRange();
-				
-				const currentModel = this._kernel.loadedModels[pattern.lastModelIndexUsed];
-				currentModel.z = this._startingZPos;
-				currentModel.active = true;
-				
+				//Get the current line of the pattern
 				const currentLineInPattern = pattern.positions[pattern.nextPosition];
 				pattern.nextPosition = 
 					(pattern.nextPosition === pattern.positions.length - 1) ? 0 : pattern.nextPosition + 1;
 				
+				//Get the positions for each model on this line
+				const modelPositionsForLine = this._getPatternLinePositions(
+					currentLineInPattern.fromPosition, 
+					currentLineInPattern.toPosition
+				);
 				
-				
-				//If we only need to draw one model
-				if(currentLineInPattern.fromPosition === currentLineInPattern.toPosition)
-				{
-					currentModel.x = currentLineInPattern.fromPosition - modelCenterOffset;
-				}
-				
+				//Set the positions of the models for this line
+				modelPositionsForLine.forEach(xPos => {
+					
+					pattern.lastModelIndexUsed = this._getNextModelIndexInRange();
+					const currentModel = this._kernel.loadedModels[pattern.lastModelIndexUsed];
+					
+					currentModel.z = this._startingZPos;
+					currentModel.active = true;
+					currentModel.x = xPos - modelCenterOffset;
+					
+				});
 				
 			}
 			
@@ -124,6 +128,41 @@ class ModelXPositionPatternManager
 		
 		//Now we need to remove any patterns that should no longer be active
 		this._removeInactivePatterns();
+	}
+	
+	
+	//When placing models along the x-axis, to make a line at that z position
+	_getPatternLinePositions(fromPosition, toPosition)
+	{
+		//If we only need to place one model, the caller should provide
+		//the same value for from and to
+		if(fromPosition === toPosition) return [fromPosition];
+		
+		
+		//If we need to place multiple models in a line along the x-axis
+		//--------------------------------------------------------------
+		
+		let gapToUse = this._patternMinXGap; //Will be increased to fill remaining space
+		
+		//The width we have to fill with models
+		const widthForPositions = (toPosition - fromPosition);
+		
+		//Calculate the required amount of models, and then increase the gap to fill 
+		//the remaining space.
+		//(We're adding one to the model count, as otherwise the end of the last gap 
+		//isn't included)
+		const modelCount = Math.floor(widthForPositions / (this._modelWidth + gapToUse)) + 1;
+		gapToUse += (widthForPositions % (this._modelWidth + gapToUse)) / modelCount;
+		
+		//Now put together the array of positions
+		let positions = [fromPosition];
+		let lastPosition = fromPosition;
+		for(let i = 1; i < modelCount; i++){
+			positions.push(lastPosition + this._modelWidth + gapToUse);
+			lastPosition = positions[i];
+		}
+		
+		return positions;
 	}
 	
 	

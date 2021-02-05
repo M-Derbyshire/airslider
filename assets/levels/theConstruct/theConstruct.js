@@ -106,30 +106,29 @@ class TheConstruct extends Level
 			
 			const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
 			
-			this.patternManager.addRepeatingPattern(50, 10000, [
-				{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
-				{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
-				{ fromPosition: levelCenter, toPosition: levelCenter },
-				{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
-				{ fromPosition: levelCenter+100, toPosition: levelCenter+100 },
-				{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
-				{ fromPosition: levelCenter, toPosition: levelCenter },
-				{ fromPosition: levelCenter-50, toPosition: levelCenter-50 }
-			]);
-			this.patternManager.addRepeatingPattern(50, 10000, [
-				{ fromPosition: 0, toPosition: 0 }
-			]);
 			// this.patternManager.addRepeatingPattern(50, 10000, [
-			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
-			// 	{ fromPosition: levelCenter-80, toPosition: levelCenter+80 },
-			// 	{ fromPosition: levelCenter-60, toPosition: levelCenter+60 },
-			// 	{ fromPosition: levelCenter-40, toPosition: levelCenter+40 },
-			// 	{ fromPosition: levelCenter-20, toPosition: levelCenter+20 },
+			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
+			// 	{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
 			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
-			// 	{ fromPosition: levelCenter-20, toPosition: levelCenter+20 },
-			// 	{ fromPosition: levelCenter-40, toPosition: levelCenter+40 },
-			// 	{ fromPosition: levelCenter-60, toPosition: levelCenter+60 },
-			// 	{ fromPosition: levelCenter-80, toPosition: levelCenter+80 }
+			// 	{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
+			// 	{ fromPosition: levelCenter+100, toPosition: levelCenter+100 },
+			// 	{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
+			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
+			// 	{ fromPosition: levelCenter-50, toPosition: levelCenter-50 }
+			// ]);
+			// this.patternManager.addRepeatingPattern(50, 10000, [
+			// 	{ fromPosition: levelCenter+200, toPosition: levelCenter+200 }
+			// ]);
+			// this.patternManager.addRepeatingPattern(50, 10000, [
+			// 	{ fromPosition: levelCenter-300, toPosition: levelCenter+300 },
+			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 },
+			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
+			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
+			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
+			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
+			// ]);
+			// this.patternManager.addRepeatingPattern(50, 10000, [
+			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
 			// ]);
         }
     }
