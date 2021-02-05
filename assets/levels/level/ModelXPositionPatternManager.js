@@ -19,7 +19,6 @@ class ModelXPositionPatternManager
 		this._modelIndexRange;
 		
 		this._modelWidth; //The width of the model animation being used
-		this._patternMinXGap; //The minimum gap between models placed along the x-axis
 		
 		//The patterns to be sent. See addRepeatingPattern method.
 		this._activePatterns = [];
@@ -33,9 +32,7 @@ class ModelXPositionPatternManager
 	//Also provide the width of these models (it is on the caller to make sure these 
 	//models all have the same width on the animation they'll be using -- really, 
 	//this class is designed with the intention of using the same model).
-	//The patternMinXGap parameter is The minimum gap between models placed along 
-	//the x-axis.
-	setPatternDefaults(fromIndex, toIndex, modelWidth, patternMinXGap)
+	setPatternDefaults(fromIndex, toIndex, modelWidth)
 	{
 		this._nextIndexInModelRange = fromIndex;
 		
@@ -45,7 +42,6 @@ class ModelXPositionPatternManager
 		};
 		
 		this._modelWidth = modelWidth;
-		this._patternMinXGap = patternMinXGap;
 	}
 	
 	//Set the starting position for models on the z-axis
@@ -60,17 +56,20 @@ class ModelXPositionPatternManager
 	//Each "pattern" object will have 2 properties: "fromPosition" and "toPosition" 
 	//(representing the x-axis positions of the start and end of that line of 
 	//the pattern).
-	//The array, as a whole, represents the multiple patterns (being sent down 
+	//The activePatterns array, as a whole, represents the multiple patterns (being sent down 
 	//the z-axis). The zAxisGap property sets the distance between each model in 
 	//the pattern, on the z-axis.
+	//The patternMinXGap parameter is the minimum gap between models placed along 
+	//the x-axis.
 	
 	//NOTE: If the "fromPosition" and "toPosition" values are the same, then 
 	//a single model will be placed at that position.
-	addRepeatingPattern(zAxisGap, repeatForMS, pattern)
+	addRepeatingPattern(zAxisGap, patternMinXGap, repeatForMS, pattern)
 	{
 		const dateTime = new Date();
 		this._activePatterns.push({
-			zGap: zAxisGap,
+			zGap: zAxisGap, //The gap between models on the z-axis
+			patternMinXGap: patternMinXGap, //this minimum gap between models on the x-axis
 			activeUntil: dateTime.getTime() + repeatForMS,
 			positions: pattern,
 			nextPosition: 0, //The next index in the above positions array that needs to be processed
@@ -106,7 +105,8 @@ class ModelXPositionPatternManager
 				//Get the positions for each model on this line
 				const modelPositionsForLine = this._getPatternLinePositions(
 					currentLineInPattern.fromPosition, 
-					currentLineInPattern.toPosition
+					currentLineInPattern.toPosition,
+					pattern.patternMinXGap
 				);
 				
 				//Set the positions of the models for this line
@@ -132,7 +132,7 @@ class ModelXPositionPatternManager
 	
 	
 	//When placing models along the x-axis, to make a line at that z position
-	_getPatternLinePositions(fromPosition, toPosition)
+	_getPatternLinePositions(fromPosition, toPosition, patternMinXGap)
 	{
 		//If we only need to place one model, the caller should provide
 		//the same value for from and to
@@ -142,8 +142,6 @@ class ModelXPositionPatternManager
 		//If we need to place multiple models in a line along the x-axis
 		//--------------------------------------------------------------
 		
-		let gapToUse = this._patternMinXGap; //Will be increased to fill remaining space
-		
 		//The width we have to fill with models
 		const widthForPositions = (toPosition - fromPosition);
 		
@@ -151,8 +149,8 @@ class ModelXPositionPatternManager
 		//the remaining space.
 		//(We're adding one to the model count, as otherwise the end of the last gap 
 		//isn't included)
-		const modelCount = Math.floor(widthForPositions / (this._modelWidth + gapToUse)) + 1;
-		gapToUse += (widthForPositions % (this._modelWidth + gapToUse)) / modelCount;
+		const modelCount = Math.floor(widthForPositions / (this._modelWidth + patternMinXGap)) + 1;
+		const gapToUse = patternMinXGap + ((widthForPositions % (this._modelWidth + patternMinXGap)) / modelCount);
 		
 		//Now put together the array of positions
 		let positions = [fromPosition];

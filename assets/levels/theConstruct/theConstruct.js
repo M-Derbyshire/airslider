@@ -28,8 +28,7 @@ class TheConstruct extends Level
         }
 		
 		const modelWidth = 100; //Set explicitly here, as shocker not yet loaded
-		const patternMinXGap = 10;
-		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth, patternMinXGap);
+		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
         
         return models;
     }
@@ -106,7 +105,7 @@ class TheConstruct extends Level
 			
 			const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
 			
-			// this.patternManager.addRepeatingPattern(50, 10000, [
+			// this.patternManager.addRepeatingPattern(50, 10, 10000, [
 			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
 			// 	{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
 			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
@@ -116,10 +115,10 @@ class TheConstruct extends Level
 			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
 			// 	{ fromPosition: levelCenter-50, toPosition: levelCenter-50 }
 			// ]);
-			// this.patternManager.addRepeatingPattern(50, 10000, [
+			// this.patternManager.addRepeatingPattern(50, 10, 10000, [
 			// 	{ fromPosition: levelCenter+200, toPosition: levelCenter+200 }
 			// ]);
-			// this.patternManager.addRepeatingPattern(50, 10000, [
+			// this.patternManager.addRepeatingPattern(50, 10, 10000, [
 			// 	{ fromPosition: levelCenter-300, toPosition: levelCenter+300 },
 			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 },
 			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
@@ -127,9 +126,9 @@ class TheConstruct extends Level
 			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
 			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
 			// ]);
-			// this.patternManager.addRepeatingPattern(50, 10000, [
-			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
-			// ]);
+			this.patternManager.addRepeatingPattern(50, 10, 10000, [
+				{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
+			]);
         }
     }
 }
