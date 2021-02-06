@@ -55,7 +55,8 @@ class ModelXPositionPatternManager
 	//The "pattern" property is an array of objects. 
 	//Each "pattern" object will have 2 properties: "fromPosition" and "toPosition" 
 	//(representing the x-axis positions of the start and end of that line of 
-	//the pattern).
+	//the pattern -- please note, the first and last models are placed with their center
+	//at these points, so there will be that overlap).
 	//The activePatterns array, as a whole, represents the multiple patterns (being sent down 
 	//the z-axis). The zAxisGap property sets the distance between each model in 
 	//the pattern, on the z-axis.
