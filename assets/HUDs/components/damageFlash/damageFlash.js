@@ -51,11 +51,10 @@ class DamageFlash extends HUDComponent
     {
         super.load(canvasCtx, camera);
         
+		//The purple option is purposefully the same as the yellow image, as they're both lightning.
         this.images = {
             yellow: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/yellow.png"),
-            orange: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/orange.png"),
-            red: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/red.png"),
-            purple: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/purple.png"),
+            purple: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/yellow.png"),
             none: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/none.png"),
             fire: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/fire.png"),
             tooth: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/tooth.png")
