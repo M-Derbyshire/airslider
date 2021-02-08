@@ -58,6 +58,13 @@ class Level
                 class2: Shocker,
                 class2EventActionName: "zCollisionEventAction"
             },
+			{ 
+                eventCheckMethodName: "zCollisionEventCheck",
+                class1: Tarian,
+                class1EventActionName: "zCollisionElectricMineEventAction",
+                class2: ElectricMine,
+                class2EventActionName: "zCollisionEventAction"
+            },
             { 
                 eventCheckMethodName: "hitPlayerOrGroundEventCheck",
                 class1: NeonPidgeon,

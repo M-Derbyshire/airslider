@@ -18,17 +18,18 @@ class TheConstruct extends Level
         // models.push(new Werewolf(0));
         // this.monsterIndex = 1;
 
-        this.shockerManager.setShockerModelRange(1, 400);
-        this.shockerManager.setCurrentShockerCount(400);
-        
-        let shockerRange = this.shockerManager.shockerModelRange;
-        for(let i = shockerRange.from; i <= shockerRange.to; i++)
-        {
-            models.push(new Shocker("yellow", "static"));
-        }
+        // this.shockerManager.setShockerModelRange(1, 400);
+        // this.shockerManager.setCurrentShockerCount(400);
+        // let shockerRange = this.shockerManager.shockerModelRange;
+        // for(let i = shockerRange.from; i <= shockerRange.to; i++)
+        // {
+        //     models.push(new Shocker("yellow", "static"));
+        // }
 		
-		const modelWidth = 100; //Set explicitly here, as shocker not yet loaded
-		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
+		models.push(new ElectricMine());
+		
+		// const modelWidth = 100; //Set explicitly here, as models not yet loaded
+		// this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
         
         return models;
     }
@@ -125,10 +126,10 @@ class TheConstruct extends Level
 			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
 			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
 			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
+			// // ]);
+			// this.patternManager.addRepeatingPattern(50, 10, 10000, [
+			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
 			// ]);
-			this.patternManager.addRepeatingPattern(50, 10, 10000, [
-				{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
-			]);
         }
     }
 }
