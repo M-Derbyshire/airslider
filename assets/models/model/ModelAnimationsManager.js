@@ -52,6 +52,11 @@ class ModelAnimationsManager {
     
     drawNextFrame()
     {
+		//Need to call this here, as if this is an animation that changes state at the end,
+		//the below settings (preZCalc* variables) may have the wrong width/height for the 
+		//new animation.
+		const frameIndex = this.getNextFrameIndex();
+		
         //Draw the image, taking into account the z-axis when setting the size/positions
 		const preZCalcX = this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(this.model.x)) + this._camera.canvasPositionX;
 		const preZCalcY = this.helpers.unit.yUnit(this._camera.unitCameraPositionCalc.y(this.model.y)) + this._camera.canvasPositionY;
@@ -59,7 +64,7 @@ class ModelAnimationsManager {
 		const preZCalcHeight = this.helpers.unit.yUnit(this.model.height);
 		
         this._canvasCtx.drawImage(
-            this.kernel.loadedAssets[this.getNextFrameIndex()].asset, 
+            this.kernel.loadedAssets[frameIndex].asset, 
             this.helpers.zCalc.x(preZCalcX, this.model.z), 
             this.helpers.zCalc.y(preZCalcY, this.model.z), 
             this.helpers.zCalc.width(preZCalcWidth, this.model.z), 
