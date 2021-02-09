@@ -20,31 +20,31 @@ class ElectricMine extends Model
     {
         super.load(levelLeftEdge, levelRightEdge);
         
-        let width = 100;
+        const width = 100;
+		const fps = 12
         
         this.animationManager.registerAnimations({
             undetonated: this.animationManager.createAnimation({
                 path: "/assets/models/ElectricMine/anim/undetonated",
-                frameCount: 1,
-                fps: 16,
+                frameCount: 3,
+                fps: fps,
                 width: width,
-                height: 70
+                height: 155
             }),
 			detonated: this.animationManager.createAnimation({
                 path: "/assets/models/ElectricMine/anim/detonated",
                 frameCount: 1,
-                fps: 16,
+                fps: fps,
                 width: width,
                 height: 70,
 				yOffset: 85
             }),
-			exploding: this.animationManager.createAnimation({
-                path: "/assets/models/ElectricMine/anim/exploding",
+			retracting: this.animationManager.createAnimation({
+                path: "/assets/models/ElectricMine/anim/retracting",
                 frameCount: 3,
-                fps: 16,
+                fps: fps,
                 width: width,
                 height: 155,
-				yOffset: -85,
 				nextAnim: "detonated"
             })
         });
@@ -67,12 +67,13 @@ class ElectricMine extends Model
         
         if(this.z < 0)
         {
+			this.state = "undetonated";
             this.active = false;
         }
     }
     
     zCollisionEventAction(otherModel)
     {
-		if(this.state === "undetonated") this.state = "exploding";
+		if(this.state === "undetonated") this.state = "retracting";
     }
 }

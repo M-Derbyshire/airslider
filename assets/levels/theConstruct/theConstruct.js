@@ -18,18 +18,16 @@ class TheConstruct extends Level
         // models.push(new Werewolf(0));
         // this.monsterIndex = 1;
 
-        // this.shockerManager.setShockerModelRange(1, 400);
-        // this.shockerManager.setCurrentShockerCount(400);
-        // let shockerRange = this.shockerManager.shockerModelRange;
-        // for(let i = shockerRange.from; i <= shockerRange.to; i++)
-        // {
-        //     models.push(new Shocker("yellow", "static"));
-        // }
+        this.shockerManager.setShockerModelRange(1, 400);
+        this.shockerManager.setCurrentShockerCount(400);
+        let shockerRange = this.shockerManager.shockerModelRange;
+        for(let i = shockerRange.from; i <= shockerRange.to; i++)
+        {
+            models.push(new ElectricMine());
+        }
 		
-		models.push(new ElectricMine());
-		
-		// const modelWidth = 100; //Set explicitly here, as models not yet loaded
-		// this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
+		const modelWidth = 100; //Set explicitly here, as models not yet loaded
+		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
         
         return models;
     }
@@ -106,28 +104,28 @@ class TheConstruct extends Level
 			
 			const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
 			
-			// this.patternManager.addRepeatingPattern(50, 10, 10000, [
-			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
-			// 	{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
-			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
-			// 	{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
-			// 	{ fromPosition: levelCenter+100, toPosition: levelCenter+100 },
-			// 	{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
-			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
-			// 	{ fromPosition: levelCenter-50, toPosition: levelCenter-50 }
-			// ]);
+			this.patternManager.addRepeatingPattern(20, 10, 10000, [
+				{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
+				{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
+				{ fromPosition: levelCenter, toPosition: levelCenter },
+				{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
+				{ fromPosition: levelCenter+100, toPosition: levelCenter+100 },
+				{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
+				{ fromPosition: levelCenter, toPosition: levelCenter },
+				{ fromPosition: levelCenter-50, toPosition: levelCenter-50 }
+			]);
 			// this.patternManager.addRepeatingPattern(50, 10, 10000, [
 			// 	{ fromPosition: levelCenter+200, toPosition: levelCenter+200 }
 			// ]);
-			// this.patternManager.addRepeatingPattern(50, 10, 10000, [
+			// this.patternManager.addRepeatingPattern(15, 10, 10000, [
 			// 	{ fromPosition: levelCenter-300, toPosition: levelCenter+300 },
 			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 },
 			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
 			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
 			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
 			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
-			// // ]);
-			// this.patternManager.addRepeatingPattern(50, 10, 10000, [
+			// ]);
+			// this.patternManager.addRepeatingPattern(15, 10, 10000, [
 			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
 			// ]);
         }
