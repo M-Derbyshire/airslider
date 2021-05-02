@@ -1,3 +1,5 @@
+import Kernel from '../../../kernel/Kernel';
+
 /*
 	Used to position a set of models on the x-axis, in a way that will make 
 	a pattern when these objects move down the z-axis. The models to use are 

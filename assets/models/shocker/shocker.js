@@ -1,3 +1,5 @@
+import Model from '../Model/Model';
+
 class Shocker extends Model
 {
     constructor(color, mode, speedX = 0, playerIndex = 0)

@@ -1,3 +1,5 @@
+import Model from '../..//..Model/Model';
+
 class LavaBall extends Model {
     constructor()
     {

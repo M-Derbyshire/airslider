@@ -1,3 +1,5 @@
+import Kernel from '../kernel/Kernel';
+
 class Frame {
     
     //x, y, width and height are all unit values

@@ -1,3 +1,6 @@
+import Kernel from '../../../kernel/Kernel';
+import ModelAnimationsManager from './ModelAnimationsManager';
+
 class Model {
     
     //constructor is run before the engines are initialised (load() is run afterwards)

@@ -1,3 +1,6 @@
+import Kernel from '../../../../kernel/Kernel';
+import HUDComponent from '../HUDComponent/HUDComponent';
+
 class DamageFlash extends HUDComponent
 {
     constructor()

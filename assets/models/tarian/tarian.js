@@ -1,3 +1,5 @@
+import Model from '../Model/Model';
+
 class Tarian extends Model {
     constructor()
     {

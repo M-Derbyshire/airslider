@@ -1,3 +1,14 @@
+import Kernel from '../../../kernel/Kernel';
+import Tarian from '../../models/Tarian/Tarian';
+import NeonPidgeon from '../../Monsters/NeonPidgeon/NeonPidgeon';
+import Falcon from '../../Monsters/Falcon/Falcon';
+import BabyDragon from '../../Monsters/BabyDragon/BabyDragon';
+import LavaBall from '../../Monsters/attacks/LavaBall/LavaBall';
+import Werewolf from '../../Monsters/Werewolf/Werewolf';
+import ElectricMine from '../../ElectricMine/ElectricMine';
+import Shocker from '../../Shocker/Shocker';
+import Frame from '../../../engines/GraphicEn/Frame';
+
 class TheConstruct extends Level
 {
     constructor()

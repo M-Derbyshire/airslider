@@ -1,3 +1,12 @@
+import AssetHandler from './AssetHandler';
+import GameEn from '../GameEn/GameEn';
+import GraphicEn from '../GraphicEn/GraphicEn';
+import MenuEn from '../MenuEn/MenuEn';
+import SoundEn from '../SoundEn/SoundEn';
+import TimeHelper from '../helpers/TimeHelper';
+import UnitHelper from '../helpers/UnitHelper';
+import ZCalc from '../helpers/zCalc';
+
 // This class provides a Singleton instance
 // So, other than the first time, you should use Kernel.getInstance()
 class Kernel {

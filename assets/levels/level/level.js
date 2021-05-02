@@ -1,3 +1,15 @@
+import Kernel from '../../../kernel/Kernel';
+import ControlsInitialiser from '../../../settings/ControlsInitialiser';
+import EventManager from './EventManager';
+import EventCheckContainer from './EventCheckContainer';
+import ModelExtraEventManager from './ModelExtraEventManager';
+import LevelRoad from './LevelRoad';
+import ShockerManager from './ShockerManager';
+import ModelXPositionPatternManager from './ModelXPositionPatternManager';
+import LevelGround from './LevelGround';
+import LevelTunnel from './LevelTunnel';
+import MainHUD from '../../HUDs/MainHUD/MainHUD';
+
 class Level
 {
     constructor()

@@ -1,3 +1,7 @@
+import Kernel from '../kernel/Kernel';
+import Camera from './Camera';
+import FrameManager from './FrameManager';
+
 class GraphicEn{
     constructor(gameCanvas, gameContext)
     {

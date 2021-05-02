@@ -1,3 +1,5 @@
+import Model from '../../Model/Model';
+
 class NeonPidgeon extends Monster {
     constructor(playerIndex, otherMonster = false)
     {

@@ -1,3 +1,5 @@
+import Kernel from '../kernel/Kernel';
+
 class Camera {
     
     constructor(canvas, canvasCtx, aspectRatioHorizontal = 17, aspectRatioVertical = 9)

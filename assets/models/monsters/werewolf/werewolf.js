@@ -1,3 +1,5 @@
+import Model from '../../Model/Model';
+
 class Werewolf extends Monster {
     constructor(playerIndex)
     {

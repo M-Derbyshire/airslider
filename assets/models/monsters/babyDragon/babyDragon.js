@@ -1,3 +1,5 @@
+import Model from '../../Model/Model';
+
 class BabyDragon extends Monster {
     constructor(playerIndex, lavaBallIndex)
     {

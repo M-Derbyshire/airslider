@@ -1,3 +1,5 @@
+import Kernel from '../../../kernel/Kernel';
+
 class LevelGround
 {
     constructor()

@@ -1,3 +1,8 @@
+import Kernel from '../../../kernel/Kernel';
+import HUD from '../HUD/HUD';
+import HealthBar from '../HealthBar';
+import DamageFlash from '../DamageFlash';
+
 class MainHUD extends HUD
 {
     constructor()
