@@ -1,0 +1,26 @@
+{
+  "name": "airshock",
+  "version": "1.0.0",
+  "description": "A game by Matthew Stuart Derbyshire",
+  "main": "index.html",
+  "dependencies": {
+    "webpack": "^5.36.2"
+  },
+  "devDependencies": {
+    "webpack-cli": "^4.6.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-debug": "./node_modules/.bin/webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/M-Derbyshire/AirShock.git"
+  },
+  "author": "Matthew Stuart Derbyshire",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/M-Derbyshire/AirShock/issues"
+  },
+  "homepage": "https://github.com/M-Derbyshire/AirShock#readme"
+}
