@@ -25,21 +25,22 @@ export default class TheConstruct extends Level
         
         // models.push(new NeonPidgeon(0));
         // models.push(new Falcon(0));
-        // models.push(new BabyDragon(0, 2));
-        // models.push(new LavaBall());
+        models.push(new BabyDragon(0, 2));
+        models.push(new LavaBall());
         // models.push(new Werewolf(0));
-        // this.monsterIndex = 1;
+        this.monsterIndex = 1;
 
-        this.shockerManager.setShockerModelRange(1, 400);
-        this.shockerManager.setCurrentShockerCount(400);
+        this.shockerManager.setShockerModelRange(3, 13);
+        this.shockerManager.setCurrentShockerCount(10);
         let shockerRange = this.shockerManager.shockerModelRange;
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
         {
-            models.push(new ElectricMine());
+            // models.push(new ElectricMine());
+			models.push(new Shocker("yellow", "static"));
         }
 		
-		const modelWidth = 100; //Set explicitly here, as models not yet loaded
-		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
+		//const modelWidth = 100; //Set explicitly here, as models not yet loaded
+		//this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
         
         return models;
     }
@@ -85,9 +86,9 @@ export default class TheConstruct extends Level
         
         this.outsideVisible = true;
         
-        // this.tunnelManager.createStartingTunnel([
-        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-        // ]);
+        this.tunnelManager.createStartingTunnel([
+            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+        ]);
     }
     
     act()
@@ -97,35 +98,45 @@ export default class TheConstruct extends Level
         //if outside/inside changes, change light mask
         this.checkLightMask();
 		
-		this.patternManager.sendPatterns();
+		// this.patternManager.sendPatterns();
         
-        // if(this.helpers.time.getTotalSeconds() <= 37)
-        // {
-        //     this.shockerManager.sendShockers();
-        // }
-        
-        //tunnel stuff
-        // this.tunnelManager.continueTunnel([
-        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-        //     this.tunnelManager.newTunnelPart(-1, this.tunnelSpriteLength)
-        // ]);
-        
-        if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this._levelSection < 1)
+        if(this.helpers.time.getTotalSeconds() <= 37)
         {
-			this._levelSection = 1;
+            this.shockerManager.sendShockers();
+        }
+        
+        
+        this.tunnelManager.continueTunnel([
+            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+            this.tunnelManager.newTunnelPart(-1, this.tunnelSpriteLength)
+        ]);
+        
+		
+		//Start the monster going straight away
+		const monster = this.kernel.loadedModels[this.monsterIndex];
+		if(this.helpers.time.getTotalSeconds() >= 0 && this.helpers.time.getTotalSeconds() <= 1)
+		{
+			monster.start();
+		}
+		
+		
+		//Set a pattern of electric mines going
+        // if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this._levelSection < 1)
+        // {
+		// 	this._levelSection = 1;
 			
-			const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
+		// 	const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
 			
-			this.patternManager.addRepeatingPattern(20, 10, 10000, [
-				{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
-				{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
-				{ fromPosition: levelCenter, toPosition: levelCenter },
-				{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
-				{ fromPosition: levelCenter+100, toPosition: levelCenter+100 },
-				{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
-				{ fromPosition: levelCenter, toPosition: levelCenter },
-				{ fromPosition: levelCenter-50, toPosition: levelCenter-50 }
-			]);
+		// 	this.patternManager.addRepeatingPattern(20, 10, 10000, [
+		// 		{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
+		// 		{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
+		// 		{ fromPosition: levelCenter, toPosition: levelCenter },
+		// 		{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
+		// 		{ fromPosition: levelCenter+100, toPosition: levelCenter+100 },
+		// 		{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
+		// 		{ fromPosition: levelCenter, toPosition: levelCenter },
+		// 		{ fromPosition: levelCenter-50, toPosition: levelCenter-50 }
+		// 	]);
 			// this.patternManager.addRepeatingPattern(50, 10, 10000, [
 			// 	{ fromPosition: levelCenter+200, toPosition: levelCenter+200 }
 			// ]);
@@ -140,6 +151,6 @@ export default class TheConstruct extends Level
 			// this.patternManager.addRepeatingPattern(15, 10, 10000, [
 			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
 			// ]);
-        }
+        // }
     }
 }
