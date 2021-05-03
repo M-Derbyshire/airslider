@@ -1,6 +1,6 @@
-import Model from '../../Model/Model';
+import Monster from '/assets/models/Monster/monster';
 
-class BabyDragon extends Monster {
+export default class BabyDragon extends Monster {
     constructor(playerIndex, lavaBallIndex)
     {
         super(Monster);

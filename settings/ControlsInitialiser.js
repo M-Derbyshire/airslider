@@ -1,6 +1,6 @@
-import Kernel from '../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class ControlsInitialiser
+export default class ControlsInitialiser
 {
     constructor()
     {

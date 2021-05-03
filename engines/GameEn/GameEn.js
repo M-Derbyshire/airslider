@@ -1,6 +1,6 @@
-import Kernel from '../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class GameEn{
+export default class GameEn{
     
     constructor()
     {

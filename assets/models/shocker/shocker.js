@@ -1,6 +1,6 @@
-import Model from '../Model/Model';
+import Model from '/assets/models/Model/Model';
 
-class Shocker extends Model
+export default class Shocker extends Model
 {
     constructor(color, mode, speedX = 0, playerIndex = 0)
     {

@@ -1,6 +1,6 @@
-import Kernel from '../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class FrameManager {
+export default class FrameManager {
     
     constructor(camera)
     {

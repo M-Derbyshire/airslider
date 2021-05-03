@@ -1,6 +1,6 @@
-import Model from '../Model/Model';
+import Model from '/assets/models/Model/Model';
 
-class ElectricMine extends Model
+export default class ElectricMine extends Model
 {
     constructor()
     {

@@ -1,6 +1,6 @@
-import Model from '../Model/Model';
+import Model from '/assets/models/Model/Model';
 
-class Tarian extends Model {
+export default class Tarian extends Model {
     constructor()
     {
         super(Model);

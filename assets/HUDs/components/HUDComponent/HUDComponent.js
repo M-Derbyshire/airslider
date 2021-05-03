@@ -1,6 +1,6 @@
-import Kernel from '../../../../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class HUDComponent
+export default class HUDComponent
 {
     constructor()
     {

@@ -1,4 +1,4 @@
-class AssetHandler
+export default class AssetHandler
 {
     constructor(rootPath)
     {

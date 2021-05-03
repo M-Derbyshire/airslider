@@ -1,6 +1,6 @@
-import Model from '../..//..Model/Model';
+import Model from '/assets/models/Model/Model';
 
-class LavaBall extends Model {
+export default class LavaBall extends Model {
     constructor()
     {
         super(Model);

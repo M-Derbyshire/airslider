@@ -1,5 +1,5 @@
-import Kernel from './kernel/kernel';
-import TheConstruct from './assets/levels/TheConstruct/TheConstruct';
+import Kernel from '/kernel/kernel';
+import TheConstruct from '/assets/levels/TheConstruct/TheConstruct';
 
 // start up the kernel
 window.addEventListener("load", function() {

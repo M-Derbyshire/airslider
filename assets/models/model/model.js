@@ -1,7 +1,7 @@
-import Kernel from '../../../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 import ModelAnimationsManager from './ModelAnimationsManager';
 
-class Model {
+export default class Model {
     
     //constructor is run before the engines are initialised (load() is run afterwards)
     constructor(){

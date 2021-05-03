@@ -1,6 +1,6 @@
-import Kernel from '../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class TimeHelper
+export default class TimeHelper
 {
     constructor()
     {

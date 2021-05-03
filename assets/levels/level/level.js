@@ -1,5 +1,5 @@
-import Kernel from '../../../kernel/Kernel';
-import ControlsInitialiser from '../../../settings/ControlsInitialiser';
+import Kernel from '/kernel/kernel';
+import ControlsInitialiser from '/settings/ControlsInitialiser';
 import EventManager from './EventManager';
 import EventCheckContainer from './EventCheckContainer';
 import ModelExtraEventManager from './ModelExtraEventManager';
@@ -8,9 +8,17 @@ import ShockerManager from './ShockerManager';
 import ModelXPositionPatternManager from './ModelXPositionPatternManager';
 import LevelGround from './LevelGround';
 import LevelTunnel from './LevelTunnel';
-import MainHUD from '../../HUDs/MainHUD/MainHUD';
+import MainHUD from '/assets/HUDs/MainHUD/MainHUD';
+import Tarian from '/assets/models/Tarian/Tarian';
+import Shocker from '/assets/models/Shocker/Shocker';
+import ElectricMine from '/assets/models/ElectricMine/ElectricMine';
+import NeonPidgeon from '/assets/models/Monsters/NeonPidgeon/NeonPidgeon';
+import LavaBall from '/assets/models/Monsters/attacks/LavaBall/LavaBall';
+import Falcon from '/assets/models/Monsters/Falcon/Falcon';
+import Werewolf from '/assets/models/Monsters/Werewolf/Werewolf';
 
-class Level
+
+export default class Level
 {
     constructor()
     {

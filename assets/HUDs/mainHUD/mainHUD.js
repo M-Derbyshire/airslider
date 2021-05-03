@@ -1,9 +1,9 @@
-import Kernel from '../../../kernel/Kernel';
-import HUD from '../HUD/HUD';
-import HealthBar from '../HealthBar';
-import DamageFlash from '../DamageFlash';
+import Kernel from '/kernel/kernel';
+import HUD from '/assets/HUDs/HUD/HUD';
+import HealthBar from '/assets/HUDs/components/HealthBar/HealthBar';
+import DamageFlash from '/assets/HUDs/components/DamageFlash/DamageFlash';
 
-class MainHUD extends HUD
+export default class MainHUD extends HUD
 {
     constructor()
     {

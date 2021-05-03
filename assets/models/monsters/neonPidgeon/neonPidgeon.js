@@ -1,6 +1,6 @@
-import Model from '../../Model/Model';
+import Monster from '/assets/models/Monster/monster';
 
-class NeonPidgeon extends Monster {
+export default class NeonPidgeon extends Monster {
     constructor(playerIndex, otherMonster = false)
     {
         super(Monster);

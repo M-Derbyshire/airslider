@@ -1,4 +1,4 @@
-import Kernel from '../../../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
 /*
 	Used to position a set of models on the x-axis, in a way that will make 
@@ -6,7 +6,7 @@ import Kernel from '../../../kernel/Kernel';
 	determined by a provided range of model indexes (in the loaded models array, 
 	in the kernel).
 */
-class ModelXPositionPatternManager
+export default class ModelXPositionPatternManager
 {
 	constructor()
 	{

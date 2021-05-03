@@ -1,7 +1,7 @@
-import Kernel from '../../../../kernel/Kernel';
-import HUDComponent from '../HUDComponent/HUDComponent';
+import Kernel from '/kernel/kernel';
+import HUDComponent from '/assets/HUDs/components/HUDComponent/HUDComponent';
 
-class DamageFlash extends HUDComponent
+export default class DamageFlash extends HUDComponent
 {
     constructor()
     {

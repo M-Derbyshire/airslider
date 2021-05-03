@@ -1,6 +1,6 @@
-import Kernel from '../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class UnitHelper
+export default class UnitHelper
 {
     constructor(unitsWithinCamera)
     {

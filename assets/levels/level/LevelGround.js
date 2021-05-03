@@ -1,6 +1,6 @@
-import Kernel from '../../../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class LevelGround
+export default class LevelGround
 {
     constructor()
     {

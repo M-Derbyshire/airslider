@@ -1,6 +1,6 @@
-import Kernel from '../../../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class ModelAnimationsManager {
+export default class ModelAnimationsManager {
     constructor(model)
     {
         this.model = model;

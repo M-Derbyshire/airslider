@@ -1,6 +1,6 @@
-import Kernel from '../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class MenuEn{
+export default class MenuEn{
     constructor()
     {
         this.kernel = Kernel.getInstance();

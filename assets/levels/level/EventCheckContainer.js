@@ -1,6 +1,6 @@
-import Kernel from '../../../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class EventCheckContainer
+export default class EventCheckContainer
 {
     constructor()
     {

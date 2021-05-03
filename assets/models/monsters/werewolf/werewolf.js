@@ -1,6 +1,6 @@
-import Model from '../../Model/Model';
+import Monster from '/assets/models/Monster/monster';
 
-class Werewolf extends Monster {
+export default class Werewolf extends Monster {
     constructor(playerIndex)
     {
         super(Monster);

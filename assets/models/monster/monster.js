@@ -1,6 +1,6 @@
-import Model from '../Model/Model';
+import Model from '/assets/models/Model/Model';
 
-class Monster extends Model {
+export default class Monster extends Model {
     constructor()
     {
         super(Model);

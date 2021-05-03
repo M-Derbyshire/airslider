@@ -1,6 +1,6 @@
-import Kernel from '../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class Camera {
+export default class Camera {
     
     constructor(canvas, canvasCtx, aspectRatioHorizontal = 17, aspectRatioVertical = 9)
     {

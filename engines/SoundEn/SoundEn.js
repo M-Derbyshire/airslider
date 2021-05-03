@@ -1,6 +1,6 @@
-import Kernel from '../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class SoundEn{
+export default class SoundEn{
     constructor()
     {
         this.kernel = Kernel.getInstance();

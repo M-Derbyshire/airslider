@@ -1,6 +1,6 @@
-import Kernel from '../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 
-class Frame {
+export default class Frame {
     
     //x, y, width and height are all unit values
     constructor(canvasCtx, camera, x, y, width, height)

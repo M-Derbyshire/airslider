@@ -1,10 +1,11 @@
 var webpack = require('webpack');
 
 module.exports = {
+	mode: 'development',
 	entry: {
 		entry: __dirname + '/initialiseGame.js'
 	},
 	output: {
-		filename: 'game.bundle.js'
+		filename: './game.bundle.js',
 	}
 }

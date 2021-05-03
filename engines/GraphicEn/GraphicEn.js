@@ -1,8 +1,8 @@
-import Kernel from '../kernel/Kernel';
+import Kernel from '/kernel/kernel';
 import Camera from './Camera';
 import FrameManager from './FrameManager';
 
-class GraphicEn{
+export default class GraphicEn{
     constructor(gameCanvas, gameContext)
     {
         this.kernel = Kernel.getInstance();
