@@ -23,14 +23,14 @@ export default class TheConstruct extends Level
         
         models.push(new Tarian()); //add main character (has to be 0)
         
-        // models.push(new NeonPidgeon(0));
-        // models.push(new Falcon(0));
-        models.push(new BabyDragon(0, 2));
-        models.push(new LavaBall());
-        // models.push(new Werewolf(0));
-        this.monsterIndex = 1;
+        // models.push(new NeonPidgeon(models[0]));
+        // models.push(new Falcon(models[0]));
+        models.push(new Werewolf(models[0]));
+		// models.push(new LavaBall());
+		// models.push(new BabyDragon(models[0], models[models.length - 1]));
+		this.monster = models[models.length - 1];
 
-        this.shockerManager.setShockerModelRange(3, 13);
+        this.shockerManager.setShockerModelRange(2, 13);
         this.shockerManager.setCurrentShockerCount(10);
         let shockerRange = this.shockerManager.shockerModelRange;
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
@@ -113,10 +113,9 @@ export default class TheConstruct extends Level
         
 		
 		//Start the monster going straight away
-		const monster = this.kernel.loadedModels[this.monsterIndex];
 		if(this.helpers.time.getTotalSeconds() >= 0 && this.helpers.time.getTotalSeconds() <= 1)
 		{
-			monster.start();
+			this.monster.start();
 		}
 		
 		

@@ -1,12 +1,12 @@
 import Monster from '/assets/models/Monster/monster';
 
 export default class BabyDragon extends Monster {
-    constructor(playerIndex, lavaBallIndex)
+    constructor(playerModel, lavaBall)
     {
         super(Monster);
         
-        this.playerIndex = playerIndex;
-        this.lavaBallIndex = lavaBallIndex;
+        this.playerModel = playerModel;
+        this.lavaBall = lavaBall;
     }
     
     load(levelLeftEdge, levelRightEdge)
@@ -38,11 +38,11 @@ export default class BabyDragon extends Monster {
         this.startY = 10,
         this.startX = this._levelRightEdge + this.offScreenUnits;
         
-        this.startZ = this.kernel.loadedModels[this.playerIndex].z;
+        this.startZ = this.playerModel.z;
         this.enterXSpeed = 90;
         
         //set the z of the lava ball
-        this.kernel.loadedModels[this.lavaBallIndex].z = this.startZ;
+        this.lavaBall.z = this.startZ;
         
         this.reset();
     }
@@ -96,7 +96,7 @@ export default class BabyDragon extends Monster {
                 ((monster._levelRightEdge - (monster.width / 2)) - 1);
         }
         
-        if(!monster.kernel.loadedModels[monster.lavaBallIndex].active && monster.fireWeapon)
+        if(!monster.lavaBall.active && monster.fireWeapon)
         {
             monster.dropBall(monster);
         }
@@ -105,7 +105,7 @@ export default class BabyDragon extends Monster {
     //attacks-----------------------------------------------------
     dropBall(monster)
     {
-        let l = monster.kernel.loadedModels[monster.lavaBallIndex];
+        let l = monster.lavaBall;
         
         //center it
         let xOffset = -65;

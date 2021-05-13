@@ -50,7 +50,7 @@ export default class Level
         this.leftEdge;
         this.rightEdge;
         
-        this.monsterIndex;
+        this.monster;
         
         this._musicRef;
         
@@ -140,7 +140,7 @@ export default class Level
         this.controlInitialiser.keyboardControls(0);
         this.controlInitialiser.touchControls(0);
         
-        this._HUD.modelIndexes.push(0);
+        this._HUD.models.push(this.kernel.loadedModels[0]);
 		
 		this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
     }

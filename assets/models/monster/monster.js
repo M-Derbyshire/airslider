@@ -6,7 +6,7 @@ export default class Monster extends Model {
         super(Model);
         
         this.specialLevel = false; //is this on a special level
-        this.playerIndex;
+        this.playerModel;
         this.color;
         this.damageDealt;
         this.zSpeed = 1; //a value is required for Tarian's collision event to work

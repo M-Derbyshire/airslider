@@ -10,28 +10,28 @@ export default class EventManager
         this._modelExtraEventManager = modelExtraEventManager;
         
         //This will be an array of objects. Each object has these attributes:
-        // eventCheckMethodName; class1ModelIndexes; class1EventActionName;
-        // class2ModelIndexes; class2EventActionName.
+        // eventCheckMethodName; class1Models; class1EventActionName;
+        // class2Models; class2EventActionName.
         this._events = [];
     }
     
     registerEvent(eventCheckMethodName, class1, class1EventActionName, class2, class2EventActionName)
     {
-        const class1ModelIndexes = [];
-        const class2ModelIndexes = [];
+        const class1Models = [];
+        const class2Models = [];
         
         //LoadedModels is a collection, so can't use foreach
         for(let i = 0; i < this.kernel.loadedModels.length; i++)
         {
-            if(this.kernel.loadedModels[i] instanceof class1) class1ModelIndexes.push(i);
-            if(this.kernel.loadedModels[i] instanceof class2) class2ModelIndexes.push(i);
+            if(this.kernel.loadedModels[i] instanceof class1) class1Models.push(this.kernel.loadedModels[i]);
+            if(this.kernel.loadedModels[i] instanceof class2) class2Models.push(this.kernel.loadedModels[i]);
         }
         
         this._events.push({ 
             eventCheckMethodName, 
-            class1ModelIndexes, 
+            class1Models, 
             class1EventActionName, 
-            class2ModelIndexes, 
+            class2Models, 
             class2EventActionName 
         });
     }
@@ -53,14 +53,14 @@ export default class EventManager
         //check them against each model for class2.
         this._events.forEach((event) => {
             
-            event.class1ModelIndexes.forEach((modelIndex1) => {
+            event.class1Models.forEach((model1) => {
                 
-                event.class2ModelIndexes.forEach((modelIndex2) => {
+                event.class2Models.forEach((model2) => {
                     
                     this._eventCheckContainer[event.eventCheckMethodName](
-                        this.kernel.loadedModels[modelIndex1], 
+                        model1, 
                         event.class1EventActionName, 
-                        this.kernel.loadedModels[modelIndex2],
+                        model2,
                         event.class2EventActionName
                     );
                     

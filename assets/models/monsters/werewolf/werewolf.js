@@ -1,11 +1,11 @@
 import Monster from '/assets/models/Monster/monster';
 
 export default class Werewolf extends Monster {
-    constructor(playerIndex)
+    constructor(playerModel)
     {
         super(Monster);
         
-        this.playerIndex = playerIndex;
+        this.playerModel = playerModel;
         
         this.damageDealtOrig = 2;
         this.damageDealt = this.damageDealtOrig;
@@ -53,7 +53,7 @@ export default class Werewolf extends Monster {
         //outLimit is how far back the monster will go, before moving forward
         //inLimit is the point the wolf will start it's sweeping again
         this.outLimit = 1;
-        this.inLimit = (this.kernel.loadedModels[this.playerIndex].z + 100);
+        this.inLimit = (this.playerModel.z + 100);
         
         this.reset();
     }
@@ -94,7 +94,7 @@ export default class Werewolf extends Monster {
     setHeadDirection() //not an action, just a method they'll both use
     {
         //set the monsters facing direction
-        let player = this.kernel.loadedModels[this.playerIndex];
+        let player = this.playerModel;
         if(this.x + (this.width / 2) >= player.x + (player.width / 2))
         {
             return "left";

@@ -1,11 +1,11 @@
 import Monster from '/assets/models/Monster/monster';
 
 export default class NeonPidgeon extends Monster {
-    constructor(playerIndex, otherMonster = false)
+    constructor(playerModel, otherMonster = false)
     {
         super(Monster);
         
-        this.playerIndex = playerIndex;
+        this.playerModel = playerModel;
         this.specialLevel = otherMonster;
         this.overlapping = false;
         
@@ -52,7 +52,7 @@ export default class NeonPidgeon extends Monster {
         this.offScreenUnits = (this.specialLevel) ? 500 : 800;
         this.startY = (this.specialLevel) ? 250 : 150;
         this.startX = this._levelRightEdge + this.offScreenUnits;
-        this.startZ = this.kernel.loadedModels[this.playerIndex].z;
+        this.startZ = this.playerModel.z;
         this.ySpeed = 1800;
         this.dropWaitOffset = 2000; //5 seconds
         this.dropWaitRange = 2000; //4 seconds
@@ -124,8 +124,8 @@ export default class NeonPidgeon extends Monster {
             monster.nextDrop = monster.helpers.time.getTotalMilliseconds() + monster.dropWaitOffset + Math.floor(Math.random() * monster.dropWaitRange);
         } else if((monster.helpers.time.getTotalMilliseconds() >= monster.nextDrop) && 
             !monster.overlapping && 
-            ((monster.x + monster.width >= monster.kernel.loadedModels[monster.playerIndex].x) && 
-            (monster.x <= monster.kernel.loadedModels[monster.playerIndex].x + monster.kernel.loadedModels[monster.playerIndex].width)))
+            ((monster.x + monster.width >= monster.playerModel.x) && 
+            (monster.x <= monster.playerModel.x + monster.playerModel.width)))
         {
             monster.nextDrop = -1;
             monster.state = "falling";

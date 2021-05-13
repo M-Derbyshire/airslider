@@ -1,11 +1,11 @@
 import Monster from '/assets/models/Monster/monster';
 
 export default class Falcon extends Monster {
-    constructor(playerIndex)
+    constructor(playerModel)
     {
         super(Monster);
         
-        this.playerIndex = playerIndex;
+        this.playerModel = playerModel;
         
         this.overlapping = false;
         
@@ -79,13 +79,13 @@ export default class Falcon extends Monster {
             this.reposition
         ];
         
-        this.player = this.kernel.loadedModels[this.playerIndex];
+        this.player = this.playerModel;
         
         this.enterXSpeed = 140;
         this.offScreenUnits = 800;
         this.startY = 75;
         this.startX = this._levelLeftEdge - this.offScreenUnits;
-        this.startZ = this.kernel.loadedModels[this.playerIndex].z;
+        this.startZ = this.playerModel.z;
         this.dropWaitOffset = this.helpers.time.secondsToFrames(5);
         this.dropWaitRange = this.helpers.time.secondsToFrames(5);
         
@@ -135,7 +135,7 @@ export default class Falcon extends Monster {
         
         //This means that if the player moves in the same direction 
         //during strafe(), the monster doesn't end up off screen.
-        this.xSpeed = this.kernel.loadedModels[this.playerIndex].topSpeed * 2.5;
+        this.xSpeed = this.player.topSpeed * 2.5;
         
         this.ySpeed = 1200;
         this.state = "flapping";
@@ -178,7 +178,7 @@ export default class Falcon extends Monster {
         const monsterSwoopYcenter = monster.y + (monsterDropLeftAnim.height / 2);
         
         
-        const player = monster.kernel.loadedModels[monster.playerIndex];
+        const player = monster.player;
         const playerXCenter = player.x + (player.width / 2);
         const playerYCenter = player.y + (player.height / 2);
         
@@ -232,7 +232,7 @@ export default class Falcon extends Monster {
     reposition(monster)
     {
         //get player center and monster center; also pre-calculate the real speed of the monster
-        const playerCenter = monster.kernel.loadedModels[monster.playerIndex].x + (monster.kernel.loadedModels[monster.playerIndex].width / 2)
+        const playerCenter = monster.player.x + (monster.player.width / 2)
         const monsterCenter = monster.x + (monster.width / 2);
         const calcSpeed = monster.helpers.unit.xSpeed(monster.xSpeed);
         

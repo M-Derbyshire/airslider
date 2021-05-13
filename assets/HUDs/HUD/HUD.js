@@ -10,7 +10,7 @@ export default class HUD
         this._camera; //Set in load()
         
         this.components = []; //HUD components included
-        this.modelIndexes = []; //indexes of models used by this HUD
+        this.models = []; //models used by this HUD
     }
     
     load(canvasCtx, camera)
