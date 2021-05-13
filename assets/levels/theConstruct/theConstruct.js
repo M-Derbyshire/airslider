@@ -108,7 +108,7 @@ export default class TheConstruct extends Level
         
         this.tunnelManager.continueTunnel([
             this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-            this.tunnelManager.newTunnelPart(-1, this.tunnelSpriteLength)
+            this.tunnelManager.newTunnelPart(null, this.tunnelSpriteLength)
         ]);
         
 		

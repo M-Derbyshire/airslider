@@ -169,7 +169,7 @@ export default class Level
         if(
             this.tunnelManager.tunnel.length > 1 && 
             this.tunnelManager.tunnel[this.tunnelManager.tunnel.length - 1].z <= 0 &&
-            this.tunnelManager.tunnel[this.tunnelManager.tunnel.length - 2].imageIndex !== -1
+            this.tunnelManager.tunnel[this.tunnelManager.tunnel.length - 2].image
         )
         {
             this._frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(

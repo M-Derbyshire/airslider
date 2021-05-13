@@ -44,7 +44,7 @@ export default class Kernel {
         this._totalInactiveMilliseconds = 0;
         this._active = true;
         
-        let filePath = window.location.pathname;
+        const filePath = window.location.pathname;
         this._rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
         
         this.loadedModels = []; //will hold all models loaded during loading

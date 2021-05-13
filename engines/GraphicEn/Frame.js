@@ -19,11 +19,11 @@ export default class Frame {
         //-1 means there is none set.
         //These are the indexes of the set background and lightmask in the 
         //_loadedBackgrounds and _loadedLightMasks arrays.
-        this._background = -1;
-        this._lightMask = -1;
+        this._backgroundIndex = -1;
+        this._lightMaskIndex = -1;
         
-        //Will contain the indexes of the images in the kernel's assets array
-        this._loadedLightMasks = []; //{ imageIndex, luminosity }
+        //Will contain the images in the kernel's assets array
+        this._loadedLightMasks = []; //{ image, luminosity }
         this._loadedBackgrounds = [];
     }
     
@@ -40,7 +40,7 @@ export default class Frame {
         //luminoisty takes a number between 0 (darkest) and 1 (lightest)
         
         this._loadedLightMasks.push({
-            imageIndex: this.kernel.loadImage(path),
+            image: this.kernel.loadImage(path),
             luminosity: 1 - luminosity
         });
         return this._loadedLightMasks.length - 1;
@@ -48,24 +48,24 @@ export default class Frame {
     
     setBackgroundImage(index)
     {
-        this._background = index;
+        this._backgroundIndex = index;
     }
     
     setLightMaskImage(index)
     {
-        this._lightMask = index;
+        this._lightMaskIndex = index;
     }
     
     
     drawFront(xUnitPos, yUnitPos) //Draw the light mask
     {
-        if(this._lightMask > -1)
+        if(this._lightMaskIndex > -1)
         {
-            const lightMaskInfo = this._loadedLightMasks[this._lightMask];
-        
+            const lightMaskInfo = this._loadedLightMasks[this._lightMaskIndex];
+			
             this._canvasCtx.globalAlpha = lightMaskInfo.luminosity;
             this._canvasCtx.drawImage(
-                this.kernel.loadedAssets[lightMaskInfo.imageIndex].asset,
+                lightMaskInfo.image,
                 this.unitHelpers.xUnit(xUnitPos) + this._camera.canvasPositionX,
                 this.unitHelpers.yUnit(yUnitPos) + this._camera.canvasPositionY,
                 this.unitHelpers.xUnit(this.width),
@@ -77,12 +77,10 @@ export default class Frame {
     
     drawBack(xUnitPos, yUnitPos) //Draw the background image
     {
-        if(this._lightMask > -1)
+        if(this._backgroundIndex > -1)
         {
-            const camera = this._camera;
-            
             this._canvasCtx.drawImage(
-                this.kernel.loadedAssets[this._loadedBackgrounds[this._background]].asset,
+                this._loadedBackgrounds[this._backgroundIndex],
                 this.unitHelpers.xUnit(xUnitPos) + this._camera.canvasPositionX,
                 this.unitHelpers.yUnit(yUnitPos) + this._camera.canvasPositionY,
                 this.unitHelpers.xUnit(this.width),

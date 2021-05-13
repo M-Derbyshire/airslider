@@ -39,7 +39,7 @@ export default class DamageFlash extends HUDComponent
             this._ctx.globalAlpha = this.opacity;
         
             this._ctx.drawImage(
-                this.kernel.loadedAssets[this.images[this.color]].asset,
+                this.images[this.color],
                 this._camera.canvasPositionX,
                 this._camera.canvasPositionY,
                 this._camera.canvasPositionWidth,

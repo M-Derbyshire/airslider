@@ -36,7 +36,7 @@ export default class ModelAnimationsManager {
             fps: fps,
             waitCount: 0, //increased when waiting to move to next frame
             nextCount: 0, //when waitCount equals this, move to the next frame (done so anim and game can have different fps. This is set on every new game-loop frame)
-            currentFrame: 0,
+            currentFrameIndex: 0,
             height: height,
             width: width,
             xOffset: xOffset, //change position for consistency
@@ -57,7 +57,7 @@ export default class ModelAnimationsManager {
 		//Need to call this here, as if this is an animation that changes state at the end,
 		//the below settings (preZCalc* variables) may have the wrong width/height for the 
 		//new animation.
-		const frameIndex = this.getNextFrameIndex();
+		const nextFrame = this.getNextFrame();
 		
         //Draw the image, taking into account the z-axis when setting the size/positions
 		const preZCalcX = this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(this.model.x)) + this._camera.canvasPositionX;
@@ -66,7 +66,7 @@ export default class ModelAnimationsManager {
 		const preZCalcHeight = this.helpers.unit.yUnit(this.model.height);
 		
         this._canvasCtx.drawImage(
-            this.kernel.loadedAssets[frameIndex].asset, 
+            nextFrame, 
             this.helpers.zCalc.x(preZCalcX, this.model.z), 
             this.helpers.zCalc.y(preZCalcY, this.model.z), 
             this.helpers.zCalc.width(preZCalcWidth, this.model.z), 
@@ -74,8 +74,10 @@ export default class ModelAnimationsManager {
         );
     }
     
-    getNextFrameIndex()
+    getNextFrame()
     {
+		let currentFrameIndex = this.animations[this.model.state].currentFrameIndex;
+		
         //First we need to set how many game-loop frames to wait for before we move on to the next frame
         //of this sprite's animation. This is to ensure that the sprite's animation remains consistent
         //if the game's fps changes (It also means that the sprite can have a different fps to the game-loop).
@@ -88,17 +90,17 @@ export default class ModelAnimationsManager {
             {
                 //If the sprite has more frames per second than the current game fps,
                 //skip the necessary amount of frames to make up for that.
-                this.animations[this.model.state].currentFrame += Math.floor(this.animations[this.model.state].fps / this.kernel.fps);
+                currentFrameIndex += Math.floor(this.animations[this.model.state].fps / this.kernel.fps);
             } else {
                 //If the sprite has less or equal frames per second to the game-loop's fps,
                 //we can just move to the next frame now.
-                this.animations[this.model.state].currentFrame++;
+                currentFrameIndex++;
             }
             
             //Is this the last frame in this sprite animation?
-            if(this.animations[this.model.state].currentFrame > this.animations[this.model.state].frameCount - 1)
+            if(currentFrameIndex > this.animations[this.model.state].frameCount - 1)
             {
-                this.animations[this.model.state].currentFrame = 0;
+                currentFrameIndex = 0;
                 
                 //If this animation isn't looped, but has another animation to switch to, change the state
                 if(this.animations[this.model.state].nextAnim != "")
@@ -111,7 +113,8 @@ export default class ModelAnimationsManager {
         }
         
         this.animations[this.model.state].waitCount++;
-        
-        return this.animations[this.model.state].frames[this.animations[this.model.state].currentFrame];
+        this.animations[this.model.state].currentFrameIndex = currentFrameIndex;
+		
+        return this.animations[this.model.state].frames[currentFrameIndex];
     }
 }

@@ -34,7 +34,7 @@ export default class AssetHandler
         
 		if(assetIsHeld)
         {
-            return assetIsHeld;
+            return this.loadedAssets[assetIsHeld].asset;
         }
         
         this._assetsStillLoading++;
@@ -43,18 +43,19 @@ export default class AssetHandler
             asset: obj
         }); 
         
+		const newLoadedAsset = this.loadedAssets[this.loadedAssets.length - 1];
+		
         if(obj instanceof Image)
         {
-            this.loadedAssets[this.loadedAssets.length - 1].asset.onload = boundCallback;
+            newLoadedAsset.asset.onload = boundCallback;
         }
         else if(obj instanceof Audio)
         {
-            this.loadedAssets[this.loadedAssets.length - 1].asset.addEventListener("canplaythrough", boundCallback);
+            newLoadedAsset.asset.addEventListener("canplaythrough", boundCallback);
         }
         
-        this.loadedAssets[this.loadedAssets.length - 1].asset.src = path;
-        
-        return this.loadedAssets.length - 1;
+        newLoadedAsset.asset.src = path;
+        return newLoadedAsset.asset;
     }
     
     prepareAssetPath(path)

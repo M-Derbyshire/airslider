@@ -12,7 +12,7 @@ export default class LevelGround
         this._canvasCtx;
         
         this.ground = {
-            ref: 0, //The image's index in the loadedAssets array
+            image: null, //The image in the loadedAssets array
             height: 0, //Height to draw the image
             distance: 0, //The correct z-axis distance between each image (which will place one on top of the other)
             offset: 0 //The amount the images have moved along the z-axis (up till the distance property above)
@@ -34,7 +34,7 @@ export default class LevelGround
             height: camera.canvasPositionHeight
         };
         
-        this.ground.ref = this.kernel.loadImage(path);
+        this.ground.image = this.kernel.loadImage(path);
         this.ground.height = height;
         let distance = -1;
         
@@ -94,7 +94,7 @@ export default class LevelGround
             
             //Need to draw it once on the left, then again on the right
             this._canvasCtx.drawImage(
-                this.kernel.loadedAssets[this.ground.ref].asset,
+                this.ground.image,
                 this.helpers.zCalc.x(this._camera.canvasPositionX - (this._camera.canvasPositionX + this._camera.canvasPositionWidth * 2), this.groundZ[i] - this.ground.offset),
                 y,
                 width,
@@ -102,7 +102,7 @@ export default class LevelGround
             );
             
             this._canvasCtx.drawImage(
-                this.kernel.loadedAssets[this.ground.ref].asset,
+                this.ground.image,
                 this.helpers.zCalc.x(this._camera.canvasPositionX + this._camera.canvasPositionWidth, this.groundZ[i] - this.ground.offset),
                 y,
                 width,

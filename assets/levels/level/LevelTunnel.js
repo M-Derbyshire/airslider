@@ -17,14 +17,14 @@ export default class LevelTunnel
     }
     
     
-    //tunnel[i].z - .length - .imageIndex - .active
-    //.imageIndex of -1 is a clear piece of the tunnel
+    //tunnel[i].z - .length - .image - .active
+    //.image being null is a clear piece of the tunnel
     newTunnelPart(image, length = 1)
     {
         return {
             z: this.helpers.zCalc.vPointDepth,
             length: length,
-            imageIndex: image,
+            image,
             active: false
         };
     }
@@ -80,11 +80,11 @@ export default class LevelTunnel
                 //move the image
                 tunnelPart.z -= levelSpeed;
                 
-                //draw the image (-1 is a clear piece)
-                if(tunnelPart.imageIndex > -1)
+                //draw the image (null is a clear piece)
+                if(tunnelPart.image)
                 {
                     this.kernel.graphicEn.gameCtx.drawImage(
-                        this.kernel.loadedAssets[tunnelPart.imageIndex].asset, 
+                        tunnelPart.image, 
                         this.helpers.zCalc.x(this._camera.canvasPositionX, tunnelPart.z, true), 
                         this.helpers.zCalc.y(this._camera.canvasPositionY, tunnelPart.z, true), 
                         this.helpers.zCalc.width(this._camera.canvasPositionWidth, tunnelPart.z, true), 
