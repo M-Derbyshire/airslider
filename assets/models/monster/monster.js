@@ -57,7 +57,7 @@ export default class Monster extends Model {
             return;
         }
         
-        this.actions[this.currentAction](this.kernel.loadedModels[this.loadedIndex]); //run the current action
+        this.actions[this.currentAction].apply(this); //run the current action
     }
     
     start()

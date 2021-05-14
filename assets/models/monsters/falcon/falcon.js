@@ -143,42 +143,42 @@ export default class Falcon extends Monster {
     
     //movement-----------------------------------------------------
     
-    stalking(monster)
+    stalking()
     {
         //Reset the damage (It's set to 0 in swoopUp() to avoid extra damage)
-        monster.damageDealt = monster.damageDealtOrig;
+        this.damageDealt = this.damageDealtOrig;
         
         //keep monster centered above player
-        monster.x = monster.player.x + (monster.player.width / 2) - (monster.width / 2);
+        this.x = this.player.x + (this.player.width / 2) - (this.width / 2);
         
-        if(monster.helpers.time.getTotalMilliseconds() - monster.lastSwoop >= monster.swoopWait)
+        if(this.helpers.time.getTotalMilliseconds() - this.lastSwoop >= this.swoopWait)
         {
-            monster.swoopWait = (Math.random() * 3000) + 1000; //between 1 and 4 seconds
+            this.swoopWait = (Math.random() * 3000) + 1000; //between 1 and 4 seconds
             // will set the lastSwoop time after swooping has finished
             
-            if(monster.x + (monster.width / 2) > (monster._levelRightEdge - monster._levelLeftEdge) / 2)
+            if(this.x + (this.width / 2) > (this._levelRightEdge - this._levelLeftEdge) / 2)
             {
-                monster.directionMultiplier = -1;
-                monster.state = "left";
+                this.directionMultiplier = -1;
+                this.state = "left";
             } else {
-                monster.directionMultiplier = 1;
-                monster.state = "right";
+                this.directionMultiplier = 1;
+                this.state = "right";
             }
             
-            monster.nextAction();
+            this.nextAction();
         }
     }
     
-    strafe(monster)
+    strafe()
     {
         // Center of monster in drop animations
         // Width/height should be the same for both dropLeft and dropRight anims.
-        const monsterDropLeftAnim = monster.animationManager.animations.dropLeft;
-        const monsterSwoopXCenter = monster.x + (monsterDropLeftAnim.width / 2);
-        const monsterSwoopYcenter = monster.y + (monsterDropLeftAnim.height / 2);
+        const monsterDropLeftAnim = this.animationManager.animations.dropLeft;
+        const monsterSwoopXCenter = this.x + (monsterDropLeftAnim.width / 2);
+        const monsterSwoopYcenter = this.y + (monsterDropLeftAnim.height / 2);
         
         
-        const player = monster.player;
+        const player = this.player;
         const playerXCenter = player.x + (player.width / 2);
         const playerYCenter = player.y + (player.height / 2);
         
@@ -195,54 +195,54 @@ export default class Falcon extends Monster {
         //as it's correctly aimed at the player.
         if(xDifference >= yDifference)
         {
-            monster.directionMultiplier = -monster.directionMultiplier;
-            monster.state = (monster.directionMultiplier == -1) ? "dropLeft" : "dropRight";
-            monster.nextAction();
+            this.directionMultiplier = -this.directionMultiplier;
+            this.state = (this.directionMultiplier == -1) ? "dropLeft" : "dropRight";
+            this.nextAction();
         } 
         else 
         {
-            monster.moveRight(monster.xSpeed * monster.directionMultiplier);
+            this.moveRight(this.xSpeed * this.directionMultiplier);
         }
     }
     
-    swoopDown(monster)
+    swoopDown()
     {
         //y speed is used for both x and y movement, so it's diagonal.
         //This is important to make sure the falcon hits the target
-        monster.moveRight(monster.ySpeed * monster.directionMultiplier);
-        monster.moveDown(monster.ySpeed);
+        this.moveRight(this.ySpeed * this.directionMultiplier);
+        this.moveDown(this.ySpeed);
     }
     
-    swoopUp(monster)
+    swoopUp()
     {
-        if(monster.y <= monster.startY)
+        if(this.y <= this.startY)
         {
-            monster.y = monster.startY;
-            monster.state = "flapping";
-            monster.nextAction();
+            this.y = this.startY;
+            this.state = "flapping";
+            this.nextAction();
         } else {
-            monster.damageDealt = 0; //will be reset at stalking
-            monster.moveUp(monster.ySpeed);
+            this.damageDealt = 0; //will be reset at stalking
+            this.moveUp(this.ySpeed);
             
             //0.75 makes the movement angle match the angle on the animation sprite
-            monster.moveRight((monster.ySpeed * 0.75) * monster.directionMultiplier);
+            this.moveRight((this.ySpeed * 0.75) * this.directionMultiplier);
         }
     }
     
-    reposition(monster)
+    reposition()
     {
         //get player center and monster center; also pre-calculate the real speed of the monster
-        const playerCenter = monster.player.x + (monster.player.width / 2)
-        const monsterCenter = monster.x + (monster.width / 2);
-        const calcSpeed = monster.helpers.unit.xSpeed(monster.xSpeed);
+        const playerCenter = this.player.x + (this.player.width / 2)
+        const monsterCenter = this.x + (this.width / 2);
+        const calcSpeed = this.helpers.unit.xSpeed(this.xSpeed);
         
         if(monsterCenter < playerCenter + calcSpeed && monsterCenter > playerCenter - calcSpeed)
         {
-            monster.lastSwoop = monster.helpers.time.getTotalMilliseconds();
-            monster.nextAction();
+            this.lastSwoop = this.helpers.time.getTotalMilliseconds();
+            this.nextAction();
         } else {
-            monster.directionMultiplier = (playerCenter < monsterCenter) ? -1 : 1;
-            monster.moveRight(monster.xSpeed * monster.directionMultiplier);
+            this.directionMultiplier = (playerCenter < monsterCenter) ? -1 : 1;
+            this.moveRight(this.xSpeed * this.directionMultiplier);
         }
     }
     

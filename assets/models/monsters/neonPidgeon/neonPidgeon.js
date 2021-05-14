@@ -106,49 +106,50 @@ export default class NeonPidgeon extends Monster {
     
     //movement-----------------------------------------------------
     
-    moveSideways(monster)
+    moveSideways()
     {
-        monster.moveRight(monster.xSpeed);
+        this.moveRight(this.xSpeed);
         
-        if(monster.x <= monster._levelLeftEdge || monster.x + monster.width >= monster._levelRightEdge)
+        if(this.x <= this._levelLeftEdge || this.x + this.width >= this._levelRightEdge)
         {
-            monster.xSpeed = -monster.xSpeed;
+            this.xSpeed = -this.xSpeed;
             
-            monster.x = (monster.xSpeed > 0) ? 
-                (monster._levelLeftEdge + 1) :
-                ((monster._levelRightEdge - monster.width) - 1);
+            this.x = (this.xSpeed > 0) ? 
+                (this._levelLeftEdge + 1) :
+                ((this._levelRightEdge - this.width) - 1);
         }
         
-        if(monster.nextDrop == -1)
+        if(this.nextDrop == -1)
         {
-            monster.nextDrop = monster.helpers.time.getTotalMilliseconds() + monster.dropWaitOffset + Math.floor(Math.random() * monster.dropWaitRange);
-        } else if((monster.helpers.time.getTotalMilliseconds() >= monster.nextDrop) && 
-            !monster.overlapping && 
-            ((monster.x + monster.width >= monster.playerModel.x) && 
-            (monster.x <= monster.playerModel.x + monster.playerModel.width)))
+            this.nextDrop = this.helpers.time.getTotalMilliseconds() + 
+											this.dropWaitOffset + Math.floor(Math.random() * this.dropWaitRange);
+        } else if((this.helpers.time.getTotalMilliseconds() >= this.nextDrop) && 
+            !this.overlapping && 
+            ((this.x + this.width >= this.playerModel.x) && 
+            (this.x <= this.playerModel.x + this.playerModel.width)))
         {
-            monster.nextDrop = -1;
-            monster.state = "falling";
-            monster.nextAction();
+            this.nextDrop = -1;
+            this.state = "falling";
+            this.nextAction();
         }
         
-        monster.overlapping = false; //this will be set to true by event if true, so end on this.
+        this.overlapping = false; //this will be set to true by event if true, so end on this.
     }
     
-    drop(monster)
+    drop()
     {
-        monster.moveDown(monster.ySpeed);
+        this.moveDown(this.ySpeed);
     }
     
-    rise(monster)
+    rise()
     {
-        monster.moveUp(monster.ySpeed);
+        this.moveUp(this.ySpeed);
         
-        if(monster.y <= monster.startY)
+        if(this.y <= this.startY)
         {
-            monster.y = monster.startY;
-            monster.state = "flapping";
-            monster.nextAction();
+            this.y = this.startY;
+            this.state = "flapping";
+            this.nextAction();
         }
     }
     

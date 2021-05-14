@@ -108,49 +108,49 @@ export default class Werewolf extends Monster {
         return this.minXSpeed + (Math.random() * (this.maxXSpeed - this.minXSpeed));
     }
     
-    sweep(monster)
+    sweep()
     {
         //set the monsters facing direction
-        monster.state = monster.setHeadDirection();
+        this.state = this.setHeadDirection();
         
         //set monsters x movement direction and move it
-        if(monster.x < monster._levelLeftEdge)
+        if(this.x < this._levelLeftEdge)
         {
-            monster.x = monster._levelLeftEdge;
-            monster.directionMultiplier = 1;
-        } else if (monster.x + monster.width > monster._levelRightEdge)
+            this.x = this._levelLeftEdge;
+            this.directionMultiplier = 1;
+        } else if (this.x + this.width > this._levelRightEdge)
         {
-            monster.x = monster._levelRightEdge - monster.width;
-            monster.directionMultiplier = -1;
+            this.x = this._levelRightEdge - this.width;
+            this.directionMultiplier = -1;
         }
-        monster.moveRight(monster.xSpeed * monster.directionMultiplier);
+        this.moveRight(this.xSpeed * this.directionMultiplier);
         
         //move monster on z axis
-        monster.moveOut(monster.zSpeed * 10);
+        this.moveOut(this.zSpeed * 10);
         
         //should monster move forward to reset?
-        if(monster.z <= monster.outLimit)
+        if(this.z <= this.outLimit)
         {
-            monster.z = monster.outLimit;
-            monster.nextAction();
+            this.z = this.outLimit;
+            this.nextAction();
         }
     }
     
-    moveUp(monster)
+    moveUp()
     {
         //set the monsters facing direction
-        monster.state = monster.setHeadDirection();
+        this.state = this.setHeadDirection();
         
         //move back in
-        monster.moveIn(monster.zSpeed * 10);
+        this.moveIn(this.zSpeed * 10);
         
         //go back to sweep if need be
-        if(monster.z >= monster.inLimit)
+        if(this.z >= this.inLimit)
         {
-            monster.xSpeed = monster.getNewSpeed();
-            monster.z = monster.inLimit;
-            monster.damageDealt = monster.damageDealtOrig;
-            monster.nextAction();
+            this.xSpeed = this.getNewSpeed();
+            this.z = this.inLimit;
+            this.damageDealt = this.damageDealtOrig;
+            this.nextAction();
         }
     }
     

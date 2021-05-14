@@ -82,41 +82,41 @@ export default class BabyDragon extends Monster {
     
     //movement-----------------------------------------------------
     
-    move(monster)
+    move()
     {
-        monster.moveRight(monster.xSpeed);
+        this.moveRight(this.xSpeed);
         
-        if(monster.x + (monster.width / 2) <= monster._levelLeftEdge || (monster.x + (monster.width / 2) >= monster._levelRightEdge))
+        if(this.x + (this.width / 2) <= this._levelLeftEdge || (this.x + (this.width / 2) >= this._levelRightEdge))
         {
-            monster.xSpeed = -monster.xSpeed;
-            monster.state = (monster.state == "left") ? "right" : "left";
+            this.xSpeed = -this.xSpeed;
+            this.state = (this.state == "left") ? "right" : "left";
             
-            monster.x = (monster.xSpeed > 0) ? 
-                ((monster._levelLeftEdge - (monster.width / 2)) + 1) :
-                ((monster._levelRightEdge - (monster.width / 2)) - 1);
+            this.x = (this.xSpeed > 0) ? 
+                ((this._levelLeftEdge - (this.width / 2)) + 1) :
+                ((this._levelRightEdge - (this.width / 2)) - 1);
         }
         
-        if(!monster.lavaBall.active && monster.fireWeapon)
+        if(!this.lavaBall.active && this.fireWeapon)
         {
-            monster.dropBall(monster);
+            this.dropBall();
         }
     }
     
     //attacks-----------------------------------------------------
-    dropBall(monster)
+    dropBall()
     {
-        let l = monster.lavaBall;
+        let l = this.lavaBall;
         
         //center it
         let xOffset = -65;
         
-        if(monster.state == "right")
+        if(this.state == "right")
         {
             xOffset = -xOffset - 25;
         }
         
-        l.x = monster.x + (monster.width / 2) + xOffset;
-        l.y = monster.y + monster.height + -20;
+        l.x = this.x + (this.width / 2) + xOffset;
+        l.y = this.y + this.height + -20;
         
         l.state = "drop";
         l.active = true;

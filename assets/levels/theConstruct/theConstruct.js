@@ -25,12 +25,12 @@ export default class TheConstruct extends Level
         
         // models.push(new NeonPidgeon(models[0]));
         // models.push(new Falcon(models[0]));
-        models.push(new Werewolf(models[0]));
-		// models.push(new LavaBall());
-		// models.push(new BabyDragon(models[0], models[models.length - 1]));
+        // models.push(new Werewolf(models[0]));
+		models.push(new LavaBall());
+		models.push(new BabyDragon(models[0], models[models.length - 1]));
 		this.monster = models[models.length - 1];
 
-        this.shockerManager.setShockerModelRange(2, 13);
+        this.shockerManager.setShockerModelRange(models.length, models.length + 10);
         this.shockerManager.setCurrentShockerCount(10);
         let shockerRange = this.shockerManager.shockerModelRange;
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
