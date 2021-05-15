@@ -23,7 +23,7 @@ export default class AssetHandler
     
     
     
-    //Loads the asset, or finds it if already loaded, then returns the index number.
+    //Loads the asset, or finds it if already loaded, then returns the asset.
     //Takes the object to store (a new Image or Audio), the source path of the asset,
     //and a callback to run when the asset has loaded.
     loadAsset(obj, path, callback)
