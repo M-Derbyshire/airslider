@@ -1,6 +1,6 @@
 import Monster from '/assets/models/Monster/monster';
 
-export default class Werewolf extends Monster {
+export default class Ghost extends Monster {
     constructor(playerModel)
     {
         super(Monster);
@@ -9,7 +9,7 @@ export default class Werewolf extends Monster {
         
         this.damageDealtOrig = 2;
         this.damageDealt = this.damageDealtOrig;
-        this.color = "tooth";
+        this.color = "ghost";
     }
     
     load(levelLeftEdge, levelRightEdge)
@@ -17,20 +17,13 @@ export default class Werewolf extends Monster {
         super.load(levelLeftEdge, levelRightEdge);
         
         this.animationManager.registerAnimations({
-            left: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/werewolf/anim/left",
-                frameCount: 2,
+            normal: this.animationManager.createAnimation({
+                path: "/assets/models/monsters/Ghost/anim/normal",
+                frameCount: 3,
                 fps: 24,
-                width: 200,
-                height: 170,
-            }),
-            right: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/werewolf/anim/right",
-                frameCount: 2,
-                fps: 24,
-                width: 200,
-                height: 170,
-            }),
+                width: 219,
+                height: 212,
+            })
         });
         
         this.actions = [
@@ -39,7 +32,7 @@ export default class Werewolf extends Monster {
         ];
         
         this.exitZSpeed = 50;
-        this.state = "left";
+        this.state = "normal";
         
         this.setYPositionFromBottom(this.height);
         this.startY = this.y;
@@ -51,7 +44,7 @@ export default class Werewolf extends Monster {
         this.zSpeed = 12; // this will be multiplied by 10, as 120 was affecting Tarian's zCollision event
         
         //outLimit is how far back the monster will go, before moving forward
-        //inLimit is the point the wolf will start it's sweeping again
+        //inLimit is the point it will start it's sweeping again
         this.outLimit = 1;
         this.inLimit = (this.playerModel.z + 100);
         
@@ -67,9 +60,6 @@ export default class Werewolf extends Monster {
     
     exit()
     {
-        //set the monsters facing direction
-        this.state = this.setHeadDirection();
-        
         //move
         this.moveIn(this.exitZSpeed);
         
@@ -86,22 +76,10 @@ export default class Werewolf extends Monster {
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
-        this.state = "left";
         this.directionMultiplier = 1; //Multiply speed by this; Negate to change direction
     }
     
     //movement-----------------------------------------------------
-    setHeadDirection() //not an action, just a method they'll both use
-    {
-        //set the monsters facing direction
-        let player = this.playerModel;
-        if(this.x + (this.width / 2) >= player.x + (player.width / 2))
-        {
-            return "left";
-        } else {
-            return "right";
-        }
-    }
     
     getNewSpeed() //again, not an action
     {
@@ -110,9 +88,6 @@ export default class Werewolf extends Monster {
     
     sweep()
     {
-        //set the monsters facing direction
-        this.state = this.setHeadDirection();
-        
         //set monsters x movement direction and move it
         if(this.x < this._levelLeftEdge)
         {
@@ -138,9 +113,6 @@ export default class Werewolf extends Monster {
     
     moveUp()
     {
-        //set the monsters facing direction
-        this.state = this.setHeadDirection();
-        
         //move back in
         this.moveIn(this.zSpeed * 10);
         

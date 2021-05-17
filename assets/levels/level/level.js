@@ -15,7 +15,7 @@ import ElectricMine from '/assets/models/ElectricMine/ElectricMine';
 import NeonPidgeon from '/assets/models/Monsters/NeonPidgeon/NeonPidgeon';
 import LavaBall from '/assets/models/Monsters/attacks/LavaBall/LavaBall';
 import Falcon from '/assets/models/Monsters/Falcon/Falcon';
-import Werewolf from '/assets/models/Monsters/Werewolf/Werewolf';
+import Ghost from '/assets/models/Monsters/Ghost/Ghost';
 
 
 export default class Level
@@ -117,7 +117,7 @@ export default class Level
                 eventCheckMethodName: "zCollisionEventCheck",
                 class1: Tarian,
                 class1EventActionName: "zCollisionEventAction",
-                class2: Werewolf,
+                class2: Ghost,
                 class2EventActionName: "zCollisionEventAction"
             },
         ]);

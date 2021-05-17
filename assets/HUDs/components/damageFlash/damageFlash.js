@@ -60,7 +60,7 @@ export default class DamageFlash extends HUDComponent
             purple: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/yellow.png"),
             none: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/none.png"),
             fire: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/fire.png"),
-            tooth: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/tooth.png")
+            ghost: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/ghost.png")
         };
     }
     

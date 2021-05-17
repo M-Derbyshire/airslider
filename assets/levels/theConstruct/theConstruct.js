@@ -4,7 +4,7 @@ import NeonPidgeon from '/assets/models/Monsters/NeonPidgeon/NeonPidgeon';
 import Falcon from '/assets/models/Monsters/Falcon/Falcon';
 import BabyDragon from '/assets/models/Monsters/BabyDragon/BabyDragon';
 import LavaBall from '/assets/models/Monsters/attacks/LavaBall/LavaBall';
-import Werewolf from '/assets/models/Monsters/Werewolf/Werewolf';
+import Ghost from '/assets/models/Monsters/Ghost/Ghost';
 import ElectricMine from '/assets/models/ElectricMine/ElectricMine';
 import Shocker from '/assets/models/Shocker/Shocker';
 import Frame from '/engines/GraphicEn/Frame';
@@ -25,9 +25,9 @@ export default class TheConstruct extends Level
         
         // models.push(new NeonPidgeon(models[0]));
         // models.push(new Falcon(models[0]));
-        // models.push(new Werewolf(models[0]));
-		models.push(new LavaBall());
-		models.push(new BabyDragon(models[0], models[models.length - 1]));
+        models.push(new Ghost(models[0]));
+		// models.push(new LavaBall());
+		// models.push(new BabyDragon(models[0], models[models.length - 1]));
 		this.monster = models[models.length - 1];
 
         this.shockerManager.setShockerModelRange(models.length, models.length + 10);
@@ -102,7 +102,7 @@ export default class TheConstruct extends Level
         
         if(this.helpers.time.getTotalSeconds() <= 37)
         {
-            this.shockerManager.sendShockers();
+            // this.shockerManager.sendShockers();
         }
         
         
