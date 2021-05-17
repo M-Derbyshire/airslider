@@ -24,8 +24,8 @@ export default class TheConstruct extends Level
         models.push(new Tarian()); //add main character (has to be 0)
         
         // models.push(new NeonPidgeon(models[0]));
-        // models.push(new Falcon(models[0]));
-        models.push(new Ghost(models[0]));
+        models.push(new Falcon(models[0]));
+        // models.push(new Ghost(models[0]));
 		// models.push(new LavaBall());
 		// models.push(new BabyDragon(models[0], models[models.length - 1]));
 		this.monster = models[models.length - 1];
@@ -102,7 +102,7 @@ export default class TheConstruct extends Level
         
         if(this.helpers.time.getTotalSeconds() <= 37)
         {
-            // this.shockerManager.sendShockers();
+            this.shockerManager.sendShockers();
         }
         
         
