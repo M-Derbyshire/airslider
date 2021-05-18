@@ -1,5 +1,4 @@
 import Kernel from '/kernel/kernel';
-import ControlsInitialiser from '/settings/ControlsInitialiser';
 import EventManager from './EventManager';
 import EventCheckContainer from './EventCheckContainer';
 import ModelExtraEventManager from './ModelExtraEventManager';
@@ -24,8 +23,6 @@ export default class Level
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
-        
-        this.controlInitialiser = new ControlsInitialiser();
         
         this._eventManager = new EventManager(new EventCheckContainer, new ModelExtraEventManager);
         this._frameManager; //Set in subclass load method
@@ -134,11 +131,6 @@ export default class Level
         this.initialLevelSpeedRaw = 600;
         this.levelSpeedRaw = this.initialLevelSpeedRaw; //Can be used if you need to check for a change in level speed, or to change it
         this.updateLevelSpeed();
-        
-        //Setup the controls
-        //The main character in this game is always index 0
-        this.controlInitialiser.keyboardControls(0);
-        this.controlInitialiser.touchControls(0);
         
         this._HUD.models.push(this.kernel.loadedModels[0]);
 		

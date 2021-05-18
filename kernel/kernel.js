@@ -120,6 +120,10 @@ export default class Kernel {
         //get models here so they can be picked up by the engines
         this.loadedModels = this.level.getModels();
 		
+		//setup controls
+		const controlInitialiser = new settings.controlsInitialiserClass();
+		controlInitialiser.initialiseControls();
+		
 		const aspectRatioHorizontal = (!isNaN(settings.aspectRatioHorizontal)) ? settings.aspectRatioHorizontal : 17;
 		const aspectRatioVertical = (!isNaN(settings.aspectRatioVertical)) ? settings.aspectRatioVertical : 9;
 		const camera = new Camera(this.gameCanvas, this.gameContext, aspectRatioHorizontal, aspectRatioVertical);

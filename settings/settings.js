@@ -1,3 +1,4 @@
+import AirShockControlsInitialiser from '/settings/ControlsInitialiser/AirShockControlsInitialiser';
 
 export default {
 	gameCanvasElementID: "gameCan",
@@ -7,4 +8,6 @@ export default {
 	unitsWithinCamera: 1000,
 	aspectRatioHorizontal: 17,
 	aspectRatioVertical: 9,
+	playerModelIndex: 0,
+	controlsInitialiserClass: AirShockControlsInitialiser,
 };

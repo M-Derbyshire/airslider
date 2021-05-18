@@ -1,23 +1,24 @@
-import Kernel from '/kernel/kernel';
+import ControlsInitialiser from '/settings/ControlsInitialiser/ControlsInitialiser';
+import settings from '/settings/settings';
 
-export default class ControlsInitialiser
+export default class AirShockControlsInitialiser extends ControlsInitialiser
 {
-    constructor()
+	constructor()
+	{
+		super();
+		
+		this.currentMove;
+		this.playerModelIndex = (!isNaN(settings.playerModelIndex)) ? settings.playerModelIndex : 0;
+		
+		this._initialisingFunctions = [
+			this.keyboardControls.bind(this),
+			this.touchControls.bind(this)
+		];
+	}
+	
+    keyboardControls() //This is for keyboard controls, for playing in browser
     {
-        this.kernel = Kernel.getInstance();
-        
-        //setup any variables required by your listeners here
-        this.currentMove;
-    }
-    
-    
-    //place methods in this class to setup the controls
-    //Pass in the model index number (this.kernel.loadedModels array) if needed
-    
-    //This is for playing in browser
-    keyboardControls(index)
-    {
-        if(!this.kernel.isOnMobile)
+        if(!settings.isOnMobile)
         {
             window.addEventListener("keydown", (e) => {
                 // this.currentMove = e.key;
@@ -26,10 +27,10 @@ export default class ControlsInitialiser
                     switch(e.key)
                     {
                         case "ArrowLeft":
-                            this.kernel.loadedModels[index].state = "left";
+                            this.kernel.loadedModels[this.playerModelIndex].state = "left";
                             break;
                         case "ArrowRight":
-                            this.kernel.loadedModels[index].state = "right";
+                            this.kernel.loadedModels[this.playerModelIndex].state = "right";
                             break;
                     }
                     this.currentMove = e.key;
@@ -39,25 +40,25 @@ export default class ControlsInitialiser
             window.addEventListener("keyup", (e) => {
                 if(this.currentMove == e.key)
                 {
-                    this.kernel.loadedModels[index].state = "forward";
+                    this.kernel.loadedModels[this.playerModelIndex].state = "forward";
                     this.currentMove = "";
                 }
             }, true);
         }
     }
     
-    //these are for game on mobile (can also be used in browser with mouse)
-    touchControls(index)
+    //these are touch controls for game on mobile
+    touchControls()
     {
         window.addEventListener("touchstart", (e) => {
             for(let i = 0; i < e.touches.length; i++)
             {
                 if(e.touches[i].pageX < (window.innerWidth / 2))
                 {
-                    this.kernel.loadedModels[index].state = "left";
+                    this.kernel.loadedModels[this.playerModelIndex].state = "left";
                     this.currentMove = "ArrowLeft";
                 } else {
-                    this.kernel.loadedModels[index].state = "right";
+                    this.kernel.loadedModels[this.playerModelIndex].state = "right";
                     this.currentMove = "ArrowRight";
                 }
             }
@@ -82,19 +83,19 @@ export default class ControlsInitialiser
                 switch(newMove)
                 {
                     case "ArrowLeft":
-                        this.kernel.loadedModels[index].state = "left";
+                        this.kernel.loadedModels[this.playerModelIndex].state = "left";
                         break;
                     case "ArrowRight":
-                        this.kernel.loadedModels[index].state = "right";
+                        this.kernel.loadedModels[this.playerModelIndex].state = "right";
                         break;
                 }
             }
             
             if(!newMove)
             {
-                this.kernel.loadedModels[index].state = "forward";
+                this.kernel.loadedModels[this.playerModelIndex].state = "forward";
                 this.currentMove = "";
             }
         }, true);
     }
-}
+};
