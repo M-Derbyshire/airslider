@@ -6,6 +6,8 @@ import SoundEn from '/engines/SoundEn/SoundEn';
 import TimeHelper from '/helpers/TimeHelper';
 import UnitHelper from '/helpers/UnitHelper';
 import ZCalc from '/helpers/zCalc';
+import Camera from '/engines/GraphicEn/Camera';
+import FrameManager from '/engines/GraphicEn/FrameManager';
 import settings from '/settings/settings';
 
 // This class provides a Singleton instance
@@ -117,9 +119,12 @@ export default class Kernel {
         
         //get models here so they can be picked up by the engines
         this.loadedModels = this.level.getModels();
+		
+		const camera = new Camera(this.gameCanvas, this.gameContext);
+		const frameManager = new FrameManager(camera);
         
         this._gameEn = new GameEn();
-        this._graphicEn = new GraphicEn(this.gameCanvas, this.gameContext);
+        this._graphicEn = new GraphicEn(this.gameCanvas, this.gameContext, camera, frameManager);
         this._soundEn = new SoundEn();
         this._menuEn = new MenuEn();
         

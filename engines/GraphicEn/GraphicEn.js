@@ -1,17 +1,15 @@
 import Kernel from '/kernel/kernel';
-import Camera from './Camera';
-import FrameManager from './FrameManager';
 
 export default class GraphicEn{
-    constructor(gameCanvas, gameContext)
+    constructor(gameCanvas, gameContext, camera, frameManager)
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
 		
         this.gameCan = gameCanvas;
         this.gameCtx = gameContext;
-        this.camera = new Camera(this.gameCan, this.gameCtx);
-        this.frameManager = new FrameManager(this.camera);
+        this.camera = camera;
+        this.frameManager = frameManager;
         
         //These will be set on the first frame, in the run() method, by the cavas-size-change handler
         this._lastFrameCanvasWidth = 0;
