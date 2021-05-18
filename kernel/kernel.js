@@ -6,6 +6,7 @@ import SoundEn from '/engines/SoundEn/SoundEn';
 import TimeHelper from '/helpers/TimeHelper';
 import UnitHelper from '/helpers/UnitHelper';
 import ZCalc from '/helpers/zCalc';
+import settings from '/settings/settings';
 
 // This class provides a Singleton instance
 // So, other than the first time, you should use Kernel.getInstance()
@@ -32,13 +33,14 @@ export default class Kernel {
         Kernel._instance = this;
         
         
-        this._isOnMobile = false; //is this a mobile app (such as through Cordova)?
+        this._isOnMobile = !!settings.isOnMobile; //is this a mobile app (such as through Cordova)?
         
-        this._fps = 60;
-        this._fpsLimit = 70;
+        this._fps = (!isNaN(settings.initialFPS)) ? settings.initialFPS : 60;
+        this._fpsLimit = (!isNaN(settings.fpsLimit)) ? settings.fpsLimit : 70;
         this._lastTime = new Date(); //used when calculating fps and enforcing fps limit
         
-        this.unitsWithinCamera = 1000; //how many drawSpace x/y units are there within the camera's size
+		//how many drawSpace x/y units are there within the camera's size
+        this.unitsWithinCamera = (!isNaN(settings.unitsWithinCamera)) ? settings.unitsWithinCamera : 1000;
         
         this._totalActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
         this._totalInactiveMilliseconds = 0;
@@ -58,7 +60,7 @@ export default class Kernel {
         
         this._helpers;
 		
-		this._gameCanvasElementID = "gameCan"; //Will eventually be set by a setting
+		this._gameCanvasElementID = settings.gameCanvasElementID;
 		this._gameCanvas = document.getElementById(this.gameCanvasElementID);
 		this._gameContext = this.gameCanvas.getContext("2d");
     }
