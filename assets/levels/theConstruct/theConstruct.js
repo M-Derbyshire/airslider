@@ -47,7 +47,7 @@ export default class TheConstruct extends Level
     
     load(canvas, canvasCtx, camera, frameManager)
     {
-        super.load(canvas);
+        super.load(canvas, canvasCtx, camera, frameManager);
         
         this._frameManager = frameManager;
         

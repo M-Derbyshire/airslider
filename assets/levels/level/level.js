@@ -64,9 +64,60 @@ export default class Level
     }
     
     //set things that can only be done after the engines are constructed
-    load(canvas)
+    load(gameCanvas, gameContext, camera, frameManager)
     {
-        //These are the events that are valid across all levels
+        this._registerLevelEvents();
+        
+        this.leftEdge = 0;
+        this.rightEdge = this.kernel.unitsWithinCamera;
+		
+        this._setupShockerManager(this.leftEdge, this.rightEdge);
+        
+        this._setupZCalc(gameCanvas);
+        
+        this._setupLevelSpeed();
+        
+        this._setupHUD(gameContext, camera);
+		
+		this._setupPatternManager();
+    }
+	
+	_setupPatternManager()
+	{
+		this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
+	}
+	
+	_setupHUD(gameContext, camera)
+	{
+		this._HUD.models.push(this.kernel.loadedModels[0]);
+		this._loadHUD(gameContext, camera);
+	}
+	
+	_setupLevelSpeed()
+	{
+		//levelSpeedRaw can be used if you need to check for a change in level speed, or to change it
+		
+		this.initialLevelSpeedRaw = 600;
+        this.levelSpeedRaw = this.initialLevelSpeedRaw;
+        this.updateLevelSpeed();
+	}
+	
+	_setupZCalc(canvas)
+	{
+		this.helpers.zCalc.setVanishPoint(
+            () => { return canvas.width / 2; }, 
+            () => { return canvas.height / 2; }
+        );
+	}
+	
+	_setupShockerManager(leftEdge, rightEdge)
+	{
+		this.shockerManager.setAreaEdges(leftEdge, rightEdge);
+	}
+	
+	_registerLevelEvents()
+	{
+		//These are the events that are valid across all levels
         this._eventManager.registerEventsArray([
             { 
                 eventCheckMethodName: "zCollisionEventCheck",
@@ -118,26 +169,9 @@ export default class Level
                 class2EventActionName: "zCollisionEventAction"
             },
         ]);
-        
-        this.leftEdge = 0;
-        this.rightEdge = this.kernel.unitsWithinCamera;
-        this.shockerManager.setAreaEdges(this.leftEdge, this.rightEdge);
-        
-        this.helpers.zCalc.setVanishPoint(
-            () => { return canvas.width / 2; }, 
-            () => { return canvas.height / 2; }
-        );
-        
-        this.initialLevelSpeedRaw = 600;
-        this.levelSpeedRaw = this.initialLevelSpeedRaw; //Can be used if you need to check for a change in level speed, or to change it
-        this.updateLevelSpeed();
-        
-        this._HUD.models.push(this.kernel.loadedModels[0]);
-		
-		this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
-    }
+	}
     
-    loadHUD(canvasCtx, camera)
+    _loadHUD(canvasCtx, camera)
     {
         this._HUD.load(canvasCtx, camera);
     }

@@ -131,7 +131,6 @@ export default class Kernel {
         
         //do any extra setup that may need access to the engines
         this.level.load(this.gameCanvas, this.gameContext, camera, frameManager);
-        this.level.loadHUD(this.gameContext, camera);
 		
         this._loadAllModels();
     }
