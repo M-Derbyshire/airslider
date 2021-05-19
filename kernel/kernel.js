@@ -120,30 +120,45 @@ export default class Kernel {
         //get models here so they can be picked up by the engines
         this.loadedModels = this.level.getModels();
 		
-		//setup controls
-		const controlInitialiser = new settings.controlsInitialiserClass();
-		controlInitialiser.initialiseControls();
-		
+		this._initialiseControls();
+        
 		const aspectRatioHorizontal = (!isNaN(settings.aspectRatioHorizontal)) ? settings.aspectRatioHorizontal : 17;
 		const aspectRatioVertical = (!isNaN(settings.aspectRatioVertical)) ? settings.aspectRatioVertical : 9;
 		const camera = new Camera(this.gameCanvas, this.gameContext, aspectRatioHorizontal, aspectRatioVertical);
 		const frameManager = new FrameManager(camera);
-        
-        this._gameEn = new GameEn();
-        this._graphicEn = new GraphicEn(this.gameCanvas, this.gameContext, camera, frameManager);
-        this._soundEn = new SoundEn();
-        this._menuEn = new MenuEn();
+		
+        this._initialiseAllEngines(camera, frameManager);
         
         //do any extra setup that may need access to the engines
-        this.level.load(this.gameCanvas, this.gameContext, this._graphicEn.camera, this._graphicEn.frameManager);
-        this.level.loadHUD(this.gameContext, this._graphicEn.camera);
-        for(let i = 0; i < this.loadedModels.length; i++)
+        this.level.load(this.gameCanvas, this.gameContext, camera, frameManager);
+        this.level.loadHUD(this.gameContext, camera);
+		
+        this._loadAllModels();
+    }
+	
+	_loadAllModels()
+	{
+		for(let i = 0; i < this.loadedModels.length; i++)
         {
             this.loadedModels[i].loadedIndex = i;
             this.loadedModels[i].load(this.level.leftEdge, this.level.rightEdge);
             this.loadedModels[i].loadAnimationsManager(this.gameContext, this._graphicEn.camera);
         }
-    }
+	}
+	
+	_initialiseAllEngines(camera, frameManager)
+	{
+		this._gameEn = new GameEn();
+        this._graphicEn = new GraphicEn(this.gameCanvas, this.gameContext, camera, frameManager);
+        this._soundEn = new SoundEn();
+        this._menuEn = new MenuEn();
+	}
+	
+	_initialiseControls()
+	{
+		const controlInitialiser = new settings.controlsInitialiserClass();
+		controlInitialiser.initialiseControls();
+	}
     
     loadImage(path, callback = this._assetHandler.getDefaultAssetCallback())
     {
