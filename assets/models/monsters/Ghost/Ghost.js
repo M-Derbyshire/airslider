@@ -88,8 +88,21 @@ export default class Ghost extends Monster {
     
     sweep()
     {
-        //set monsters x movement direction and move it
-        if(this.x < this._levelLeftEdge)
+        this._handleMonsterOverlappingLevelEdges();
+		
+        this.moveRight(this.xSpeed * this.directionMultiplier);
+        
+        this.moveOut(this.zSpeed * 10);
+        
+        if(this.z <= this.outLimit)
+        {
+            this._handleMonsterReachingOutLimit();
+        }
+    }
+	
+	_handleMonsterOverlappingLevelEdges()
+	{
+		if(this.x < this._levelLeftEdge)
         {
             this.x = this._levelLeftEdge;
             this.directionMultiplier = 1;
@@ -98,33 +111,33 @@ export default class Ghost extends Monster {
             this.x = this._levelRightEdge - this.width;
             this.directionMultiplier = -1;
         }
-        this.moveRight(this.xSpeed * this.directionMultiplier);
-        
-        //move monster on z axis
-        this.moveOut(this.zSpeed * 10);
-        
-        //should monster move forward to reset?
-        if(this.z <= this.outLimit)
-        {
-            this.z = this.outLimit;
-            this.nextAction();
-        }
-    }
+	}
+	
+	_handleMonsterReachingOutLimit()
+	{
+		this.z = this.outLimit;
+        this.nextAction();
+	}
+	
+	
     
     moveUp()
     {
-        //move back in
         this.moveIn(this.zSpeed * 10);
         
-        //go back to sweep if need be
         if(this.z >= this.inLimit)
         {
-            this.xSpeed = this.getNewSpeed();
-            this.z = this.inLimit;
-            this.damageDealt = this.damageDealtOrig;
-            this.nextAction();
+            this._handleMonsterReachingInLimit();
         }
     }
+	
+	_handleMonsterReachingInLimit()
+	{
+		this.xSpeed = this.getNewSpeed();
+		this.z = this.inLimit;
+		this.damageDealt = this.damageDealtOrig;
+		this.nextAction();
+	}
     
     
     //events------------------------------------------------------------
