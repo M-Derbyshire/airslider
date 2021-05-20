@@ -86,7 +86,17 @@ export default class BabyDragon extends Monster {
     {
         this.moveRight(this.xSpeed);
         
-        if(this.x + (this.width / 2) <= this._levelLeftEdge || (this.x + (this.width / 2) >= this._levelRightEdge))
+		this._handleOverlappingOfLevelEdges();
+        
+        this._dropBallIfTime();
+    }
+	
+	_handleOverlappingOfLevelEdges()
+	{
+		const hasOverlappedLeftEdge = (this.x + (this.width / 2) <= this._levelLeftEdge);
+		const hasOverlappedRightEdge = (this.x + (this.width / 2) >= this._levelRightEdge);
+		
+        if(hasOverlappedLeftEdge || hasOverlappedRightEdge)
         {
             this.xSpeed = -this.xSpeed;
             this.state = (this.state == "left") ? "right" : "left";
@@ -95,12 +105,15 @@ export default class BabyDragon extends Monster {
                 ((this._levelLeftEdge - (this.width / 2)) + 1) :
                 ((this._levelRightEdge - (this.width / 2)) - 1);
         }
-        
-        if(!this.lavaBall.active && this.fireWeapon)
+	}
+	
+	_dropBallIfTime()
+	{
+		if(!this.lavaBall.active && this.fireWeapon)
         {
             this.dropBall();
         }
-    }
+	}
     
     //attacks-----------------------------------------------------
     dropBall()
