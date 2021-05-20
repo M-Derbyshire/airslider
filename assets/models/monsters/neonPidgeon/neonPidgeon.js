@@ -80,7 +80,7 @@ export default class NeonPidgeon extends Monster {
         {
             //if not at correct height, don't leave yet
             this.state = "rising";
-            this.rise(this.kernel.loadedModels[this.loadedIndex]);
+            this.rise();
         } else {
             this.state = "flapping";
         
@@ -88,11 +88,18 @@ export default class NeonPidgeon extends Monster {
             
             if((this.x + this.width) < (this._levelLeftEdge - this.offScreenUnits))
             {
-                this.exiting = false;
-                this.active = false;
+                this._handleMonsterExitingScreen();
             }
         }
     }
+	
+	_handleMonsterExitingScreen()
+	{
+		this.exiting = false;
+    	this.active = false;
+	}
+	
+	
     
     reset()
     {
@@ -110,7 +117,46 @@ export default class NeonPidgeon extends Monster {
     {
         this.moveRight(this.xSpeed);
         
-        if(this.x <= this._levelLeftEdge || this.x + this.width >= this._levelRightEdge)
+        this._handleMonsterOverlappingLevelEdges();
+        
+        if(this.nextDrop === -1)
+        {
+            this.nextDrop = this._getNextDropTime();
+        } 
+		else if(this._monsterShouldDrop())
+        {
+            this._startMonsterDrop();
+        }
+        
+		//If this should be true, it will be set to true by neonPidgeonOverlappingEventAction, so end on this.
+        this.overlapping = false;
+    }
+	
+	_startMonsterDrop()
+	{
+		this.nextDrop = -1;
+        this.state = "falling";
+        this.nextAction();
+	}
+	
+	_getNextDropTime()
+	{
+		return this.helpers.time.getTotalMilliseconds() + 
+									this.dropWaitOffset + 
+									Math.floor(Math.random() * this.dropWaitRange);
+	}
+	
+	_monsterShouldDrop()
+	{
+		return ((this.helpers.time.getTotalMilliseconds() >= this.nextDrop) && 
+				!this.overlapping && 
+            	((this.x + this.width >= this.playerModel.x) && 
+				(this.x <= this.playerModel.x + this.playerModel.width)));
+	}
+	
+	_handleMonsterOverlappingLevelEdges()
+	{
+		if(this.x <= this._levelLeftEdge || this.x + this.width >= this._levelRightEdge)
         {
             this.xSpeed = -this.xSpeed;
             
@@ -118,23 +164,9 @@ export default class NeonPidgeon extends Monster {
                 (this._levelLeftEdge + 1) :
                 ((this._levelRightEdge - this.width) - 1);
         }
-        
-        if(this.nextDrop == -1)
-        {
-            this.nextDrop = this.helpers.time.getTotalMilliseconds() + 
-											this.dropWaitOffset + Math.floor(Math.random() * this.dropWaitRange);
-        } else if((this.helpers.time.getTotalMilliseconds() >= this.nextDrop) && 
-            !this.overlapping && 
-            ((this.x + this.width >= this.playerModel.x) && 
-            (this.x <= this.playerModel.x + this.playerModel.width)))
-        {
-            this.nextDrop = -1;
-            this.state = "falling";
-            this.nextAction();
-        }
-        
-        this.overlapping = false; //this will be set to true by event if true, so end on this.
-    }
+	}
+	
+	
     
     drop()
     {
