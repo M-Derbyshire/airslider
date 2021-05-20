@@ -16,24 +16,22 @@ export default class DamageFlash extends HUDComponent
     
     draw()
     {
-        this.flashSpeed = (this.flashSpeed >= 0) ? 
-            (this.flashSpeedDivider / this.kernel.fps) : 
-            -(this.flashSpeedDivider / this.kernel.fps);
+        this.flashSpeed = this._getFPSConsistentSpeed(this.flashSpeed);
         
+		
         if(this.opacity >= 1)
         {
-            this.opacity = 1;
-            this.flashSpeed = -this.flashSpeed;
+            this._switchToFadeOut();
         }
         
+		
         if(this.opacity > 0)
         {
             this.opacity += this.flashSpeed;
             
             if(this.opacity <= 0)
             {
-                this.opacity = 0;
-                this.flashSpeed = -this.flashSpeed;
+                this._stopFlash();
             }
             
             this._ctx.globalAlpha = this.opacity;
@@ -49,6 +47,26 @@ export default class DamageFlash extends HUDComponent
             this._ctx.globalAlpha = 1;
         }
     }
+	
+	_getFPSConsistentSpeed(lastFrameSpeed)
+	{
+		const newSpeed = (this.flashSpeedDivider / this.kernel.fps);
+		return (lastFrameSpeed >= 0) ? newSpeed : -newSpeed;
+	}
+	
+	_switchToFadeOut()
+	{
+		this.opacity = 1;
+        this.flashSpeed = -this.flashSpeed;
+	}
+	
+	_stopFlash()
+	{
+		this.opacity = 0;
+        this.flashSpeed = -this.flashSpeed;
+	}
+	
+	
     
     load(canvasCtx, camera)
     {
