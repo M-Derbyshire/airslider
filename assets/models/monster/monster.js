@@ -34,8 +34,28 @@ export default class Monster extends Model {
     
     act()
     {
-        if(this.kernel.level.levelSpeedRaw < this.realZSpeedRaw && this.active)
+        if(this.entering)
         {
+            this.enter();
+        }
+        else if(this.exiting)
+        {
+            this.exit();
+        }
+		else
+		{
+			this.actions[this.currentAction].apply(this);
+		}
+		
+		this._handlePlayerLoss();
+    }
+	
+	_handlePlayerLoss()
+	{
+		//If we (the player) has stopped moving forward (lost)
+		if(this.kernel.level.levelSpeedRaw < this.realZSpeedRaw && this.active)
+        {
+			//Fly/float off into the distance
             this.z += (this.helpers.zCalc.speed(this.realZSpeedRaw, this.kernel.fps) - this.helpers.zCalc.speed(this.kernel.level.levelSpeed, this.kernel.fps));
             this.fireWeapon = false;
             
@@ -44,21 +64,9 @@ export default class Monster extends Model {
                 this.active = false;
             }
         }
-        
-        if(this.entering)
-        {
-            this.enter();
-            return;
-        }
-        
-        if(this.exiting)
-        {
-            this.exit();
-            return;
-        }
-        
-        this.actions[this.currentAction].apply(this); //run the current action
-    }
+	}
+	
+	
     
     start()
     {
