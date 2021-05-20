@@ -96,7 +96,7 @@ export default class TheConstruct extends Level
         this.updateLevelSpeed(); //keeps level speed consistent via fps
         
         //if outside/inside changes, change light mask
-        this.checkLightMask();
+        this.setLightMask();
 		
 		// this.patternManager.sendPatterns();
         

@@ -190,7 +190,7 @@ export default class Level
         }
     }
     
-    checkLightMask()
+    setLightMask()
     {
         if(
             this.tunnelManager.tunnel.length > 1 && 
