@@ -25,15 +25,18 @@ export default class HealthBar extends HUDComponent
     
     draw()
     {
+		this._ctx.lineCap = "round";
+		
         const health = this.kernel.loadedModels[this.targetIndex].health;
-        
         const cameraX = this._camera.canvasPositionX;
         const cameraY = this._camera.canvasPositionY;
-        
-        this._ctx.lineCap = "round";
-        
-        
-        //back for bar
+		
+		this._drawBarBorder(cameraX, cameraY);
+        this._drawHealthLevel(cameraX, cameraY, health);
+    }
+	
+	_drawBarBorder(cameraX, cameraY)
+	{
         const backX = this.helpers.unit.xUnit(this.x);
         const backY = this.helpers.unit.yUnit(this.y);
         const backWidth = this.helpers.unit.xUnit(this.width);
@@ -45,9 +48,11 @@ export default class HealthBar extends HUDComponent
         this._ctx.moveTo(cameraX + backX + (backHeight / 2), cameraY + backY);
         this._ctx.lineTo((cameraX + backX - (backHeight / 2)) + backWidth, cameraY + backY);
         this._ctx.stroke();
-        
-        //bar for health
-        if(health > 0)
+	}
+	
+	_drawHealthLevel(cameraX, cameraY, health)
+	{
+		if(health > 0)
         {
             this._ctx.strokeStyle = this.barColor;
             
@@ -61,5 +66,5 @@ export default class HealthBar extends HUDComponent
             this._ctx.lineTo(cameraX + healthX + healthWidth, cameraY + healthY);
             this._ctx.stroke();
         }
-    }
+	}
 }
