@@ -58,22 +58,34 @@ export default class ElectricMine extends Model
     
     act()
     {
-        if(this.kernel.level.levelSpeed == 0) //updates zSpeed
+        this._updateZSpeedBasedOnLevelSpeed();
+        
+        this.z -= this.zSpeed;
+		
+		this._handleModelLeavingScreen();
+    }
+	
+	_updateZSpeedBasedOnLevelSpeed()
+	{
+		if(this.kernel.level.levelSpeed == 0)
         {
             this.zSpeed = -(this.helpers.zCalc.speed(this.kernel.level.initialLevelSpeedRaw, this.kernel.fps) / 1.5);
         } else {
             this.zSpeed = this.kernel.level.levelSpeed / 1.5;
         }
-        
-        this.z -= this.zSpeed; //not using this.moveOut(), as the levelspeed is being reset based on fps -- thus this is as well
-        
-        if(this.z < 0)
+	}
+	
+	_handleModelLeavingScreen()
+	{
+		if(this.z < 0)
         {
 			this.state = "undetonated";
             this.active = false;
         }
-    }
+	}
     
+	
+	
     zCollisionEventAction(otherModel)
     {
 		if(this.state === "undetonated") this.state = "retracting";
