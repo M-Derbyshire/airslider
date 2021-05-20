@@ -174,6 +174,8 @@ export default class Falcon extends Monster {
 		}
 	}
     
+	
+	
     strafe()
     {
         if(this._isItTimeToSwoop())
@@ -216,6 +218,7 @@ export default class Falcon extends Monster {
 	}
     
 	
+	
     swoopDown()
     {
         //y speed is used for both x and y movement, so it's diagonal.
@@ -224,6 +227,8 @@ export default class Falcon extends Monster {
         this.moveDown(this.ySpeed);
     }
     
+	
+	
     swoopUp()
     {
         if(this.y <= this.startY)
@@ -240,23 +245,38 @@ export default class Falcon extends Monster {
         }
     }
     
+	
+	
     reposition()
     {
         //get player center and monster center; also pre-calculate the real speed of the monster
         const playerCenter = this.player.x + (this.player.width / 2)
         const monsterCenter = this.x + (this.width / 2);
-        const calcSpeed = this.helpers.unit.xSpeed(this.xSpeed);
+        const preCalculatedMonsterSpeed = this.helpers.unit.xSpeed(this.xSpeed);
         
-        if(monsterCenter < playerCenter + calcSpeed && monsterCenter > playerCenter - calcSpeed)
+        if(this._isFalconCenteredAbovePlayer(playerCenter, monsterCenter, preCalculatedMonsterSpeed))
         {
             this.lastSwoop = this.helpers.time.getTotalMilliseconds();
             this.nextAction();
         } else {
-            this.directionMultiplier = (playerCenter < monsterCenter) ? -1 : 1;
-            this.moveRight(this.xSpeed * this.directionMultiplier);
+            this._moveFalconToCenterAbovePlayer(playerCenter, monsterCenter);
         }
     }
+	
+	_isFalconCenteredAbovePlayer(playerCenter, monsterCenter, preCalculatedMonsterSpeed)
+	{
+		return ((monsterCenter < playerCenter + preCalculatedMonsterSpeed) && 
+					(monsterCenter > playerCenter - preCalculatedMonsterSpeed));
+	}
+	
+	_moveFalconToCenterAbovePlayer(playerCenter, monsterCenter)
+	{
+		this.directionMultiplier = (playerCenter < monsterCenter) ? -1 : 1;
+        this.moveRight(this.xSpeed * this.directionMultiplier);
+	}
     
+	
+	
     //events------------------------------------------------------------
     
     hitPlayerOrGroundEventAction(otherModel)
