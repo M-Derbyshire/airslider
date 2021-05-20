@@ -120,7 +120,7 @@ export default class Falcon extends Monster {
                 this.active = false;
             }
         } else {
-            this.actions[this.currentAction](this.kernel.loadedModels[this.loadedIndex]); //run the current action
+            this.actions[this.currentAction](); //run the current action
         }
     }
     
