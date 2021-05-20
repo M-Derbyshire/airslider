@@ -145,7 +145,7 @@ export default class Falcon extends Monster {
     
     stalking()
     {
-        //Reset the damage (It's set to 0 in swoopUp() to avoid extra damage)
+        //Reset the damage (It's set to 0 in swoopUp() to avoid dealing extra damage to the player)
         this.damageDealt = this.damageDealtOrig;
         
         //keep monster centered above player
@@ -154,46 +154,29 @@ export default class Falcon extends Monster {
         if(this.helpers.time.getTotalMilliseconds() - this.lastSwoop >= this.swoopWait)
         {
             this.swoopWait = (Math.random() * 3000) + 1000; //between 1 and 4 seconds
-            // will set the lastSwoop time after swooping has finished
+            // will set the lastSwoop time after swooping has finished (see reposition())
             
-            if(this.x + (this.width / 2) > (this._levelRightEdge - this._levelLeftEdge) / 2)
-            {
-                this.directionMultiplier = -1;
-                this.state = "left";
-            } else {
-                this.directionMultiplier = 1;
-                this.state = "right";
-            }
+            this._setSwoopDirection();
             
             this.nextAction();
         }
     }
+	
+	_setSwoopDirection()
+	{
+		if(this.x + (this.width / 2) > (this._levelRightEdge - this._levelLeftEdge) / 2)
+		{
+			this.directionMultiplier = -1;
+			this.state = "left";
+		} else {
+			this.directionMultiplier = 1;
+			this.state = "right";
+		}
+	}
     
     strafe()
     {
-        // Center of monster in drop animations
-        // Width/height should be the same for both dropLeft and dropRight anims.
-        const monsterDropLeftAnim = this.animationManager.animations.dropLeft;
-        const monsterSwoopXCenter = this.x + (monsterDropLeftAnim.width / 2);
-        const monsterSwoopYcenter = this.y + (monsterDropLeftAnim.height / 2);
-        
-        
-        const player = this.player;
-        const playerXCenter = player.x + (player.width / 2);
-        const playerYCenter = player.y + (player.height / 2);
-        
-        // Always a positive when in the air.
-        const yDifference = playerYCenter - monsterSwoopYcenter; 
-        
-        // Need this to always be positive, so we can just see if it's greater
-        // than the yDifference for either direction.
-        let xDifference = playerXCenter - monsterSwoopXCenter;
-        if(xDifference < 0) xDifference = -xDifference;
-        
-        //Monster will switch to swooping down with the same speed for x and y.
-        //So, if the xDifference and yDifference match, it's time to swoop, 
-        //as it's correctly aimed at the player.
-        if(xDifference >= yDifference)
+        if(this._isItTimeToSwoop())
         {
             this.directionMultiplier = -this.directionMultiplier;
             this.state = (this.directionMultiplier == -1) ? "dropLeft" : "dropRight";
@@ -204,7 +187,35 @@ export default class Falcon extends Monster {
             this.moveRight(this.xSpeed * this.directionMultiplier);
         }
     }
+	
+	_isItTimeToSwoop()
+	{
+		//The width will be the same for both left and right drop anims, 
+		//so just getting one of them here.
+        const monsterDropLeftAnim = this.animationManager.animations.dropLeft;
+		
+        const monsterSwoopXCenter = this.x + (monsterDropLeftAnim.width / 2);
+        const monsterSwoopYCenter = this.y + (monsterDropLeftAnim.height / 2);
+        
+        const player = this.player;
+        const playerXCenter = player.x + (player.width / 2);
+        const playerYCenter = player.y + (player.height / 2);
+        
+		
+        const yDifference = playerYCenter - monsterSwoopYCenter; 
+		
+		//If the player is to the left of the monster, we'll get a negative value here,
+		//so make it positive
+        const xDifference = playerXCenter - monsterSwoopXCenter;
+        const positiveXDifference = (xDifference >= 0) ? xDifference : -xDifference;
+        
+        //Monster will switch to swooping down diagnolly, with the same speed for x and y.
+        //So, if the xDifference and yDifference match, it's time to swoop, as it's 
+		//correctly aimed at the player.
+        return (positiveXDifference >= yDifference);
+	}
     
+	
     swoopDown()
     {
         //y speed is used for both x and y movement, so it's diagonal.
