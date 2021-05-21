@@ -74,18 +74,29 @@ export default class Tarian extends Model {
         
         this.zSpeed = 35; //used when state is "lost"
     }
+	
+	
     
     act()
     {
         this._movePlayer();
         
-        if(this.health <= 10 && this.health > 0)
+        this._handleDamageFlash();
+        
+		this._handleExplodingAndLoss();
+    }
+	
+	_handleDamageFlash()
+	{
+		if(this.health <= 10 && this.health > 0)
         {
             this.flash();
         }
-        
-        //make sure the exploding/lost anims always run when they should
-        if(this.exploding && this.state != "exploding")
+	}
+	
+	_handleExplodingAndLoss()
+	{
+		if(this.exploding && this.state != "exploding")
         {
             if(this.state == "lost")
             {
@@ -100,21 +111,27 @@ export default class Tarian extends Model {
         {
             this.state = "lost";
         }
-        
-        //this will run if Tarian is onscreen, but defeated
-        if(this.state == "lost" && this.z >= 0)
+		
+		this._handleOnScreenAfterLoss();
+		this._handleLeavingScreenAfterLoss();
+	}
+	
+	_handleOnScreenAfterLoss()
+	{
+        if(this.lost && this.z >= 0)
         {
-            this.state = "lost";
             this.moveOut(this.zSpeed);
         }
-        
-        //if Tarian is offscreen after loss
-        if(this.z <= 0)
+	}
+	
+	_handleLeavingScreenAfterLoss()
+	{
+		if(this.lost && this.z < 0)
         {
             this.active = false;
             this.kernel.level.levelStop();
         }
-    }
+	}
     
 	
 	
