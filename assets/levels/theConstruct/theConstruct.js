@@ -21,7 +21,8 @@ export default class TheConstruct extends Level
     {
         let models = [];
         
-        models.push(new Tarian()); //add main character (has to be 0)
+		const player = new Tarian();
+        models.push(player); //add main character (has to be 0)
         
         models.push(new NeonPidgeon(models[0]));
         // models.push(new Falcon(models[0]));

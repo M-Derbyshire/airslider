@@ -2,7 +2,8 @@ import Model from '/assets/models/Model/Model';
 
 export default class Shocker extends Model
 {
-    constructor(color, mode, speedX = 0, playerIndex = 0)
+	//Possible modes: "static", "sweep", "home"
+    constructor(color, mode, playerModel = null, speedX = 0)
     {
         super(Model);
         
@@ -11,8 +12,9 @@ export default class Shocker extends Model
         this._state = "shock";
         this._active = false;
         this._xSpeed = speedX; //this will be fed through xSpeed()
-        this.homingTargetIndex = playerIndex;
+        this.homingTarget = playerModel;
 		this.damageDealt = 2;
+		this.homingZStart = 200; //If in "home" mode, at what Z position do we start homing?
     }
     
     load(levelLeftEdge, levelRightEdge)
@@ -43,33 +45,46 @@ export default class Shocker extends Model
     
     act()
     {
-        if(this.kernel.level.levelSpeed == 0) //updates zSpeed
+        this._setZSpeedBasedOnLevelSpeed();
+		
+		//not using this.moveOut(), as the levelspeed is being reset based on fps -- thus this is as well
+        this.z -= this.zSpeed;
+        
+        const currentXSpeed = (this.mode == "home") ? this._getHomingMovementXSpeed() : this.xSpeed;
+		
+        if(this.z < 0)
+        {
+            this.active = false;
+        }
+		
+		//This may be negative (which would be left movement)
+		this.moveRight(currentXSpeed);
+    }
+	
+	_setZSpeedBasedOnLevelSpeed()
+	{
+		if(this.kernel.level.levelSpeed == 0) //updates zSpeed
         {
             this.zSpeed = -(this.helpers.zCalc.speed(this.kernel.level.initialLevelSpeedRaw, this.kernel.fps) / 1.5);
         } else {
             this.zSpeed = this.kernel.level.levelSpeed / 1.5;
         }
-        
-        if(this.mode == "home")
-        {
-            this.zSpeed = (this.zSpeed / 4) * 3;
-            this.homingSpeed = 100 / this.xSpeed;
-            this.xSpeed = 0;
-            
-            //sweep towards the player
-            this.xSpeed = 
-            ((this.kernel.loadedModels[this.homingTargetIndex].x + (this.kernel.loadedModels[this.homingTargetIndex].width / 2)) - 
-            (this.x + (this.width / 2))) / this.homingSpeed;
-        }
-        
-        this.z -= this.zSpeed; //not using this.moveOut(), as the levelspeed is being reset based on fps -- thus this is as well
-        this.moveRight(this.xSpeed);
-        
-        if(this.z < 0)
-        {
-            this.active = false;
-        }
-    }
+	}
+	
+	_getHomingMovementXSpeed()
+	{
+		if(this.z > this.homingZStart)
+		{
+			return 0;
+		}
+		
+		const homingSpeed = 100 / this.xSpeed;
+		
+		const player = this.homingTarget;
+		return ((player.x + (player.width / 2)) - (this.x + (this.width / 2))) / homingSpeed;
+	}
+	
+	
     
     zCollisionEventAction(otherModel)
     {
