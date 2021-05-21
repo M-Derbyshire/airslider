@@ -77,7 +77,7 @@ export default class Tarian extends Model {
     
     act()
     {
-        this.movePlayer();
+        this._movePlayer();
         
         if(this.health <= 10 && this.health > 0)
         {
@@ -116,56 +116,84 @@ export default class Tarian extends Model {
         }
     }
     
-    movePlayer() //this will just use moveRight(), but can also feed in negative numbers
+	
+	
+    _movePlayer() //this will just use moveRight(), but can also feed in negative numbers
     {
-        if(this.kernel.totalActiveMilliseconds - this.lastSpeedChange >= 100) //1 tenth of a second
-        {
-            this.lastSpeedChange = this.kernel.totalActiveMilliseconds;
-            
-            let direction = 0;
-            let speedChange = this.accl;
-            
-            // speed will be multiplied by the direction, to decide left or right
-            if(this.state == "right")
-            {
-                direction = 1;
-            } else if (this.state == "left")
-            {
-                direction = -1;
-            } else if (this.state !== "left" && this.state !== "right") //if stopping
-            {
-                if(this.xSpeed > 0)
-                {
-                    direction = -1;
-                } else if (this.xSpeed < 0)
-                {
-                    direction = 1;
-                }
-                
-                speedChange = this.deaccl;
-            }
-            
-            //set the speed
-            speedChange *= direction;
-            this.xSpeed += speedChange;
-            
-            // finally, if gone above topspeed, set to topspeed
-            // else, if reached zero, set to zero
-            if(this.xSpeed > this.topSpeed || this.xSpeed < -this.topSpeed)
-            {
-                this.xSpeed = this.topSpeed * direction;
-            } 
-            else if (
-                        (this.state !== "left" && this.state !== "right") && 
-                        (this.xSpeed > -speedChange && this.xSpeed < speedChange)
-                    )
-            {
-                this.xSpeed = 0;
-            }
-        }
+        this._setSpeedBasedOnAcceleration();
         
         this.moveRight(this.xSpeed);
     }
+	
+	_setSpeedBasedOnAcceleration()
+	{
+		if(this.kernel.totalActiveMilliseconds - this.lastSpeedChange >= 100) //1 tenth of a second
+        {
+            this.lastSpeedChange = this.kernel.totalActiveMilliseconds;
+			this._changeSpeed();
+        }
+	}
+	
+	_changeSpeed()
+	{
+		let directionMultiplier = 0;
+		let speedChange = this.accl;
+		
+		if(this.state == "right")
+		{
+			directionMultiplier = 1;
+		} 
+		else if (this.state == "left")
+		{
+			directionMultiplier = -1;
+		} 
+		else if (this.state !== "left" && this.state !== "right") //if stopping
+		{
+			if(this.xSpeed > 0)
+			{
+				directionMultiplier = -1;
+			} 
+			else if (this.xSpeed < 0)
+			{
+				directionMultiplier = 1;
+			}
+			
+			speedChange = this.deaccl;
+		}
+		
+		speedChange *= directionMultiplier;
+		this.xSpeed += speedChange;
+		
+		this._handleTooFastOrNegativeSpeed(speedChange, directionMultiplier);
+	}
+	
+	_handleTooFastOrNegativeSpeed(speedChange, directionMultiplier)
+	{
+		if(this._isAboveTopSpeedEitherDirection())
+		{
+			this.xSpeed = this.topSpeed * directionMultiplier;
+		} 
+		else if (this._isReadyToStopMovement(speedChange))
+		{
+			this.xSpeed = 0;
+		}
+	}
+	
+	_isAboveTopSpeedEitherDirection()
+	{
+		return (this.xSpeed > this.topSpeed || this.xSpeed < -this.topSpeed);
+	}
+	
+	_isReadyToStopMovement(speedChange)
+	{
+		return ((this.state !== "left" && this.state !== "right") && 
+					(this.xSpeed > -speedChange && this.xSpeed < speedChange));
+	}
+	
+	
+	
+	
+	
     
     extraEvents()
     {
