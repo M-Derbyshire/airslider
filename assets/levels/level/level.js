@@ -33,7 +33,7 @@ export default class Level
         this.shockerManager = new ShockerManager();
 		this.patternManager = new ModelXPositionPatternManager();
         
-        this.ground = new LevelGround();
+        this.ground;
         
         this.tunnelManager = new LevelTunnel();
         
@@ -70,6 +70,8 @@ export default class Level
         
         this.leftEdge = 0;
         this.rightEdge = this.kernel.unitsWithinCamera;
+		
+		this.ground = new LevelGround(gameContext, camera);
 		
         this._setupShockerManager(this.leftEdge, this.rightEdge);
         

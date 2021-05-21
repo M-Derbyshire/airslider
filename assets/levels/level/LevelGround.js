@@ -2,14 +2,13 @@ import Kernel from '/kernel/kernel';
 
 export default class LevelGround
 {
-    constructor()
+    constructor(canvasCtx, camera)
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
-        
-        //Set in set()
-        this._camera;
-        this._canvasCtx;
+
+        this._camera = camera;
+        this._canvasCtx = canvasCtx;
         
         this.ground = {
             image: null, //The image in the loadedAssets array
@@ -21,17 +20,14 @@ export default class LevelGround
         this.groundZ = []; //The z-axis positions of each of the ground images
     }
     
-    set(canvasCtx, camera, path, height)
+    set(path, height)
     {
-        this._camera = camera;
-        this._canvasCtx = canvasCtx;
-        
         //Can't set in constructor as graphicEn hasn't been initialised
         const canvasPositions = { 
-            x: camera.canvasPositionX, 
-            y: camera.canvasPositionY,
-            width: camera.canvasPositionWidth,
-            height: camera.canvasPositionHeight
+            x: this._camera.canvasPositionX, 
+            y: this._camera.canvasPositionY,
+            width: this._camera.canvasPositionWidth,
+            height: this._camera.canvasPositionHeight
         };
         
         this.ground.image = this.kernel.loadImage(path);
