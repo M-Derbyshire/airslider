@@ -36,7 +36,7 @@ export default class LevelTunnel
         
         while(this._isTunnelPopulatedWithLastPieceOffScreen())
         {
-            const tunnelPartsCopy = parts.map((part) => ({...part}));
+            const tunnelPartsCopy = parts.map(part => ({...part}));
             
             for(let i = tunnelPartsCopy.length - 1; i >= 0; i--)
             {
@@ -58,17 +58,29 @@ export default class LevelTunnel
     
     continueTunnel(newTunnelParts)
     {
-        if(this.tunnel.length == 0 || this.tunnel[0].active)
+        if(this._isReadyToAddMoreParts())
         {
             for(let i = 0; i < newTunnelParts.length; i++)
             {
                 this.tunnel.unshift(newTunnelParts[i]);
             }
-        } else if (!this.tunnel[this.tunnel.length - 1].active)
+        } 
+		else if (!this._getLastTunnelPart().active)
         {
-            this.tunnel[this.tunnel.length - 1].active = true;
+            this._getLastTunnelPart().active = true;
         }
     }
+	
+	_isReadyToAddMoreParts()
+	{
+		return (this.tunnel.length === 0 || this.tunnel[0].active);
+	}
+	
+	_getLastTunnelPart()
+	{
+		return this.tunnel[this.tunnel.length - 1];
+	}
+	
     
     //tunnel[i].z - .length - .color - .active
     draw(levelSpeed)
