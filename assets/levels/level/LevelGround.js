@@ -10,19 +10,14 @@ export default class LevelGround
         this._camera = camera;
         this._canvasCtx = canvasCtx;
         
-        this.ground = {
-            image: null, //The image in the loadedAssets array
-            height: 0, //Height to draw the image
-            distance: 0, //The correct z-axis distance between each image (which will place one on top of the other)
-            offset: 0 //The amount the images have moved along the z-axis (up till the distance property above)
-        };
+        this.ground; //The shared data for every piece of ground drawn (see _getPopulatedGroundObject())
         
-        this.groundZ = []; //The z-axis positions of each of the ground images
+        this.groundZPositions = []; //The z-axis positions of every piece of ground
     }
     
-    set(path, height)
+    setupGround(path, imageHeight)
     {
-        //Can't set in constructor as graphicEn hasn't been initialised
+        //Can't set in constructor as graphicEn wouldn't have been initialised then
         const canvasPositions = { 
             x: this._camera.canvasPositionX, 
             y: this._camera.canvasPositionY,
@@ -30,37 +25,55 @@ export default class LevelGround
             height: this._camera.canvasPositionHeight
         };
         
-        this.ground.image = this.kernel.loadImage(path);
-        this.ground.height = height;
-        let distance = -1;
+        this.ground = this._getPopulatedGroundObject(path, imageHeight);
         
-        this.groundZ.push(this.helpers.zCalc.vPointDepth); //The position of the first ground piece
-        
-        
-        for(let z = this.helpers.zCalc.vPointDepth; z >= 0; z--)
-        {
-            if(distance == -1) //If the only piece is the first piece
-            {
-                //Find the correct distance on the z-axis between each image.
-                //This takes the height of the image into account to figure out if the top of this
-                //ground image would now be at the bottom of the last image, if drawn at this 
-                //z-position.
-                if(this.helpers.zCalc.y(canvasPositions.height, z) >= this.helpers.zCalc.y(canvasPositions.height, this.groundZ[this.groundZ.length - 1]) + this.helpers.zCalc.height(height, this.groundZ[this.groundZ.length - 1]))
-                {
-                    distance = this.groundZ[this.groundZ.length - 1] - z;
-                    this.ground.distance = distance;
-                    this.groundZ.push(z + 1);
-                }
-            } else {
-                
-                //If z is now far enough away from the last added piece, add a new one
-                if(this.groundZ[this.groundZ.length - 1] - z == distance)
-                {
-                    this.groundZ.push(z + 1);
-                }
-            }
-        }
+        this._populateGroundZPositions(canvasPositions, imageHeight);
     }
+	
+	_getPopulatedGroundObject(path, height)
+	{
+		return {
+			//The Z distance you'd need to move an image before it was in the next image's original position
+            distance: null, 
+			
+            image: this.kernel.loadImage(path),
+            height, //Height to draw the image
+            offset: 0 //The amount the images have moved along the z-axis
+        };
+	}
+	
+	//canvasPositions should be an object with an x, y, width and height
+	_populateGroundZPositions(canvasPositions, imageheight)
+	{
+        for(let currentZPos = this.helpers.zCalc.vPointDepth; currentZPos >= 0; currentZPos--)
+        {
+			if(this.groundZPositions.length === 0)
+			{
+				this.groundZPositions.push(this.helpers.zCalc.vPointDepth);
+				continue;
+			}
+            
+			const lastZPosition = this.groundZPositions[this.groundZPositions.length - 1];
+			if(this.groundZPositions.length === 1)
+            {
+				const currentZPosTopEdge = this.helpers.zCalc.y(canvasPositions.height, currentZPos);
+				const lastZPosTopEdge = this.helpers.zCalc.y(canvasPositions.height, lastZPosition);
+				const lastZPosHeight = this.helpers.zCalc.height(imageheight, lastZPosition);
+				
+                if(currentZPosTopEdge >= lastZPosTopEdge + lastZPosHeight)
+                {
+                    this.ground.distance = lastZPosition - currentZPos;
+                }
+            } 
+			
+			if(lastZPosition - currentZPos === this.ground.distance)
+			{
+				this.groundZPositions.push(currentZPos + 1);
+			}
+        }
+	}
+	
+	
     
     
     //This works by moving all of the images on the z-axis, until they have
@@ -69,7 +82,7 @@ export default class LevelGround
     //like they are just continuing to move towards the camera.
     draw(levelSpeed)
     {
-        for(let i = 0; i < this.groundZ.length; i++)
+        for(let i = 0; i < this.groundZPositions.length; i++)
         {
             //The offset is subtracted from the starting z position of the image,
             //to make it move. 
@@ -84,14 +97,14 @@ export default class LevelGround
             
             this.ground.offset += (levelSpeed / 250);
             
-            let y = this.helpers.zCalc.y(this._camera.canvasPositionY + this._camera.canvasPositionHeight, this.groundZ[i] - this.ground.offset);
-            let width = this.helpers.zCalc.width((this._camera.canvasPositionX + this._camera.canvasPositionWidth * 2), this.groundZ[i] - this.ground.offset);
-            let height = this.helpers.zCalc.height(this.ground.height, this.groundZ[i] - this.ground.offset);
+            let y = this.helpers.zCalc.y(this._camera.canvasPositionY + this._camera.canvasPositionHeight, this.groundZPositions[i] - this.ground.offset);
+            let width = this.helpers.zCalc.width((this._camera.canvasPositionX + this._camera.canvasPositionWidth * 2), this.groundZPositions[i] - this.ground.offset);
+            let height = this.helpers.zCalc.height(this.ground.height, this.groundZPositions[i] - this.ground.offset);
             
             //Need to draw it once on the left, then again on the right
             this._canvasCtx.drawImage(
                 this.ground.image,
-                this.helpers.zCalc.x(this._camera.canvasPositionX - (this._camera.canvasPositionX + this._camera.canvasPositionWidth * 2), this.groundZ[i] - this.ground.offset),
+                this.helpers.zCalc.x(this._camera.canvasPositionX - (this._camera.canvasPositionX + this._camera.canvasPositionWidth * 2), this.groundZPositions[i] - this.ground.offset),
                 y,
                 width,
                 height
@@ -99,7 +112,7 @@ export default class LevelGround
             
             this._canvasCtx.drawImage(
                 this.ground.image,
-                this.helpers.zCalc.x(this._camera.canvasPositionX + this._camera.canvasPositionWidth, this.groundZ[i] - this.ground.offset),
+                this.helpers.zCalc.x(this._camera.canvasPositionX + this._camera.canvasPositionWidth, this.groundZPositions[i] - this.ground.offset),
                 y,
                 width,
                 height
