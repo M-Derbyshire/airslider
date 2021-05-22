@@ -82,47 +82,73 @@ export default class LevelTunnel
 	}
 	
     
-    //tunnel[i].z - .length - .color - .active
+	
     draw(levelSpeed)
     {
         for(let i = 0; i < this.tunnel.length; i++)
         {
             if(this.tunnel[i].active)
             {
-                let tunnelPart = this.tunnel[i];
-                
-                //move the image
+                const tunnelPart = this.tunnel[i];
+				
                 tunnelPart.z -= levelSpeed;
+                this._drawTunnelPart(tunnelPart);
                 
-                //draw the image (null is a clear piece)
-                if(tunnelPart.image)
-                {
-                    this.kernel.graphicEn.gameCtx.drawImage(
-                        tunnelPart.image, 
-                        this.helpers.zCalc.x(this._camera.canvasPositionX, tunnelPart.z, true), 
-                        this.helpers.zCalc.y(this._camera.canvasPositionY, tunnelPart.z, true), 
-                        this.helpers.zCalc.width(this._camera.canvasPositionWidth, tunnelPart.z, true), 
-                        this.helpers.zCalc.height(this._camera.canvasPositionHeight, tunnelPart.z, true)
-                    );
-                }
+                this._handlePartsActivation(i);
                 
-                //if this is not the first piece, and it's moved far enough, activate the next one
-                if(
-                    i > 0 && 
-                    !this.tunnel[i - 1].active &&
-                    (tunnelPart.z + tunnelPart.length) <= this.helpers.zCalc.vPointDepth
-                )
-                {
-                    this.tunnel[i - 1].active = true;
-                    this.tunnel[i - 1].z = tunnelPart.z + tunnelPart.length;
-                }
-                
-                //if this piece is out of the frame, it's no longer needed.
-                if(i === this.tunnel.length - 1 && this.tunnel[i].z + this.tunnel[i].length < 0)
-                {
-                    this.tunnel.pop(); // pop out this piece of the tunnel
-                }
+                this._handlePartOutOfFrame(i);
             }
         }
     }
+	
+	_drawTunnelPart(tunnelPart)
+	{
+		if(tunnelPart.image) //(null is a clear piece)
+		{
+			this.kernel.graphicEn.gameCtx.drawImage(
+				tunnelPart.image, 
+				this.helpers.zCalc.x(this._camera.canvasPositionX, tunnelPart.z, true), 
+				this.helpers.zCalc.y(this._camera.canvasPositionY, tunnelPart.z, true), 
+				this.helpers.zCalc.width(this._camera.canvasPositionWidth, tunnelPart.z, true), 
+				this.helpers.zCalc.height(this._camera.canvasPositionHeight, tunnelPart.z, true)
+			);
+		}
+	}
+	
+	_handlePartsActivation(partIndex)
+	{
+		if(partIndex > 0 && this._isTimeToActivatePreviousTunnelPart(partIndex))
+		{
+			const currentPart = this.tunnel[partIndex];
+			const previousPart = this.tunnel[partIndex - 1];
+			
+			previousPart.active = true;
+			previousPart.z = currentPart.z + currentPart.length;
+		}
+	}
+	
+	_isTimeToActivatePreviousTunnelPart(currentPartIndex)
+	{
+		if(this.tunnel.length < 2) return false;
+		
+		const currentPart = this.tunnel[currentPartIndex];
+		const previousPart = this.tunnel[currentPartIndex - 1];
+		
+		return (!previousPart.active && 
+					(currentPart.z + currentPart.length) <= this.helpers.zCalc.vPointDepth);
+	}
+	
+	_handlePartOutOfFrame(partIndex)
+	{
+		if(this._isPartOutOfFrame(partIndex))
+		{
+			this.tunnel.pop();
+		}
+	}
+	
+	_isPartOutOfFrame(partIndex)
+	{
+		return (partIndex === this.tunnel.length - 1 && 
+					this.tunnel[partIndex].z + this.tunnel[partIndex].length < 0);
+	}
 }
