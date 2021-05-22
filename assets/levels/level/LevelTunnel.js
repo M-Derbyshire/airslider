@@ -18,7 +18,8 @@ export default class LevelTunnel
     
     
     //tunnel[i].z - .length - .image - .active
-    //.image being null is a clear piece of the tunnel
+    //.image being null is a clear piece of the tunnel.
+	//.length is the length of the piece, on the z-axis.
     newTunnelPart(image, length = 1)
     {
         return {
@@ -33,26 +34,27 @@ export default class LevelTunnel
     {
         let newZ = this.helpers.zCalc.vPointDepth;
         
-        //Make a whole tunnel full of the provided parts
-        while(this.tunnel.length < 2 || this.tunnel[this.tunnel.length - 2].z > 0)
+        while(this._isTunnelPopulatedWithLastPieceOffScreen())
         {
-            //Need to make copies of all of these parts 
-            //(so we can use them multiple times at different z positions)
-            const partsCopy = parts.map((part) => {
-                return { ...part };
-            });
+            const tunnelPartsCopy = parts.map((part) => ({...part}));
             
-            for(let i = partsCopy.length - 1; i >= 0; i--)
+            for(let i = tunnelPartsCopy.length - 1; i >= 0; i--)
             {
-                this.tunnel.push(partsCopy[i]);
-                this.tunnel[this.tunnel.length - 1].active = true;
+                this.tunnel.push(tunnelPartsCopy[i]);
+                tunnelPartsCopy[i].active = true;
                 
-                // Set the Z to the previous item's Z, minus this one's length
-                newZ = newZ - this.tunnel[this.tunnel.length - 1].length;
-                this.tunnel[this.tunnel.length - 1].z = newZ;
+                newZ = newZ - tunnelPartsCopy[i].length;
+                tunnelPartsCopy[i].z = newZ;
             }
         }
     }
+	
+	_isTunnelPopulatedWithLastPieceOffScreen()
+	{
+		return (this.tunnel.length < 2 || this.tunnel[this.tunnel.length - 2].z > 0);
+	}
+	
+	
     
     continueTunnel(newTunnelParts)
     {

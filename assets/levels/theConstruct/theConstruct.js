@@ -85,9 +85,9 @@ export default class TheConstruct extends Level
         
         this.outsideVisible = true;
         
-        // this.tunnelManager.createStartingTunnel([
-        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-        // ]);
+        this.tunnelManager.createStartingTunnel([
+            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+        ]);
     }
     
     act()
@@ -105,10 +105,10 @@ export default class TheConstruct extends Level
         }
         
         
-        // this.tunnelManager.continueTunnel([
-        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-        //     this.tunnelManager.newTunnelPart(null, this.tunnelSpriteLength)
-        // ]);
+        this.tunnelManager.continueTunnel([
+            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+            this.tunnelManager.newTunnelPart(null, this.tunnelSpriteLength)
+        ]);
         
 		
 		//Start the monster going straight away
