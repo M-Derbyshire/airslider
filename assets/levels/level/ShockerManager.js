@@ -57,6 +57,7 @@ export default class ShockerManager
 	}
     
     
+	
     sendShockers()
     {
         for(let i = this._fromIndex; i <= this._toIndex; i++)
@@ -65,43 +66,9 @@ export default class ShockerManager
 			
             if(this._isTimeToSendNextShocker(i))
             {
-                // need to set some to be where the Tarian is, so player can't just stay in one place
-                let shockerXPos;
-                
-                //player character
-                let playerX = this.kernel.loadedModels[0].x;
-                let playerWidth = this.kernel.loadedModels[0].width;
-                
-                if((i + 1) % 3 == 0) //if this is every third in every 3 shockers
-                {
-                    // put somewhere on left side of level
-                    shockerXPos = (Math.random() * (((this._rightEdge - currentShocker.width) - this._leftEdge) / 2)) + this._leftEdge;
-                
-                } else if((i + 2) % 3 == 0) //if this is every second in every 3 shockers
-                {
-                    // now on the right side
-                    shockerXPos = (Math.random() * (((this._rightEdge - currentShocker.width) - this._leftEdge) / 2)) + ((this._rightEdge - this._leftEdge) / 2);
-                
-                } else //If this is first in every 3 shockers
-                {
-                    // put where player is (x coordinate)
-                    
-                    // want their center points to line up
-                    shockerXPos = (playerX + (playerWidth / 2)) - (currentShocker.width / 2);
-                    
-                    //now make sure they are within the bounds of the level
-                    if(shockerXPos < this._leftEdge)
-                    {
-                        shockerXPos = this._leftEdge;
-                    } else if (shockerXPos + currentShocker.width > this._rightEdge)
-                    {
-                        shockerXPos = this._rightEdge - currentShocker.width;
-                    }
-                }
-                
+				currentShocker.x = this._getShockerXPosition(i);
+				
                 currentShocker.z = this.helpers.zCalc.vPointDepth;
-                currentShocker.x = shockerXPos;
-                
                 currentShocker.active = true;
             }
         }
@@ -130,5 +97,54 @@ export default class ShockerManager
 		}
 		
 		return false;
+	}
+	
+	_getShockerXPosition(currentShockerIndex)
+	{
+		const currentShocker = this.kernel.loadedModels[currentShockerIndex];
+		
+		if((currentShockerIndex + 1) % 3 == 0) //the third of every 3 shockers
+		{
+			// put somewhere on left side of level
+			return this._getRandomXPosInFirstHalfOfArea(currentShocker.width) + this._leftEdge;
+		
+		} else if((currentShockerIndex + 2) % 3 == 0) //the second of every 3 shockers
+		{
+			// now on the right side
+			const halfOfAreaWidth = ((this._rightEdge - this._leftEdge) / 2);
+			
+			return this._getRandomXPosInFirstHalfOfArea(currentShocker.width) + halfOfAreaWidth;
+		
+		} else //the first of every 3 shockers
+		{
+			// put where player is (on the x-coordinate)
+			const player = this.kernel.loadedModels[this._playerModelIndex];
+			
+			return this._getShockerXPositionCenteredOnPlayer(currentShocker, player);
+		}
+	}
+	
+	_getRandomXPosInFirstHalfOfArea(currentShockerWidth)
+	{
+		return (Math.random() * (((this._rightEdge - currentShockerWidth) - this._leftEdge) / 2));
+	}
+	
+	_getShockerXPositionCenteredOnPlayer(currentShocker, player)
+	{
+		const playerCenter = (player.x + (player.width / 2));
+		const shockerCenter = (currentShocker.width / 2)
+		
+		let shockerXPos = playerCenter - shockerCenter;
+		
+		if(shockerXPos < this._leftEdge)
+		{
+			shockerXPos = this._leftEdge;
+		} 
+		else if (shockerXPos + currentShocker.width > this._rightEdge)
+		{
+			shockerXPos = this._rightEdge - currentShocker.width;
+		}
+		
+		return shockerXPos
 	}
 }
