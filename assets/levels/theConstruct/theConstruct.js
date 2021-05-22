@@ -125,27 +125,27 @@ export default class TheConstruct extends Level
 			
 			const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
 			
-			this.patternManager.addRepeatingPattern(20, 10, 10000, [
-				{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
-				{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
-				{ fromPosition: levelCenter, toPosition: levelCenter },
-				{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
-				{ fromPosition: levelCenter+100, toPosition: levelCenter+100 },
-				{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
-				{ fromPosition: levelCenter, toPosition: levelCenter },
-				{ fromPosition: levelCenter-50, toPosition: levelCenter-50 }
-			]);
+			// this.patternManager.addRepeatingPattern(20, 10, 10000, [
+			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
+			// 	{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
+			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
+			// 	{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
+			// 	{ fromPosition: levelCenter+100, toPosition: levelCenter+100 },
+			// 	{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
+			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
+			// 	{ fromPosition: levelCenter-50, toPosition: levelCenter-50 }
+			// ]);
 			this.patternManager.addRepeatingPattern(50, 10, 10000, [
 				{ fromPosition: levelCenter+200, toPosition: levelCenter+200 }
 			]);
-			// this.patternManager.addRepeatingPattern(15, 10, 10000, [
-			// 	{ fromPosition: levelCenter-300, toPosition: levelCenter+300 },
-			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 },
-			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
-			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
-			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
-			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
-			// ]);
+			this.patternManager.addRepeatingPattern(15, 10, 10000, [
+				{ fromPosition: levelCenter-300, toPosition: levelCenter+300 },
+				{ fromPosition: levelCenter-200, toPosition: levelCenter+200 },
+				{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
+				{ fromPosition: levelCenter, toPosition: levelCenter },
+				{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
+				{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
+			]);
 			// this.patternManager.addRepeatingPattern(15, 10, 10000, [
 			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
 			// ]);

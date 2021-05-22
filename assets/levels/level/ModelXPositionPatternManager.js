@@ -113,7 +113,7 @@ export default class ModelXPositionPatternManager
 					(pattern.nextPosition === pattern.positions.length - 1) ? 0 : pattern.nextPosition + 1;
 				
 				//Get the positions for each model on this line
-				const modelPositionsForLine = this._getPatternLinePositions(
+				const modelPositionsForLine = this._getPatternXAxisLinePositions(
 					currentLineInPattern.fromPosition, 
 					currentLineInPattern.toPosition,
 					pattern.patternMinXGap
@@ -141,39 +141,23 @@ export default class ModelXPositionPatternManager
 	}
 	
 	
-	//When placing models along the x-axis, to make a line at that z position
-	_getPatternLinePositions(fromPosition, toPosition, patternMinXGap)
+	_getPatternXAxisLinePositions(fromPosition, toPosition, patternMinXGap)
 	{
-		//If we only need to place one model, the caller should provide
-		//the same value for from and to
 		if(fromPosition === toPosition) return [fromPosition];
 		
-		
-		//If we need to place multiple models in a line along the x-axis
-		//--------------------------------------------------------------
-		
-		//The width we have to fill with models
 		const widthForPositions = (toPosition - fromPosition);
+		const requiredModelCount = Math.floor(widthForPositions / (this._modelAnimationWidth + patternMinXGap)) + 1;
+		const gapToUse = patternMinXGap + ((widthForPositions % (this._modelAnimationWidth + patternMinXGap)) / requiredModelCount);
 		
-		//Calculate the required amount of models, and then increase the gap to fill 
-		//the remaining space.
-		//(We're adding one to the model count, as otherwise the end of the last gap 
-		//isn't included)
-		const modelCount = Math.floor(widthForPositions / (this._modelAnimationWidth + patternMinXGap)) + 1;
-		const gapToUse = patternMinXGap + ((widthForPositions % (this._modelAnimationWidth + patternMinXGap)) / modelCount);
-		
-		//Now put together the array of positions
 		let positions = [fromPosition];
 		let lastPosition = fromPosition;
-		for(let i = 1; i < modelCount; i++){
+		for(let i = 1; i < requiredModelCount; i++){
 			positions.push(lastPosition + this._modelAnimationWidth + gapToUse);
 			lastPosition = positions[i];
 		}
 		
 		return positions;
 	}
-	
-	
 	
 	_getNextModelIndexInRange()
 	{
@@ -187,8 +171,6 @@ export default class ModelXPositionPatternManager
 		
 		return currentIndex;
 	}
-	
-	
 	
 	_removeInactivePatterns()
 	{
