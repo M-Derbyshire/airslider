@@ -7,8 +7,6 @@ export default class ShockerManager
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
         
-        //The horizontal span of the area you want the shockers
-        //to be able to move in.
         this._leftEdge = 0;
         this._rightEdge = 0;
         
@@ -22,6 +20,8 @@ export default class ShockerManager
     }
     
     
+	//Set the horizontal span of the area you want the shockers
+	//to be able to move in.
     setAreaEdges(left, right)
     {
         this._leftEdge = left;
@@ -31,20 +31,19 @@ export default class ShockerManager
     get leftEdge() { return this._leftEdge; }
     get rightEdge() { return this._rightEdge; }
     
-    setShockerModelRange(from, to)
+	
+    setShockerModelRange(fromModelIndex, toModelIndex)
     {
-        //The loadedModels array should only contain shockers
-        //between these 2 index numbers
-        this._fromIndex = from;
-        this._toIndex = to;
+        this._fromIndex = fromModelIndex;
+        this._toIndex = toModelIndex;
     }
     
     get shockerModelRange() { return { from: this._fromIndex, to: this._toIndex }; }
     
+	//How many shockers should be in play at this time?
+    //(This will affect the difficulty.)
     setCurrentShockerCount(num)
     {
-        //How many shockers should be in play at this time?
-        //This will affect the difficulty.
         this._shockerCount = num;
     }
     
@@ -63,7 +62,7 @@ export default class ShockerManager
             // _shockerCount. It will try to ensure a consistent amount of shockers
             // being sent, so the lower/higher the shockerCount, the longer/shorter
             // the distance between them, making the game easier/harder.)
-            if((!this.kernel.loadedModels[i].active && i == this._fromIndex) || 
+            if((!this.kernel.loadedModels[i].active && i === this._fromIndex) || 
                 (!this.kernel.loadedModels[i].active && this.kernel.loadedModels[i - 1].active && 
                     (this.kernel.loadedModels[i - 1].z + 
                         (this.helpers.zCalc.vPointDepth / this._shockerCount) < this.helpers.zCalc.vPointDepth)))
