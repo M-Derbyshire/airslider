@@ -88,8 +88,8 @@ export default class ModelXPositionPatternManager
 	}
 	
 	
+	
 	//Run all currently active patterns.
-	//If _nextIndexInModelRange is less than 0 (meaning not set), this will do nothing.
 	//If not enough models are provided, this will go back to the first (it is up to the 
 	//caller to make sure this has enough models for the patterns).
 	sendPatterns()
@@ -177,12 +177,13 @@ export default class ModelXPositionPatternManager
 	
 	_getNextModelIndexInRange()
 	{
-		const currentIndex = this._nextIndexInModelRange; //To be returned
+		const currentIndex = this._nextIndexInModelRange;
 		
-		//If we've reached the last model in the range, go back to the first
-		this._nextIndexInModelRange = (this._nextIndexInModelRange === this._modelIndexRange.to) ? 
-				this._modelIndexRange.from : 
-				this._nextIndexInModelRange + 1;
+		this._nextIndexInModelRange++;
+		if(this._nextIndexInModelRange > this._modelIndexRange.to)
+		{
+			this._nextIndexInModelRange = this._modelIndexRange.from;
+		}
 		
 		return currentIndex;
 	}
