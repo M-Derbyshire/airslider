@@ -7,6 +7,8 @@ export default class ShockerManager
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
         
+		this.playerModelIndex;
+		
         this._leftEdge = 0;
         this._rightEdge = 0;
         
@@ -49,23 +51,19 @@ export default class ShockerManager
     
     get currentShockerCount() { return this._shockerCount }
     
+	setPlayerModelIndex(index)
+	{
+		this._playerModelIndex = index;
+	}
     
     
     sendShockers()
     {
         for(let i = this._fromIndex; i <= this._toIndex; i++)
         {
-            //If this is the first shocker and it's not active,
-            //or this isn't active but the one before it is (And the one before 
-            //has moved far enough to warrant this one now being sent.
-            // How far these need to go before the next is sent depends on
-            // _shockerCount. It will try to ensure a consistent amount of shockers
-            // being sent, so the lower/higher the shockerCount, the longer/shorter
-            // the distance between them, making the game easier/harder.)
-            if((!this.kernel.loadedModels[i].active && i === this._fromIndex) || 
-                (!this.kernel.loadedModels[i].active && this.kernel.loadedModels[i - 1].active && 
-                    (this.kernel.loadedModels[i - 1].z + 
-                        (this.helpers.zCalc.vPointDepth / this._shockerCount) < this.helpers.zCalc.vPointDepth)))
+			const currentShocker = this.kernel.loadedModels[i];
+			
+            if(this._isTimeToSendNextShocker(i))
             {
                 // need to set some to be where the Tarian is, so player can't just stay in one place
                 let shockerXPos;
@@ -77,38 +75,60 @@ export default class ShockerManager
                 if((i + 1) % 3 == 0) //if this is every third in every 3 shockers
                 {
                     // put somewhere on left side of level
-                    shockerXPos = (Math.random() * (((this._rightEdge - this.kernel.loadedModels[i].width) - this._leftEdge) / 2)) + this._leftEdge;
+                    shockerXPos = (Math.random() * (((this._rightEdge - currentShocker.width) - this._leftEdge) / 2)) + this._leftEdge;
                 
                 } else if((i + 2) % 3 == 0) //if this is every second in every 3 shockers
                 {
                     // now on the right side
-                    shockerXPos = (Math.random() * (((this._rightEdge - this.kernel.loadedModels[i].width) - this._leftEdge) / 2)) + ((this._rightEdge - this._leftEdge) / 2);
+                    shockerXPos = (Math.random() * (((this._rightEdge - currentShocker.width) - this._leftEdge) / 2)) + ((this._rightEdge - this._leftEdge) / 2);
                 
                 } else //If this is first in every 3 shockers
                 {
                     // put where player is (x coordinate)
                     
-                    
-                    let shockerWidth = this.kernel.loadedModels[i].width;
-                    
                     // want their center points to line up
-                    shockerXPos = (playerX + (playerWidth / 2)) - (shockerWidth / 2);
+                    shockerXPos = (playerX + (playerWidth / 2)) - (currentShocker.width / 2);
                     
                     //now make sure they are within the bounds of the level
                     if(shockerXPos < this._leftEdge)
                     {
                         shockerXPos = this._leftEdge;
-                    } else if (shockerXPos + shockerWidth > this._rightEdge)
+                    } else if (shockerXPos + currentShocker.width > this._rightEdge)
                     {
-                        shockerXPos = this._rightEdge - shockerWidth;
+                        shockerXPos = this._rightEdge - currentShocker.width;
                     }
                 }
                 
-                this.kernel.loadedModels[i].z = this.helpers.zCalc.vPointDepth;
-                this.kernel.loadedModels[i].x = shockerXPos;
+                currentShocker.z = this.helpers.zCalc.vPointDepth;
+                currentShocker.x = shockerXPos;
                 
-                this.kernel.loadedModels[i].active = true;
+                currentShocker.active = true;
             }
         }
     }
+	
+	_isTimeToSendNextShocker(currentModelIndex)
+	{
+		const currentShocker = this.kernel.loadedModels[currentModelIndex];
+		
+		if(!currentShocker.active)
+		{
+			if (currentModelIndex === this._fromIndex) 
+			{
+				return true;
+			}
+			else
+			{
+				const previousShocker = this.kernel.loadedModels[currentModelIndex - 1];
+				const vanishingPointDepth = this.helpers.zCalc.vPointDepth;
+				
+				const previousShockerHasMovedFarEnough = 
+					(previousShocker.z + (vanishingPointDepth / this._shockerCount) < vanishingPointDepth);
+				
+				return (previousShocker.active && previousShockerHasMovedFarEnough);
+			}
+		}
+		
+		return false;
+	}
 }

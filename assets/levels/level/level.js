@@ -115,6 +115,7 @@ export default class Level
 	_setupShockerManager(leftEdge, rightEdge)
 	{
 		this.shockerManager.setAreaEdges(leftEdge, rightEdge);
+		this.shockerManager.setPlayerModelIndex(0);
 	}
 	
 	_registerLevelEvents()
