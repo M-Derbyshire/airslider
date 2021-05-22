@@ -89,59 +89,56 @@ export default class ModelXPositionPatternManager
 	
 	
 	
-	//Run all currently active patterns.
-	//If not enough models are provided, this will go back to the first (it is up to the 
-	//caller to make sure this has enough models for the patterns).
 	sendPatterns()
 	{
 		if(this._nextIndexInModelRange < 0) return;
 		
-		//When placing models, their center should be in the given position.
-		//This helps us do that (minus it from the position).
-		const modelCenterOffset = this._modelAnimationWidth / 2;
+		this._activePatterns.forEach(this._sendGivenPattern.bind(this));
 		
-		//Action the active patterns
-		this._activePatterns.forEach(pattern => {
-			
-			//Is it time to send the next line of models?
-			const lastIndex = pattern.lastModelIndexUsed;
-			if(lastIndex < 0 || this._kernel.loadedModels[lastIndex].z <= (this._startingZPos - pattern.zGap))
-			{
-				//Get the current line of the pattern
-				const currentLineInPattern = pattern.positions[pattern.nextPosition];
-				pattern.nextPosition = 
-					(pattern.nextPosition === pattern.positions.length - 1) ? 0 : pattern.nextPosition + 1;
-				
-				//Get the positions for each model on this line
-				const modelPositionsForLine = this._getPatternXAxisLinePositions(
-					currentLineInPattern.fromPosition, 
-					currentLineInPattern.toPosition,
-					pattern.patternMinXGap
-				);
-				
-				//Set the positions of the models for this line
-				modelPositionsForLine.forEach(xPos => {
-					
-					pattern.lastModelIndexUsed = this._getNextModelIndexInRange();
-					const currentModel = this._kernel.loadedModels[pattern.lastModelIndexUsed];
-					
-					currentModel.z = this._startingZPos;
-					currentModel.active = true;
-					currentModel.x = xPos - modelCenterOffset;
-					
-				});
-				
-			}
-			
-		});
-		
-		
-		//Now we need to remove any patterns that should no longer be active
 		this._removeInactivePatterns();
 	}
 	
+	//If not enough models are provided, this will loop back to the first one (it is up to the 
+	//caller to make sure this has enough models for the patterns).
+	_sendGivenPattern(pattern)
+	{
+		if(this._isTimeForNextLineOfPattern(pattern))
+		{
+			const currentXAxisLineInPattern = pattern.positions[pattern.nextPosition];
+			
+			this._setPatternNextPositionIndex(pattern);
+			
+			const currentXAxisModelPositions = this._getPatternXAxisModelPositions(
+				currentXAxisLineInPattern.fromPosition, 
+				currentXAxisLineInPattern.toPosition,
+				pattern.patternMinXGap
+			);
+			
+			currentXAxisModelPositions.forEach((xPos) => this._setModelsToXPositions(xPos, pattern));
+		}
+	}
 	
-	_getPatternXAxisLinePositions(fromPosition, toPosition, patternMinXGap)
+	_isTimeForNextLineOfPattern(pattern)
+	{
+		const lastIndex = pattern.lastModelIndexUsed;
+		const lastModelUsed = this._kernel.loadedModels[lastIndex];
+		
+		return (lastIndex < 0 || lastModelUsed.z <= (this._startingZPos - pattern.zGap));
+	}
+	
+	_setPatternNextPositionIndex(pattern)
+	{
+		if(pattern.nextPosition === pattern.positions.length - 1)
+		{
+			pattern.nextPosition = 0;
+		}
+		else
+		{
+			pattern.nextPosition++;
+		}
+	}
+	
+	_getPatternXAxisModelPositions(fromPosition, toPosition, patternMinXGap)
 	{
 		if(fromPosition === toPosition) return [fromPosition];
 		
@@ -157,6 +154,17 @@ export default class ModelXPositionPatternManager
 		}
 		
 		return positions;
+	}
+	
+	_setModelsToXPositions(xPos, pattern)
+	{
+		const modelCenterOffset = this._modelAnimationWidth / 2;
+		pattern.lastModelIndexUsed = this._getNextModelIndexInRange();
+		const currentModel = this._kernel.loadedModels[pattern.lastModelIndexUsed];
+		
+		currentModel.z = this._startingZPos;
+		currentModel.active = true;
+		currentModel.x = xPos - modelCenterOffset;
 	}
 	
 	_getNextModelIndexInRange()
