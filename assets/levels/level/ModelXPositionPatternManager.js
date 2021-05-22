@@ -2,9 +2,9 @@ import Kernel from '/kernel/kernel';
 
 /*
 	Used to position a set of models on the x-axis, in a way that will make 
-	a pattern when these objects move down the z-axis. The models to use are 
-	determined by a provided range of model indexes (in the loaded models array, 
-	in the kernel).
+	a pattern (or multiple patterns) when these objects move down the z-axis. 
+	The models to use are determined by a provided range of model indexes (in 
+	the loaded models array, in the kernel).
 */
 export default class ModelXPositionPatternManager
 {
@@ -15,12 +15,14 @@ export default class ModelXPositionPatternManager
 		
 		this._startingZPos;
 		
-		//This will be an object with 2 properties: "from" and "to".
 		//This represents the range of index numbers in the loaded models 
-		//	array, for the models that can be used by this to make patterns
-		this._modelIndexRange;
+		//	array, for the models that can be used when making patterns
+		this._modelIndexRange = {
+			from: -1,
+			to: -1
+		};
 		
-		this._modelWidth; //The width of the model animation being used
+		this._modelAnimationWidth; //The width of the model animation being used
 		
 		//The patterns to be sent. See addRepeatingPattern method.
 		this._activePatterns = [];
@@ -29,54 +31,59 @@ export default class ModelXPositionPatternManager
 		this._nextIndexInModelRange = -1;
 	}
 	
-	
-	//Set the range of models in the models array to be used to create patterns.
-	//Also provide the width of these models (it is on the caller to make sure these 
-	//models all have the same width on the animation they'll be using -- really, 
-	//this class is designed with the intention of using the same model).
-	setPatternDefaults(fromIndex, toIndex, modelWidth)
+	/*
+		fromModelIndex, toModelIndex - defines the range of models that can be used
+		modelAnimationWidth - the width of the models that are being used
+	*/
+	setPatternDefaults(fromModelIndex, toModelIndex, modelAnimationWidth)
 	{
-		this._nextIndexInModelRange = fromIndex;
+		this._nextIndexInModelRange = fromModelIndex;
 		
 		this._modelIndexRange = {
-			from: fromIndex,
-			to: toIndex
+			from: fromModelIndex,
+			to: toModelIndex
 		};
 		
-		this._modelWidth = modelWidth;
+		this._modelAnimationWidth = modelAnimationWidth;
 	}
 	
-	//Set the starting position for models on the z-axis
 	setStartingZPosition(zPos)
 	{
 		this._startingZPos = zPos;
 	}
 	
 	
-	//Adds a pattern to the queue, to be repeated for the given milliseconds.
-	//The "pattern" property is an array of objects. 
-	//Each "pattern" object will have 2 properties: "fromPosition" and "toPosition" 
-	//(representing the x-axis positions of the start and end of that line of 
-	//the pattern -- please note, the first and last models are placed with their center
-	//at these points, so there will be that overlap).
-	//The activePatterns array, as a whole, represents the multiple patterns (being sent down 
-	//the z-axis). The zAxisGap property sets the distance between each model in 
-	//the pattern, on the z-axis.
-	//The patternMinXGap parameter is the minimum gap between models placed along 
-	//the x-axis.
-	
-	//NOTE: If the "fromPosition" and "toPosition" values are the same, then 
-	//a single model will be placed at that position.
+	/*
+		Adds a pattern to the queue of patterns, to be repeated for the given milliseconds.
+		-----------------------------------------------------------------------
+		The "pattern" property is an array of objects. 
+		Each "pattern" object will have 2 properties: "fromPosition" and "toPosition" 
+		(representing the x-axis positions of the start and end of that line of 
+		the pattern -- please note, the first and last models are placed with their center
+		at these points, so that will cause some overlap).
+		
+		NOTE: If the "fromPosition" and "toPosition" values are the same, then 
+		a single model will be placed at that position.
+		-----------------------------------------------------------------------
+		The activePatterns array, as a whole, represents the multiple patterns (being sent down 
+		the z-axis). 
+		
+		The zAxisGap property sets the distance between each model in the pattern, on the z-axis.
+		
+		The patternMinXGap parameter is the minimum gap between models placed along the x-axis, 
+		for that pattern.
+		-----------------------------------------------------------------------
+	*/
 	addRepeatingPattern(zAxisGap, patternMinXGap, repeatForMS, pattern)
 	{
 		const dateTime = new Date();
 		this._activePatterns.push({
-			zGap: zAxisGap, //The gap between models on the z-axis
-			patternMinXGap: patternMinXGap, //this minimum gap between models on the x-axis
+			zGap: zAxisGap,
+			patternMinXGap: patternMinXGap,
 			activeUntil: dateTime.getTime() + repeatForMS,
 			positions: pattern,
-			nextPosition: 0, //The next index in the above positions array that needs to be processed
-			lastModelIndexUsed: -1 //The last model thatw as used in this pattern. Less than 0 means not set
+			nextPosition: 0, //The next index in the "positions" array that needs to be processed
+			lastModelIndexUsed: -1
 		});
 	}
 	
@@ -91,7 +98,7 @@ export default class ModelXPositionPatternManager
 		
 		//When placing models, their center should be in the given position.
 		//This helps us do that (minus it from the position).
-		const modelCenterOffset = this._modelWidth / 2;
+		const modelCenterOffset = this._modelAnimationWidth / 2;
 		
 		//Action the active patterns
 		this._activePatterns.forEach(pattern => {
@@ -152,14 +159,14 @@ export default class ModelXPositionPatternManager
 		//the remaining space.
 		//(We're adding one to the model count, as otherwise the end of the last gap 
 		//isn't included)
-		const modelCount = Math.floor(widthForPositions / (this._modelWidth + patternMinXGap)) + 1;
-		const gapToUse = patternMinXGap + ((widthForPositions % (this._modelWidth + patternMinXGap)) / modelCount);
+		const modelCount = Math.floor(widthForPositions / (this._modelAnimationWidth + patternMinXGap)) + 1;
+		const gapToUse = patternMinXGap + ((widthForPositions % (this._modelAnimationWidth + patternMinXGap)) / modelCount);
 		
 		//Now put together the array of positions
 		let positions = [fromPosition];
 		let lastPosition = fromPosition;
 		for(let i = 1; i < modelCount; i++){
-			positions.push(lastPosition + this._modelWidth + gapToUse);
+			positions.push(lastPosition + this._modelAnimationWidth + gapToUse);
 			lastPosition = positions[i];
 		}
 		
