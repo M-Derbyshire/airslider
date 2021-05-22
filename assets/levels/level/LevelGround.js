@@ -14,6 +14,8 @@ export default class LevelGround
         
         this.groundZPositions = []; //The z-axis positions of every piece of ground
     }
+	
+	
     
     setupGround(path, imageHeight)
     {
@@ -38,7 +40,7 @@ export default class LevelGround
 			
             image: this.kernel.loadImage(path),
             height, //Height to draw the image
-            offset: 0 //The amount the images have moved along the z-axis
+            offset: 0 //The amount the images have all moved along the z-axis
         };
 	}
 	
@@ -82,41 +84,44 @@ export default class LevelGround
     //like they are just continuing to move towards the camera.
     draw(levelSpeed)
     {
+		this._resetGroundOffsetIfReachedDistance();
+		
         for(let i = 0; i < this.groundZPositions.length; i++)
         {
-            //The offset is subtracted from the starting z position of the image,
-            //to make it move. 
-            if(this.ground.offset > this.ground.distance)
-            {
-                //Once the ground reaches the distance between the images, they can
-                // reset. And, as they're all the same, it will look like they're 
-                // continuing their movement (even though no more are actually 
-                // being created)
-                this.ground.offset = 0;
-            }
-            
             this.ground.offset += (levelSpeed / 250);
-            
-            let y = this.helpers.zCalc.y(this._camera.canvasPositionY + this._camera.canvasPositionHeight, this.groundZPositions[i] - this.ground.offset);
-            let width = this.helpers.zCalc.width((this._camera.canvasPositionX + this._camera.canvasPositionWidth * 2), this.groundZPositions[i] - this.ground.offset);
-            let height = this.helpers.zCalc.height(this.ground.height, this.groundZPositions[i] - this.ground.offset);
-            
-            //Need to draw it once on the left, then again on the right
-            this._canvasCtx.drawImage(
-                this.ground.image,
-                this.helpers.zCalc.x(this._camera.canvasPositionX - (this._camera.canvasPositionX + this._camera.canvasPositionWidth * 2), this.groundZPositions[i] - this.ground.offset),
-                y,
-                width,
-                height
-            );
-            
-            this._canvasCtx.drawImage(
-                this.ground.image,
-                this.helpers.zCalc.x(this._camera.canvasPositionX + this._camera.canvasPositionWidth, this.groundZPositions[i] - this.ground.offset),
-                y,
-                width,
-                height
-            );
+            this._drawLeftAndRightGroundImage(this.groundZPositions[i]);
         }
     }
+	
+	_resetGroundOffsetIfReachedDistance()
+	{
+		if(this.ground.offset > this.ground.distance)
+		{
+			this.ground.offset = 0;
+		}
+	}
+	
+	_drawLeftAndRightGroundImage(groundZPos)
+	{
+		const offsetZPos = groundZPos - this.ground.offset;
+		
+		const canvasBottomEdge = this._camera.canvasPositionY + this._camera.canvasPositionHeight;
+		const canvasRightEdge = this._camera.canvasPositionX + this._camera.canvasPositionWidth;
+		const imageWidth = this._camera.canvasPositionX + (this._camera.canvasPositionWidth * 2);
+		
+		const drawY = this.helpers.zCalc.y(canvasBottomEdge, offsetZPos);
+		const drawWidth = this.helpers.zCalc.width(imageWidth, offsetZPos);
+		const drawHeight = this.helpers.zCalc.height(this.ground.height, offsetZPos);
+		
+		const leftDrawX = this.helpers.zCalc.x(this._camera.canvasPositionX - imageWidth, offsetZPos);
+		const rightDrawX = this.helpers.zCalc.x(canvasRightEdge, offsetZPos);
+		
+		this._drawGroundImage(leftDrawX, drawY, drawWidth, drawHeight);
+		this._drawGroundImage(rightDrawX, drawY, drawWidth, drawHeight);
+	}
+	
+	_drawGroundImage(x, y, width, height)
+	{
+		this._canvasCtx.drawImage(this.ground.image, x, y, width, height);
+	}
 }
