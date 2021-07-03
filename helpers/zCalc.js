@@ -1,27 +1,21 @@
-import Kernel from '/kernel/kernel';
-
 export default class ZCalc 
 {
     constructor(unitsWithinCamera)
     {
-        this.kernel = Kernel.getInstance();
-        
         this._unitsWithinCamera = unitsWithinCamera;
         
         //Vanishing point settings
         this._vPointX;
         this._vPointY;
         this._vPointDepth; //the max z position
+		
+		this._precalculatedScalingMultipliers = [];
         
         //The vanishing point is defined in literal canvas positions,
         //so these functions will be used to calculate the new values
         //on a screen resize.
         this._calcVPointX = () => {};
         this._calcVPointY = () => {};
-        
-        //A precalculated value based on the depth
-        //(This is explained in the "Scaled Positions and Dimensions" section.).
-        this._shrunkDepth;
     }
     
     //-------------------------- getters and setters ----------------------------
@@ -33,19 +27,17 @@ export default class ZCalc
     get vPointDepth(){return this._vPointDepth;}
     
     //Here you can provide the functions that will set the exact canvas position (these 
-	//should be called by the graphic engine if the canvas is resized.). Also, you can 
+	//should be called by the graphic engine if the canvas is resized). Also, you can 
 	//provide how many units you want in depth.
     setVanishPoint(canvasXPosCalcFunction, canvasYPosCalcFunction, depth = 1000)
      {
         this._calcVPointX = canvasXPosCalcFunction;
         this._calcVPointY = canvasYPosCalcFunction;
         
-        this.resetVanishPointPosition();
         this._vPointDepth = depth;
-        
-        //Precalculating this here. 
-        //It is explained in the "Scaled Positions and Dimensions" section below.
-        this._shrunkDepth = depth / 8; 
+		
+		this.resetVanishPointPosition();
+		this._precalculateScalingMultipliers();
     }
     
     resetVanishPointPosition()
@@ -53,6 +45,7 @@ export default class ZCalc
         this._vPointX = this._calcVPointX();
         this._vPointY = this._calcVPointY();
     }
+	
     
     //-------------------------- Z Axis Speed ----------------------------------
     
@@ -62,6 +55,8 @@ export default class ZCalc
         return ((this._vPointDepth / this._unitsWithinCamera) * speed) / fps;
     }
     
+	
+	
 	/*
 		------------------- Scaled Positions and Dimensions ---------------------
 		
@@ -93,35 +88,58 @@ export default class ZCalc
 		-------------------------------------------------------------------------
 		
 		However, the problem with this solution is something called "The Oatmeal Effect". 
-		This is where the movement of the sprite being drawn appears to increase as it 
-		moves further along the z-axis.
+		This is where the movement of the sprite being drawn appears to speed up as it gets 
+		further along the z-axis (moving towards the vanishing point).
 		
+		After experimenting with this for a while, I found that we would need to decrease 
+		the speed of the scaling, as the z-position got nearer to the vamishing point.
+		
+		To do this, I found that a curve that was very close to (though not exactly matching) 
+		a factoral was needed to make this work (so -- after a quick drop -- the rate of the 
+		decrease would slow down and the curve would flatten). This would be difficult to 
+		calculate in a O(1) way, so I decided against calculating this during gameplay.
+		
+		this._precalculateScalingMultipliers() will pre-calculate an array of "multipliers" (one
+		for each position on the z-axis). These multipliers are numbers between 1 and 0, and they 
+		will match the shape of the required curve. They are then used to modify the passed in 
+		dimension/position values (in this._position() and this._dimension()).
+		
+		During the calculation of the scaling multipliers, a "shrunkDepth" is used. This is 
+		the vanishing point depth, divided by 8 (a number chosen through trial and error). 
+		The reason for the division on the vanishing point depth is because, even though the 
+		speed of movement will appear consistent, the continuous reduction of the multiplier 
+		means that any scaled values would not actually reach the vanishing point when at the 
+		deepest z-position.
 		
 		******************************
 		Calculating the Dimensions:
 		******************************
 		
-		Because of The Oatmeal Effect, the solution here is to calculate a new depth unit 
-		for every point the sprite has moved along the z-axis.
-
-		The depth unit values are calculated by taking the dimension value, and dividing
-		it by this._shrunkDepth. The Shrunk depth is the vanishing point depth, divided by 8.
-		The reason for the division on the vanishing point depth is because, even though the 
-		speed of movement will appear consistent, the continuous reduction of the dimension 
-		means that it would not reach 0 when at the deepest depth. It is divided by 8 because 
-		that is the value that gets the sprite close to 0 when at the vanishing point depth.
-		
+		The given dimension (width/height) value will be decreased by multiplying it by the 
+		correct scaling multiplier for the given z-axis position.
 		
 		******************************
 		Calculating the Positions:
 		******************************
 		
-		This is essentially the same procedure as with the dimensions, except for 2 differences:
-			1 - The position value is increased, not decreased.
+		Calculating the positions (X/Y) is essentially the same procedure as with the dimensions, 
+		except for 2 differences:
+			1 - The position value is increased, not decreased, as we get further along the z-axis.
 			2 - The vanishing point's position is taken into account in the calculations, in order to 
 				make the sprite move towards/from it.
     */
 	
+	_precalculateScalingMultipliers()
+	{
+		const shrunkDepth = this._vPointDepth / 8;
+		
+		let multiplier = 1;
+		for(let z = 0; z <= this._vPointDepth; z++)
+		{
+			this._precalculatedScalingMultipliers.push(multiplier);
+			multiplier -= (multiplier / shrunkDepth);
+		}
+	}
 	
 	
 	//Provide the position/dimension value, the z-axis position,
@@ -130,12 +148,12 @@ export default class ZCalc
 	
     x(xPosition, zPosition, showNegative = false)
     {
-        return this._position(zPosition, xPosition, this.vPointX, showNegative);
+        return this._position(zPosition, xPosition, this._vPointX, showNegative);
     }
     
     y(yPosition, zPosition, showNegative = false)
     {
-        return this._position(zPosition, yPosition, this.vPointY, showNegative);
+        return this._position(zPosition, yPosition, this._vPointY, showNegative);
     }
     
     width(width, zPosition, showNegative = false)
@@ -151,28 +169,28 @@ export default class ZCalc
 	
 	
     //Takes the model's z position, the model's x or y position,
-    //and the vanishing point value for that axis.
+    //and the vanishing point position on that axis.
     //Returns the scaled value for the position on that axis.
     _position(zPosition, axisPosition, axisVPoint, showNegative)
     {
         if(this._isOutOfView(zPosition, showNegative))
         {
             return 0;
-        } else {
-			
-			//The for loop below needs a positive zPos, so if zPos is negative,
-			//make it positive (we'll flip it back later).
-            const originalZPosition = zPosition;
-            const originalPosition = axisPosition;
+        } 
+		else 
+		{
+			//We need a positive z-index, so if it's negative we'll flip it now, then flip the 
+			//multiplier once we have it.
+			const originalZPosition = zPosition;
             zPosition = (originalZPosition < 0) ? -zPosition : zPosition;
-            
-            for(let i = 0; i < zPosition; i++)
-            {
-                axisPosition += ((axisVPoint - axisPosition) / this._shrunkDepth);
-            }
-            
-            //If the zPos was made positive, flip the result back to negative.
-            return (originalZPosition < 0) ? originalPosition + (originalPosition - axisPosition) : axisPosition;
+			
+			const distanceToVPoint = (axisVPoint - axisPosition);
+			const multiplier = this._precalculatedScalingMultipliers[Math.round(zPosition)];
+			
+			const positiveMultiplier = (1 - multiplier);
+			const realMultiplier = ((originalZPosition < 0) ? -positiveMultiplier : positiveMultiplier);
+			
+			return axisPosition + (distanceToVPoint * realMultiplier);
         }
     }
     
@@ -182,21 +200,18 @@ export default class ZCalc
         if(this._isOutOfView(zPosition, showNegative))
         {
             return 0;
-        } else {
+        } 
+		else 
+		{
+			//We need a positive z-index, so if it's negative we'll flip it now, then correct the 
+			//result later.
+			const originalZPosition = zPosition;
+			zPosition = (originalZPosition < 0) ? -zPosition : zPosition;
 			
-			//The for loop below needs a positive zPos, so if zPos is negative,
-			//make it positive (we'll flip it back later).
-            const originalZPosition = zPosition;
-            const originalDimension = dimension;
-            zPosition = (originalZPosition < 0) ? -zPosition : zPosition;
-            
-            for(let i = 0; i < zPosition; i++)
-            {
-                dimension -= (dimension / this._shrunkDepth);
-            }
-            
-			//If the zPos was made positive, flip the result back to negative.
-            return (originalZPosition < 0) ? originalDimension + (originalDimension - dimension) : dimension;
+			const positiveMultiplier = this._precalculatedScalingMultipliers[Math.round(zPosition)];
+			const changedDimension = (dimension * positiveMultiplier);
+			
+			return (originalZPosition < 0) ? (dimension + (dimension - changedDimension)) : changedDimension;
         }
     }
 	
