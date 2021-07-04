@@ -1,9 +1,7 @@
 export default class ZCalc 
 {
-    constructor(unitsWithinCamera)
+    constructor()
     {
-        this._unitsWithinCamera = unitsWithinCamera;
-        
         //Vanishing point settings
         this._vPointX;
         this._vPointY;
@@ -52,7 +50,7 @@ export default class ZCalc
     //This is used to keep the speed on the z-axis consistent (so the changing fps is not a problem)
     speed(speed, fps)
     {
-        return ((this._vPointDepth / this._unitsWithinCamera) * speed) / fps;
+        return speed / fps;
     }
     
 	

@@ -107,7 +107,7 @@ export default class Kernel {
     load()
     {
         this._helpers = {
-            zCalc: new ZCalc(this.unitsWithinCamera),
+            zCalc: new ZCalc(),
             time: new TimeHelper(),
             unit: new UnitHelper(this.unitsWithinCamera)
         };
