@@ -89,8 +89,8 @@ export default class ZCalc
 		This is where the movement of the sprite being drawn appears to speed up as it gets 
 		further along the z-axis (moving towards the vanishing point).
 		
-		After experimenting with this for a while, I found that we would need to decrease 
-		the speed of the scaling, as the z-position got nearer to the vamishing point.
+		After experimenting with this for a while, I found that the way to solve this was to 
+		decrease the speed of the scaling as the z-position got nearer to the vanishing point.
 		
 		To do this, I found that a curve that was very close to (though not exactly matching) 
 		a factoral was needed to make this work (so -- after a quick drop -- the rate of the 
