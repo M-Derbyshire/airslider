@@ -28,7 +28,7 @@ export default class Tarian extends Model {
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,
-				framesCoordinates: [
+				frameCoordinates: [
 					{ x: 0, y: 2760, width: 92, height: 119 },
 					{ x: 0, y: 2880, width: 92, height: 119 },
 					{ x: 0, y: 3000, width: 92, height: 119 },
@@ -41,7 +41,7 @@ export default class Tarian extends Model {
                 drawWidth: 170, 
                 drawHeight: 170, 
                 xOffset: -40,
-				framesCoordinates: [
+				frameCoordinates: [
 					{ x: 0, y: 3600, width: 126, height: 97 },
 					{ x: 0, y: 3698, width: 126, height: 97 },
 					{ x: 0, y: 3796, width: 126, height: 97 },
@@ -54,7 +54,7 @@ export default class Tarian extends Model {
                 drawWidth: 170,
                 drawHeight: 170,
                 xOffset: 40,
-				framesCoordinates: [
+				frameCoordinates: [
 					{ x: 0, y: 3992, width: 118, height: 97 },
 					{ x: 0, y: 4090, width: 118, height: 97 },
 					{ x: 0, y: 4188, width: 118, height: 97 },
@@ -67,7 +67,7 @@ export default class Tarian extends Model {
                 drawWidth: 120,
                 drawHeight: 170,
                 nextAnim: "lost",
-				framesCoordinates: [
+				frameCoordinates: [
 					{ x: 0, y: 0, width: 92, height: 119 },
 					{ x: 0, y: 120, width: 92, height: 119 },
 					{ x: 0, y: 240, width: 92, height: 119 },
@@ -98,7 +98,7 @@ export default class Tarian extends Model {
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,
-				framesCoordinates: [
+				frameCoordinates: [
 					{ x: 0, y: 3240, width: 92, height: 119 },
 					{ x: 0, y: 3360, width: 92, height: 119 },
 					{ x: 0, y: 3480, width: 92, height: 119 },

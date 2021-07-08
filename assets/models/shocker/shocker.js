@@ -22,13 +22,13 @@ export default class Shocker extends Model
         super.load(levelLeftEdge, levelRightEdge);
 		
 		let width;
-		let framesCoordinates;
+		let frameCoordinates;
 		
 		if(this.color === "purple")
 		{
 			width = 300;
 			
-			framesCoordinates = [
+			frameCoordinates = [
 				{ x: 0, y: 0, width: 783, height: 476 },
 				{ x: 0, y: 475, width: 783, height: 476 },
 				{ x: 0, y: 953, width: 783, height: 476 },
@@ -38,7 +38,7 @@ export default class Shocker extends Model
 		{
 			width = 100;
 			
-			framesCoordinates = [
+			frameCoordinates = [
 				{ x: 0, y: 0, width: 131, height: 238 },
 				{ x: 0, y: 239, width: 131, height: 238 },
 				{ x: 0, y: 478, width: 131, height: 238 },
@@ -48,7 +48,7 @@ export default class Shocker extends Model
         this.animationManager.registerAnimations({
             shock: this.animationManager.createAnimation({
                 sheetPath: "/assets/models/shocker/anim/shocker-" + this.color + "-spritesheet.png",
-                framesCoordinates,
+                frameCoordinates,
                 fps: 24,
                 drawWidth: width,
                 drawHeight: 340,

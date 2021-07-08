@@ -23,7 +23,7 @@ export default class NeonPidgeon extends Monster {
                 fps: 24,
                 drawWidth: 250,
                 drawHeight: 200,
-				framesCoordinates: [
+				frameCoordinates: [
 					{ x: 0, y: 0, width: 337, height: 240 },
 				],
             }),
@@ -32,7 +32,7 @@ export default class NeonPidgeon extends Monster {
                 fps: 24,
                 drawWidth: 250,
                 drawHeight: 200,
-				framesCoordinates: [
+				frameCoordinates: [
 					{ x: 0, y: 242, width: 337, height: 228 },
 					{ x: 0, y: 471, width: 337, height: 228 },
 					{ x: 0, y: 700, width: 337, height: 228 },
@@ -48,7 +48,7 @@ export default class NeonPidgeon extends Monster {
                 fps: 24,
                 drawWidth: 250,
                 drawHeight: 200,
-				framesCoordinates: [
+				frameCoordinates: [
 					{ x: 0, y: 2074, width: 337, height: 240 },
 				],
             }),

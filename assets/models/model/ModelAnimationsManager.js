@@ -27,11 +27,11 @@ export default class ModelAnimationsManager {
         this.animations = animations;
     }
     
-    createAnimation({sheetPath, fps, drawWidth, drawHeight, framesCoordinates, xOffset = 0, yOffset = 0, nextAnim = ""})
+    createAnimation({sheetPath, fps, drawWidth, drawHeight, frameCoordinates, xOffset = 0, yOffset = 0, nextAnim = ""})
     {
         let anim = {
 			spritesheet: this.kernel.loadImage(sheetPath),
-            framesCoordinates: framesCoordinates,
+            frameCoordinates: frameCoordinates,
             fps: fps,
             waitCount: 0, //increased when waiting to move to next frame
             nextCount: 0, //when waitCount equals this, move to the next frame (done so anim and game can have different fps. This is set on every new game-loop frame)
@@ -97,7 +97,7 @@ export default class ModelAnimationsManager {
             }
             
             //Is this the last frame in this sprite animation?
-            if(currentFrameIndex > this.animations[this.model.state].framesCoordinates.length - 1)
+            if(currentFrameIndex > this.animations[this.model.state].frameCoordinates.length - 1)
             {
                 currentFrameIndex = 0;
                 
@@ -114,6 +114,6 @@ export default class ModelAnimationsManager {
         this.animations[this.model.state].waitCount++;
         this.animations[this.model.state].currentFrameIndex = currentFrameIndex;
 		
-        return this.animations[this.model.state].framesCoordinates[currentFrameIndex];
+        return this.animations[this.model.state].frameCoordinates[currentFrameIndex];
     }
 }
