@@ -5,7 +5,6 @@ import Falcon from '/assets/models/Monsters/Falcon/Falcon';
 import BabyDragon from '/assets/models/Monsters/BabyDragon/BabyDragon';
 import LavaBall from '/assets/models/Monsters/attacks/LavaBall/LavaBall';
 import Ghost from '/assets/models/Monsters/Ghost/Ghost';
-import ElectricMine from '/assets/models/ElectricMine/ElectricMine';
 import Shocker from '/assets/models/Shocker/Shocker';
 import Frame from '/engines/GraphicEn/Frame';
 import Level from '/assets/levels/Level/Level';
@@ -36,7 +35,6 @@ export default class TheConstruct extends Level
         let shockerRange = this.shockerManager.shockerModelRange;
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
         {
-            // models.push(new ElectricMine());
 			models.push(new Shocker("yellow", "static"));
         }
 		

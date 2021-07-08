@@ -10,7 +10,6 @@ import LevelTunnel from './LevelTunnel';
 import MainHUD from '/assets/HUDs/MainHUD/MainHUD';
 import Tarian from '/assets/models/Tarian/Tarian';
 import Shocker from '/assets/models/Shocker/Shocker';
-import ElectricMine from '/assets/models/ElectricMine/ElectricMine';
 import NeonPidgeon from '/assets/models/Monsters/NeonPidgeon/NeonPidgeon';
 import LavaBall from '/assets/models/Monsters/attacks/LavaBall/LavaBall';
 import Falcon from '/assets/models/Monsters/Falcon/Falcon';
@@ -127,13 +126,6 @@ export default class Level
                 class1: Tarian,
                 class1EventActionName: "zCollisionEventAction",
                 class2: Shocker,
-                class2EventActionName: "zCollisionEventAction"
-            },
-			{ 
-                eventCheckMethodName: "zCollisionEventCheck",
-                class1: Tarian,
-                class1EventActionName: "zCollisionElectricMineEventAction",
-                class2: ElectricMine,
                 class2EventActionName: "zCollisionEventAction"
             },
             { 
