@@ -27,27 +27,21 @@ export default class ModelAnimationsManager {
         this.animations = animations;
     }
     
-    createAnimation({path, frameCount, fps, width, height, xOffset = 0, yOffset = 0, nextAnim = ""})
+    createAnimation({sheetPath, fps, drawWidth, drawHeight, framesCoordinates, xOffset = 0, yOffset = 0, nextAnim = ""})
     {
         let anim = {
-            path: path,
-            frameCount: frameCount,
-            frames: [],
+			spritesheet: this.kernel.loadImage(sheetPath),
+            framesCoordinates: framesCoordinates,
             fps: fps,
             waitCount: 0, //increased when waiting to move to next frame
             nextCount: 0, //when waitCount equals this, move to the next frame (done so anim and game can have different fps. This is set on every new game-loop frame)
             currentFrameIndex: 0,
-            height: height,
-            width: width,
+            height: drawHeight,
+            width: drawWidth,
             xOffset: xOffset, //change position for consistency
             yOffset: yOffset,
             nextAnim: nextAnim, //used to follow through from one anim into another (this is the name of the next state)
         };
-        
-        for(let i = 0; i < anim.frameCount; i++)
-        {
-            anim.frames[i] = this.kernel.loadImage(anim.path + "/" + i + ".png");
-        }
         
         return anim;
     }
@@ -57,7 +51,7 @@ export default class ModelAnimationsManager {
 		//Need to call this here, as if this is an animation that changes state at the end,
 		//the below settings (preZCalc* variables) may have the wrong width/height for the 
 		//new animation.
-		const nextFrame = this.getNextFrame();
+		const nextFrameCoordinates = this.getNextFrameCoordinates();
 		
         //Draw the image, taking into account the z-axis when setting the size/positions
 		const preZCalcX = this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(this.model.x)) + this._camera.canvasPositionX;
@@ -66,7 +60,11 @@ export default class ModelAnimationsManager {
 		const preZCalcHeight = this.helpers.unit.yUnit(this.model.height);
 		
         this._canvasCtx.drawImage(
-            nextFrame, 
+            this.animations[this.model.state].spritesheet, 
+			nextFrameCoordinates.x,
+			nextFrameCoordinates.y,
+			nextFrameCoordinates.width,
+			nextFrameCoordinates.height,
             this.helpers.zCalc.x(preZCalcX, this.model.z), 
             this.helpers.zCalc.y(preZCalcY, this.model.z), 
             this.helpers.zCalc.width(preZCalcWidth, this.model.z), 
@@ -74,7 +72,8 @@ export default class ModelAnimationsManager {
         );
     }
     
-    getNextFrame()
+	//Returns the coordinates (x/y/width/height) of the next frame on the spritesheet
+    getNextFrameCoordinates()
     {
 		let currentFrameIndex = this.animations[this.model.state].currentFrameIndex;
 		
@@ -98,7 +97,7 @@ export default class ModelAnimationsManager {
             }
             
             //Is this the last frame in this sprite animation?
-            if(currentFrameIndex > this.animations[this.model.state].frameCount - 1)
+            if(currentFrameIndex > this.animations[this.model.state].framesCoordinates.length - 1)
             {
                 currentFrameIndex = 0;
                 
@@ -115,6 +114,6 @@ export default class ModelAnimationsManager {
         this.animations[this.model.state].waitCount++;
         this.animations[this.model.state].currentFrameIndex = currentFrameIndex;
 		
-        return this.animations[this.model.state].frames[currentFrameIndex];
+        return this.animations[this.model.state].framesCoordinates[currentFrameIndex];
     }
 }

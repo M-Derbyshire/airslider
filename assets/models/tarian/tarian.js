@@ -24,42 +24,85 @@ export default class Tarian extends Model {
         //I've used exact values for the fps, so it will be consistent when changing game fps
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
-                path: "/assets/models/tarian/anim/forward", 
-                frameCount: 4,
+                sheetPath: "/assets/models/tarian/anim/tarian-spritesheet.png", 
                 fps: 24,
-                width: 120,
-                height: 170,
+                drawWidth: 120,
+                drawHeight: 170,
+				framesCoordinates: [
+					{ x: 0, y: 2760, width: 92, height: 119 },
+					{ x: 0, y: 2880, width: 92, height: 119 },
+					{ x: 0, y: 3000, width: 92, height: 119 },
+					{ x: 0, y: 3120, width: 92, height: 119 },
+				]
             }),
             left: this.animationManager.createAnimation({
-                path: "/assets/models/tarian/anim/left", 
-                frameCount: 4, 
+                sheetPath: "/assets/models/tarian/anim/tarian-spritesheet.png", 
                 fps: 24, 
-                width: 170, 
-                height: 170, 
+                drawWidth: 170, 
+                drawHeight: 170, 
                 xOffset: -40,
+				framesCoordinates: [
+					{ x: 0, y: 3600, width: 126, height: 97 },
+					{ x: 0, y: 3698, width: 126, height: 97 },
+					{ x: 0, y: 3796, width: 126, height: 97 },
+					{ x: 0, y: 3894, width: 126, height: 97 },
+				]
             }),
             right: this.animationManager.createAnimation({
-                path: "/assets/models/tarian/anim/right", 
-                frameCount: 4,
+                sheetPath: "/assets/models/tarian/anim/tarian-spritesheet.png", 
                 fps: 24,
-                width: 170,
-                height: 170,
+                drawWidth: 170,
+                drawHeight: 170,
                 xOffset: 40,
+				framesCoordinates: [
+					{ x: 0, y: 3992, width: 118, height: 97 },
+					{ x: 0, y: 4090, width: 118, height: 97 },
+					{ x: 0, y: 4188, width: 118, height: 97 },
+					{ x: 0, y: 4286, width: 118, height: 97 },
+				]
             }),
             exploding: this.animationManager.createAnimation({
-                path: "/assets/models/tarian/anim/exploding",
-                frameCount: 22,
+                sheetPath: "/assets/models/tarian/anim/tarian-spritesheet.png", 
                 fps: 24,
-                width: 120,
-                height: 170,
+                drawWidth: 120,
+                drawHeight: 170,
                 nextAnim: "lost",
+				framesCoordinates: [
+					{ x: 0, y: 0, width: 92, height: 119 },
+					{ x: 0, y: 120, width: 92, height: 119 },
+					{ x: 0, y: 240, width: 92, height: 119 },
+					{ x: 0, y: 360, width: 92, height: 119 },
+					{ x: 0, y: 480, width: 92, height: 119 },
+					{ x: 0, y: 600, width: 92, height: 119 },
+					{ x: 0, y: 720, width: 92, height: 119 },
+					{ x: 0, y: 840, width: 92, height: 119 },
+					{ x: 0, y: 960, width: 92, height: 119 },
+					{ x: 0, y: 1080, width: 92, height: 119 },
+					{ x: 0, y: 1200, width: 92, height: 119 },
+					{ x: 0, y: 1320, width: 92, height: 119 },
+					{ x: 0, y: 1440, width: 92, height: 119 },
+					{ x: 0, y: 1560, width: 92, height: 119 },
+					{ x: 0, y: 1680, width: 92, height: 119 },
+					{ x: 0, y: 1800, width: 92, height: 119 },
+					{ x: 0, y: 1920, width: 92, height: 119 },
+					{ x: 0, y: 2040, width: 92, height: 119 },
+					{ x: 0, y: 2160, width: 92, height: 119 },
+					{ x: 0, y: 2280, width: 92, height: 119 },
+					{ x: 0, y: 2400, width: 92, height: 119 },
+					{ x: 0, y: 2520, width: 92, height: 119 },
+					{ x: 0, y: 2640, width: 92, height: 119 },
+				]
             }),
             lost: this.animationManager.createAnimation({
-                path: "/assets/models/tarian/anim/lost",
-                frameCount: 3,
+                sheetPath: "/assets/models/tarian/anim/tarian-spritesheet.png", 
                 fps: 24,
-                width: 120,
-                height: 170,
+                drawWidth: 120,
+                drawHeight: 170,
+				framesCoordinates: [
+					{ x: 0, y: 3240, width: 92, height: 119 },
+					{ x: 0, y: 3360, width: 92, height: 119 },
+					{ x: 0, y: 3480, width: 92, height: 119 },
+				]
             })
         });
         
