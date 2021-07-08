@@ -23,7 +23,7 @@ export default class TheConstruct extends Level
 		const player = new Tarian();
         models.push(player); //add main character (has to be 0)
         
-        // models.push(new NeonPidgeon(models[0]));
+        models.push(new NeonPidgeon(models[0]));
         // models.push(new Falcon(models[0]));
         // models.push(new Ghost(models[0]));
 		// models.push(new LavaBall());
@@ -99,7 +99,7 @@ export default class TheConstruct extends Level
         
         if(this.helpers.time.getTotalSeconds() <= 37)
         {
-            this.shockerManager.sendShockers();
+            // this.shockerManager.sendShockers();
         }
         
         
@@ -112,7 +112,7 @@ export default class TheConstruct extends Level
 		//Start the monster going straight away
 		if(this.helpers.time.getTotalSeconds() >= 0 && this.helpers.time.getTotalSeconds() <= 1)
 		{
-			// this.monster.start();
+			this.monster.start();
 		}
 		
 		

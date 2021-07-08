@@ -19,25 +19,38 @@ export default class NeonPidgeon extends Monster {
         
         this.animationManager.registerAnimations({
             falling: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/neonPidgeon/anim/falling",
-                frameCount: 1,
+                sheetPath: "/assets/models/monsters/neonPidgeon/anim/neonPidgeon-spritesheet.png",
                 fps: 24,
-                width: 250,
-                height: 200,
+                drawWidth: 250,
+                drawHeight: 200,
+				framesCoordinates: [
+					{ x: 0, y: 0, width: 337, height: 240 },
+				],
             }),
             flapping: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/neonPidgeon/anim/flapping",
-                frameCount: 4,
+                sheetPath: "/assets/models/monsters/neonPidgeon/anim/neonPidgeon-spritesheet.png",
                 fps: 24,
-                width: 250,
-                height: 200,
+                drawWidth: 250,
+                drawHeight: 200,
+				framesCoordinates: [
+					{ x: 0, y: 242, width: 337, height: 228 },
+					{ x: 0, y: 471, width: 337, height: 228 },
+					{ x: 0, y: 700, width: 337, height: 228 },
+					{ x: 0, y: 929, width: 337, height: 228 },
+					{ x: 0, y: 1158, width: 337, height: 228 },
+					{ x: 0, y: 1387, width: 337, height: 228 },
+					{ x: 0, y: 1616, width: 337, height: 228 },
+					{ x: 0, y: 1845, width: 337, height: 228 },
+				],
             }),
             rising: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/neonPidgeon/anim/rising",
-                frameCount: 1,
+                sheetPath: "/assets/models/monsters/neonPidgeon/anim/neonPidgeon-spritesheet.png",
                 fps: 24,
-                width: 250,
-                height: 200,
+                drawWidth: 250,
+                drawHeight: 200,
+				framesCoordinates: [
+					{ x: 0, y: 2074, width: 337, height: 240 },
+				],
             }),
         });
         
