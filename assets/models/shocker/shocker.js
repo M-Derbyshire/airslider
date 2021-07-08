@@ -20,16 +20,38 @@ export default class Shocker extends Model
     load(levelLeftEdge, levelRightEdge)
     {
         super.load(levelLeftEdge, levelRightEdge);
-        
-        let width = (this.color == "purple") ? 300 : 100;
+		
+		let width;
+		let framesCoordinates;
+		
+		if(this.color === "purple")
+		{
+			width = 300;
+			
+			framesCoordinates = [
+				{ x: 0, y: 0, width: 783, height: 476 },
+				{ x: 0, y: 475, width: 783, height: 476 },
+				{ x: 0, y: 953, width: 783, height: 476 },
+			];
+		}
+		else
+		{
+			width = 100;
+			
+			framesCoordinates = [
+				{ x: 0, y: 0, width: 131, height: 238 },
+				{ x: 0, y: 239, width: 131, height: 238 },
+				{ x: 0, y: 478, width: 131, height: 238 },
+			];
+		}
         
         this.animationManager.registerAnimations({
             shock: this.animationManager.createAnimation({
-                path: "/assets/models/shocker/anim/" + this.color,
-                frameCount: 3,
+                sheetPath: "/assets/models/shocker/anim/shocker-" + this.color + "-spritesheet.png",
+                framesCoordinates,
                 fps: 24,
-                width: width,
-                height: 340,
+                drawWidth: width,
+                drawHeight: 340,
             })
         });
         

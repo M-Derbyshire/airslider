@@ -37,7 +37,7 @@ export default class TheConstruct extends Level
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
         {
             // models.push(new ElectricMine());
-			// models.push(new Shocker("yellow", "static"));
+			models.push(new Shocker("yellow", "static"));
         }
 		
 		const modelWidth = 100; //Set explicitly here, as models not yet loaded
@@ -101,7 +101,7 @@ export default class TheConstruct extends Level
         
         if(this.helpers.time.getTotalSeconds() <= 37)
         {
-            // this.shockerManager.sendShockers();
+            this.shockerManager.sendShockers();
         }
         
         
