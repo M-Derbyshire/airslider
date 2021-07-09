@@ -20,53 +20,79 @@ export default class Falcon extends Monster {
         
         this.animationManager.registerAnimations({
             dropLeft: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/falcon/anim/dropping/left",
-                frameCount: 1,
+                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
                 fps: 24,
-                width: 175,
-                height: 300,
+                drawWidth: 175,
+                drawHeight: 300,
+				frameCoordinates: [
+					{ x: 0, y: 0, width: 188, height: 151 },
+				]
             }),
             dropRight: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/falcon/anim/dropping/right",
-                frameCount: 1,
+                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
                 fps: 24,
-                width: 175,
-                height: 300,
+                drawWidth: 175,
+                drawHeight: 300,
+				frameCoordinates: [
+					{ x: 0, y: 152, width: 188, height: 151 },
+				]
             }),
             flapping: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/falcon/anim/flapping",
+                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
                 frameCount: 8,
                 fps: 24,
-                width: 350,
-                height: 200,
+                drawWidth: 350,
+                drawHeight: 200,
+				frameCoordinates: [
+					{ x: 0, y: 303, width: 398, height: 151 },
+					{ x: 0, y: 455, width: 398, height: 151 },
+					{ x: 0, y: 607, width: 398, height: 151 },
+					{ x: 0, y: 759, width: 398, height: 151 },
+					{ x: 0, y: 911, width: 398, height: 151 },
+					{ x: 0, y: 1063, width: 398, height: 151 },
+					{ x: 0, y: 1215, width: 398, height: 151 },
+					{ x: 0, y: 1367, width: 398, height: 151 },
+				]
             }),
             left: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/falcon/anim/left",
+                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
                 frameCount: 1,
                 fps: 24,
-                width: 350,
-                height: 200,
+                drawWidth: 350,
+                drawHeight: 200,
+				frameCoordinates: [
+					{ x: 0, y: 1519, width: 398, height: 151 },
+				]
             }),
             right: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/falcon/anim/right",
+                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
                 frameCount: 1,
                 fps: 24,
-                width: 350,
-                height: 200,
+                drawWidth: 350,
+                drawHeight: 200,
+				frameCoordinates: [
+					{ x: 0, y: 1671, width: 398, height: 151 },
+				]
             }),
             riseLeft: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/falcon/anim/rising/left",
+                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
                 frameCount: 1,
                 fps: 24,
-                width: 170,
-                height: 300,
+                drawWidth: 170,
+                drawHeight: 300,
+				frameCoordinates: [
+					{ x: 0, y: 1823, width: 150, height: 187 },
+				]
             }),
             riseRight: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/falcon/anim/rising/right",
+                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
                 frameCount: 1,
                 fps: 24,
-                width: 170,
-                height: 300,
+                drawWidth: 170,
+                drawHeight: 300,
+				frameCoordinates: [
+					{ x: 0, y: 2011, width: 150, height: 187 },
+				]
             }),
         });
         
