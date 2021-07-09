@@ -18,11 +18,15 @@ export default class Ghost extends Monster {
         
         this.animationManager.registerAnimations({
             normal: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/Ghost/anim/normal",
-                frameCount: 3,
+                sheetPath: "/assets/models/monsters/Ghost/anim/ghost-spritesheet.png",
                 fps: 24,
-                width: 219,
-                height: 212,
+                drawWidth: 219,
+                drawHeight: 212,
+				frameCoordinates: [
+					{ x: 0, y: 0, width: 319, height: 312 },
+					{ x: 0, y: 313, width: 319, height: 312 },
+					{ x: 0, y: 625, width: 319, height: 312 },
+				]
             })
         });
         
