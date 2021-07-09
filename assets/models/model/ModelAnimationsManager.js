@@ -30,8 +30,10 @@ export default class ModelAnimationsManager {
     createAnimation({sheetPath, fps, drawWidth, drawHeight, frameCoordinates, xOffset = 0, yOffset = 0, nextAnim = ""})
     {
         let anim = {
+			//If this is already loaded, the AssetHandler will just return the same reference
 			spritesheet: this.kernel.loadImage(sheetPath),
-            frameCoordinates: frameCoordinates,
+            
+			frameCoordinates: frameCoordinates,
             fps: fps,
             waitCount: 0, //increased when waiting to move to next frame
             nextCount: 0, //when waitCount equals this, move to the next frame (done so anim and game can have different fps. This is set on every new game-loop frame)
@@ -96,24 +98,26 @@ export default class ModelAnimationsManager {
                 currentFrameIndex++;
             }
             
-            //Is this the last frame in this sprite animation?
-            if(currentFrameIndex > this.animations[this.model.state].frameCoordinates.length - 1)
-            {
-                currentFrameIndex = 0;
-                
-                //If this animation isn't looped, but has another animation to switch to, change the state
-                if(this.animations[this.model.state].nextAnim != "")
-                {
-                    this.model.state = this.animations[this.model.state].nextAnim;
-                }
-            }
-            
             this.animations[this.model.state].waitCount = 0;
         }
         
         this.animations[this.model.state].waitCount++;
-        this.animations[this.model.state].currentFrameIndex = currentFrameIndex;
+		this.animations[this.model.state].currentFrameIndex = currentFrameIndex;
 		
-        return this.animations[this.model.state].frameCoordinates[currentFrameIndex];
+		//Is this the last frame in this sprite animation?
+		if(currentFrameIndex > this.animations[this.model.state].frameCoordinates.length - 1)
+		{
+			//Reset the current animation
+			this.animations[this.model.state].currentFrameIndex = 0;
+			
+			//If this animation isn't looped, but has another animation to switch to, change the state
+			if(this.animations[this.model.state].nextAnim != "")
+			{
+				this.model.state = this.animations[this.model.state].nextAnim;
+			}
+		}
+		
+        return this.animations[this.model.state]
+			.frameCoordinates[this.animations[this.model.state].currentFrameIndex];
     }
 }
