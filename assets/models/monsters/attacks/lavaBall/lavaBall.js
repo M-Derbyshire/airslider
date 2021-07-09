@@ -20,26 +20,35 @@ export default class LavaBall extends Model {
         
         this.animationManager.registerAnimations({
             drop: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/attacks/lavaBall/anim/drop",
-                frameCount: 1,
+                sheetPath: "/assets/models/monsters/attacks/lavaBall/anim/lavaBomb-spritesheet.png",
                 fps: 24,
-                width: ballWidth,
-                height: ballHeight
+                drawWidth: ballWidth,
+                drawHeight: ballHeight,
+				frameCoordinates: [
+					{ x: 0, y: 0, width: 59, height: 59 }
+				]
             }),
             break: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/attacks/lavaBall/anim/break",
-                frameCount: 4,
+                sheetPath: "/assets/models/monsters/attacks/lavaBall/anim/lavaBomb-spritesheet.png",
                 fps: 24,
-                width: ballWidth,
-                height: ballHeight,
-                nextAnim: "none"
+                drawWidth: ballWidth,
+                drawHeight: ballHeight,
+                nextAnim: "none",
+				frameCoordinates: [
+					{ x: 0, y: 0, width: 59, height: 59 },
+					{ x: 0, y: 60, width: 59, height: 59 },
+					{ x: 0, y: 120, width: 59, height: 59 },
+					{ x: 0, y: 180, width: 59, height: 59 },
+				]
             }),
             none: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/attacks/lavaBall/anim/drop",
-                frameCount: 1,
+                sheetPath: "/assets/models/monsters/attacks/lavaBall/anim/lavaBomb-spritesheet.png",
                 fps: 24,
-                width: 0,
-                height: 0
+                drawWidth: 0,
+                drawHeight: 0,
+				frameCoordinates: [
+					{ x: 0, y: 0, width: 0, height: 0 }
+				]
             }),
         });
         
@@ -55,13 +64,13 @@ export default class LavaBall extends Model {
             this.moveDown(this.ySpeed);
         }
         
-        if(this.y + this.height >= this.kernel.unitsWithinCamera && this.state == "drop")
+        if(this.y + this.height >= this.kernel.unitsWithinCamera && this.state === "drop")
         {
             this.setYPositionFromBottom(this.height);
             this.state = "break";
         }
         
-        if(this.state == "none")
+        if(this.state === "none")
         {
             this.active = false;
         }
