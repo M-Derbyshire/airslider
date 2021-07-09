@@ -15,18 +15,40 @@ export default class BabyDragon extends Monster {
         
         this.animationManager.registerAnimations({
             left: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/babyDragon/anim/left",
-                frameCount: 4,
+                sheetPath: "/assets/models/monsters/babyDragon/anim/babyDragon-spritesheet.png",
                 fps: 24,
-                width: 400,
-                height: 300
+                drawWidth: 400,
+                drawHeight: 300,
+				frameCoordinates: [
+					{ x: 0, y: 0, width: 474, height: 187 },
+					{ x: 0, y: 188, width: 474, height: 187 },
+					{ x: 0, y: 376, width: 474, height: 187 },
+					{ x: 0, y: 564, width: 474, height: 187 },
+					{ x: 0, y: 752, width: 474, height: 187 },
+					{ x: 0, y: 940, width: 474, height: 187 },
+					{ x: 0, y: 1128, width: 474, height: 187 },
+					{ x: 0, y: 1316, width: 474, height: 187 },
+					{ x: 0, y: 1504, width: 474, height: 187 },
+					{ x: 0, y: 1692, width: 474, height: 187 },
+				]
             }),
             right: this.animationManager.createAnimation({
-                path: "/assets/models/monsters/babyDragon/anim/right",
-                frameCount: 4,
+                sheetPath: "/assets/models/monsters/babyDragon/anim/babyDragon-spritesheet.png",
                 fps: 24,
-                width: 400,
-                height: 300
+                drawWidth: 400,
+                drawHeight: 300,
+				frameCoordinates: [
+					{ x: 0, y: 1879, width: 474, height: 187 },
+					{ x: 0, y: 2067, width: 474, height: 187 },
+					{ x: 0, y: 2255, width: 474, height: 187 },
+					{ x: 0, y: 2443, width: 474, height: 187 },
+					{ x: 0, y: 2631, width: 474, height: 187 },
+					{ x: 0, y: 2819, width: 474, height: 187 },
+					{ x: 0, y: 3007, width: 474, height: 187 },
+					{ x: 0, y: 3195, width: 474, height: 187 },
+					{ x: 0, y: 3383, width: 474, height: 187 },
+					{ x: 0, y: 3571, width: 474, height: 187 },
+				]
             })
         });
         
