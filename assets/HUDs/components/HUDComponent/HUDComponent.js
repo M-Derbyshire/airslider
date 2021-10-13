@@ -10,6 +10,11 @@ export default class HUDComponent
         //Set in load(). 
         this._ctx; //The canvas context
         this._camera;
+		
+		this.x;
+        this.y;
+        this.width;
+        this.height;
     }
     
     load(canvasCtx, camera)
