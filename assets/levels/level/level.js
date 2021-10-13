@@ -1,5 +1,6 @@
 import Kernel from '/kernel/kernel';
 import EventManager from './EventManager';
+import PointerEventManager from './PointerEventManager';
 import EventCheckContainer from './EventCheckContainer';
 import ModelExtraEventManager from './ModelExtraEventManager';
 import LevelRoad from './LevelRoad';
@@ -24,6 +25,7 @@ export default class Level
         this.helpers = this.kernel.helpers;
         
         this._eventManager = new EventManager(new EventCheckContainer, new ModelExtraEventManager);
+		this._pointerEventManager; //Setup in load method
         this._frameManager; //Set in subclass load method
         
         this.road = new LevelRoad();
@@ -77,10 +79,18 @@ export default class Level
         this._setupZCalc(gameCanvas);
         
         this._setupLevelSpeed();
-        
-        this._setupHUD(gameContext, camera);
 		
 		this._setupPatternManager();
+		
+		this._pointerEventManager = new PointerEventManager(gameCanvas);
+		
+		 this._setupHUD(gameContext, camera, this._pointerEventManager);
+		
+		//Not an array, so have to loop over normally
+		for(let i = 0; i < this.kernel.loadedModels.length; i++)
+		{
+			this._pointerEventManager.addPointerEventSubject(this.kernel.loadedModels[i]);
+		}
     }
 	
 	_setupPatternManager()
@@ -88,10 +98,10 @@ export default class Level
 		this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
 	}
 	
-	_setupHUD(gameContext, camera)
+	_setupHUD(gameContext, camera, pointerEventManager)
 	{
 		this._HUD.models.push(this.kernel.loadedModels[0]);
-		this._loadHUD(gameContext, camera);
+		this._loadHUD(gameContext, camera, pointerEventManager);
 	}
 	
 	_setupLevelSpeed()
@@ -166,9 +176,9 @@ export default class Level
         ]);
 	}
     
-    _loadHUD(canvasCtx, camera)
+    _loadHUD(canvasCtx, camera, pointerEventManager)
     {
-        this._HUD.load(canvasCtx, camera);
+        this._HUD.load(canvasCtx, camera, pointerEventManager);
     }
     
     get HUD() { return this._HUD; }

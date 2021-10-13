@@ -12,9 +12,9 @@ export default class MainHUD extends HUD
         this._damageFlash;
     }
     
-    load(canvasCtx, camera)
+    load(canvasCtx, camera, pointerEventManager)
     {
-        super.load(canvasCtx, camera);
+        super.load(canvasCtx, camera, pointerEventManager);
         
 		//DamageFlash needs to be called by the player's character model
 		//Therefore, we need to keep a 
