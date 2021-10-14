@@ -20,8 +20,13 @@ export default class PointerEventManager {
 	{
 		e.preventDefault();
 		const canvasRect = e.target.getBoundingClientRect();
-		const clickX = e.clientX - canvasRect.left;
-		const clickY = e.clientY - canvasRect.top;
+		
+		//We need to take into account the devicePixelRatio
+		const canvasScaleX = e.target.width / canvasRect.width;
+		const canvasScaleY = e.target.height / canvasRect.height;
+		
+		const clickX = (e.clientX - canvasRect.left) * canvasScaleX;
+		const clickY = (e.clientY - canvasRect.top) * canvasScaleY;
 		
 		//subject is a collection, so can't use foreach
 		for(let i = 0; i < this.subjects.length; i++)
