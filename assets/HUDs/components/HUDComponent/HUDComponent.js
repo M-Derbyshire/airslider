@@ -25,4 +25,15 @@ export default class HUDComponent
     
     //meant to be overriden
     draw(){}
+	
+	isPointerOverlapping(pointX, pointY)
+	{
+		const xUnit = this.helpers.unit.xUnit.bind(this.helpers.unit);
+		const yUnit = this.helpers.unit.yUnit.bind(this.helpers.unit);
+		
+		return (
+			pointX > xUnit(this.x) && pointX < (xUnit(this.x) + xUnit(this.width)) && 
+			pointY > yUnit(this.y) && pointY < (yUnit(this.y) + yUnit(this.height))
+		);
+	}
 }
