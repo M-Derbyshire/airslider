@@ -56,10 +56,7 @@ export default class ModelAnimationsManager {
 		const nextFrameCoordinates = this.getNextFrameCoordinates();
 		
         //Draw the image, taking into account the z-axis when setting the size/positions
-		const preZCalcX = this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(this.model.x)) + this._camera.canvasPositionX;
-		const preZCalcY = this.helpers.unit.yUnit(this._camera.unitCameraPositionCalc.y(this.model.y)) + this._camera.canvasPositionY;
-		const preZCalcWidth = this.helpers.unit.xUnit(this.model.width);
-		const preZCalcHeight = this.helpers.unit.yUnit(this.model.height);
+		const drawPositions = this.getDrawPositionsAndDimensions(this.model)
 		
         this._canvasCtx.drawImage(
             this.animations[this.model.state].spritesheet, 
@@ -67,13 +64,28 @@ export default class ModelAnimationsManager {
 			nextFrameCoordinates.y,
 			nextFrameCoordinates.width,
 			nextFrameCoordinates.height,
-            this.helpers.zCalc.x(preZCalcX, this.model.z), 
-            this.helpers.zCalc.y(preZCalcY, this.model.z), 
-            this.helpers.zCalc.width(preZCalcWidth, this.model.z), 
-            this.helpers.zCalc.height(preZCalcHeight, this.model.z)
+			drawPositions.x,
+			drawPositions.y,
+			drawPositions.width,
+			drawPositions.height
         );
     }
     
+	getDrawPositionsAndDimensions(model)
+	{
+		const preZCalcX = this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(model.x)) + this._camera.canvasPositionX;
+		const preZCalcY = this.helpers.unit.yUnit(this._camera.unitCameraPositionCalc.y(model.y)) + this._camera.canvasPositionY;
+		const preZCalcWidth = this.helpers.unit.xUnit(model.width);
+		const preZCalcHeight = this.helpers.unit.yUnit(model.height);
+		
+		return {
+			x: this.helpers.zCalc.x(preZCalcX, model.z), 
+            y: this.helpers.zCalc.y(preZCalcY, model.z), 
+            width: this.helpers.zCalc.width(preZCalcWidth, model.z), 
+            height: this.helpers.zCalc.height(preZCalcHeight, model.z)
+		};
+	}
+	
 	//Returns the coordinates (x/y/width/height) of the next frame on the spritesheet
     getNextFrameCoordinates()
     {

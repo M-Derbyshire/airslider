@@ -137,4 +137,15 @@ export default class Model {
     {
         this.y = this.kernel.unitsWithinCamera - pos;
     }
+	
+	
+	isPointerOverlapping(pointX, pointY)
+	{
+		const drawPositions = this.animationManager.getDrawPositionsAndDimensions(this);
+		
+		return (
+			pointX > drawPositions.x && pointX < (drawPositions.x + drawPositions.width) && 
+			pointY > drawPositions.y && pointY < (drawPositions.y + drawPositions.height)
+		);
+	}
 }
