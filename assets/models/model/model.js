@@ -69,14 +69,8 @@ export default class Model {
     
     //meant to be overridden
     act() {}
+    load() {}
     
-    
-    
-    load(levelLeftEdge, levelRightEdge)
-    {
-        this._levelLeftEdge = levelLeftEdge;
-        this._levelRightEdge = levelRightEdge;
-    }
     
     loadAnimationsManager(canvasCtx, camera)
     {

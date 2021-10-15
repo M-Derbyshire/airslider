@@ -12,6 +12,13 @@ export default class ASModel extends Model {
     levelStopped() {}
 	
 	
+	
+	load(levelLeftEdge, levelRightEdge)
+    {
+        this._levelLeftEdge = levelLeftEdge;
+        this._levelRightEdge = levelRightEdge;
+    }
+	
     centerXPosition()
     {
         this.x = (this.kernel.unitsWithinCamera / 2) - (this.helpers.unit.xUnit(this.width) / 2);
