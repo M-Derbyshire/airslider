@@ -68,7 +68,6 @@ export default class Model {
     //-----------------------------------------------------------
     
     //meant to be overridden
-    levelStopped() {}
     act() {}
     
     
@@ -125,17 +124,6 @@ export default class Model {
     moveOut(speed)
     {
         this.z -= this.helpers.zCalc.speed(speed, this.kernel.fps);
-    }
-    
-    
-    centerXPosition()
-    {
-        this.x = (this.kernel.unitsWithinCamera / 2) - (this.helpers.unit.xUnit(this.width) / 2);
-    }
-    
-    setYPositionFromBottom(pos)
-    {
-        this.y = this.kernel.unitsWithinCamera - pos;
     }
 	
 	

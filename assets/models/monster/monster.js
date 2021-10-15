@@ -1,9 +1,9 @@
-import Model from '/assets/models/Model/Model';
+import ASModel from '/assets/models/ASModel/ASModel';
 
-export default class Monster extends Model {
+export default class Monster extends ASModel {
     constructor()
     {
-        super(Model);
+        super(ASModel);
         
         this.specialLevel = false; //is this on a special level
         this.playerModel;

@@ -1,9 +1,9 @@
-import Model from '/assets/models/Model/Model';
+import ASModel from '/assets/models/ASModel/ASModel';
 
-export default class LavaBall extends Model {
+export default class LavaBall extends ASModel {
     constructor()
     {
-        super(Model);
+        super(ASModel);
         
         this.active = false;
         this.damageDealt = 2;

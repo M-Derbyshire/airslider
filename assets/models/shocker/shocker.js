@@ -1,11 +1,11 @@
-import Model from '/assets/models/Model/Model';
+import ASModel from '/assets/models/ASModel/ASModel';
 
-export default class Shocker extends Model
+export default class Shocker extends ASModel
 {
 	//Possible modes: "static", "sweep", "home"
     constructor(color, mode, playerModel = null, speedX = 0)
     {
-        super(Model);
+        super(ASModel);
         
         this.color = color;
         this.mode = mode;

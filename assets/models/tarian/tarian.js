@@ -1,9 +1,9 @@
-import Model from '/assets/models/Model/Model';
+import ASModel from '/assets/models/ASModel/ASModel';
 
-export default class Tarian extends Model {
+export default class Tarian extends ASModel {
     constructor()
     {
-        super(Model);
+        super(ASModel);
         
         this._state = "forward";
         this._active = true;
