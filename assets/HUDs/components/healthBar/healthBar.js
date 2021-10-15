@@ -1,11 +1,11 @@
 import Kernel from '/kernel/kernel';
-import HUDComponent from '/assets/HUDs/components/HUDComponent/HUDComponent';
+import ASHUDComponent from '/assets/HUDs/components/ASHUDComponent/ASHUDComponent';
 
-export default class HealthBar extends HUDComponent
+export default class HealthBar extends ASHUDComponent
 {
     constructor(x, y, width, height, targetModelIndex)
     {
-        super(HUDComponent);
+        super(ASHUDComponent);
         
         this.x = x;
         this.y = y;

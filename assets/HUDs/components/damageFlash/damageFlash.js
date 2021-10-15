@@ -1,11 +1,11 @@
 import Kernel from '/kernel/kernel';
-import HUDComponent from '/assets/HUDs/components/HUDComponent/HUDComponent';
+import ASHUDComponent from '/assets/HUDs/components/ASHUDComponent/ASHUDComponent';
 
-export default class DamageFlash extends HUDComponent
+export default class DamageFlash extends ASHUDComponent
 {
     constructor()
     {
-        super(HUDComponent);
+        super(ASHUDComponent);
         
         this.images;
         this.opacity = 0;
