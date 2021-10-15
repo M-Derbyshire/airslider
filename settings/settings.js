@@ -1,4 +1,4 @@
-import AirShockControlsInitialiser from '/settings/ControlsInitialiser/AirShockControlsInitialiser';
+import ASControlsInitialiser from '/settings/ControlsInitialiser/ASControlsInitialiser';
 
 export default {
 	gameCanvasElementID: "gameCan",
@@ -9,5 +9,5 @@ export default {
 	aspectRatioHorizontal: 17,
 	aspectRatioVertical: 9,
 	playerModelIndex: 0,
-	controlsInitialiserClass: AirShockControlsInitialiser,
+	controlsInitialiserClass: ASControlsInitialiser,
 };

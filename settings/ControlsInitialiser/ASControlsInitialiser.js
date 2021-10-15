@@ -1,11 +1,11 @@
 import ControlsInitialiser from '/settings/ControlsInitialiser/ControlsInitialiser';
 import settings from '/settings/settings';
 
-export default class AirShockControlsInitialiser extends ControlsInitialiser
+export default class ASControlsInitialiser extends ControlsInitialiser
 {
 	constructor()
 	{
-		super();
+		super(ControlsInitialiser);
 		
 		this.currentMove;
 		this.playerModelIndex = (!isNaN(settings.playerModelIndex)) ? settings.playerModelIndex : 0;
