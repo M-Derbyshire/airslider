@@ -1,13 +1,13 @@
 import Kernel from '/kernel/kernel';
-import HUD from '/assets/HUDs/HUD/HUD';
+import ASHUD from '/assets/HUDs/ASHUD/ASHUD';
 import HealthBar from '/assets/HUDs/components/HealthBar/HealthBar';
 import DamageFlash from '/assets/HUDs/components/DamageFlash/DamageFlash';
 
-export default class MainHUD extends HUD
+export default class MainHUD extends ASHUD
 {
     constructor()
     {
-        super(HUD);
+        super(ASHUD);
         
         this._damageFlash;
     }
