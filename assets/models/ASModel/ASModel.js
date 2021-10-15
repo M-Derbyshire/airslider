@@ -4,7 +4,13 @@ export default class ASModel extends Model {
 	
 	constructor()
 	{
-		super(Model)
+		super(Model);
+		
+		// Set in load
+        this._levelLeftEdge;
+        this._levelRightEdge;
+		
+		this.damageDealt = 0;
 	}
 	
 	

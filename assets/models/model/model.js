@@ -10,10 +10,6 @@ export default class Model {
         this.helpers = this.kernel.helpers;
         this.animationManager = new ModelAnimationsManager(this);
         
-        // Set in load
-        this._levelLeftEdge;
-        this._levelRightEdge;
-        
         this._state; //string with the current state of the model
         this._active; //is this active
         this._display = true; //should this be drawn
@@ -26,8 +22,6 @@ export default class Model {
         this._zSpeed;
         
         this._loadedIndex; //will hold current index in this.kernel.loadedModels
-        
-        this.damageDealt = 0;
     }
     
     //getters and setters --------------------------------------
