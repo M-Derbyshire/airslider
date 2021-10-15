@@ -7,13 +7,13 @@ import LavaBall from '/assets/models/Monsters/attacks/LavaBall/LavaBall';
 import Ghost from '/assets/models/Monsters/Ghost/Ghost';
 import Shocker from '/assets/models/Shocker/Shocker';
 import Frame from '/engines/GraphicEn/Frame';
-import Level from '/assets/levels/Level/Level';
+import ASLevel from '/assets/levels/ASLevel/ASLevel';
 
-export default class TheConstruct extends Level
+export default class TheConstruct extends ASLevel
 {
     constructor()
     {
-        super(Level);
+        super(ASLevel);
     }
     
     getModels()
