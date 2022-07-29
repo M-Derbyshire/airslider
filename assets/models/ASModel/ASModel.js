@@ -27,7 +27,7 @@ export default class ASModel extends Model {
 	
     centerXPosition()
     {
-        this.x = (this.kernel.unitsWithinCamera / 2) - (this.helpers.unit.xUnit(this.width) / 2);
+        this.x = (this.kernel.unitsWithinCamera / 2) - (this.width / 2);
     }
     
     setYPositionFromBottom(pos)
