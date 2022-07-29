@@ -33,16 +33,16 @@ export default class ModelAnimationsManager {
 			//If this is already loaded, the AssetHandler will just return the same reference
 			spritesheet: this.kernel.loadImage(sheetPath),
             
-			frameCoordinates: frameCoordinates,
-            fps: fps,
+			frameCoordinates,
+            fps,
             waitCount: 0, //increased when waiting to move to next frame
             nextCount: 0, //when waitCount equals this, move to the next frame (done so anim and game can have different fps. This is set on every new game-loop frame)
             currentFrameIndex: 0,
             height: drawHeight,
             width: drawWidth,
-            xOffset: xOffset, //change position for consistency
-            yOffset: yOffset,
-            nextAnim: nextAnim, //used to follow through from one anim into another (this is the name of the next state)
+            xOffset, //change position for consistency
+            yOffset,
+            nextAnim, //used to follow through from one anim into another (this is the name of the next state)
         };
         
         return anim;
@@ -53,10 +53,10 @@ export default class ModelAnimationsManager {
 		//Need to call this here, as if this is an animation that changes state at the end,
 		//the below settings (preZCalc* variables) may have the wrong width/height for the 
 		//new animation.
-		const nextFrameCoordinates = this.getNextFrameCoordinates();
+		const nextFrameCoordinates = this._getNextFrameCoordinates();
 		
         //Draw the image, taking into account the z-axis when setting the size/positions
-		const drawPositions = this.getDrawPositionsAndDimensions(this.model)
+		const drawPositions = this._getDrawPositionsAndDimensions(this.model)
 		
         this._canvasCtx.drawImage(
             this.animations[this.model.state].spritesheet, 
@@ -71,23 +71,29 @@ export default class ModelAnimationsManager {
         );
     }
     
-	getDrawPositionsAndDimensions(model)
+    // Calculates the positions/dimensions to draw the model, and returns them as an object: { x, y, width, height }
+	_getDrawPositionsAndDimensions(model)
 	{
 		const preZCalcX = this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(model.x)) + this._camera.canvasPositionX;
 		const preZCalcY = this.helpers.unit.yUnit(this._camera.unitCameraPositionCalc.y(model.y)) + this._camera.canvasPositionY;
 		const preZCalcWidth = this.helpers.unit.xUnit(model.width);
 		const preZCalcHeight = this.helpers.unit.yUnit(model.height);
-		
+        
+        const zCalcX = this.helpers.zCalc.x(preZCalcX, model.z);
+        const zCalcY = this.helpers.zCalc.y(preZCalcY, model.z);
+        const zCalcWidth = this.helpers.zCalc.width(preZCalcWidth, model.z);
+        const zCalcHeight = this.helpers.zCalc.height(preZCalcHeight, model.z);
+        
 		return {
-			x: this.helpers.zCalc.x(preZCalcX, model.z), 
-            y: this.helpers.zCalc.y(preZCalcY, model.z), 
-            width: this.helpers.zCalc.width(preZCalcWidth, model.z), 
-            height: this.helpers.zCalc.height(preZCalcHeight, model.z)
+			x: zCalcX, 
+            y: zCalcY, 
+            width: zCalcWidth, 
+            height: zCalcHeight
 		};
 	}
 	
 	//Returns the coordinates (x/y/width/height) of the next frame on the spritesheet
-    getNextFrameCoordinates()
+    _getNextFrameCoordinates()
     {
 		let currentFrameIndex = this.animations[this.model.state].currentFrameIndex;
 		
