@@ -52,7 +52,7 @@ export default class Kernel {
         
         this._assetHandler = new AssetHandler(this._rootPath);
         
-        this._levelQueue = [];
+        this._levelQueue = []; // [{ level: Level, hasBeenPrepared: boolean, loadedModels: Model[], preparedEngines: { gameEn:GameEn, graphicEn:GraphicEn, soundEn:SoundEn } }]
         this._gameEn;
         this._graphicEn;
         this._soundEn;
