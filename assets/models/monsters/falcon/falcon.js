@@ -14,9 +14,11 @@ export default class Falcon extends Monster {
         this.color = "none";
     }
     
-    load(levelLeftEdge, levelRightEdge)
+    load()
     {
-        super.load(levelLeftEdge, levelRightEdge);
+        super.load();
+        
+        this._assetsToUnload.push("/assets/models/monsters/falcon/anim/falcon-spritesheet.png");
         
         this.animationManager.registerAnimations({
             dropLeft: this.animationManager.createAnimation({
@@ -96,6 +98,11 @@ export default class Falcon extends Monster {
             }),
         });
         
+    }
+    
+    prepare()
+    {
+        super.prepare();
         
         this.actions = [
             this.stalking,

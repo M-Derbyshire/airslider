@@ -12,6 +12,8 @@ export default class ModelAnimationsManager {
         this._canvasCtx;
         
         this.animations;
+        
+        this.sheetMap = new Map(); //Stores the spritesheets. The key is the sheet path
     }
     
     load(canvasCtx, camera)
@@ -29,10 +31,11 @@ export default class ModelAnimationsManager {
     
     createAnimation({sheetPath, fps, drawWidth, drawHeight, frameCoordinates, xOffset = 0, yOffset = 0, nextAnim = ""})
     {
+        if(!this.sheetMap.has(sheetPath))
+            this.sheetMap.set(sheetPath, this.kernel.loadImage(sheetPath));
+        
         let anim = {
-			//If this is already loaded, the AssetHandler will just return the same reference
-			spritesheet: this.kernel.loadImage(sheetPath),
-            
+			spritesheet: this.sheetMap.get(sheetPath),
 			frameCoordinates,
             fps,
             waitCount: 0, //increased when waiting to move to next frame

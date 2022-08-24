@@ -21,7 +21,6 @@ export default class ASControlsInitialiser extends ControlsInitialiser
         if(!settings.isOnMobile)
         {
             window.addEventListener("keydown", (e) => {
-                // this.currentMove = e.key;
                 if(this.currentMove !== e.key)
                 {
                     switch(e.key)

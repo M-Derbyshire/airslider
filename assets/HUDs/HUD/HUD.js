@@ -12,6 +12,8 @@ export default class HUD
         this.components = []; //HUD components included
         this.models = []; //models used by this HUD
 		this._pointerEventManager;
+        
+        this._assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
     }
     
     load(canvasCtx, camera, pointerEventManager)
@@ -22,13 +24,24 @@ export default class HUD
     
     loadComponents(canvasCtx, camera)
     {
-        for(let i = 0; i < this.components.length; i++)
-        {
-            this.components[i].load(canvasCtx, camera);
+        this.components.forEach(component => {
+            component.load(canvasCtx, camera);
 			
 			if(this._pointerEventManager.addPointerEventSubject)
-				this._pointerEventManager.addPointerEventSubject(this.components[i]);
-        }
+				this._pointerEventManager.addPointerEventSubject(component);
+        });
+    }
+    
+    //If implementing your own unload in a child class, be sure to call this with super.unload()
+    unload()
+    {
+        this._assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
+        this.components.forEach(component => component.unload());
+    }
+    
+    prepare()
+    {
+        this.components.forEach(component => component.prepare());
     }
     
     draw()

@@ -22,6 +22,8 @@ export default class Model {
         this._zSpeed;
         
         this._loadedIndex; //will hold current index in this.kernel.loadedModels
+        
+        this._assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
     }
     
     //getters and setters --------------------------------------
@@ -64,7 +66,13 @@ export default class Model {
     //meant to be overridden
     act() {}
     load() {}
+    prepare() {}
     
+    //If implementing your own unload in a child class, be sure to call this with super.unload()
+    unload()
+    {
+        this._assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
+    }
     
     loadAnimationsManager(canvasCtx, camera)
     {

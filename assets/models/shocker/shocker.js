@@ -17,9 +17,9 @@ export default class Shocker extends ASModel
 		this.homingZStart = 200; //If in "home" mode, at what Z position do we start homing?
     }
     
-    load(levelLeftEdge, levelRightEdge)
+    load()
     {
-        super.load(levelLeftEdge, levelRightEdge);
+        super.load();
 		
 		let width;
 		let frameCoordinates;
@@ -54,6 +54,11 @@ export default class Shocker extends ASModel
                 drawHeight: 340,
             })
         });
+    }
+    
+    prepare()
+    {
+        super.prepare();
         
         this.setYPositionFromBottom(this.height);
         this.z = this.helpers.zCalc.vPointDepth;
@@ -64,6 +69,7 @@ export default class Shocker extends ASModel
             this.xSpeed = (((Math.floor(Math.random() * 2)) * 2) - 1) * this.xSpeed;
         }
     }
+    
     
     act()
     {

@@ -17,9 +17,9 @@ export default class Tarian extends ASModel {
         this.lastSpeedChange = 0; //used when changing the speed
     }
     
-    load(levelLeftEdge, levelRightEdge)
+    load()
     {
-        super.load(levelLeftEdge, levelRightEdge);
+        super.load();
         
         //I've used exact values for the fps, so it will be consistent when changing game fps
         this.animationManager.registerAnimations({
@@ -105,6 +105,11 @@ export default class Tarian extends ASModel {
 				]
             })
         });
+    }
+    
+    prepare()
+    {
+        super.prepare();
         
         this.z = 20;
         this.centerXPosition();
@@ -187,9 +192,9 @@ export default class Tarian extends ASModel {
 	
 	_setSpeedBasedOnAcceleration()
 	{
-		if(this.kernel.totalActiveMilliseconds - this.lastSpeedChange >= 100) //1 tenth of a second
+		if(this.kernel.totalLevelActiveMilliseconds - this.lastSpeedChange >= 100) //1 tenth of a second
         {
-            this.lastSpeedChange = this.kernel.totalActiveMilliseconds;
+            this.lastSpeedChange = this.kernel.totalLevelActiveMilliseconds;
 			this._changeSpeed();
         }
 	}

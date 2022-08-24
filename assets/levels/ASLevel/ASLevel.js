@@ -51,11 +51,11 @@ export default class ASLevel extends Level {
 	load(gameCanvas, gameContext, camera, frameManager)
 	{
 		super.load(gameCanvas, gameContext, camera, frameManager);
-		
+        
 		this.leftEdge = 0;
         this.rightEdge = this.kernel.unitsWithinCamera;
-		
-		this.ground = new LevelGround(gameContext, camera);
+        
+        this.ground = new LevelGround(gameContext, camera);
 		
         this._setupShockerManager(this.leftEdge, this.rightEdge);
 		
@@ -63,6 +63,17 @@ export default class ASLevel extends Level {
 		
 		this._setupPatternManager();
 	}
+    
+    prepare()
+    {
+        super.prepare();
+        this.ground.setupGround();
+    }
+    
+    unload()
+    {
+        super.unload();
+    }
 	
 	
 	_setupPatternManager()

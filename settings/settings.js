@@ -1,4 +1,5 @@
 import ASControlsInitialiser from '/settings/ControlsInitialiser/ASControlsInitialiser';
+import TheConstruct from '/assets/levels/TheConstruct/TheConstruct';
 
 export default {
 	gameCanvasElementID: "gameCan",
@@ -10,4 +11,6 @@ export default {
 	aspectRatioVertical: 9,
 	playerModelIndex: 0,
 	controlsInitialiserClass: ASControlsInitialiser,
+	initialLevelClass: TheConstruct,
+	initialLevelConstructorParameters: []
 };

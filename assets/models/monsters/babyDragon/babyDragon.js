@@ -9,9 +9,11 @@ export default class BabyDragon extends Monster {
         this.lavaBall = lavaBall;
     }
     
-    load(levelLeftEdge, levelRightEdge)
+    load()
     {
-        super.load(levelLeftEdge, levelRightEdge);
+        super.load();
+        
+        this._assetsToUnload.push("/assets/models/monsters/babyDragon/anim/babyDragon-spritesheet.png");
         
         this.animationManager.registerAnimations({
             left: this.animationManager.createAnimation({
@@ -51,6 +53,14 @@ export default class BabyDragon extends Monster {
 				]
             })
         });
+        
+        this.state = "left";
+        
+    }
+    
+    prepare()
+    {
+        super.prepare();
         
         this.actions = [
             this.move

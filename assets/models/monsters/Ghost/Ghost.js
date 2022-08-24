@@ -12,9 +12,11 @@ export default class Ghost extends Monster {
         this.color = "ghost";
     }
     
-    load(levelLeftEdge, levelRightEdge)
+    load()
     {
-        super.load(levelLeftEdge, levelRightEdge);
+        super.load();
+        
+        this._assetsToUnload.push("/assets/models/monsters/Ghost/anim/ghost-spritesheet.png");
         
         this.animationManager.registerAnimations({
             normal: this.animationManager.createAnimation({
@@ -29,6 +31,12 @@ export default class Ghost extends Monster {
 				]
             })
         });
+        
+    }
+    
+    prepare()
+    {
+        super.prepare();
         
         this.actions = [
             this.sweep,

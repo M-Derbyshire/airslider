@@ -19,10 +19,15 @@ export default class ASModel extends Model {
 	
 	
 	
-	load(levelLeftEdge, levelRightEdge)
+	load(gameCanvas, gameContext, camera, frameManager)
     {
-        this._levelLeftEdge = levelLeftEdge;
-        this._levelRightEdge = levelRightEdge;
+        super.load(gameCanvas, gameContext, camera, frameManager);
+    }
+    
+    prepare()
+    {
+        this._levelLeftEdge = this.kernel.level.leftEdge;
+        this._levelRightEdge = this.kernel.level.rightEdge;
     }
 	
     centerXPosition()

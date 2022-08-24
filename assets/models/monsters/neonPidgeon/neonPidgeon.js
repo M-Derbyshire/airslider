@@ -13,9 +13,11 @@ export default class NeonPidgeon extends Monster {
         this.color = "none";
     }
     
-    load(levelLeftEdge, levelRightEdge)
+    load()
     {
-        super.load(levelLeftEdge, levelRightEdge);
+        super.load();
+        
+        this._assetsToUnload.push("/assets/models/monsters/neonPidgeon/anim/neonPidgeon-spritesheet.png");
         
         this.animationManager.registerAnimations({
             falling: this.animationManager.createAnimation({
@@ -53,6 +55,12 @@ export default class NeonPidgeon extends Monster {
 				],
             }),
         });
+        
+    }
+    
+    prepare()
+    {
+        super.prepare();
         
         this.actions = [
             this.moveSideways,

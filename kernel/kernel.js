@@ -1,7 +1,6 @@
 import AssetHandler from './AssetHandler';
 import GameEn from '/engines/GameEn/GameEn';
 import GraphicEn from '/engines/GraphicEn/GraphicEn';
-import MenuEn from '/engines/MenuEn/MenuEn';
 import SoundEn from '/engines/SoundEn/SoundEn';
 import TimeHelper from '/helpers/TimeHelper';
 import UnitHelper from '/helpers/UnitHelper';
@@ -44,21 +43,19 @@ export default class Kernel {
 		//how many drawSpace x/y units are there within the camera's size
         this.unitsWithinCamera = (!isNaN(settings.unitsWithinCamera)) ? settings.unitsWithinCamera : 1000;
         
-        this._totalActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
-        this._totalInactiveMilliseconds = 0;
+        this._totalLevelActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
+        this._totalLevelInactiveMilliseconds = 0;
         this._active = true;
         
         const filePath = window.location.pathname;
         this._rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
         
-        this.loadedModels = []; //will hold all models loaded during loading
         this._assetHandler = new AssetHandler(this._rootPath);
         
-        this._level;
+        this._levelQueue = [];
         this._gameEn;
         this._graphicEn;
         this._soundEn;
-        this._menuEn;
         
         this._helpers;
 		
@@ -74,8 +71,8 @@ export default class Kernel {
     
     get fpsLimit(){return this._fpsLimit;}
     
-    get totalActiveMilliseconds(){return this._totalActiveMilliseconds;}
-    get totalInactiveMilliseconds(){return this._totalInactiveMilliseconds;}
+    get totalLevelActiveMilliseconds(){return this._totalLevelActiveMilliseconds;}
+    get totalLevelInactiveMilliseconds(){return this._totalLevelInactiveMilliseconds;}
     
     get active(){return this._active;}
     set active(newVal){this._active = newVal;}
@@ -84,11 +81,17 @@ export default class Kernel {
     
     get helpers() {return this._helpers;}
     
-    get level(){return this._level;}
-    set level(newVal){this._level = newVal;}
+    get level(){return (this._levelQueue.length > 0) ? this._levelQueue[0].level : undefined;}
+    
+    get loadedModels(){return (this._levelQueue.length > 0) ? this._levelQueue[0].loadedModels : [];}
+    set loadedModels(newVal){if(this._levelQueue.length > 0) this._levelQueue[0].loadedModels = newVal;}
+    
+    get levelHasBeenPrepared(){return (this._levelQueue.length > 0) ? this._levelQueue[0].hasBeenPrepared : undefined}
+    set levelHasBeenPrepared(newVal){if(this._levelQueue.length > 0) this._levelQueue[0].hasBeenPrepared = newVal;}
     
     get loadedAssets(){return this._assetHandler.loadedAssets;}
     get assetHandler(){return this._assetHandler;}
+    get assetsStillLoading(){return this.assetHandler._assetsStillLoading;}
     
     get gameEn(){return this._gameEn;}
     
@@ -103,7 +106,7 @@ export default class Kernel {
 	get gameContext(){return this._gameContext;}
     
     
-    // loading methods --------------------------------------------------------------------------
+    // loading/unloading methods --------------------------------------------------------------------------
     load()
     {
         this._helpers = {
@@ -111,15 +114,12 @@ export default class Kernel {
             time: new TimeHelper(),
             unit: new UnitHelper(this.unitsWithinCamera)
         };
+        
+        this.loadLevel(new settings.initialLevelClass(...settings.initialLevelConstructorParameters));
     }
     
-    loadLevel(Level)
+    loadLevel(level)
     {
-        this.level = Level;
-        
-        //get models here so they can be picked up by the engines
-        this.loadedModels = this.level.getModels();
-		
 		this._initialiseControls();
         
 		const aspectRatioHorizontal = (!isNaN(settings.aspectRatioHorizontal)) ? settings.aspectRatioHorizontal : 17;
@@ -127,31 +127,66 @@ export default class Kernel {
 		const camera = new Camera(this.gameCanvas, this.gameContext, aspectRatioHorizontal, aspectRatioVertical);
 		const frameManager = new FrameManager(camera);
 		
-        this._initialiseAllEngines(camera, frameManager);
+        const preparedEngines = this._initialiseAllEngines(camera, frameManager); // new engines, aimed at this level
         
         //do any extra setup that may need access to the engines
-        this.level.load(this.gameCanvas, this.gameContext, camera, frameManager);
-		
-        this._loadAllModels();
+        level.load(this.gameCanvas, this.gameContext, camera, frameManager);
+        
+        //Get models here so they can be picked up by the engines
+        const loadedModels = level.getModels();
+        
+        //Now we can load the models, after the engines have been loaded
+        this._loadModels(loadedModels, preparedEngines);
+        
+        //hasBeenPrepared should be set to true if the level (and it's models) have had the prepare() method called
+        this._levelQueue.push({ level, hasBeenPrepared: false, loadedModels, preparedEngines });
+        
+    }
+    
+    unloadCurrentLevel()
+    {
+        this.loadedModels.forEach(model => model.unload());
+        this.level.unload();
+        this._totalLevelActiveMilliseconds = 0;
+        this._totalLevelInactiveMilliseconds = 0;
+        this._levelQueue.shift();
     }
 	
-	_loadAllModels()
+	_loadModels(models, engines)
 	{
-		for(let i = 0; i < this.loadedModels.length; i++)
-        {
-            this.loadedModels[i].loadedIndex = i;
-            this.loadedModels[i].load(this.level.leftEdge, this.level.rightEdge);
-            this.loadedModels[i].loadAnimationsManager(this.gameContext, this._graphicEn.camera);
-        }
+        models.forEach((model, idx) => {
+            model.loadedIndex = idx;
+            model.load();
+            model.loadAnimationsManager(this.gameContext, engines.graphicEn.camera);
+        });
 	}
-	
+    
+    prepareCurrentLevelAndModels()
+    {
+        this.level.prepare();
+        this.loadedModels.forEach(model => model.prepare());
+        
+        this.levelHasBeenPrepared = true;
+    }
+    
+    
+	// Returns new instances of all engines
 	_initialiseAllEngines(camera, frameManager)
 	{
-		this._gameEn = new GameEn();
-        this._graphicEn = new GraphicEn(this.gameCanvas, this.gameContext, camera, frameManager);
-        this._soundEn = new SoundEn();
-        this._menuEn = new MenuEn();
+		const gameEn = new GameEn();
+        const graphicEn = new GraphicEn(this.gameCanvas, this.gameContext, camera, frameManager);
+        const soundEn = new SoundEn();
+        
+        return { gameEn, graphicEn, soundEn };
 	}
+    
+    replaceEngines()
+    {
+        this._gameEn = this._levelQueue[0].preparedEngines.gameEn;
+        this._graphicEn = this._levelQueue[0].preparedEngines.graphicEn;
+        this._soundEn = this._levelQueue[0].preparedEngines.soundEn;
+    }
+    
 	
 	_initialiseControls()
 	{
@@ -159,6 +194,7 @@ export default class Kernel {
 		controlInitialiser.initialiseControls();
 	}
     
+    // Asset management
     loadImage(path, callback = this._assetHandler.getDefaultAssetCallback())
     {
         return this._assetHandler.loadAsset(new Image, path, callback);
@@ -169,6 +205,13 @@ export default class Kernel {
         return this._assetHandler.loadAsset(new Audio, path, callback);
     }
     
+    // Finds the loaded asset with the given file path, and reduces the usage count against it.
+    // The asset should stay loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it
+    releaseAsset(path)
+    {
+        this._assetHandler.releaseAsset(path);
+    }
+    
     
     //running the game ---------------------------------------------------------------
     run()
@@ -177,9 +220,15 @@ export default class Kernel {
         
         //don't run unless it's time for next frame
         let dt = new Date();
-        if((dt.getTime() - this._lastTime.getTime()) < (1000 / this._fpsLimit) || this._assetHandler.assetsStillLoading > 0)
+        if((dt.getTime() - this._lastTime.getTime()) < (1000 / this._fpsLimit) || (!this.levelHasBeenPrepared && this.assetsStillLoading > 0))
         {
             return;
+        }
+        
+        if(!this.levelHasBeenPrepared)
+        {
+            this.replaceEngines();
+            this.prepareCurrentLevelAndModels();
         }
         
         this._fps = 1000 / (dt.getTime() - this._lastTime.getTime());
@@ -215,11 +264,11 @@ export default class Kernel {
         {
             if(this._active)
             {
-                this._totalActiveMilliseconds += timePassed;
+                this._totalLevelActiveMilliseconds += timePassed;
             }
             else
             {
-                this._totalInactiveMilliseconds += timePassed;
+                this._totalLevelInactiveMilliseconds += timePassed;
             }
         }
     }

@@ -30,16 +30,16 @@ export default class TheConstruct extends ASLevel
 		models.push(new BabyDragon(models[0], models[models.length - 1]));
 		this.monster = models[models.length - 1];
 
-        this.shockerManager.setShockerModelRange(models.length, models.length + 10);
-        this.shockerManager.setCurrentShockerCount(10);
-        let shockerRange = this.shockerManager.shockerModelRange;
-        for(let i = shockerRange.from; i <= shockerRange.to; i++)
-        {
-			models.push(new Shocker("yellow", "static"));
-        }
+        // this.shockerManager.setShockerModelRange(models.length, models.length + 10);
+        // this.shockerManager.setCurrentShockerCount(10);
+        // let shockerRange = this.shockerManager.shockerModelRange;
+        // for(let i = shockerRange.from; i <= shockerRange.to; i++)
+        // {
+		// 	models.push(new Shocker("yellow", "static"));
+        // }
 		
-		const modelWidth = 100; //Set explicitly here, as models not yet loaded
-		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
+		// const modelWidth = 100; //Set explicitly here, as models not yet loaded
+		// this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
         
         return models;
     }
@@ -53,7 +53,7 @@ export default class TheConstruct extends ASLevel
         this.tunnelSprite = this.kernel.loadImage("/assets/levels/theConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
         
-        this.ground.setupGround(
+        this.ground.load(
             "/assets/levels/theConstruct/images/ground.png",
             this.helpers.unit.yUnit(50)
         );
@@ -78,6 +78,15 @@ export default class TheConstruct extends ASLevel
             0.25
         );
         
+        this._assetsToUnload.push(
+            "/assets/levels/theConstruct/images/theConstructTunnel.png",
+            "/assets/levels/theConstruct/images/testBackground.png",
+            "/assets/levels/theConstruct/images/testBackgroundMask.png",
+            "/assets/levels/level/images/tunnelLightMask.png",
+            "/assets/levels/theConstruct/images/ground.png"
+        );
+        
+        
         this.frameIndex = this._frameManager.addFrame(frame);
         
         
@@ -87,6 +96,12 @@ export default class TheConstruct extends ASLevel
         //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
         // ]);
     }
+    
+    prepare()
+    {
+        super.prepare();
+    }
+    
     
     act()
     {

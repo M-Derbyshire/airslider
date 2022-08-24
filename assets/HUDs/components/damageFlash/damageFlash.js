@@ -80,6 +80,7 @@ export default class DamageFlash extends ASHUDComponent
             fire: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/fire.png"),
             ghost: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/ghost.png")
         };
+        
     }
     
     //This is called by the player's model, and starts the flash going

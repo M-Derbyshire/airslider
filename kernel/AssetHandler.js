@@ -30,20 +30,22 @@ export default class AssetHandler
     {
 		const boundCallback = callback.bind(this);
         path = this.prepareAssetPath(path);
-        const assetIsHeld = this.checkAssetHeld(path); //Returns either the index number, or false
+        const heldAssetIdx = this.checkAssetHeld(path); //Returns either the index number, or -1
         
-		if(assetIsHeld)
+        
+		if(heldAssetIdx > -1)
         {
-            return this.loadedAssets[assetIsHeld].asset;
+            this.loadedAssets[heldAssetIdx].usageCount++;
+            return this.loadedAssets[heldAssetIdx].asset;
         }
         
         this._assetsStillLoading++;
-        this.loadedAssets.push({
+        const newLoadedAsset = {
             path,
-            asset: obj
-        }); 
+            asset: obj,
+            usageCount: 1 //How many entities are currently using this?
+        }; 
         
-		const newLoadedAsset = this.loadedAssets[this.loadedAssets.length - 1];
 		
         if(obj instanceof Image)
         {
@@ -55,7 +57,29 @@ export default class AssetHandler
         }
         
         newLoadedAsset.asset.src = path;
+        
+        this.loadedAssets.push(newLoadedAsset);
         return newLoadedAsset.asset;
+    }
+    
+    // Finds the loaded asset with the given file path, and reduces the usage count against it.
+    // The asset should stay loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it
+    releaseAsset(path)
+    {
+        path = this.prepareAssetPath(path);
+        const heldAssetIdx = this.checkAssetHeld(path);
+        
+        if(heldAssetIdx === -1)
+        {
+            return;
+        }
+        
+        this.loadedAssets[heldAssetIdx].usageCount--;
+        
+        if(this.loadedAssets[heldAssetIdx].usageCount === 0)
+        {
+            this.loadedAssets.splice(heldAssetIdx, 1);
+        }
     }
     
     prepareAssetPath(path)
@@ -63,15 +87,16 @@ export default class AssetHandler
         return this._rootPath + path;
     }
     
+    //Returns the index of the asset if it has been loaded, or -1 if not
     checkAssetHeld(path)
     {
         for(let i = 0; i < this.loadedAssets.length; i++)
         {
-            if(this.loadedAssets[i].path == path)
+            if(this.loadedAssets[i].path === path)
             {
                 return i;
             }
         }
-        return false;
+        return -1;
     }
 }

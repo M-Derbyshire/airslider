@@ -15,9 +15,12 @@ export default class LevelGround
         this.groundZPositions = []; //The z-axis positions of every piece of ground
     }
 	
-	
+	load(imagePath, imageHeight)
+	{
+		this.ground = this._getPopulatedGroundObject(imagePath, imageHeight);
+	}
     
-    setupGround(path, imageHeight)
+    setupGround()
     {
         //Can't set in constructor as graphicEn wouldn't have been initialised then
         const canvasPositions = { 
@@ -27,9 +30,7 @@ export default class LevelGround
             height: this._camera.canvasPositionHeight
         };
         
-        this.ground = this._getPopulatedGroundObject(path, imageHeight);
-        
-        this._populateGroundZPositions(canvasPositions, imageHeight);
+        this._populateGroundZPositions(canvasPositions, this.ground.height);
     }
 	
 	_getPopulatedGroundObject(path, height)

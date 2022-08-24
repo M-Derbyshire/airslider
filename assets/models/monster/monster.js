@@ -79,10 +79,10 @@ export default class Monster extends ASModel {
         this.exiting = true;
     }
     
-    load(levelLeftEdge, levelRightEdge) //this is overriding the model method
+    
+    prepare()
     {
-        super.load(levelLeftEdge, levelRightEdge);
-        
+        super.prepare();
         this.fireWeapon = true;
         this.realZSpeedRaw = this.kernel.level.levelSpeedRaw;
     }

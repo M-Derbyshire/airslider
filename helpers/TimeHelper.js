@@ -21,11 +21,11 @@ export default class TimeHelper
     //these are more accurate
     getTotalSeconds()
     {
-        return this.kernel.totalActiveMilliseconds / 1000;
+        return this.kernel.totalLevelActiveMilliseconds / 1000;
     }
 
     getTotalMilliseconds()
     {
-        return this.kernel.totalActiveMilliseconds;
+        return this.kernel.totalLevelActiveMilliseconds;
     }
 }
