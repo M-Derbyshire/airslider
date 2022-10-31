@@ -44,7 +44,6 @@ export default class Kernel {
         this.unitsWithinCamera = (!isNaN(settings.unitsWithinCamera)) ? settings.unitsWithinCamera : 1000;
         
         this._totalLevelActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
-        this._totalLevelInactiveMilliseconds = 0;
         this._active = true;
         
         const filePath = window.location.pathname;
@@ -72,7 +71,6 @@ export default class Kernel {
     get fpsLimit(){return this._fpsLimit;}
     
     get totalLevelActiveMilliseconds(){return this._totalLevelActiveMilliseconds;}
-    get totalLevelInactiveMilliseconds(){return this._totalLevelInactiveMilliseconds;}
     
     get active(){return this._active;}
     set active(newVal){this._active = newVal;}
@@ -148,7 +146,6 @@ export default class Kernel {
         this.loadedModels.forEach(model => model.unload());
         this.level.unload();
         this._totalLevelActiveMilliseconds = 0;
-        this._totalLevelInactiveMilliseconds = 0;
         this._levelQueue.shift();
     }
 	
@@ -260,16 +257,9 @@ export default class Kernel {
     {
         let timePassed = Math.floor(currentDateTime.getMilliseconds()) - Math.floor(this._lastTime.getMilliseconds());
         
-        if(timePassed >= 1)
+        if(this._active && timePassed >= 1)
         {
-            if(this._active)
-            {
-                this._totalLevelActiveMilliseconds += timePassed;
-            }
-            else
-            {
-                this._totalLevelInactiveMilliseconds += timePassed;
-            }
+            this._totalLevelActiveMilliseconds += timePassed;
         }
     }
 }
