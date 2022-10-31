@@ -88,7 +88,7 @@ export default class Level
     get HUD() { return this._HUD; }
     
     //meant to be overridden
-    getModels(){}
+    getModels(){ return []; }
     act(){}
 	_registerLevelEvents(){}
 	
