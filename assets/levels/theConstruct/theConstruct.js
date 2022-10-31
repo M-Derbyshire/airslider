@@ -105,7 +105,7 @@ export default class TheConstruct extends ASLevel
     
     act()
     {
-        this.updateLevelSpeed(); //keeps level speed consistent via fps
+        super.act();
         
         //if outside/inside changes, change light mask
         this.setLightMask();

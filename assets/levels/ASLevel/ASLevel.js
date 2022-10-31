@@ -146,6 +146,12 @@ export default class ASLevel extends Level {
             },
         ]);
 	}
+    
+    act()
+    {
+        super.act();
+        this.updateLevelSpeed(); //keeps level speed consistent via fps
+    }
 	
 	updateLevelSpeed()
     {
