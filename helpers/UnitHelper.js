@@ -27,13 +27,18 @@ export default class UnitHelper
     
     //xUnit and yUnit will take a position/dimension unit value, and provide an actual canvas position/size
     
-    xUnit(unit)
+    xUnit(unitVal)
     {
-        return ((this._camera.canvasWidth / this.unitsWithinCamera) * unit);
+        return this._unitValToCanvasVal(unitVal, this._camera.canvasWidth);
     }
-    yUnit(unit)
+    yUnit(unitVal)
     {
-        return ((this._camera.canvasHeight / this.unitsWithinCamera) * unit);
+        return this._unitValToCanvasVal(unitVal, this._camera.canvasHeight);
+    }
+    
+    _unitValToCanvasVal(unitVal, canvasAxisSize)
+    {
+        return ((canvasAxisSize / this.unitsWithinCamera) * unitVal);
     }
     
     
@@ -44,11 +49,16 @@ export default class UnitHelper
     
     xSpeed(speed)
     {
-        return speed / this.kernel.fps;
+        return this._consistentSpeed(speed);
     }
 
     ySpeed(speed)
     {
-        return speed / this.kernel.fps;
+        return this._consistentSpeed(speed);
+    }
+    
+    _consistentSpeed(speed)
+    {
+        return speed / this.kernel.fps; 
     }
 }
