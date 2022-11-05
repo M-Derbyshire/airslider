@@ -61,6 +61,8 @@ export default class Kernel {
 		this._gameCanvasElementID = settings.gameCanvasElementID;
 		this._gameCanvas = document.getElementById(this.gameCanvasElementID);
 		this._gameContext = this.gameCanvas.getContext("2d");
+        
+        this._controlInitialiser = new settings.controlsInitialiserClass();
     }
     
     //getters and setters ----------------------------------------------------------------------
@@ -146,6 +148,7 @@ export default class Kernel {
         this.loadedModels.forEach(model => model.unload());
         this.level.unload();
         this._totalLevelActiveMilliseconds = 0;
+        this._controlInitialiser.unregisterEventListeners();
         this._levelQueue.shift();
     }
 	
@@ -187,8 +190,7 @@ export default class Kernel {
 	
 	_initialiseControls()
 	{
-		const controlInitialiser = new settings.controlsInitialiserClass();
-		controlInitialiser.initialiseControls();
+		this._controlInitialiser.initialiseControls();
 	}
     
     // Asset management

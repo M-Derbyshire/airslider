@@ -20,7 +20,7 @@ export default class ASControlsInitialiser extends ControlsInitialiser
     {
         if(!settings.isOnMobile)
         {
-            window.addEventListener("keydown", (e) => {
+            const keyDownListener = (e) => {
                 if(this.currentMove !== e.key)
                 {
                     switch(e.key)
@@ -34,22 +34,25 @@ export default class ASControlsInitialiser extends ControlsInitialiser
                     }
                     this.currentMove = e.key;
                 }
-            }, true);
+            };
             
-            window.addEventListener("keyup", (e) => {
+            const keyUpListener = (e) => {
                 if(this.currentMove == e.key)
                 {
                     this.kernel.loadedModels[this.playerModelIndex].state = "forward";
                     this.currentMove = "";
                 }
-            }, true);
+            };
+            
+            this._registeredEventListeners.push({ type: "keydown", listener: keyDownListener, options: true });
+            this._registeredEventListeners.push({ type: "keyup", listener: keyUpListener, options: true });
         }
     }
     
     //these are touch controls for game on mobile
     touchControls()
     {
-        window.addEventListener("touchstart", (e) => {
+        const touchStartListener = (e) => {
             for(let i = 0; i < e.touches.length; i++)
             {
                 if(e.touches[i].pageX < (window.innerWidth / 2))
@@ -61,9 +64,9 @@ export default class ASControlsInitialiser extends ControlsInitialiser
                     this.currentMove = "ArrowRight";
                 }
             }
-        }, true);
+        };
         
-        window.addEventListener("touchend", (e) => {
+        const touchEndListener = (e) => {
             let newMove = null;
             for(let i = 0; i < e.touches.length; i++)
             {
@@ -95,6 +98,9 @@ export default class ASControlsInitialiser extends ControlsInitialiser
                 this.kernel.loadedModels[this.playerModelIndex].state = "forward";
                 this.currentMove = "";
             }
-        }, true);
+        };
+        
+        this._registeredEventListeners.push({ type: "touchstart", listener: touchStartListener, options: true });
+        this._registeredEventListeners.push({ type: "touchend", listener: touchEndListener, options: true });
     }
 };
