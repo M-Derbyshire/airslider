@@ -8,6 +8,7 @@ import Tarian from '/assets/models/Tarian/Tarian';
 import Shocker from '/assets/models/Shocker/Shocker';
 import NeonPidgeon from '/assets/models/Monsters/NeonPidgeon/NeonPidgeon';
 import LavaBall from '/assets/models/Monsters/attacks/LavaBall/LavaBall';
+import Lightning from '/assets/models/Monsters/attacks/Lightning/Lightning';
 import Falcon from '/assets/models/Monsters/Falcon/Falcon';
 import Ghost from '/assets/models/Monsters/Ghost/Ghost';
 
@@ -143,6 +144,13 @@ export default class ASLevel extends Level {
                 class1EventActionName: "zCollisionEventAction",
                 class2: Ghost,
                 class2EventActionName: "zCollisionEventAction"
+            },
+            {
+              eventCheckMethodName: "zCollisionEventCheck",
+              class1: Tarian,
+              class1EventActionName: "zCollisionEventAction",
+              class2: Lightning,
+              class2EventActionName: "hitPlayerEventAction"
             },
         ]);
 	}

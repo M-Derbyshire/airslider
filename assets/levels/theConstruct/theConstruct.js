@@ -6,6 +6,8 @@ import BabyDragon from '/assets/models/Monsters/BabyDragon/BabyDragon';
 import LavaBall from '/assets/models/Monsters/attacks/LavaBall/LavaBall';
 import Ghost from '/assets/models/Monsters/Ghost/Ghost';
 import Shocker from '/assets/models/Shocker/Shocker';
+import ElectricSeahorse from '/assets/models/Monsters/ElectricSeahorse/ElectricSeahorse';
+import Lightning from '/assets/models/Monsters/attacks/Lightning/Lightning';
 import Frame from '/engines/GraphicEn/Frame';
 import ASLevel from '/assets/levels/ASLevel/ASLevel';
 
@@ -26,8 +28,11 @@ export default class TheConstruct extends ASLevel
         // models.push(new NeonPidgeon(models[0]));
         //models.push(new Falcon(models[0]));
         // models.push(new Ghost(models[0]));
-		models.push(new LavaBall());
-		models.push(new BabyDragon(models[0], models[models.length - 1]));
+		// models.push(new LavaBall());
+		// models.push(new BabyDragon(models[0], models[models.length - 1]));
+        models.push(new Lightning());
+        models.push(new Lightning());
+        models.push(new ElectricSeahorse(player, models[models.length - 2], models[models.length - 1]));
 		this.monster = models[models.length - 1];
 
         // this.shockerManager.setShockerModelRange(models.length, models.length + 10);
@@ -125,18 +130,26 @@ export default class TheConstruct extends ASLevel
         
 		
 		//Start the monster going straight away
-		if(this.helpers.time.getTotalSeconds() >= 0 && this.helpers.time.getTotalSeconds() <= 1)
+		if(this.helpers.time.getTotalSeconds() >= 0 && this.helpers.time.getTotalSeconds() <= 1 && this._levelSection < 1)
 		{
 			this.monster.start();
+            this._levelSection = 1;
 		}
+        
+        //Stop the monster
+        if(this.helpers.time.getTotalSeconds() >= 30 && this._levelSection === 1)
+        {
+            this.monster.stop();
+            this._levelSection = 2;
+        }
 		
 		
 		//Set a pattern of electric mines going
         if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this._levelSection < 1)
         {
-			this._levelSection = 1;
+			// this._levelSection = 1;
 			
-			const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
+			// const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
 			
 			// this.patternManager.addRepeatingPattern(20, 10, 10000, [
 			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
