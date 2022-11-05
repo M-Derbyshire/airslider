@@ -25,5 +25,7 @@ export default class ControlsInitialiser
 		this._registeredEventListeners.forEach(
 			listenerInfo => window.removeEventListener(listenerInfo.type, listenerInfo.listener, listenerInfo.options)
 		);
+		
+		this._registeredEventListeners = [];
 	}
 }
