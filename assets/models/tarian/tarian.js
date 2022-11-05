@@ -300,38 +300,6 @@ export default class Tarian extends ASModel {
             this.kernel.level.HUD.startDamageFlash(otherModel.color);
         }
     }
-	
-	zCollisionElectricMineEventAction(otherModel)
-    {
-        if("damageDealt" in otherModel && otherModel.damageDealt > 0 && otherModel.state === "undetonated")
-        {
-            this.health -= otherModel.damageDealt;
-            if(this.health <= 0)
-            {
-                this.health = 0;
-                this.exploding = true;
-                this.display = true;
-            }
-            
-            this.kernel.level.HUD.startDamageFlash(otherModel.color);
-        }
-		
-		//Change movement direction to simulate the blast (or just a bounce off if already denotated)
-		if("blastSpeed" in otherModel)
-		{
-			const collisionSpeed = (otherModel.state === "undetonated") ? 
-				otherModel.blastSpeed :
-				otherModel.blastSpeed / 4;
-				
-			this.xSpeed = (this.xSpeed > 0) ? -collisionSpeed : collisionSpeed;
-			this.state = "forward"; //If we don't change this, we still accelerate in the direction we were moving
-			
-			this.x = (this.x + this.width <= otherModel.x + otherModel.width) ?
-				(otherModel.x - this.width) - 2 :
-				(otherModel.x + otherModel.width) + 2;
-			
-		}
-    }
     
     flash()
     {
