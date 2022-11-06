@@ -31,6 +31,8 @@ export default class Level
         this.frameIndex;
     }
     
+    get HUD() { return this._HUD; }
+    
     //set things that can only be done after the engines are constructed
     load(gameCanvas, gameContext, camera, frameManager)
     {
@@ -85,43 +87,15 @@ export default class Level
         this._HUD.load(canvasCtx, camera, pointerEventManager);
     }
     
-    get HUD() { return this._HUD; }
+    checkForEvents()
+    {
+        this._eventManager.checkForEvents();
+    }
     
     //meant to be overridden
     getModels(){ return []; }
     act(){}
 	_registerLevelEvents(){}
-	
-    
-    
-    drawBack()
-    {
-        if(this.extraDrawBack)
-        {
-            this.extraDrawBack();
-        }
-        
-        if(this.outsideVisible)
-        {
-            this.ground.draw(this.levelSpeed);
-        }
-        
-        this.tunnelManager.draw(this.levelSpeed);
-        this.road.draw(this.roadColor);
-    }
-    
-    drawFront()
-    {
-        
-        
-        if(this.extraDrawFront)
-        {
-            this.extraDrawFront();
-        }
-    }
-    
-    checkForEvents()
-    {
-        this._eventManager.checkForEvents();
-    }
+    drawBack(){}
+    drawFront(){}
 }

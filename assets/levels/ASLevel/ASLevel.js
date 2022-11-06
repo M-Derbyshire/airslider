@@ -196,4 +196,15 @@ export default class ASLevel extends Level {
             this.kernel.loadedModels[i].levelStopped();
         }
     }
+    
+    drawBack()
+    {
+        if(this.outsideVisible)
+        {
+            this.ground.draw(this.levelSpeed);
+        }
+        
+        this.tunnelManager.draw(this.levelSpeed);
+        this.road.draw(this.roadColor);
+    }
 }
