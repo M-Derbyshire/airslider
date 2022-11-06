@@ -32,26 +32,28 @@ export default class LevelTunnel
     
     createStartingTunnel(parts)
     {
-        let newZ = this.helpers.zCalc.vPointDepth;
+        let newZ = -parts[0].length;
         
-        while(this._isTunnelPopulatedWithLastPieceOffScreen())
+        while(!this._isTunnelPopulatedToVanishingPoint())
         {
             const tunnelPartsCopy = parts.map(part => ({...part}));
             
-            for(let i = tunnelPartsCopy.length - 1; i >= 0; i--)
+            for(let i = 0; i < tunnelPartsCopy.length; i++)
             {
-                this.tunnel.push(tunnelPartsCopy[i]);
                 tunnelPartsCopy[i].active = true;
-                
-                newZ = newZ - tunnelPartsCopy[i].length;
                 tunnelPartsCopy[i].z = newZ;
+                this.tunnel.push(tunnelPartsCopy[i]);
+                
+                newZ += tunnelPartsCopy[i].length;
             }
         }
+        
+        
     }
 	
-	_isTunnelPopulatedWithLastPieceOffScreen()
+	_isTunnelPopulatedToVanishingPoint()
 	{
-		return (this.tunnel.length < 2 || this.tunnel[this.tunnel.length - 2].z > 0);
+        return (this.tunnel.length > 0 && this._getLastTunnelPart().z >= this.helpers.zCalc.vPointDepth)
 	}
 	
 	

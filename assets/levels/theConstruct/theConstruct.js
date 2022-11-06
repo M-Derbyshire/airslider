@@ -96,15 +96,15 @@ export default class TheConstruct extends ASLevel
         
         
         this.outsideVisible = true;
-        
-        // this.tunnelManager.createStartingTunnel([
-        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-        // ]);
     }
     
     prepare()
     {
         super.prepare();
+        
+        // this.tunnelManager.createStartingTunnel([
+        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
+        // ]);
     }
     
     
