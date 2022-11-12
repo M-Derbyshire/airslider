@@ -11,13 +11,16 @@ export default class LevelGround
         this._canvasCtx = canvasCtx;
         
         this.ground; //The shared data for every piece of ground drawn (see _getPopulatedGroundObject())
+		this.distance; //The distance between pieces of ground (on the z axis)
         
         this.groundZPositions = []; //The z-axis positions of every piece of ground
     }
 	
-	load(imagePath, imageHeight)
+	//gapZDistance is the number of units on the z axis that will seperate pieces of ground
+	load(imagePath, imageHeight, gapZDistance)
 	{
 		this.ground = this._getPopulatedGroundObject(imagePath, imageHeight);
+		this.distance = gapZDistance;
 	}
     
     setupGround()
@@ -30,15 +33,12 @@ export default class LevelGround
             height: this._camera.canvasPositionHeight
         };
         
-        this._populateGroundZPositions(canvasPositions, this.ground.height);
+        this._populateGroundZPositions(canvasPositions);
     }
 	
 	_getPopulatedGroundObject(path, height)
 	{
 		return {
-			//The Z distance you'd need to move an image before it was in the next image's original position
-            distance: null, 
-			
             image: this.kernel.loadImage(path),
             height, //Height to draw the image
             offset: 0 //The amount the images have all moved along the z-axis
@@ -46,34 +46,43 @@ export default class LevelGround
 	}
 	
 	//canvasPositions should be an object with an x, y, width and height
-	_populateGroundZPositions(canvasPositions, imageheight)
+	_populateGroundZPositions(canvasPositions)
 	{
-        for(let currentZPos = this.helpers.zCalc.vPointDepth; currentZPos >= 0; currentZPos--)
-        {
-			if(this.groundZPositions.length === 0)
-			{
-				this.groundZPositions.push(this.helpers.zCalc.vPointDepth);
-				continue;
-			}
+        // for(let currentZPos = this.helpers.zCalc.vPointDepth; currentZPos >= 0; currentZPos--)
+        // {
+		// 	if(this.groundZPositions.length === 0)
+		// 	{
+		// 		this.groundZPositions.push(this.helpers.zCalc.vPointDepth);
+		// 		continue;
+		// 	}
             
-			const lastZPosition = this.groundZPositions[this.groundZPositions.length - 1];
-			if(this.groundZPositions.length === 1)
-            {
-				const currentZPosTopEdge = this.helpers.zCalc.y(canvasPositions.height, currentZPos);
-				const lastZPosTopEdge = this.helpers.zCalc.y(canvasPositions.height, lastZPosition);
-				const lastZPosHeight = this.helpers.zCalc.height(imageheight, lastZPosition);
+		// 	const lastZPosition = this.groundZPositions[this.groundZPositions.length - 1];
+		// 	if(this.groundZPositions.length === 1)
+        //     {
+		// 		const currentZPosTopEdge = this.helpers.zCalc.y(canvasPositions.height, currentZPos);
+		// 		const lastZPosTopEdge = this.helpers.zCalc.y(canvasPositions.height, lastZPosition);
+		// 		const lastZPosHeight = this.helpers.zCalc.height(this.ground.height, lastZPosition);
 				
-                if(currentZPosTopEdge >= lastZPosTopEdge + lastZPosHeight)
-                {
-                    this.ground.distance = lastZPosition - currentZPos;
-                }
-            } 
+        //         if(currentZPosTopEdge >= lastZPosTopEdge + lastZPosHeight)
+        //         {
+        //             this.ground.distance = (lastZPosition - currentZPos);
+        //         }
+        //     } 
 			
-			if(lastZPosition - currentZPos === this.ground.distance)
-			{
-				this.groundZPositions.push(currentZPos + 1);
-			}
-        }
+		// 	if(lastZPosition - currentZPos === this.ground.distance)
+		// 	{
+		// 		this.groundZPositions.push(currentZPos - 1);
+		// 	}
+        // }
+		
+		
+		
+		//Start from far away, so we don't draw the distant ones on top of the closer ones
+		for(let i = this.helpers.zCalc.vPointDepth; i >= 0; i -= this.distance)
+		{
+			this.groundZPositions.push(i);
+		}
+		
 	}
 	
 	
@@ -96,7 +105,7 @@ export default class LevelGround
 	
 	_resetGroundOffsetIfReachedDistance()
 	{
-		if(this.ground.offset > this.ground.distance)
+		if(this.ground.offset >= this.distance)
 		{
 			this.ground.offset = 0;
 		}
@@ -112,7 +121,7 @@ export default class LevelGround
 		
 		const drawY = this.helpers.zCalc.y(canvasBottomEdge, offsetZPos);
 		const drawWidth = this.helpers.zCalc.width(imageWidth, offsetZPos);
-		const drawHeight = this.helpers.zCalc.height(this.ground.height, offsetZPos);
+		const drawHeight = this.helpers.zCalc.height(this.helpers.unit.yUnit(this.ground.height), offsetZPos);
 		
 		const leftDrawX = this.helpers.zCalc.x(this._camera.canvasPositionX - imageWidth, offsetZPos);
 		const rightDrawX = this.helpers.zCalc.x(canvasRightEdge, offsetZPos);
