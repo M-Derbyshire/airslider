@@ -98,7 +98,7 @@ export default class LevelGround
 		
         for(let i = 0; i < this.groundZPositions.length; i++)
         {
-            this.ground.offset += (levelSpeed / 250);
+            this.ground.offset += (levelSpeed / 75);
             this._drawLeftAndRightGroundImage(this.groundZPositions[i]);
         }
     }

@@ -103,9 +103,9 @@ export default class TheConstruct extends ASLevel
     {
         super.prepare();
         
-        // this.tunnelManager.createStartingTunnel([
-        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
-        // ]);
+        this.tunnelManager.createStartingTunnel([
+            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
+        ]);
     }
     
     
