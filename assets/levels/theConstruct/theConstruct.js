@@ -123,11 +123,10 @@ export default class TheConstruct extends ASLevel
             // this.shockerManager.sendShockers();
         }
         
-        
-        // this.tunnelManager.continueTunnel([
-        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-        //     this.tunnelManager.newTunnelPart(null, this.tunnelSpriteLength)
-        // ]);
+        this.tunnelManager.continueTunnel([
+            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+            this.tunnelManager.newTunnelPart(null, this.tunnelSpriteLength)
+        ]);
         
 		
 		//Start the monster going straight away

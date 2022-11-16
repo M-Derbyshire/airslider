@@ -37,6 +37,7 @@ export default class Kernel {
         this._isOnMobile = !!settings.isOnMobile; //is this a mobile app (such as through Cordova)?
         
         this._fps = (!isNaN(settings.initialFPS)) ? settings.initialFPS : 60;
+        this._highestFpsReached = 0;
         this._fpsLimit = (!isNaN(settings.fpsLimit)) ? settings.fpsLimit : 70;
         this._lastTime = new Date(); //used when calculating fps and enforcing fps limit
         
@@ -230,7 +231,7 @@ export default class Kernel {
             this.prepareCurrentLevelAndModels();
         }
         
-        this._fps = 1000 / (dt.getTime() - this._lastTime.getTime());
+        this._fps = this.getNewFps(dt);
         
         this.updateTotalTime(dt);
         this._lastTime = dt;
@@ -241,6 +242,21 @@ export default class Kernel {
             this._graphicEn.run();
             this._soundEn.run();
         }
+    }
+    
+    getNewFps(currentDateTime)
+    {
+        //If the browser window/tab is not open, requestAnimationFrame can pause.
+        //However, this can cause unexpected behaviour because the frame rate will drop for one 
+        //frame when the player returns to the tab/window. 
+        //Therefore, we will store the highest frame rate achieved, and just return that if the 
+        //current rate is unexpectably low
+        const currentFps = 1000 / (currentDateTime.getTime() - this._lastTime.getTime());
+        
+        if(currentFps > this._highestFpsReached)
+            this._highestFpsReached = currentFps;
+        
+        return (currentFps < (this._highestFpsReached - 10)) ? this._highestFpsReached : currentFps;
     }
     
     toggleGamePause()

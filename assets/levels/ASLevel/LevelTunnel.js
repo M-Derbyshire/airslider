@@ -92,7 +92,7 @@ export default class LevelTunnel
             if(this.tunnel[i].active)
             {
                 const tunnelPart = this.tunnel[i];
-				
+    
                 tunnelPart.z -= levelSpeed;
                 this._drawTunnelPart(tunnelPart);
                 
