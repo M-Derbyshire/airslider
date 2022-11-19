@@ -62,6 +62,7 @@ export default class LavaBall extends ASModel {
     {
         super.prepare();
         this.ySpeed = 2160;
+        this.setRandomXSpeed();
     }
     
     act()
@@ -69,6 +70,7 @@ export default class LavaBall extends ASModel {
         if(this.state == "drop")
         {
             this.moveDown(this.ySpeed);
+            this.moveRight(this.xSpeed); //maybe negative, to move left
         }
         
         if(this.y + this.height >= this.kernel.unitsWithinCamera && this.state === "drop")
@@ -80,7 +82,16 @@ export default class LavaBall extends ASModel {
         if(this.state === "none")
         {
             this.active = false;
+            this.setRandomXSpeed();
         }
+    }
+    
+    setRandomXSpeed()
+    {
+        const maxXSpeed = this.ySpeed / 8; //Max x speed, in either direction
+        
+        //Between -maxXSpeed and maxXSpeed
+        this.xSpeed = (Math.random() * (maxXSpeed * 2)) - maxXSpeed;
     }
     
     hitPlayerEventAction(otherModel)

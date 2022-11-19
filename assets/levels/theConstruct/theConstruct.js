@@ -28,11 +28,11 @@ export default class TheConstruct extends ASLevel
         // models.push(new NeonPidgeon(models[0]));
         //models.push(new Falcon(models[0]));
         // models.push(new Ghost(models[0]));
-		// models.push(new LavaBall());
-		// models.push(new BabyDragon(models[0], models[models.length - 1]));
-        models.push(new Lightning());
-        models.push(new Lightning());
-        models.push(new ElectricSeahorse(player, models[models.length - 2], models[models.length - 1]));
+		models.push(new LavaBall());
+		models.push(new BabyDragon(models[0], models[models.length - 1]));
+        // models.push(new Lightning());
+        // models.push(new Lightning());
+        // models.push(new ElectricSeahorse(player, models[models.length - 2], models[models.length - 1]));
 		this.monster = models[models.length - 1];
 
         // this.shockerManager.setShockerModelRange(models.length, models.length + 10);
@@ -103,9 +103,9 @@ export default class TheConstruct extends ASLevel
     {
         super.prepare();
         
-        this.tunnelManager.createStartingTunnel([
-            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
-        ]);
+        // this.tunnelManager.createStartingTunnel([
+        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
+        // ]);
     }
     
     
@@ -123,10 +123,10 @@ export default class TheConstruct extends ASLevel
             // this.shockerManager.sendShockers();
         }
         
-        this.tunnelManager.continueTunnel([
-            this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-            this.tunnelManager.newTunnelPart(null, this.tunnelSpriteLength)
-        ]);
+        // this.tunnelManager.continueTunnel([
+        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+        //     this.tunnelManager.newTunnelPart(null, this.tunnelSpriteLength)
+        // ]);
         
 		
 		//Start the monster going straight away
