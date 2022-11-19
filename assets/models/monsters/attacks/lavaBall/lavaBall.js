@@ -62,6 +62,7 @@ export default class LavaBall extends ASModel {
     {
         super.prepare();
         this.ySpeed = 2160;
+        this.ySpeed = 1000;
         this.setRandomXSpeed();
     }
     

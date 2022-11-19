@@ -1,12 +1,23 @@
 import Monster from '/assets/models/Monster/monster';
 
 export default class BabyDragon extends Monster {
-    constructor(playerModel, lavaBall)
+    constructor(playerModel, lavaBall1, lavaBall2)
     {
         super(Monster);
         
         this.playerModel = playerModel;
-        this.lavaBall = lavaBall;
+        this.lavaBalls = [lavaBall1, lavaBall2];
+        
+        //The "next" lava ball refers to the next one to drop (not the next one to select)
+        //Also see the getter for prevLavaBallIndex
+        this.nextLavaBallIndex = 0;
+    }
+    
+    get prevLavaBallIndex() {
+        if(this.nextLavaBallIndex === this.lavaBalls.length - 1)
+                return 0;
+        
+        return this.nextLavaBallIndex + 1;
     }
     
     load()
@@ -73,8 +84,7 @@ export default class BabyDragon extends Monster {
         this.startZ = this.playerModel.z;
         this.enterXSpeed = 90;
         
-        //set the z of the lava ball
-        this.lavaBall.z = this.startZ;
+        this.lavaBalls.forEach(lb => lb.z = this.startZ);
         
         this.reset();
     }
@@ -106,6 +116,7 @@ export default class BabyDragon extends Monster {
     reset()
     {
         this.xSpeed = -720;
+        
         this.x = this.startX;
         this.y = this.startY;
         this.z = this.startZ;
@@ -141,16 +152,21 @@ export default class BabyDragon extends Monster {
 	
 	_dropBallIfTime()
 	{
-		if(!this.lavaBall.active && this.fireWeapon)
+        const prevLavaBall = this.lavaBalls[this.prevLavaBallIndex];
+        
+		if(this.fireWeapon 
+            && !this.lavaBalls[this.nextLavaBallIndex].active 
+            && (!prevLavaBall.active || prevLavaBall.y > this.kernel.unitsWithinCamera / 1.5))
         {
             this.dropBall();
+            this.nextLavaBallIndex = this.prevLavaBallIndex;
         }
 	}
     
     //attacks-----------------------------------------------------
     dropBall()
     {
-        let l = this.lavaBall;
+        let l = this.lavaBalls[this.nextLavaBallIndex];
         
         //center it
         let xOffset = -65;
