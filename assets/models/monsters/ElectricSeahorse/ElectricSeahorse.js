@@ -65,6 +65,11 @@ export default class ElectricSeahorse extends Monster {
         this.reset();
     }
     
+    getBoundaryBoxes()
+    {
+        return [];
+    }
+    
     //entering and exiting and reseting-----------------------------------------
     
     enter()

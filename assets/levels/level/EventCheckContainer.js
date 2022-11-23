@@ -17,15 +17,28 @@ export default class EventCheckContainer
     
     zCollisionEventCheck(modelA, modelAActionMethodName, modelB, modelBActionMethodName)
     {
-        if (modelB.active && 
-        ((modelA.z >= (modelB.z - modelB.zSpeed)) && (modelA.z <= modelB.z)) &&
-        (modelA.x + modelA.width >= modelB.x) &&
-        (modelA.x <= modelB.x + modelB.width) &&
-        (modelA.y + modelA.height >= modelB.y) &&
-        (modelA.y <= modelB.y + modelB.height))
+        const boxesA = modelA.getBoundaryBoxes();
+        const boxesB = modelB.getBoundaryBoxes();
+        
+        for(let aIter = 0; aIter < boxesA.length; aIter++)
         {
-            modelA[modelAActionMethodName](modelB);
-            modelB[modelBActionMethodName](modelA);
+            const boxA = boxesA[aIter];
+            
+            for(let bIter = 0; bIter < boxesB.length; bIter++)
+            {
+                const boxB = boxesB[bIter];
+                
+                if (modelB.active && 
+                ((boxA.z >= (boxB.z - modelB.zSpeed)) && (boxA.z <= boxB.z)) &&
+                (boxA.x + boxA.width >= boxB.x) &&
+                (boxA.x <= boxB.x + boxB.width) &&
+                (boxA.y + boxA.height >= boxB.y) &&
+                (boxA.y <= boxB.y + boxB.height))
+                {
+                    modelA[modelAActionMethodName](modelB);
+                    modelB[modelBActionMethodName](modelA);
+                }
+            }
         }
     }
     
