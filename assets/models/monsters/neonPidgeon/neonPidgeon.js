@@ -82,6 +82,32 @@ export default class NeonPidgeon extends Monster {
         this.reset();
     }
     
+    // Collision boxes --------------------------------------------------------
+    getBoundaryBoxes()
+    {
+        if(this.state === "falling")
+        {
+            return [
+                {
+                    x: this.x,
+                    y: this.y + (this.height / 2.5),
+                    z: this.z,
+                    width: this.width,
+                    height: this.height / 4
+                },
+                {
+                    x: this.x + (this.width / 2.24),
+                    y: this.y,
+                    z: this.z,
+                    width: this.width / 8,
+                    height: this.height
+                }
+            ];
+        }
+        
+        return [];
+    }
+    
     //entering and exiting and reseting-----------------------------------------
     
     enter()

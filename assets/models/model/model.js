@@ -24,6 +24,8 @@ export default class Model {
         this._loadedIndex; //will hold current index in this.kernel.loadedModels
         
         this._assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
+        
+        this._drawBoundaryBoxes = false; // If we set this to true, we'll draw the boxes from this.getBoundaryBoxes()
     }
     
     //getters and setters --------------------------------------
@@ -82,6 +84,9 @@ export default class Model {
     draw()
     {
         this.animationManager.drawNextFrame();
+        
+        if(this._drawBoundaryBoxes)
+            this.animationManager.drawBoundaryBoxes();
     }
     
     checkForExtraEvents()
@@ -132,4 +137,17 @@ export default class Model {
 			pointY > drawPositions.y && pointY < (drawPositions.y + drawPositions.height)
 		);
 	}
+    
+    getBoundaryBoxes()
+    {
+        return [
+            {
+                x: this.x,
+                y: this.y,
+                z: this.z,
+                width: this.width,
+                height: this.height
+            }
+        ];
+    }
 }

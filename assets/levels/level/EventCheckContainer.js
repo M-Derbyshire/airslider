@@ -31,17 +31,35 @@ export default class EventCheckContainer
     
     hitPlayerOrGroundEventCheck(modelA, modelAActionMethodName, modelB, modelBActionMethodName)
     {
-        if((modelA.x + modelA.width >= modelB.x) &&
-        (modelA.x <= modelB.x + modelB.width) &&
-        (modelA.y + modelA.height >= modelB.y) &&
-        (modelA.y <= modelB.y + modelB.height))
+        //Ground hit check
+        if(modelA.y + modelA.height >= this.kernel.unitsWithinCamera)
         {
             modelA[modelAActionMethodName](modelB);
-            modelB[modelBActionMethodName](modelA);
+            return;
         }
-        else if(modelA.y + modelA.height >= this.kernel.unitsWithinCamera)
+        
+        const boxesA = modelA.getBoundaryBoxes();
+        const boxesB = modelB.getBoundaryBoxes();
+        
+        //Not using forEach, as we want to return after the first collision found
+        for(let aIter = 0; aIter < boxesA.length; aIter++)
         {
-            modelA[modelAActionMethodName](modelB);
+            const boxA = boxesA[aIter];
+            
+            for(let bIter = 0; bIter < boxesB.length; bIter++)
+            {
+                const boxB = boxesB[bIter];
+                
+                if((boxA.x + boxA.width >= boxB.x) &&
+                (boxA.x <= boxB.x + boxB.width) &&
+                (boxA.y + boxA.height >= boxB.y) &&
+                (boxA.y <= boxB.y + boxB.height))
+                {
+                    modelA[modelAActionMethodName](modelB);
+                    modelB[modelBActionMethodName](modelA);
+                    return;
+                }
+            }
         }
     }
     

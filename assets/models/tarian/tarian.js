@@ -122,6 +122,85 @@ export default class Tarian extends ASModel {
         
         this.zSpeed = 35; //used when state is "lost"
     }
+    
+    getBoundaryBoxes()
+    {
+        if(this.state === "forward")
+        {
+            return [
+                {
+                    x: this.x + (this.width / 10),
+                    y: this.y + (this.height / 5),
+                    z: this.z,
+                    width: this.width * 0.75,
+                    height: this.height * 0.75
+                },
+                {
+                    x: this.x + (this.width / 3.3),
+                    y: this.y,
+                    z: this.z,
+                    width: this.width * 0.35,
+                    height: this.height * 0.5
+                }
+            ];
+        }
+        
+        if(this.state === "left")
+        {
+            return [
+                {
+                    x: this.x + (this.width * 0.05),
+                    y: this.y,
+                    z: this.z,
+                    width: this.width / 4.25,
+                    height: this.height * 0.85
+                },
+                {
+                    x: this.x + (this.width / 4),
+                    y: this.y + (this.height / 7),
+                    z: this.z,
+                    width: this.width / 3,
+                    height: this.height * 0.75
+                },
+                {
+                    x: this.x + (this.width * 0.55),
+                    y: this.y + (this.height * 0.4),
+                    z: this.z,
+                    width: this.width / 2.5,
+                    height: this.height * 0.5
+                }
+            ];
+        }
+        
+        if(this.state === "right")
+        {
+            return [
+                {
+                    x: this.x + (this.width * 0.75),
+                    y: this.y,
+                    z: this.z,
+                    width: this.width / 4.25,
+                    height: this.height * 0.85
+                },
+                {
+                    x: this.x + (this.width * 0.4),
+                    y: this.y + (this.height * 0.07),
+                    z: this.z,
+                    width: this.width / 3,
+                    height: this.height * 0.75
+                },
+                {
+                    x: this.x,
+                    y: this.y + (this.height * 0.4),
+                    z: this.z,
+                    width: this.width / 2.5,
+                    height: this.height * 0.5
+                }
+            ];
+        }
+        
+        return super.getBoundaryBoxes();
+    }
 	
 	
     

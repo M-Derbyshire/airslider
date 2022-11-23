@@ -74,18 +74,34 @@ export default class ModelAnimationsManager {
         );
     }
     
-    // Calculates the positions/dimensions to draw the model, and returns them as an object: { x, y, width, height }
-	_getDrawPositionsAndDimensions(model)
-	{
-		const preZCalcX = this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(model.x)) + this._camera.canvasPositionX;
-		const preZCalcY = this.helpers.unit.yUnit(this._camera.unitCameraPositionCalc.y(model.y)) + this._camera.canvasPositionY;
-		const preZCalcWidth = this.helpers.unit.xUnit(model.width);
-		const preZCalcHeight = this.helpers.unit.yUnit(model.height);
+    drawBoundaryBoxes()
+    {
+        const boxes = this.model.getBoundaryBoxes();
         
-        const zCalcX = this.helpers.zCalc.x(preZCalcX, model.z);
-        const zCalcY = this.helpers.zCalc.y(preZCalcY, model.z);
-        const zCalcWidth = this.helpers.zCalc.width(preZCalcWidth, model.z);
-        const zCalcHeight = this.helpers.zCalc.height(preZCalcHeight, model.z);
+        const originalStrokeColor = this._canvasCtx.strokeStyle;
+        this._canvasCtx.strokeStyle = "red";
+        
+        boxes.forEach(box => {
+            const { x, y, width, height } = this._getDrawPositionsAndDimensions(box);
+            this._canvasCtx.strokeRect(x, y, width, height);
+        });
+        
+        this._canvasCtx.strokeStyle = originalStrokeColor;
+    }
+    
+    // Calculates the positions/dimensions to draw the model (or boundary box), and returns them as an object: { x, y, width, height }
+    // The "originalValues" parameter needs to be an object: { x, y, z, width, height }
+	_getDrawPositionsAndDimensions(originalValues)
+	{
+		const preZCalcX = this.helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(originalValues.x)) + this._camera.canvasPositionX;
+		const preZCalcY = this.helpers.unit.yUnit(this._camera.unitCameraPositionCalc.y(originalValues.y)) + this._camera.canvasPositionY;
+		const preZCalcWidth = this.helpers.unit.xUnit(originalValues.width);
+		const preZCalcHeight = this.helpers.unit.yUnit(originalValues.height);
+        
+        const zCalcX = this.helpers.zCalc.x(preZCalcX, originalValues.z);
+        const zCalcY = this.helpers.zCalc.y(preZCalcY, originalValues.z);
+        const zCalcWidth = this.helpers.zCalc.width(preZCalcWidth, originalValues.z);
+        const zCalcHeight = this.helpers.zCalc.height(preZCalcHeight, originalValues.z);
         
 		return {
 			x: zCalcX, 
