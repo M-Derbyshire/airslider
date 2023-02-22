@@ -208,18 +208,23 @@ export default class Tarian extends ASModel {
     {
         this._movePlayer();
         
-        this._handleDamageFlash();
+        this._handleLowHealthFlash();
         
 		this._handleExplodingAndLoss();
     }
-	
-	_handleDamageFlash()
-	{
-		if(this.health <= 10 && this.health > 0)
+    
+    _handleLowHealthFlash()
+    {
+        if(this.health <= 10 && this.health > 0 && !this.kernel.level.HUD.isLowHealthFlashActive())
         {
-            this.flash();
+            this.kernel.level.HUD.startLowHealthFlash();
         }
-	}
+        
+        if(this.health <= 0 && this.kernel.level.HUD.isLowHealthFlashActive())
+        {
+            this.kernel.level.HUD.stopLowHealthFlash();
+        }
+    }
 	
 	_handleExplodingAndLoss()
 	{
@@ -377,15 +382,6 @@ export default class Tarian extends ASModel {
             }
             
             this.kernel.level.HUD.startDamageFlash(otherModel.color);
-        }
-    }
-    
-    flash()
-    {
-        if(this.lastFlashChange == 0 || this.lastFlashChange + this.flashSpeed < this.helpers.time.getTotalMilliseconds())
-        {
-            this.display = !this.display;
-            this.lastFlashChange = this.helpers.time.getTotalMilliseconds();
         }
     }
 }

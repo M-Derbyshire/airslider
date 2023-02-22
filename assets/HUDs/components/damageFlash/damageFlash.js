@@ -1,4 +1,3 @@
-import Kernel from '/kernel/kernel';
 import ASHUDComponent from '/assets/HUDs/components/ASHUDComponent/ASHUDComponent';
 
 export default class DamageFlash extends ASHUDComponent
