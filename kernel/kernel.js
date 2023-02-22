@@ -62,6 +62,7 @@ export default class Kernel {
 		this._gameCanvasElementID = settings.gameCanvasElementID;
 		this._gameCanvas = document.getElementById(this.gameCanvasElementID);
 		this._gameContext = this.gameCanvas.getContext("2d");
+        this._correctCanvasStyleAndDevicePixelRatio = settings.correctCanvasStyleAndDevicePixelRatio;
         
         this._controlInitialiser = new settings.controlsInitialiserClass();
     }
@@ -105,6 +106,7 @@ export default class Kernel {
 	get gameCanvasElementID(){return this._gameCanvasElementID;}
 	get gameCanvas(){return this._gameCanvas;}
 	get gameContext(){return this._gameContext;}
+    get correctCanvasStyleAndDevicePixelRatio(){return this._correctCanvasStyleAndDevicePixelRatio;}
     
     
     // loading/unloading methods --------------------------------------------------------------------------

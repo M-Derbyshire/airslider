@@ -107,15 +107,18 @@ export default class GraphicEn{
     
     setCanvasCorrectWidthHeight()
     {
-        //Need to change the styling for the canvas, based on the DPI,
-        //to avoid it being stretched and blurry.
-        
-        //getComputedStyle is used incase the canvas size is in %. Slice takes off the "px".
-        //.width and .height are not the same as .style.width and .style.height, and if they
-        //are less than the style values, the image can be blurry (we also need to take into
-        //account the devicePixelRatio)
-        this.gameCan.width = window.getComputedStyle(this.gameCan).width.slice(0, -2) * (window.devicePixelRatio || 1);
-        this.gameCan.height = window.getComputedStyle(this.gameCan).height.slice(0, -2) * (window.devicePixelRatio || 1);
+        if(this.kernel.correctCanvasStyleAndDevicePixelRatio)
+        {
+            //Need to change the styling for the canvas, based on the DPI,
+            //to avoid it being stretched and blurry.
+            
+            //getComputedStyle is used incase the canvas size is in %. Slice takes off the "px".
+            //.width and .height are not the same as .style.width and .style.height, and if they
+            //are less than the style values, the image can be blurry (we also need to take into
+            //account the devicePixelRatio)
+            this.gameCan.width = window.getComputedStyle(this.gameCan).width.slice(0, -2) * (window.devicePixelRatio || 1);
+            this.gameCan.height = window.getComputedStyle(this.gameCan).height.slice(0, -2) * (window.devicePixelRatio || 1);
+        }
         
         //It should be noted that this should be ran on loading as well (it is the first setting of the below)
         this.camera.setCameraSize();

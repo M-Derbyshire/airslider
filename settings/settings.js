@@ -3,6 +3,7 @@ import TheConstruct from '/assets/levels/TheConstruct/TheConstruct';
 
 export default {
 	gameCanvasElementID: "gameCan",
+	correctCanvasStyleAndDevicePixelRatio: true,
 	isOnMobile: false,
 	initialFPS: 60,
 	fpsLimit: 70,
