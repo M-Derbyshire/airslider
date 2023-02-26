@@ -135,10 +135,10 @@ export default class Kernel {
         //do any extra setup that may need access to the engines
         level.load(this.gameCanvas, this.gameContext, camera, frameManager);
         
-        //Get models here so they can be picked up by the engines
+        //Get models here
         const loadedModels = level.getModels();
         
-        //Now we can load the models, after the engines have been loaded
+        //Now we can load the models
         this._loadModels(loadedModels, preparedEngines);
         
         //hasBeenPrepared should be set to true if the level (and it's models) have had the prepare() method called
