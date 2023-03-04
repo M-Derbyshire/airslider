@@ -45,7 +45,7 @@ export default class TarianExplosion extends ASModel {
     
     act()
     {
-        if(this._player.lost || true)
+        if(this._player.lost)
         {
             if(!this.display && this._player.active)
                 this.display = true;
