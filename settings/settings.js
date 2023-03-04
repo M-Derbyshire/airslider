@@ -7,6 +7,8 @@ export default {
 	isOnMobile: false,
 	initialFPS: 60,
 	fpsLimit: 70,
+	displayFps: true,
+	fpsDisplayColor: "blue",
 	unitsWithinCamera: 1000,
 	aspectRatioHorizontal: 17,
 	aspectRatioVertical: 9,

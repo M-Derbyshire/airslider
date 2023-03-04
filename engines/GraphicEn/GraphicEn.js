@@ -48,8 +48,8 @@ export default class GraphicEn{
         this.kernel.level.HUD.draw();
         this.camera.drawFront();
         
-        //Leave this here if you want to see the game's current FPS.
-        this.fpsMeter();
+        if(this.kernel.displayFps)
+            this.fpsMeter();
     }
     
     
@@ -78,12 +78,13 @@ export default class GraphicEn{
     }
     
     
-    fpsMeter(color = "blue")
+    fpsMeter()
     {
         let fontSize = 30
         this.gameCtx.font = fontSize + "px Arial";
-        this.gameCtx.fillStyle = color;
-        this.gameCtx.fillText("FPS: " + this.kernel.fps, 10, (10 + fontSize));
+        this.gameCtx.fillStyle = this.kernel.fpsDisplayColor;
+        const fpsDisplay = Math.round(this.kernel.fps * 100) / 100; // 2 decimal places
+        this.gameCtx.fillText("FPS: " + fpsDisplay, 10, (10 + fontSize));
     }
     
     

@@ -64,6 +64,9 @@ export default class Kernel {
 		this._gameContext = this.gameCanvas.getContext("2d");
         this._correctCanvasStyleAndDevicePixelRatio = settings.correctCanvasStyleAndDevicePixelRatio;
         
+        this.displayFps = settings.displayFps;
+        this.fpsDisplayColor = settings.fpsDisplayColor;
+        
         this._controlInitialiser = new settings.controlsInitialiserClass();
     }
     
