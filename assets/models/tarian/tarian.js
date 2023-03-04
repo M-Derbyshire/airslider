@@ -15,6 +15,9 @@ export default class Tarian extends ASModel {
         this.flashSpeed = 50;
         
         this.lastSpeedChange = 0; //used when changing the speed
+        
+        this.canBeControlled = true; //should the directional controls be operational?
+        this._lostAtTimeMS = 0; //the time (in milliseconds) that the player entered the lost state
     }
     
     load()
@@ -121,6 +124,9 @@ export default class Tarian extends ASModel {
         this.xSpeed = 0;
         
         this.zSpeed = 35; //used when state is "lost"
+        
+        this.canBeControlled = true;
+        this._lostAtTimeMS = 0;
     }
     
     getBoundaryBoxes()
@@ -234,6 +240,7 @@ export default class Tarian extends ASModel {
             {
                 this.exploding = false;
                 this.lost = true;
+                this._lostAtTimeMS = this.kernel.totalLevelActiveMilliseconds;
             } else {
                 this.state = "exploding";
             }
@@ -250,9 +257,12 @@ export default class Tarian extends ASModel {
 	
 	_handleOnScreenAfterLoss()
 	{
-        if(this.lost && this.z >= 0)
+        if(this.lost && this.z >= -5)
         {
-            this.moveOut(this.zSpeed);
+            this.canBeControlled = false;
+            
+            if((this._lostAtTimeMS + 3000) < this.kernel.totalLevelActiveMilliseconds)
+                this.moveOut(this.zSpeed);
         }
 	}
 	

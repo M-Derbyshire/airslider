@@ -21,15 +21,17 @@ export default class ASControlsInitialiser extends ControlsInitialiser
         if(!settings.isOnMobile)
         {
             const keyDownListener = (e) => {
-                if(this.currentMove !== e.key)
+                const playerModel = this.kernel.loadedModels[this.playerModelIndex];
+                
+                if(this.currentMove !== e.key && playerModel.canBeControlled)
                 {
                     switch(e.key)
                     {
                         case "ArrowLeft":
-                            this.kernel.loadedModels[this.playerModelIndex].state = "left";
+                            playerModel.state = "left";
                             break;
                         case "ArrowRight":
-                            this.kernel.loadedModels[this.playerModelIndex].state = "right";
+                            playerModel.state = "right";
                             break;
                     }
                     this.currentMove = e.key;
@@ -37,9 +39,11 @@ export default class ASControlsInitialiser extends ControlsInitialiser
             };
             
             const keyUpListener = (e) => {
+                const playerModel = this.kernel.loadedModels[this.playerModelIndex];
+                
                 if(this.currentMove == e.key)
                 {
-                    this.kernel.loadedModels[this.playerModelIndex].state = "forward";
+                    playerModel.state = "forward";
                     this.currentMove = "";
                 }
             };
@@ -53,20 +57,24 @@ export default class ASControlsInitialiser extends ControlsInitialiser
     touchControls()
     {
         const touchStartListener = (e) => {
+            const playerModel = this.kernel.loadedModels[this.playerModelIndex];
+            
             for(let i = 0; i < e.touches.length; i++)
             {
-                if(e.touches[i].pageX < (window.innerWidth / 2))
+                if(e.touches[i].pageX < (window.innerWidth / 2) && playerModel.canBeControlled)
                 {
-                    this.kernel.loadedModels[this.playerModelIndex].state = "left";
+                    playerModel.state = "left";
                     this.currentMove = "ArrowLeft";
                 } else {
-                    this.kernel.loadedModels[this.playerModelIndex].state = "right";
+                    playerModel.state = "right";
                     this.currentMove = "ArrowRight";
                 }
             }
         };
         
         const touchEndListener = (e) => {
+            const playerModel = this.kernel.loadedModels[this.playerModelIndex];
+            
             let newMove = null;
             for(let i = 0; i < e.touches.length; i++)
             {
@@ -85,17 +93,17 @@ export default class ASControlsInitialiser extends ControlsInitialiser
                 switch(newMove)
                 {
                     case "ArrowLeft":
-                        this.kernel.loadedModels[this.playerModelIndex].state = "left";
+                        playerModel.state = "left";
                         break;
                     case "ArrowRight":
-                        this.kernel.loadedModels[this.playerModelIndex].state = "right";
+                        playerModel.state = "right";
                         break;
                 }
             }
             
             if(!newMove)
             {
-                this.kernel.loadedModels[this.playerModelIndex].state = "forward";
+                playerModel.state = "forward";
                 this.currentMove = "";
             }
         };

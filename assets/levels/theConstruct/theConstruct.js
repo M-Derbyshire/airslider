@@ -10,6 +10,7 @@ import ElectricSeahorse from '/assets/models/Monsters/ElectricSeahorse/ElectricS
 import Lightning from '/assets/models/Monsters/attacks/Lightning/Lightning';
 import Frame from '/engines/GraphicEn/Frame';
 import ASLevel from '/assets/levels/ASLevel/ASLevel';
+import TarianExplosion from '/assets/models/TarianExplosion/TarianExplosion';
 
 export default class TheConstruct extends ASLevel
 {
@@ -23,7 +24,9 @@ export default class TheConstruct extends ASLevel
         let models = [];
         
 		const player = new Tarian();
+        const playerExplosion = new TarianExplosion(player);
         models.push(player); //add main character (has to be 0)
+        models.push(playerExplosion);
         
         // models.push(new NeonPidgeon(models[0]));
         // models.push(new Falcon(models[0]));
