@@ -11,6 +11,8 @@ export default class BabyDragon extends Monster {
         //The "next" lava ball refers to the next one to drop (not the next one to select)
         //Also see the getter for prevLavaBallIndex
         this.nextLavaBallIndex = 0;
+        
+        this._nextSpeedToggleTime; // determines when the monster should next toggle its speed
     }
     
     get prevLavaBallIndex() {
@@ -83,6 +85,7 @@ export default class BabyDragon extends Monster {
         
         this.startZ = this.playerModel.z;
         this.enterXSpeed = 90;
+        this._initialXSpeed = -720;
         
         this.lavaBalls.forEach(lb => lb.z = this.startZ);
         
@@ -120,7 +123,7 @@ export default class BabyDragon extends Monster {
     
     reset()
     {
-        this.xSpeed = -720;
+        this.xSpeed = this._initialXSpeed;
         
         this.x = this.startX;
         this.y = this.startY;
@@ -137,6 +140,9 @@ export default class BabyDragon extends Monster {
 		this._handleOverlappingOfLevelEdges();
         
         this._dropBallIfTime();
+        
+        if(this._shouldChangeSpeed())
+            this._toggleSpeed();
     }
 	
 	_handleOverlappingOfLevelEdges()
@@ -154,6 +160,37 @@ export default class BabyDragon extends Monster {
                 ((this._levelRightEdge - (this.width / 2)) - 1);
         }
 	}
+    
+    _shouldChangeSpeed()
+    {
+        const runningTime = this.kernel.totalLevelActiveMilliseconds;
+        
+        // Initial
+        if(!this._nextSpeedToggleTime)
+        {
+            this._nextSpeedToggleTime = runningTime + 5000;
+        }
+        
+        
+        if(runningTime >= this._nextSpeedToggleTime)
+        {
+            const newTimePeriod = (Math.random() * 4000) + 2000; //between 2 and 4 seconds
+            this._nextSpeedToggleTime = runningTime + newTimePeriod;
+            return true;
+        }
+        
+        return false;
+    }
+    
+    _toggleSpeed()
+    {
+        if(this.xSpeed === Math.abs(this._initialXSpeed))
+            this.xSpeed = this.xSpeed * 1.25;
+        else
+            this.xSpeed = (this.xSpeed > 0) ? -this._initialXSpeed : this._initialXSpeed;
+        
+        this.lavaBalls.forEach(ball => ball.toggleSpeed());
+    }
 	
 	_dropBallIfTime()
 	{

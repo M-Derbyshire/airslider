@@ -61,8 +61,8 @@ export default class LavaBall extends ASModel {
     prepare()
     {
         super.prepare();
-        this.ySpeed = 2160;
-        this.ySpeed = 1000;
+        this._initialYSpeed = 1000;
+        this.ySpeed = this._initialYSpeed;
         this.setRandomXSpeed();
     }
     
@@ -93,6 +93,15 @@ export default class LavaBall extends ASModel {
         
         //Between -maxXSpeed and maxXSpeed
         this.xSpeed = (Math.random() * (maxXSpeed * 2)) - maxXSpeed;
+    }
+    
+    // This is called by the dragon, when it toggles it's own speed
+    toggleSpeed()
+    {
+        if(this.ySpeed === Math.abs(this._initialYSpeed))
+            this.ySpeed = this.ySpeed * 1.5;
+        else
+            this.ySpeed = this._initialYSpeed;
     }
     
     hitPlayerEventAction(otherModel)
