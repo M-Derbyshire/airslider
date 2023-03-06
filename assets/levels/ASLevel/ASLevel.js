@@ -36,7 +36,7 @@ export default class ASLevel extends Level {
         this.leftEdge;
         this.rightEdge;
         
-        this.monster;
+        this.monsters;
 		
 		this.outsideVisible = false;
 		

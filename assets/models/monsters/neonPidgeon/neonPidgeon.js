@@ -1,12 +1,12 @@
 import Monster from '/assets/models/Monster/monster';
 
 export default class NeonPidgeon extends Monster {
-    constructor(playerModel, otherMonster = false)
+    constructor(playerModel, topLevelMonster = false)
     {
         super(Monster);
         
         this.playerModel = playerModel;
-        this.specialLevel = otherMonster;
+        this._topLevelMonster = topLevelMonster;
         this.overlapping = false;
         
         this.damageDealt = 10;
@@ -70,11 +70,11 @@ export default class NeonPidgeon extends Monster {
         
         this.enterXSpeed = 90;
         this.exitXSpeed = 240;
-        this.offScreenUnits = (this.specialLevel) ? 500 : 800;
-        this.startY = (this.specialLevel) ? 250 : 150;
+        this.offScreenUnits = (this._topLevelMonster) ? 650 : 500;
+        this.startY = (this._topLevelMonster) ? 150 : 250;
         this.startX = this._levelRightEdge + this.offScreenUnits;
         this.startZ = this.playerModel.z;
-        this.ySpeed = 1800;
+        this.ySpeed = 1250;
         this.dropWaitOffset = 2000; //5 seconds
         this.dropWaitRange = 2000; //4 seconds
         this.initialDropWait = 8000;
@@ -154,7 +154,7 @@ export default class NeonPidgeon extends Monster {
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
-        this.xSpeed = (this.specialLevel) ? -1080 : -960;
+        this.xSpeed = (this._topLevelMonster) ? -760 : -880;
         this.state = "flapping";
     }
     
