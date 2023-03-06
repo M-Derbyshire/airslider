@@ -28,9 +28,9 @@ export default class TheConstruct extends ASLevel
         models.push(player); //add main character (has to be 0)
         models.push(playerExplosion);
         
-        models.push(new NeonPidgeon(player, true));
-        models.push(new NeonPidgeon(player));
-        // models.push(new Falcon(models[0]));
+        // models.push(new NeonPidgeon(player, true));
+        // models.push(new NeonPidgeon(player));
+        models.push(new Falcon(models[0]));
         // models.push(new Ghost(models[0]));
 		// models.push(new LavaBall());
         // models.push(new LavaBall());
@@ -40,7 +40,7 @@ export default class TheConstruct extends ASLevel
         // models.push(new ElectricSeahorse(player, models[models.length - 2], models[models.length - 1]));
 		this.monsters = [
             models[models.length - 1],
-            models[models.length - 2]
+            // models[models.length - 2]
         ];
 
         // this.shockerManager.setShockerModelRange(models.length, models.length + 10);

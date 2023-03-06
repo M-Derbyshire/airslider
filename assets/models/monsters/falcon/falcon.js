@@ -141,7 +141,7 @@ export default class Falcon extends Monster {
     
     exit()
     {
-        if(this.y == this.startY)
+        if(this.y === this.startY)
         {
             this.state = "flapping";
         
@@ -153,7 +153,7 @@ export default class Falcon extends Monster {
                 this.active = false;
             }
         } else {
-            this.actions[this.currentAction](); //run the current action
+            this.actions[this.currentAction].apply(this); //run the current action
         }
     }
     
@@ -168,9 +168,9 @@ export default class Falcon extends Monster {
         
         //This means that if the player moves in the same direction 
         //during strafe(), the monster doesn't end up off screen.
-        this.xSpeed = this.player.topSpeed * 2.5;
+        this.xSpeed = this.player.topSpeed * 1.5;
         
-        this.ySpeed = 1200;
+        this.ySpeed = this.xSpeed;
         this.state = "flapping";
     }
     
@@ -186,7 +186,7 @@ export default class Falcon extends Monster {
         
         if(this.helpers.time.getTotalMilliseconds() - this.lastSwoop >= this.swoopWait)
         {
-            this.swoopWait = (Math.random() * 3000) + 1000; //between 1 and 4 seconds
+            this.swoopWait = (Math.random() * 2000) + 500; //between 0.5 and 2 seconds
             // will set the lastSwoop time after swooping has finished (see reposition())
             
             this._setSwoopDirection();
@@ -271,10 +271,11 @@ export default class Falcon extends Monster {
             this.nextAction();
         } else {
             this.damageDealt = 0; //will be reset at stalking
-            this.moveUp(this.ySpeed);
             
-            //0.75 makes the movement angle match the angle on the animation sprite
-            this.moveRight((this.ySpeed * 0.75) * this.directionMultiplier);
+            // We want to be slower rising, so player can see the monster
+            // We also want to ensure the angle matches the sprite
+            this.moveUp(this.ySpeed * 0.65);
+            this.moveRight((this.ySpeed * 0.4) * this.directionMultiplier);
         }
     }
     
@@ -316,12 +317,6 @@ export default class Falcon extends Monster {
     {
         if(this.state == "dropLeft" || this.state == "dropRight")
         {
-            // if the monster didn't collide with the ground
-            if(this.y + this.height < this.kernel.unitsWithinCamera)
-            {
-                this.directionMultiplier = -this.directionMultiplier;
-            }
-            
             this.state = (this.directionMultiplier == -1) ? "riseLeft" : "riseRight";
             this.nextAction();
         }
