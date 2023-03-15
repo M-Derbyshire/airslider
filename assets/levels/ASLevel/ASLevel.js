@@ -11,6 +11,7 @@ import LavaBall from '/assets/models/Monsters/attacks/LavaBall/LavaBall';
 import Lightning from '/assets/models/Monsters/attacks/Lightning/Lightning';
 import Falcon from '/assets/models/Monsters/Falcon/Falcon';
 import Ghost from '/assets/models/Monsters/Ghost/Ghost';
+import ElectricHornet from '/assets/models/Monsters/ElectricHornet/ElectricHornet';
 
 
 export default class ASLevel extends Level {
@@ -108,6 +109,13 @@ export default class ASLevel extends Level {
                 class1: Tarian,
                 class1EventActionName: "zCollisionEventAction",
                 class2: Shocker,
+                class2EventActionName: "zCollisionEventAction"
+            },
+            { 
+                eventCheckMethodName: "zCollisionEventCheck",
+                class1: ElectricHornet,
+                class1EventActionName: "zCollisionEventAction",
+                class2: Tarian,
                 class2EventActionName: "zCollisionEventAction"
             },
             { 

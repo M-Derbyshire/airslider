@@ -75,8 +75,8 @@ export default class NeonPidgeon extends Monster {
         this.startX = this._levelRightEdge + this.offScreenUnits;
         this.startZ = this.playerModel.z;
         this.ySpeed = 1250;
-        this.dropWaitOffset = 2000; //5 seconds
-        this.dropWaitRange = 2000; //4 seconds
+        this.dropWaitOffset = 2000; //2 seconds
+        this.dropWaitRange = 2000; //2 seconds
         this.initialDropWait = 8000;
         
         this.reset();
@@ -108,7 +108,7 @@ export default class NeonPidgeon extends Monster {
         return [];
     }
     
-    //entering and exiting and reseting-----------------------------------------
+    //entering and exiting and resetting-----------------------------------------
     
     enter()
     {

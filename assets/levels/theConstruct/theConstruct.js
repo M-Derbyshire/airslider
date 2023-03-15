@@ -11,6 +11,7 @@ import Lightning from '/assets/models/Monsters/attacks/Lightning/Lightning';
 import Frame from '/engines/GraphicEn/Frame';
 import ASLevel from '/assets/levels/ASLevel/ASLevel';
 import TarianExplosion from '/assets/models/TarianExplosion/TarianExplosion';
+import ElectricHornet from '/assets/models/Monsters/ElectricHornet/ElectricHornet';
 
 export default class TheConstruct extends ASLevel
 {
@@ -32,12 +33,13 @@ export default class TheConstruct extends ASLevel
         // models.push(new NeonPidgeon(player));
         // models.push(new Falcon(models[0]));
         // models.push(new Ghost(models[0]));
-		models.push(new LavaBall());
-        models.push(new LavaBall());
-		models.push(new BabyDragon(models[0], models[models.length - 1], models[models.length - 2]));
+		// models.push(new LavaBall());
+        // models.push(new LavaBall());
+		// models.push(new BabyDragon(models[0], models[models.length - 1], models[models.length - 2]));
         // models.push(new Lightning());
         // models.push(new Lightning());
         // models.push(new ElectricSeahorse(player, models[models.length - 2], models[models.length - 1]));
+        models.push(new ElectricHornet(player));
 		this.monsters = [
             models[models.length - 1],
             // models[models.length - 2]
@@ -152,7 +154,7 @@ export default class TheConstruct extends ASLevel
         }
 		
 		
-		//Set a pattern of electric mines going
+		//Set a pattern of shockers going
         if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this._levelSection < 1)
         {
 			// this._levelSection = 1;
