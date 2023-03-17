@@ -1,10 +1,11 @@
 import ASModel from '/assets/models/ASModel/ASModel';
 
 export default class LavaBall extends ASModel {
-    constructor()
+    constructor(playerModel)
     {
         super(ASModel);
         
+        this.playerModel = playerModel;
         this.active = false;
         this.damageDealt = 2;
         this.color = "fire";
@@ -63,7 +64,6 @@ export default class LavaBall extends ASModel {
         super.prepare();
         this._initialYSpeed = 1000;
         this.ySpeed = this._initialYSpeed;
-        this.setRandomXSpeed();
     }
     
     act()
@@ -71,7 +71,7 @@ export default class LavaBall extends ASModel {
         if(this.state == "drop")
         {
             this.moveDown(this.ySpeed);
-            this.moveRight(this.xSpeed); //maybe negative, to move left
+            this.moveRight(this.xSpeed); //may be negative, to move left
         }
         
         if(this.y + this.height >= this.kernel.unitsWithinCamera && this.state === "drop")
@@ -83,25 +83,29 @@ export default class LavaBall extends ASModel {
         if(this.state === "none")
         {
             this.active = false;
-            this.setRandomXSpeed();
         }
     }
     
-    setRandomXSpeed()
+    // Called by the dragon when it's ready to drop
+    aimAtPlayer()
     {
-        const maxXSpeed = this.ySpeed / 8; //Max x speed, in either direction
+        const speedMultiplier = 2.25;
+        const xSpeedLimit = 250; // A limit on the x speed
         
-        //Between -maxXSpeed and maxXSpeed
-        this.xSpeed = (Math.random() * (maxXSpeed * 2)) - maxXSpeed;
-    }
-    
-    // This is called by the dragon, when it toggles it's own speed
-    toggleSpeed()
-    {
-        if(this.ySpeed === Math.abs(this._initialYSpeed))
-            this.ySpeed = this.ySpeed * 1.5;
-        else
-            this.ySpeed = this._initialYSpeed;
+        // We need to calculate the x/y speed needed to get to the player (can be negative values)
+        const distanceToPlayerTop = this.playerModel.y - (this.y + this.height);
+        const playerXCenter = (this.playerModel.width / 2) + this.playerModel.x;
+        const thisXCenter = (this.width / 2) + this.x;
+        const distanceToPlayerXCentre = playerXCenter - thisXCenter;
+        
+        this.ySpeed = distanceToPlayerTop * speedMultiplier;
+        this.xSpeed = distanceToPlayerXCentre * speedMultiplier;
+        
+        // We want to limit the x speed (in either direction)
+        if(Math.abs(this.xSpeed) > xSpeedLimit)
+        {
+            this.xSpeed = (this.xSpeed > 0) ? xSpeedLimit : -xSpeedLimit;
+        }
     }
     
     hitPlayerEventAction(otherModel)

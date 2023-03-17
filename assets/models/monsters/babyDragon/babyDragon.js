@@ -12,7 +12,7 @@ export default class BabyDragon extends Monster {
         //Also see the getter for prevLavaBallIndex
         this.nextLavaBallIndex = 0;
         
-        this._nextSpeedToggleTime; // determines when the monster should next toggle its speed
+        this._nextDirectionToggleTime; // determines when the monster should next toggle its direction
     }
     
     get prevLavaBallIndex() {
@@ -141,8 +141,8 @@ export default class BabyDragon extends Monster {
         
         this._dropBallIfTime();
         
-        if(this._shouldChangeSpeed())
-            this._toggleSpeed();
+        if(this._shouldChangeDirection())
+            this._toggleDirection();
     }
 	
 	_handleOverlappingOfLevelEdges()
@@ -161,35 +161,45 @@ export default class BabyDragon extends Monster {
         }
 	}
     
-    _shouldChangeSpeed()
+    _shouldChangeDirection()
     {
         const runningTime = this.kernel.totalLevelActiveMilliseconds;
         
         // Initial
-        if(!this._nextSpeedToggleTime)
+        if(!this._nextDirectionToggleTime)
         {
-            this._nextSpeedToggleTime = runningTime + 5000;
+            this._nextDirectionToggleTime = runningTime + 5000;
         }
         
+        // We only want to change direction if monster is a certain distance from the edge of the level
+        const areaSize = this.width / 8;
+        const leftArea = this._levelLeftEdge + areaSize;
+        const rightArea = this._levelRightEdge - areaSize;
+        const monsterRightEdge = (this.x + this.width);
         
-        if(runningTime >= this._nextSpeedToggleTime)
+        const monsterIsWithinLeftArea = (this.x <= leftArea); 
+        const monsterIsWithinRightArea = (monsterRightEdge >= rightArea);
+        
+        // Is it time to toggle, and is the monster close to the center
+        if(runningTime >= this._nextDirectionToggleTime)
         {
-            const newTimePeriod = (Math.random() * 4000) + 2000; //between 2 and 4 seconds
-            this._nextSpeedToggleTime = runningTime + newTimePeriod;
-            return true;
+            // We only want to start moving right if in the left area (or vice-versa)
+            if((monsterIsWithinLeftArea && this.state === "left") || 
+                (monsterIsWithinRightArea && this.state === "right"))
+            {
+                const newTimePeriod = (Math.random() * 4000) + 2000; //between 2 and 4 seconds
+                this._nextDirectionToggleTime = runningTime + newTimePeriod;
+                return true;
+            }
         }
         
         return false;
     }
     
-    _toggleSpeed()
+    _toggleDirection()
     {
-        if(this.xSpeed === Math.abs(this._initialXSpeed))
-            this.xSpeed = this.xSpeed * 1.25;
-        else
-            this.xSpeed = (this.xSpeed > 0) ? -this._initialXSpeed : this._initialXSpeed;
-        
-        this.lavaBalls.forEach(ball => ball.toggleSpeed());
+        this.xSpeed = -this.xSpeed;
+        this.state = (this.state === "left") ? "right" : "left";
     }
 	
 	_dropBallIfTime()
@@ -224,6 +234,7 @@ export default class BabyDragon extends Monster {
         l.y = this.y + this.height + -20;
         
         l.state = "drop";
+        l.aimAtPlayer();
         l.active = true;
     }
 }

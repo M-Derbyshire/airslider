@@ -33,13 +33,13 @@ export default class TheConstruct extends ASLevel
         // models.push(new NeonPidgeon(player));
         // models.push(new Falcon(models[0]));
         // models.push(new Ghost(models[0]));
-		// models.push(new LavaBall());
-        // models.push(new LavaBall());
-		// models.push(new BabyDragon(models[0], models[models.length - 1], models[models.length - 2]));
+		models.push(new LavaBall(models[0]));
+        models.push(new LavaBall(models[0]));
+		models.push(new BabyDragon(models[0], models[models.length - 1], models[models.length - 2]));
         // models.push(new Lightning());
         // models.push(new Lightning());
         // models.push(new ElectricSeahorse(player, models[models.length - 2], models[models.length - 1]));
-        models.push(new ElectricHornet(player));
+        // models.push(new ElectricHornet(player));
 		this.monsters = [
             models[models.length - 1],
             // models[models.length - 2]
