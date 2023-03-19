@@ -135,7 +135,7 @@ export default class Kernel {
 		
         const preparedEngines = this._initialiseAllEngines(camera, frameManager); // new engines, aimed at this level
         
-        //do any extra setup that may need access to the engines
+        //do any extra setup
         level.load(this.gameCanvas, this.gameContext, camera, frameManager);
         
         //Get models here
