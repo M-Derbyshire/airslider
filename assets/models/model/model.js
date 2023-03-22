@@ -26,6 +26,16 @@ export default class Model {
         this._assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
         
         this._drawBoundaryBoxes = false; // If we set this to true, we'll draw the boxes from this.getBoundaryBoxes()
+        
+        this._text = {
+            text: "",
+            x: 0, // relative to model x
+            y: 0, // relative to model y
+            size: 30, // in pixels
+            font: "Arial",
+            color: "red",
+            style: "bolder", // canvas font-style, font-variant and font-weight
+        };
     }
     
     //getters and setters --------------------------------------
@@ -38,6 +48,9 @@ export default class Model {
     
     get display() {return this._display;}
     set display(newVal) {this._display = newVal;}
+    
+    get text() {return this._text;}
+    set text(newVal) {this._text = newVal;}
     
     get x() {return this._x;}
     set x(x) {this._x = x;}
@@ -84,6 +97,9 @@ export default class Model {
     draw()
     {
         this.animationManager.drawNextFrame();
+        
+        if(this._text.text)
+            this.animationManager.drawText();
         
         if(this._drawBoundaryBoxes)
             this.animationManager.drawBoundaryBoxes();

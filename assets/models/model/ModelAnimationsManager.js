@@ -74,6 +74,26 @@ export default class ModelAnimationsManager {
         );
     }
     
+    drawText()
+    {
+        const text = this.model.text;
+            
+        const origPositions = {
+            x: this.model.x + text.x,
+            y: this.model.y + text.y,
+            z: this.model.z,
+            width: 0,
+            height: text.size
+        }
+        
+        const calcPositions = this._getDrawPositionsAndDimensions(origPositions);
+        
+        this._canvasCtx.font = `${text.style} ${calcPositions.height}px ${text.font}`;
+        this._canvasCtx.fillStyle = text.color;
+        
+        this._canvasCtx.fillText(text.text, calcPositions.x, calcPositions.y);
+    }
+    
     drawBoundaryBoxes()
     {
         const boxes = this.model.getBoundaryBoxes();
