@@ -8,6 +8,7 @@ import ZCalc from '/helpers/zCalc';
 import Camera from '/engines/GraphicEn/Camera';
 import FrameManager from '/engines/GraphicEn/FrameManager';
 import settings from '/settings/settings';
+import fonts from '/assets/fonts/fonts';
 
 // This class provides a Singleton instance
 // So, other than the first time, you should use Kernel.getInstance()
@@ -121,6 +122,8 @@ export default class Kernel {
             unit: new UnitHelper(this.unitsWithinCamera)
         };
         
+        Object.keys(fonts).forEach(key => this.loadFont(key, fonts[key]));
+        
         this.loadLevel(new settings.initialLevelClass(...settings.initialLevelConstructorParameters));
     }
     
@@ -210,8 +213,14 @@ export default class Kernel {
         return this._assetHandler.loadAsset(new Audio, path, callback);
     }
     
+    loadFont(name, path, callback = this._assetHandler.getDefaultAssetCallback())
+    {
+        return this._assetHandler.loadFont(name, path, callback);
+    }
+    
     // Finds the loaded asset with the given file path, and reduces the usage count against it.
-    // The asset should stay loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it
+    // The asset should stay loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it.
+    // (fonts cannot be unloaded)
     releaseAsset(path)
     {
         this._assetHandler.releaseAsset(path);

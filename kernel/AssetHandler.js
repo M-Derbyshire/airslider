@@ -5,6 +5,9 @@ export default class AssetHandler
         this._rootPath = rootPath;
         this._assetsStillLoading = 0; //increased when asset starts loading, decrease when done
         this.loadedAssets = [];
+        
+        // Start of development asset path
+        this._baseUrl = window.location.href.replace("/index.html", "");
     }
     
     get assetsStillLoading(){return this._assetsStillLoading;}
@@ -98,5 +101,18 @@ export default class AssetHandler
             }
         }
         return -1;
+    }
+    
+    loadFont(name, path, callback)
+    {
+        const boundCallback = callback.bind(this);
+        
+        const font = new FontFace(name, `url(${this._baseUrl}/${path})`);
+        font.load().then((font) => {
+            document.fonts.add(font);
+            boundCallback();
+        });
+        
+        this._assetsStillLoading++;
     }
 }
