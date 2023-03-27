@@ -46,10 +46,15 @@ export default class HUD
     
     draw()
     {
-        for(let i = 0; i < this.components.length; i++)
-        {
-            this.components[i].draw();
-        }
+        this.components.forEach(component => {
+            if(component.active)
+            {
+                component.draw();
+                
+                if(component.text.text)
+                    component.drawText();
+            } 
+        });
         
         if(this.extraDraw)
         {
