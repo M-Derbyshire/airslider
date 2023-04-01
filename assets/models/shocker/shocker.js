@@ -91,9 +91,9 @@ export default class Shocker extends ASModel
 	
 	_setZSpeedBasedOnLevelSpeed()
 	{
-		if(this.kernel.level.levelSpeed == 0) //updates zSpeed
+		if(!this.kernel.level.levelMoving)
         {
-            this.zSpeed = -(this.helpers.zCalc.speed(this.kernel.level.initialLevelSpeedRaw, this.kernel.fps) / 1.5);
+            this.zSpeed = -(this.helpers.zCalc.speed(this.kernel.level.maxLevelSpeedRaw, this.kernel.fps) / 1.5);
         } else {
             this.zSpeed = this.kernel.level.levelSpeed / 1.5;
         }

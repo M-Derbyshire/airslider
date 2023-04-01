@@ -2,87 +2,58 @@ import Kernel from '/kernel/kernel';
 
 export default class LevelGround
 {
-    constructor(canvasCtx, camera)
+	// groundPopulatedInitially - true if the ground should already be there. If false, player is moving towards the ground
+    constructor(canvasCtx, camera, groundPopulatedInitially = true)
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
 
         this._camera = camera;
         this._canvasCtx = canvasCtx;
+		this._groundPopulatedInitially = groundPopulatedInitially;
         
         this.ground; //The shared data for every piece of ground drawn (see _getPopulatedGroundObject())
 		this.distance; //The distance between pieces of ground (on the z axis)
+		this._groundDrawCount; // How many of the ground positions should be drawn?
         
         this.groundZPositions = []; //The z-axis positions of every piece of ground
+		
+		this._removeGround = false; // If the player is leaving this area of ground, we want to remove it
     }
 	
 	//gapZDistance is the number of units on the z axis that will seperate pieces of ground
-	load(imagePath, imageHeight, gapZDistance)
+	// if imageStaticWidth is provided, the image will not be stretched to fill the space
+	load(imagePath, imageHeight, gapZDistance, imageStaticWidth = null)
 	{
-		this.ground = this._getPopulatedGroundObject(imagePath, imageHeight);
+		this.ground = this._getPopulatedGroundObject(imagePath, imageHeight, imageStaticWidth);
 		this.distance = gapZDistance;
 	}
     
     setupGround()
     {
-        //Can't set in constructor as graphicEn wouldn't have been initialised then
-        const canvasPositions = { 
-            x: this._camera.canvasPositionX, 
-            y: this._camera.canvasPositionY,
-            width: this._camera.canvasPositionWidth,
-            height: this._camera.canvasPositionHeight
-        };
-        
-        this._populateGroundZPositions(canvasPositions);
+        this._populateGroundZPositions();
     }
 	
-	_getPopulatedGroundObject(path, height)
+	_getPopulatedGroundObject(path, height, width)
 	{
 		return {
             image: this.kernel.loadImage(path),
             height, //Height to draw the image
+			width,
             offset: 0 //The amount the images have all moved along the z-axis
         };
 	}
 	
-	//canvasPositions should be an object with an x, y, width and height
-	_populateGroundZPositions(canvasPositions)
+	
+	_populateGroundZPositions()
 	{
-        // for(let currentZPos = this.helpers.zCalc.vPointDepth; currentZPos >= 0; currentZPos--)
-        // {
-		// 	if(this.groundZPositions.length === 0)
-		// 	{
-		// 		this.groundZPositions.push(this.helpers.zCalc.vPointDepth);
-		// 		continue;
-		// 	}
-            
-		// 	const lastZPosition = this.groundZPositions[this.groundZPositions.length - 1];
-		// 	if(this.groundZPositions.length === 1)
-        //     {
-		// 		const currentZPosTopEdge = this.helpers.zCalc.y(canvasPositions.height, currentZPos);
-		// 		const lastZPosTopEdge = this.helpers.zCalc.y(canvasPositions.height, lastZPosition);
-		// 		const lastZPosHeight = this.helpers.zCalc.height(this.ground.height, lastZPosition);
-				
-        //         if(currentZPosTopEdge >= lastZPosTopEdge + lastZPosHeight)
-        //         {
-        //             this.ground.distance = (lastZPosition - currentZPos);
-        //         }
-        //     } 
-			
-		// 	if(lastZPosition - currentZPos === this.ground.distance)
-		// 	{
-		// 		this.groundZPositions.push(currentZPos - 1);
-		// 	}
-        // }
-		
-		
-		
 		//Start from far away, so we don't draw the distant ones on top of the closer ones
 		for(let i = this.helpers.zCalc.vPointDepth; i >= 0; i -= this.distance)
 		{
 			this.groundZPositions.push(i);
 		}
 		
+		this._groundDrawCount = (this._groundPopulatedInitially) ? this.groundZPositions.length : 1;
 	}
 	
 	
@@ -94,20 +65,38 @@ export default class LevelGround
     //like they are just continuing to move towards the camera.
     draw(levelSpeed)
     {
-		this._resetGroundOffsetIfReachedDistance();
+		this.ground.offset += levelSpeed;
+		this._resetGroundIfReachedDistance();
 		
-        for(let i = 0; i < this.groundZPositions.length; i++)
-        {
-            this.ground.offset += (levelSpeed / 75);
-            this._drawLeftAndRightGroundImage(this.groundZPositions[i]);
-        }
+		this.groundZPositions.forEach((pos, i) => {
+			if(i < this._groundDrawCount)
+			{
+				this._drawLeftAndRightGroundImage(pos);
+			}
+		});
     }
 	
-	_resetGroundOffsetIfReachedDistance()
+	// Use this to trigger the ending of the ground
+	removeGround()
+	{
+		this._removeGround = true;
+	}
+	
+	_resetGroundIfReachedDistance()
 	{
 		if(this.ground.offset >= this.distance)
 		{
 			this.ground.offset = 0;
+			
+			if(!this._groundPopulatedInitially)
+			{
+				this._groundDrawCount++;
+			}
+				
+			if(this._removeGround)
+			{
+				this.groundZPositions.shift();
+			}
 		}
 	}
 	
@@ -117,9 +106,11 @@ export default class LevelGround
 		
 		const canvasBottomEdge = this._camera.canvasPositionY + this._camera.canvasPositionHeight;
 		const canvasRightEdge = this._camera.canvasPositionX + this._camera.canvasPositionWidth;
-		const imageWidth = this._camera.canvasPositionX + (this._camera.canvasPositionWidth * 2);
+		const imageWidth = (this.ground.width) 
+			? this.ground.width 
+			: this._camera.canvasPositionX + (this._camera.canvasPositionWidth * 2);
 		
-		const drawY = this.helpers.zCalc.y(canvasBottomEdge, offsetZPos);
+		const drawY = this.helpers.zCalc.y(canvasBottomEdge - this.ground.height, offsetZPos);
 		const drawWidth = this.helpers.zCalc.width(imageWidth, offsetZPos);
 		const drawHeight = this.helpers.zCalc.height(this.helpers.unit.yUnit(this.ground.height), offsetZPos);
 		

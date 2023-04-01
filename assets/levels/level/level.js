@@ -40,6 +40,8 @@ export default class Level
         this._gameContext = gameContext;
         this._camera = camera;
         this._frameManager = frameManager;
+        
+        this._setupZCalc(this._gameCanvas);
     }
     
     //If implementing your own unload in a child class, be sure to call this with super.unload()

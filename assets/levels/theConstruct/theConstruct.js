@@ -18,15 +18,19 @@ export default class TheConstruct extends ASLevel
     constructor()
     {
         super(ASLevel);
+        
+        this._levelClosingSectionNumber = 3;
     }
     
     getModels()
     {
+        const stdModels = super.getModels();
+        
         let models = [];
         
-		const player = new Tarian();
-        const playerExplosion = new TarianExplosion(player);
-        models.push(player); //add main character (has to be 0)
+		this._player = new Tarian();
+        const playerExplosion = new TarianExplosion(this._player);
+        models.push(this._player); //add main character (has to be 0)
         models.push(playerExplosion);
         
         // models.push(new NeonPidgeon(player, true));
@@ -40,7 +44,7 @@ export default class TheConstruct extends ASLevel
         // models.push(new Lightning());
         // models.push(new ElectricSeahorse(player, models[models.length - 2], models[models.length - 1]));
         // models.push(new ElectricHornet(player));
-		this.monsters = [
+		this._monsters = [
             // models[models.length - 1],
             // models[models.length - 2]
         ];
@@ -56,7 +60,7 @@ export default class TheConstruct extends ASLevel
 		// const modelWidth = 100; //Set explicitly here, as models not yet loaded
 		// this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
         
-        return models;
+        return [...models, ...stdModels];
     }
     
     load(canvas, canvasCtx, camera, frameManager)
@@ -65,13 +69,13 @@ export default class TheConstruct extends ASLevel
         
         this._frameManager = frameManager;
         
-        this.tunnelSprite = this.kernel.loadImage("/assets/levels/theConstruct/images/theConstructTunnel.png");
-        this.tunnelSpriteLength = 60;
+        this._tunnelSprite = this.kernel.loadImage("/assets/levels/theConstruct/images/theConstructTunnel.png");
+        this._tunnelSpriteLength = 60;
         
         this.ground.load(
             "/assets/levels/theConstruct/images/ground.png",
             50,
-            25
+            35
         );
         
         this.tunnelManager.load(camera);
@@ -114,7 +118,7 @@ export default class TheConstruct extends ASLevel
         super.prepare();
         
         // this.tunnelManager.createStartingTunnel([
-        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
+        //     this.tunnelManager.newTunnelPart(this._tunnelSprite, this._tunnelSpriteLength)
         // ]);
     }
     
@@ -122,9 +126,6 @@ export default class TheConstruct extends ASLevel
     act()
     {
         super.act();
-        
-        //if outside/inside changes, change light mask
-        this.setLightMask();
 		
 		this.patternManager.sendPatterns();
         
@@ -134,23 +135,28 @@ export default class TheConstruct extends ASLevel
         }
         
         // this.tunnelManager.continueTunnel([
-        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+        //     this.tunnelManager.newTunnelPart(this._tunnelSprite, this._tunnelSpriteLength),
         //     this.tunnelManager.newTunnelPart(null, this.tunnelSpriteLength)
         // ]);
         
 		
-		//Start the monster going straight away
-		if(this.helpers.time.getTotalSeconds() >= 0 && this.helpers.time.getTotalSeconds() <= 1 && this._levelSection < 1)
+		//Start the monster going
+		if(this.helpers.time.getTotalSeconds() >= 15 && this._levelSection === 1)
 		{
-			this.monsters.forEach(monster => monster.start());
-            this._levelSection = 1;
+			this._monsters.forEach(monster => monster.start());
+            this._levelSection = 2;
 		}
         
         //Stop the monster
-        if(this.helpers.time.getTotalSeconds() >= 30 && this._levelSection === 1)
+        // if(this.helpers.time.getTotalSeconds() >= 40 && this._levelSection === 2)
+        // {
+        //     this._monsters.forEach(monster => monster.stop());
+        //     this._levelSection = this._levelClosingSectionNumber;
+        // }
+        
+        if(this.helpers.time.getTotalSeconds() >= 25 && this._levelSection === 2)
         {
-            this.monsters.forEach(monster => monster.stop());
-            this._levelSection = 2;
+            this._levelSection = this._levelClosingSectionNumber;
         }
 		
 		

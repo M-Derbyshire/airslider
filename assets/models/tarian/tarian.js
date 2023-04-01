@@ -11,12 +11,13 @@ export default class Tarian extends ASModel {
         
         this.exploding = false;
         this.lost = false;
+        this._lostZSpeed = 35;
         this.lastFlashChange = 0; //used in the flashing
         this.flashSpeed = 50;
         
         this.lastSpeedChange = 0; //used when changing the speed
         
-        this.canBeControlled = true; //should the directional controls be operational?
+        this.canBeControlled = false; //should the directional controls be operational?
         this._lostAtTimeMS = 0; //the time (in milliseconds) that the player entered the lost state
     }
     
@@ -123,9 +124,9 @@ export default class Tarian extends ASModel {
         this.topSpeed = 1000;
         this.xSpeed = 0;
         
-        this.zSpeed = 35; //used when state is "lost"
+        this.zSpeed = 0;
         
-        this.canBeControlled = true;
+        this.canBeControlled = false;
         this._lostAtTimeMS = 0;
     }
     
@@ -240,7 +241,7 @@ export default class Tarian extends ASModel {
             {
                 this.exploding = false;
                 this.lost = true;
-                this._lostAtTimeMS = this.kernel.totalLevelActiveMilliseconds;
+                this._lostAtTimeMS = this.helpers.time.getTotalMilliseconds();
             } else {
                 this.state = "exploding";
             }
@@ -261,8 +262,8 @@ export default class Tarian extends ASModel {
         {
             this.canBeControlled = false;
             
-            if((this._lostAtTimeMS + 3000) < this.kernel.totalLevelActiveMilliseconds)
-                this.moveOut(this.zSpeed);
+            if((this._lostAtTimeMS + 3000) < this.helpers.time.getTotalMilliseconds())
+                this.zSpeed = -this._lostZSpeed;
         }
 	}
 	
@@ -275,6 +276,11 @@ export default class Tarian extends ASModel {
         }
 	}
     
+    levelStopped()
+    {
+        this.active = false;
+    }
+    
 	
 	
     _movePlayer() //this will just use moveRight(), but can also feed in negative numbers
@@ -282,13 +288,15 @@ export default class Tarian extends ASModel {
         this._setSpeedBasedOnAcceleration();
         
         this.moveRight(this.xSpeed);
+        
+        this.moveIn(this.zSpeed);
     }
 	
 	_setSpeedBasedOnAcceleration()
 	{
-		if(this.kernel.totalLevelActiveMilliseconds - this.lastSpeedChange >= 100) //1 tenth of a second
+		if(this.helpers.time.getTotalMilliseconds() - this.lastSpeedChange >= 100) //1 tenth of a second
         {
-            this.lastSpeedChange = this.kernel.totalLevelActiveMilliseconds;
+            this.lastSpeedChange = this.helpers.time.getTotalMilliseconds();
 			this._changeSpeed();
         }
 	}

@@ -2,8 +2,11 @@ import Level from '/assets/levels/Level/Level';
 import LevelRoad from './LevelRoad';
 import ShockerManager from './ShockerManager';
 import ModelXPositionPatternManager from './ModelXPositionPatternManager';
+import settings from '../../../settings/settings';
 import LevelGround from './LevelGround';
 import LevelTunnel from './LevelTunnel';
+import Sign from '/assets/models/Sign/Sign';
+import SignDisplay from '/assets/models/SignDisplay/SignDisplay';
 import Tarian from '/assets/models/Tarian/Tarian';
 import Shocker from '/assets/models/Shocker/Shocker';
 import NeonPidgeon from '/assets/models/Monsters/NeonPidgeon/NeonPidgeon';
@@ -29,26 +32,51 @@ export default class ASLevel extends Level {
         this.ground;
         
         this.tunnelManager = new LevelTunnel();
+        this._tunnelSprite;
+        this._tunnelSpriteLength;
 		
-		//The section the level is currently on
-		this._levelSection = 0;
+		this._levelSection = 0; // The section the level is currently on (0 is the opening sequence)
+        this._levelClosingSectionNumber = 1; // The closing section number is defined by the child level.
+        this._timeLevelClosingBeginMS = 0; // When (in milliseconds) did the closing sequence begin
 		
         //The edges of the playable area
         this.leftEdge;
         this.rightEdge;
         
-        this.monsters;
+        this._monsters;
+        this._player;
 		
 		this.outsideVisible = false;
 		
 		this.tunnelLightMaskIndex;
         this.outsideLightMaskIndex;
         
+        this.levelMoving = false;
         this.levelSpeed;
         this.levelSpeedRaw;
-        this.initialLevelSpeedRaw;
+        this.maxLevelSpeedRaw;
+        this.levelSpeedAccl; // How quickly does the speed accelerate at the start?
+        
+        // Models/info for opening and closing of level
+        this._startSign;
+        this._startSignDisplay;
+        this._finishSign;
+        this._finishFlagsActive = false;
+        this._signStartingZPosition = 50;
 	}
-	
+    
+    getModels()
+    {
+        this._startSign = new Sign("", this._signStartingZPosition, -1, true);
+        this._startSignDisplay = new SignDisplay(this._startSign);
+        this._finishSign = new Sign("FINISH", this.helpers.zCalc.vPointDepth, this._signStartingZPosition, false);
+        
+        return [
+            this._startSign,
+            this._startSignDisplay,
+            this._finishSign
+        ];
+    }
 	
 	load(gameCanvas, gameContext, camera, frameManager)
 	{
@@ -58,6 +86,14 @@ export default class ASLevel extends Level {
         this.rightEdge = this.kernel.unitsWithinCamera;
         
         this.ground = new LevelGround(gameContext, camera);
+        this._finishFlagsManager = new LevelGround(gameContext, camera, false); 
+        
+        this._finishFlagsManager.load(
+            "/assets/levels/ASLevel/images/finish_flag.png",
+            312,
+            50,
+            350
+        );
 		
         this._setupShockerManager(this.leftEdge, this.rightEdge);
 		
@@ -70,6 +106,10 @@ export default class ASLevel extends Level {
     {
         super.prepare();
         this.ground.setupGround();
+        this._finishFlagsManager.setupGround();
+        
+        this._finishFlagsActive = false;
+        this.levelMoving = false;
     }
     
     unload()
@@ -86,10 +126,10 @@ export default class ASLevel extends Level {
 	_setupLevelSpeed()
 	{
 		//levelSpeedRaw can be used if you need to check for a change in level speed, or to change it
-		
-		this.initialLevelSpeedRaw = 600;
-        this.levelSpeedRaw = this.initialLevelSpeedRaw;
-        this.updateLevelSpeed();
+		this.maxLevelSpeedRaw = 600;
+        this.levelSpeedRaw = 0;
+        this.levelSpeedAccl = 600;
+        this._updateLevelSpeed();
 	}
 	
 	_setupShockerManager(leftEdge, rightEdge)
@@ -166,18 +206,44 @@ export default class ASLevel extends Level {
     act()
     {
         super.act();
-        this.updateLevelSpeed(); //keeps level speed consistent via fps
+        this._updateLevelSpeed(); //keeps level speed consistent via fps
+        
+        //if outside/inside changes, change light mask
+        this._setLightMask();
+        
+        // Opening
+        if(this._levelSection === 0)
+        {
+            this._levelOpening();
+        }
+        
+        // closing
+        if(this.levelMoving && this._levelSection === this._levelClosingSectionNumber)
+        {
+            this._levelClosing();
+        }
     }
 	
-	updateLevelSpeed()
+	_updateLevelSpeed()
     {
-        if(this.levelSpeed != 0)
+        if(this.levelMoving)
         {
-            this.levelSpeed = this.helpers.zCalc.speed(this.levelSpeedRaw, this.kernel.fps); //need to use this in monsters for death
+            if(this.levelSpeedRaw < this.maxLevelSpeedRaw)
+            {
+                this.levelSpeedRaw += this.helpers.zCalc.speed(this.levelSpeedAccl, this.kernel.fps);
+            } else {
+                this.levelSpeedRaw = this.maxLevelSpeedRaw;
+            }
+            
+            this.levelSpeed = this.helpers.zCalc.speed(this.levelSpeedRaw, this.kernel.fps);
+        }
+        else
+        {
+            this.levelSpeed = 0;
         }
     }
     
-    setLightMask()
+    _setLightMask()
     {
         if(
             this.tunnelManager.tunnel.length > 1 && 
@@ -194,10 +260,17 @@ export default class ASLevel extends Level {
             );
         }
     }
+    
+    // Start the forward movement of the level (increases until it reaches max)
+    _levelMovementStart()
+    {
+        this.levelMoving = true;
+        this.kernel.loadedModels[settings.playerModelIndex].canBeControlled = true;
+    }
 	
 	levelStop()
     {
-        this.levelSpeedRaw = 0;
+        this.levelMoving = false;
         
         for(let i = 0; i < this.kernel.loadedModels.length; i++)
         {
@@ -212,7 +285,55 @@ export default class ASLevel extends Level {
             this.ground.draw(this.levelSpeed);
         }
         
+        // Not doing this in the above if statement, because draw() needs to be called to add more flags
+        if(this._finishFlagsActive)
+            this._finishFlagsManager.draw(this.levelSpeed);
+        
         this.tunnelManager.draw(this.levelSpeed);
         this.road.draw(this.roadColor);
+    }
+    
+    // Opening and closing sequences for the levels
+    _levelOpening()
+    {
+        // SignDisplay will start the countdown automatically
+        
+        if(this._startSignDisplay.state === "go")
+        {
+            this._levelMovementStart();
+            this._levelSection++;
+        }
+    }
+    
+    _levelClosing()
+    {
+        // Start the finish flags, and record when the closing sequence began
+        if(!this._timeLevelClosingBeginMS)
+        {
+            this._timeLevelClosingBeginMS = this.helpers.time.getTotalMilliseconds();
+            this._finishFlagsActive = true;
+        }
+        
+        // End the finish flags, before starting the sign's entrance
+        if(!this._finishSign.active && this.helpers.time.getTotalMilliseconds() >= (this._timeLevelClosingBeginMS + 3500))
+        {
+            this._finishFlagsManager.removeGround();
+        }
+        
+        // Trigger the finish sign's entrance
+        if(!this._finishSign.active && this.helpers.time.getTotalMilliseconds() >= (this._timeLevelClosingBeginMS + 4000))
+        {
+            this._finishSign.active = true;
+        }
+        
+        // If the sign is in position, stop the level
+        if(this._finishSign.z === this._signStartingZPosition && this._player.zSpeed === 0)
+        {
+            this._player.zSpeed = this.levelSpeedRaw;
+            this.levelMoving = false;
+        }
+        
+        if(this._player.z > this.helpers.zCalc.vPointDepth)
+            this.levelStop();
     }
 }
