@@ -75,7 +75,7 @@ export default class TheConstruct extends ASLevel
         this.ground.load(
             "/assets/levels/theConstruct/images/ground.png",
             50,
-            35
+            50
         );
         
         this.tunnelManager.load(camera);

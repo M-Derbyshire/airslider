@@ -92,7 +92,7 @@ export default class ASLevel extends Level {
             "/assets/levels/ASLevel/images/finish_flag.png",
             312,
             50,
-            350
+            500
         );
 		
         this._setupShockerManager(this.leftEdge, this.rightEdge);
@@ -126,7 +126,7 @@ export default class ASLevel extends Level {
 	_setupLevelSpeed()
 	{
 		//levelSpeedRaw can be used if you need to check for a change in level speed, or to change it
-		this.maxLevelSpeedRaw = 600;
+		this.maxLevelSpeedRaw = 1000;
         this.levelSpeedRaw = 0;
         this.levelSpeedAccl = 600;
         this._updateLevelSpeed();
