@@ -294,4 +294,11 @@ export default class Kernel {
             this._totalLevelActiveMilliseconds += timePassed;
         }
     }
+    
+    // Initiating the game -----------------------------------------------------------------
+    initiate()
+    {
+        this.load();
+        this.run();
+    }
 }
