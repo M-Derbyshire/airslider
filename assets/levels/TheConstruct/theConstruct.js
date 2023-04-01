@@ -1,4 +1,4 @@
-import Kernel from '/kernel/kernel';
+import Kernel from '/Kernel/kernel';
 import Tarian from '/assets/models/Tarian/Tarian';
 import NeonPidgeon from '/assets/models/Monsters/NeonPidgeon/NeonPidgeon';
 import Falcon from '/assets/models/Monsters/Falcon/Falcon';
@@ -69,11 +69,11 @@ export default class TheConstruct extends ASLevel
         
         this._frameManager = frameManager;
         
-        this._tunnelSprite = this.kernel.loadImage("/assets/levels/theConstruct/images/theConstructTunnel.png");
+        this._tunnelSprite = this.kernel.loadImage("/assets/levels/TheConstruct/images/theConstructTunnel.png");
         this._tunnelSpriteLength = 60;
         
         this.ground.load(
-            "/assets/levels/theConstruct/images/ground.png",
+            "/assets/levels/TheConstruct/images/ground.png",
             50,
             50
         );
@@ -86,24 +86,24 @@ export default class TheConstruct extends ASLevel
         const unitsWithinCamera = this.kernel.unitsWithinCamera;
         let frame = new Frame(canvasCtx, camera, 0, 0, unitsWithinCamera, unitsWithinCamera);
         
-        const frameBackgroundIndex = frame.loadBackground("/assets/levels/theConstruct/images/testBackground.png");
+        const frameBackgroundIndex = frame.loadBackground("/assets/levels/TheConstruct/images/testBackground.png");
         frame.setBackgroundImage(frameBackgroundIndex);
         
         this.outsideLightMaskIndex = frame.loadLightMask(
-            "/assets/levels/theConstruct/images/testBackgroundMask.png",
+            "/assets/levels/TheConstruct/images/testBackgroundMask.png",
             0
         );
         this.tunnelLightMaskIndex = frame.loadLightMask(
-            "/assets/levels/level/images/tunnelLightMask.png",
+            "/assets/levels/Level/images/tunnelLightMask.png",
             0.25
         );
         
         this._assetsToUnload.push(
-            "/assets/levels/theConstruct/images/theConstructTunnel.png",
-            "/assets/levels/theConstruct/images/testBackground.png",
-            "/assets/levels/theConstruct/images/testBackgroundMask.png",
-            "/assets/levels/level/images/tunnelLightMask.png",
-            "/assets/levels/theConstruct/images/ground.png"
+            "/assets/levels/TheConstruct/images/theConstructTunnel.png",
+            "/assets/levels/TheConstruct/images/testBackground.png",
+            "/assets/levels/TheConstruct/images/testBackgroundMask.png",
+            "/assets/levels/Level/images/tunnelLightMask.png",
+            "/assets/levels/TheConstruct/images/ground.png"
         );
         
         

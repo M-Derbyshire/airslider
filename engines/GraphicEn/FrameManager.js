@@ -1,4 +1,4 @@
-import Kernel from '/kernel/kernel';
+import Kernel from '/Kernel/kernel';
 
 export default class FrameManager {
     

@@ -73,11 +73,11 @@ export default class DamageFlash extends ASHUDComponent
         
 		//The purple option is purposefully the same as the yellow image, as they're both lightning.
         this.images = {
-            yellow: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/yellow.png"),
-            purple: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/yellow.png"),
-            none: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/none.png"),
-            fire: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/fire.png"),
-            ghost: this.kernel.loadImage("/assets/HUDs/components/damageFlash/images/ghost.png")
+            yellow: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png"),
+            purple: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png"),
+            none: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/none.png"),
+            fire: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/fire.png"),
+            ghost: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/ghost.png")
         };
         
     }

@@ -1,4 +1,4 @@
-import Kernel from '/kernel/kernel';
+import Kernel from '/Kernel/kernel';
 import EventManager from './EventManager';
 import PointerEventManager from './PointerEventManager';
 import EventCheckContainer from './EventCheckContainer';

@@ -1,4 +1,4 @@
-import Kernel from '/kernel/kernel';
+import Kernel from '/Kernel/kernel';
 
 /*
 	Used to position a set of models on the x-axis, in a way that will make 

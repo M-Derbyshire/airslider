@@ -1,4 +1,4 @@
-import Kernel from '/kernel/kernel';
+import Kernel from '/Kernel/kernel';
 import ModelAnimationsManager from './ModelAnimationsManager';
 
 export default class Model {

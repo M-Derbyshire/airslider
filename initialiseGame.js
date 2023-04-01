@@ -1,4 +1,4 @@
-import Kernel from '/kernel/kernel';
+import Kernel from '/Kernel/kernel';
 
 // start up the kernel
 window.addEventListener("load", function() {

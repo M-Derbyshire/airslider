@@ -47,7 +47,7 @@ export default class Shocker extends ASModel
         
         this.animationManager.registerAnimations({
             shock: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/shocker/anim/shocker-" + this.color + "-spritesheet.png",
+                sheetPath: "/assets/models/Shocker/anim/shocker-" + this.color + "-spritesheet.png",
                 frameCoordinates,
                 fps: 24,
                 drawWidth: width,

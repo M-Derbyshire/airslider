@@ -19,11 +19,11 @@ export default class LavaBall extends ASModel {
         let ballWidth = 30;
         let ballHeight = 40;
         
-        this._assetsToUnload.push("/assets/models/monsters/attacks/lavaBall/anim/lavaBomb-spritesheet.png");
+        this._assetsToUnload.push("/assets/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png");
         
         this.animationManager.registerAnimations({
             drop: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/attacks/lavaBall/anim/lavaBomb-spritesheet.png",
+                sheetPath: "/assets/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png",
                 fps: 24,
                 drawWidth: ballWidth,
                 drawHeight: ballHeight,
@@ -32,7 +32,7 @@ export default class LavaBall extends ASModel {
 				]
             }),
             break: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/attacks/lavaBall/anim/lavaBomb-spritesheet.png",
+                sheetPath: "/assets/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png",
                 fps: 24,
                 drawWidth: ballWidth,
                 drawHeight: ballHeight,
@@ -45,7 +45,7 @@ export default class LavaBall extends ASModel {
 				]
             }),
             none: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/attacks/lavaBall/anim/lavaBomb-spritesheet.png",
+                sheetPath: "/assets/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png",
                 fps: 24,
                 drawWidth: 0,
                 drawHeight: 0,

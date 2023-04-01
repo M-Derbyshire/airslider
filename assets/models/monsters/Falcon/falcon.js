@@ -18,11 +18,11 @@ export default class Falcon extends Monster {
     {
         super.load();
         
-        this._assetsToUnload.push("/assets/models/monsters/falcon/anim/falcon-spritesheet.png");
+        this._assetsToUnload.push("/assets/models/monsters/Falcon/anim/falcon-spritesheet.png");
         
         this.animationManager.registerAnimations({
             dropLeft: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
+                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
                 fps: 24,
                 drawWidth: 175,
                 drawHeight: 300,
@@ -31,7 +31,7 @@ export default class Falcon extends Monster {
 				]
             }),
             dropRight: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
+                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
                 fps: 24,
                 drawWidth: 175,
                 drawHeight: 300,
@@ -40,7 +40,7 @@ export default class Falcon extends Monster {
 				]
             }),
             flapping: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
+                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
                 frameCount: 8,
                 fps: 24,
                 drawWidth: 350,
@@ -57,7 +57,7 @@ export default class Falcon extends Monster {
 				]
             }),
             left: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
+                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
                 frameCount: 1,
                 fps: 24,
                 drawWidth: 350,
@@ -67,7 +67,7 @@ export default class Falcon extends Monster {
 				]
             }),
             right: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
+                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
                 frameCount: 1,
                 fps: 24,
                 drawWidth: 350,
@@ -77,7 +77,7 @@ export default class Falcon extends Monster {
 				]
             }),
             riseLeft: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
+                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
                 frameCount: 1,
                 fps: 24,
                 drawWidth: 170,
@@ -87,7 +87,7 @@ export default class Falcon extends Monster {
 				]
             }),
             riseRight: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/falcon/anim/falcon-spritesheet.png",
+                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
                 frameCount: 1,
                 fps: 24,
                 drawWidth: 170,
