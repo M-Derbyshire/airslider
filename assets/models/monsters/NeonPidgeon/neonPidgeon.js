@@ -17,11 +17,12 @@ export default class NeonPidgeon extends Monster {
     {
         super.load();
         
-        this._assetsToUnload.push("/assets/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png");
+        const spritesheetPath = "/assets/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png";
+        this._assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
             falling: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png",
+                sheetPath: spritesheetPath,
                 fps: 24,
                 drawWidth: 250,
                 drawHeight: 200,
@@ -30,7 +31,7 @@ export default class NeonPidgeon extends Monster {
 				],
             }),
             flapping: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png",
+                sheetPath: spritesheetPath,
                 fps: 24,
                 drawWidth: 250,
                 drawHeight: 200,
@@ -46,7 +47,7 @@ export default class NeonPidgeon extends Monster {
 				],
             }),
             rising: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png",
+                sheetPath: spritesheetPath,
                 fps: 24,
                 drawWidth: 250,
                 drawHeight: 200,

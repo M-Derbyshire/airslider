@@ -25,10 +25,12 @@ export default class Tarian extends ASModel {
     {
         super.load();
         
+        const spritesheetPath = "/assets/models/Tarian/anim/tarian-spritesheet.png";
+        
         //I've used exact values for the fps, so it will be consistent when changing game fps
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/Tarian/anim/tarian-spritesheet.png", 
+                sheetPath: spritesheetPath, 
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,
@@ -40,7 +42,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             left: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/Tarian/anim/tarian-spritesheet.png", 
+                sheetPath: spritesheetPath, 
                 fps: 24, 
                 drawWidth: 170, 
                 drawHeight: 170, 
@@ -53,7 +55,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             right: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/Tarian/anim/tarian-spritesheet.png", 
+                sheetPath: spritesheetPath, 
                 fps: 24,
                 drawWidth: 170,
                 drawHeight: 170,
@@ -66,7 +68,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             exploding: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/Tarian/anim/tarian-spritesheet.png", 
+                sheetPath: spritesheetPath, 
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,
@@ -98,7 +100,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             lost: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/Tarian/anim/tarian-spritesheet.png", 
+                sheetPath: spritesheetPath, 
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,

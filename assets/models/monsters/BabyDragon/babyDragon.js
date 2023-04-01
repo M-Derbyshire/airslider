@@ -26,11 +26,12 @@ export default class BabyDragon extends Monster {
     {
         super.load();
         
-        this._assetsToUnload.push("/assets/models/monsters/BabyDragon/anim/babyDragon-spritesheet.png");
+        const spritesheetPath = "/assets/models/monsters/BabyDragon/anim/babyDragon-spritesheet.png";
+        this._assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
             left: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/BabyDragon/anim/babyDragon-spritesheet.png",
+                sheetPath: spritesheetPath,
                 fps: 24,
                 drawWidth: 400,
                 drawHeight: 300,
@@ -48,7 +49,7 @@ export default class BabyDragon extends Monster {
 				]
             }),
             right: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/BabyDragon/anim/babyDragon-spritesheet.png",
+                sheetPath: spritesheetPath,
                 fps: 24,
                 drawWidth: 400,
                 drawHeight: 300,
