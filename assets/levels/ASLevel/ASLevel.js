@@ -2,7 +2,6 @@ import Level from '/assets/levels/Level/Level';
 import LevelRoad from './LevelRoad';
 import ShockerManager from './ShockerManager';
 import ModelXPositionPatternManager from './ModelXPositionPatternManager';
-import settings from '../../../settings/settings';
 import LevelGround from './LevelGround';
 import LevelTunnel from './LevelTunnel';
 import Sign from '/assets/models/Sign/Sign';
@@ -265,7 +264,7 @@ export default class ASLevel extends Level {
     _levelMovementStart()
     {
         this.levelMoving = true;
-        this.kernel.loadedModels[settings.playerModelIndex].canBeControlled = true;
+        this.kernel.loadedModels[this.kernel.settings.playerModelIndex].canBeControlled = true;
     }
 	
 	levelStop()

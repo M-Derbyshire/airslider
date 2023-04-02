@@ -7,7 +7,8 @@ import UnitHelper from '/Kernel/helpers/UnitHelper';
 import ZCalc from '/Kernel/helpers/zCalc';
 import Camera from '/engines/GraphicEn/Camera';
 import FrameManager from '/engines/GraphicEn/FrameManager';
-import settings from '/settings/settings';
+import devSettings from '/settings/settings.development';
+import prodSettings from '/settings/settings.production';
 import fonts from '/assets/fonts/fonts';
 
 // This class provides a Singleton instance
@@ -34,6 +35,8 @@ export default class Kernel {
         }
         Kernel._instance = this;
         
+        const settings = (process.env.ENV === "development") ? devSettings : prodSettings;
+        this._settings = settings;
         
         this._isOnMobile = !!settings.isOnMobile; //is this a mobile app (such as through Cordova)?
         
@@ -72,6 +75,8 @@ export default class Kernel {
     }
     
     //getters and setters ----------------------------------------------------------------------
+    get settings(){return this._settings;}
+    
     get isOnMobile(){return this._isOnMobile;}
     
     get fps(){return this._fps;}
@@ -124,15 +129,15 @@ export default class Kernel {
         
         Object.keys(fonts).forEach(key => this.loadFont(key, fonts[key]));
         
-        this.loadLevel(new settings.initialLevelClass(...settings.initialLevelConstructorParameters));
+        this.loadLevel(new this.settings.initialLevelClass(...this.settings.initialLevelConstructorParameters));
     }
     
     loadLevel(level)
     {
 		this._initialiseControls();
         
-		const aspectRatioHorizontal = (!isNaN(settings.aspectRatioHorizontal)) ? settings.aspectRatioHorizontal : 17;
-		const aspectRatioVertical = (!isNaN(settings.aspectRatioVertical)) ? settings.aspectRatioVertical : 9;
+		const aspectRatioHorizontal = (!isNaN(this.settings.aspectRatioHorizontal)) ? this.settings.aspectRatioHorizontal : 17;
+		const aspectRatioVertical = (!isNaN(this.settings.aspectRatioVertical)) ? this.settings.aspectRatioVertical : 9;
 		const camera = new Camera(this.gameCanvas, this.gameContext, aspectRatioHorizontal, aspectRatioVertical);
 		const frameManager = new FrameManager(camera);
 		

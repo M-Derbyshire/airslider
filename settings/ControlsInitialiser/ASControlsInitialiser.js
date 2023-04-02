@@ -1,5 +1,4 @@
 import ControlsInitialiser from '/settings/ControlsInitialiser/ControlsInitialiser';
-import settings from '/settings/settings';
 
 export default class ASControlsInitialiser extends ControlsInitialiser
 {
@@ -8,17 +7,19 @@ export default class ASControlsInitialiser extends ControlsInitialiser
 		super(ControlsInitialiser);
 		
 		this.currentMove;
-		this.playerModelIndex = (!isNaN(settings.playerModelIndex)) ? settings.playerModelIndex : 0;
+		this.playerModelIndex = (!isNaN(this.kernel.settings.playerModelIndex)) ? this.kernel.settings.playerModelIndex : 0;
 		
 		this._initialisingFunctions = [
 			this.keyboardControls.bind(this),
 			this.touchControls.bind(this)
 		];
+        
+        this._settings = this.kernel.settings;
 	}
 	
     keyboardControls() //This is for keyboard controls, for playing in browser
     {
-        if(!settings.isOnMobile)
+        if(!this._settings.isOnMobile)
         {
             const keyDownListener = (e) => {
                 const playerModel = this.kernel.loadedModels[this.playerModelIndex];
