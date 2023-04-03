@@ -35,7 +35,7 @@ export default class Kernel {
         }
         Kernel._instance = this;
         
-        const settings = (process.env.ENV === "development") ? devSettings : prodSettings;
+        const settings = (process.env.GAME_ENV === "development") ? devSettings : prodSettings;
         this._settings = settings;
         
         this._isOnMobile = !!settings.isOnMobile; //is this a mobile app (such as through Cordova)?
