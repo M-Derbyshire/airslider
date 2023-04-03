@@ -28,7 +28,7 @@ export default class Model {
         this._drawBoundaryBoxes = false; // If we set this to true, we'll draw the boxes from this.getBoundaryBoxes()
         
         this._text = {
-            text: "",
+            content: "",
             x: 0, // relative to model x
             y: 0, // relative to model y
             size: 30, // in pixels
@@ -98,7 +98,7 @@ export default class Model {
     {
         this.animationManager.drawNextFrame();
         
-        if(this._text.text)
+        if(this._text.content)
             this.animationManager.drawText();
         
         if(this._drawBoundaryBoxes)

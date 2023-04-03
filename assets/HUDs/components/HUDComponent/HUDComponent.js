@@ -21,7 +21,7 @@ export default class HUDComponent
         this._assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
         
         this.text = {
-            text: "",
+            content: "",
             x: 0, // relative to level
             y: 0, // relative to level
             size: 30, // in pixels
@@ -55,7 +55,7 @@ export default class HUDComponent
         this._ctx.font = `${this.text.style} ${drawSize}px ${this.text.font}`;
         this._ctx.fillStyle = this.text.color;
         
-        this._ctx.fillText(this.text.text, drawX + cameraX, drawY + cameraY);
+        this._ctx.fillText(this.text.content, drawX + cameraX, drawY + cameraY);
     }
     
     //meant to be overriden

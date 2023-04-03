@@ -91,7 +91,7 @@ export default class ModelAnimationsManager {
         this._canvasCtx.font = `${text.style} ${calcPositions.height}px ${text.font}`;
         this._canvasCtx.fillStyle = text.color;
         
-        this._canvasCtx.fillText(text.text, calcPositions.x, calcPositions.y);
+        this._canvasCtx.fillText(text.content, calcPositions.x, calcPositions.y);
     }
     
     drawBoundaryBoxes()
