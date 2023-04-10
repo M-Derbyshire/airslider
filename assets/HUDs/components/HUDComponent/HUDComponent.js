@@ -1,25 +1,52 @@
 import Kernel from '/Kernel/kernel';
 
+/**
+ * A component of the Heads Up Display
+ */
 export default class HUDComponent
 {
+    /**
+     * Constructor
+     */
     constructor()
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
+         
+        this.ctx; //The canvas context
+        this.camera;
         
-        //Set in load(). 
-        this._ctx; //The canvas context
-        this._camera;
+        this.assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
 		
+        
+        /**
+         * The x coordinate of this component
+         */
 		this.x;
+        
+        /**
+         * The y coordinate of this component
+         */
         this.y;
+        
+        /**
+         * The width of this component
+         */
         this.width;
+        
+        /**
+         * The height of this component
+         */
         this.height;
         
+        /**
+         * Is this component active?
+         */
         this.active = true;
         
-        this._assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
-        
+        /**
+         * Details for displaying an entity's text content
+         */
         this.text = {
             content: "",
             x: 0, // relative to level
@@ -27,41 +54,63 @@ export default class HUDComponent
             size: 30, // in pixels
             font: "Arial",
             color: "red",
-            style: "bolder", // canvas font-style, font-variant and font-weight
+            style: "bolder", // See the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
         };
     }
     
+    /**
+     * Loads the component
+     * @param canvasCtx the 2D context from the HTML canvas element
+     * @param camera the game's camera
+     */
     load(canvasCtx, camera)
     {
-        this._ctx = canvasCtx;
-        this._camera = camera;
+        this.ctx = canvasCtx;
+        this.camera = camera;
     }
     
-    //If implementing your own unload in a child class, be sure to call this with super.unload()
+    /**
+     * Unloads any assets that need to be unloaded by the component
+     */
     unload()
     {
-        this._assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
+        this.assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
     }
     
+    /**
+     * Draws the text content setup within this component
+     */
     drawText()
     {
         const drawX = this.helpers.unit.xUnit(this.text.x);
         const drawY = this.helpers.unit.yUnit(this.text.y);
         const drawSize = this.helpers.unit.yUnit(this.text.size);
         
-        const cameraX = this._camera.canvasPositionX;
-        const cameraY = this._camera.canvasPositionY;
+        const cameraX = this.camera.canvasPositionX;
+        const cameraY = this.camera.canvasPositionY;
         
-        this._ctx.font = `${this.text.style} ${drawSize}px ${this.text.font}`;
-        this._ctx.fillStyle = this.text.color;
+        this.ctx.font = `${this.text.style} ${drawSize}px ${this.text.font}`;
+        this.ctx.fillStyle = this.text.color;
         
-        this._ctx.fillText(this.text.content, drawX + cameraX, drawY + cameraY);
+        this.ctx.fillText(this.text.content, drawX + cameraX, drawY + cameraY);
     }
     
-    //meant to be overriden
+    /**
+     * Draws the component
+     */
     draw(){}
+    
+    /**
+     * Prepares the component before the level starts
+     */
     prepare(){}
 	
+    /**
+     * Is the mouse pointer overlapping this component?
+     * @param pointX the x position (within the canvas's space) of the mouse pointer 
+     * @param pointY the y position (within the canvas's space) of the mouse pointer
+     * @returns true if it is overlapping, false if not
+     */
 	isPointerOverlapping(pointX, pointY)
 	{
 		const xUnit = this.helpers.unit.xUnit.bind(this.helpers.unit);

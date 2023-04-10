@@ -33,17 +33,17 @@ export default class DamageFlash extends ASHUDComponent
                 this._stopFlash();
             }
             
-            this._ctx.globalAlpha = this.opacity;
+            this.ctx.globalAlpha = this.opacity;
         
-            this._ctx.drawImage(
+            this.ctx.drawImage(
                 this.images[this.color],
-                this._camera.canvasPositionX,
-                this._camera.canvasPositionY,
-                this._camera.canvasPositionWidth,
-                this._camera.canvasPositionHeight
+                this.camera.canvasPositionX,
+                this.camera.canvasPositionY,
+                this.camera.canvasPositionWidth,
+                this.camera.canvasPositionHeight
             );
             
-            this._ctx.globalAlpha = 1;
+            this.ctx.globalAlpha = 1;
         }
     }
 	

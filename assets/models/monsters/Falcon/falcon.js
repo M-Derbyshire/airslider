@@ -18,7 +18,7 @@ export default class Falcon extends Monster {
     {
         super.load();
         
-        this._assetsToUnload.push("/assets/models/monsters/Falcon/anim/falcon-spritesheet.png");
+        this.assetsToUnload.push("/assets/models/monsters/Falcon/anim/falcon-spritesheet.png");
         
         this.animationManager.registerAnimations({
             dropLeft: this.animationManager.createAnimation({

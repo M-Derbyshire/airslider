@@ -1,10 +1,18 @@
 import Kernel from '/Kernel/kernel';
 
+/**
+ * Manages the event monitoring for a level
+ */
 export default class EventManager
 {
+    /**
+     * Constructor
+     * @param eventCheckContainer An instance of the EventCheckContainer (which contains custom methods that will check for events)
+     * @param modelExtraEventManager Manages any extra events associated with the level's models
+     */
     constructor(eventCheckContainer, modelExtraEventManager)
     {
-        this.kernel = Kernel.getInstance();
+        this._kernel = Kernel.getInstance();
         
         this._eventCheckContainer = eventCheckContainer;
         this._modelExtraEventManager = modelExtraEventManager;
@@ -12,34 +20,41 @@ export default class EventManager
         //This will be an array of objects. Each object has these attributes:
         // eventCheckMethodName; class1Models; class1EventActionName;
         // class2Models; class2EventActionName.
-        this._events = [];
+        this._events:IEvent[] = [];
     }
     
-    registerEvent(eventCheckMethodName, class1, class1EventActionName, class2, class2EventActionName)
+    /**
+     * Registers a new event check. All models that are instances of the 2 given classes will be collected. When the 
+     * event check is ran, each model of the first class will be checked against each model of the second class, to see 
+     * if the event has occurred between them.
+     * @param event The details of an event to be registered
+     */
+    registerEvent(event:IEventDetails)
     {
         const class1Models = [];
         const class2Models = [];
         
         //LoadedModels is a collection, so can't use foreach
-        for(let i = 0; i < this.kernel.loadedModels.length; i++)
+        for(let i = 0; i < this._kernel.loadedModels.length; i++)
         {
-            if(this.kernel.loadedModels[i] instanceof class1) class1Models.push(this.kernel.loadedModels[i]);
-            if(this.kernel.loadedModels[i] instanceof class2) class2Models.push(this.kernel.loadedModels[i]);
+            if(this._kernel.loadedModels[i] instanceof event.class1) class1Models.push(this._kernel.loadedModels[i]);
+            if(this._kernel.loadedModels[i] instanceof event.class2) class2Models.push(this._kernel.loadedModels[i]);
         }
         
         this._events.push({ 
-            eventCheckMethodName, 
+            eventCheckMethodName: event.eventCheckMethodName, 
             class1Models, 
-            class1EventActionName, 
+            class1EventActionName: event.class1EventActionName, 
             class2Models, 
-            class2EventActionName 
+            class2EventActionName: event.class2EventActionName 
         });
     }
     
-    //The events parameter will be an array of event objects, that each contain the parameters required
-    //by the registerEvent method. The object property names are: "eventCheckMethodName", "class1", 
-    //"class1EventActionName", "class2", and "class2EventActionName".
-    registerEventsArray(events)
+    /**
+     * Registers multiple event checks. See registerEvent method for more details
+     * @param events The details of the events to be registered
+     */
+    registerEventsArray(events:IEventDetails[])
     {
         events.forEach(e => {
             this.registerEvent(e.eventCheckMethodName, e.class1, e.class1EventActionName, e.class2,
@@ -47,6 +62,9 @@ export default class EventManager
         });
     }
     
+    /**
+     * Runs the event checks, along with any extra events associated with the level's models
+     */
     checkForEvents()
     {
         //For each event, go through the models for class1, and then
@@ -69,10 +87,13 @@ export default class EventManager
             });
         });
         
-        this.checkForExtraModelEvents();
+        this._checkForExtraModelEvents();
     }
     
-    checkForExtraModelEvents()
+    /**
+     * Runs any extra events associated with the level's models
+     */
+    _checkForExtraModelEvents()
     {
         this._modelExtraEventManager.checkForEvents();
     }

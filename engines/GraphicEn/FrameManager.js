@@ -1,8 +1,15 @@
 import Kernel from '/Kernel/kernel';
 
+/**
+ * Manages the frames of a level
+ */
 export default class FrameManager {
     
-    constructor(camera)
+    /**
+     * Constructor
+     * @param camera The game's camera
+     */
+    constructor(camera:ICamera)
     {
         this.kernel = Kernel.getInstance();
         
@@ -12,24 +19,30 @@ export default class FrameManager {
     }
     
     
-    
-    addFrame(frame) //This returns the index number of this frame
+    /**
+     * Adds a frame to the level
+     * @param frame The frame to add
+     * @returns The index of the frame, in the manager's internal array
+     */
+    addFrame(frame)
     {
         return this._frames.push(frame) - 1;
     }
     
-    removeFrame(index)
-    {
-        this._frames.splice(index, 1);
-    }
-    
+    /**
+     * Gets a frame from the manager's internal array
+     * @param index The index of the frame, in the manager's internal array
+     * @returns The requested frame
+     */
     getFrameByIndex(index)
     {
         return this._frames[index];
     }
     
-    
-    
+    /**
+     * Determines which frames should be drawn, and stores that info in the manager's internal 
+     * state
+     */
     determineFramesToDraw()
     {
         this._framesToBeDrawn = this._frames.filter((frame) => {
@@ -37,6 +50,9 @@ export default class FrameManager {
         });
     }
     
+    /**
+     * Draws the background-related elements of all of the frames that need to be drawn
+     */
     drawFramesBack()
     {
         this._framesToBeDrawn.forEach((frame) => {
@@ -47,6 +63,9 @@ export default class FrameManager {
         });
     }
     
+    /**
+     * Draws the foreground-related elements of all of the frames that need to be drawn
+     */
     drawFramesFront()
     {
         this._framesToBeDrawn.forEach((frame) => {

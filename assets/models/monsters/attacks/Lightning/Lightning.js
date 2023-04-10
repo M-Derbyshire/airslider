@@ -20,7 +20,7 @@ export default class Lightning extends ASModel {
         
         const spritesheetPath = "/assets/models/monsters/attacks/Lightning/anim/lightning-spritesheet.png";
         
-        this._assetsToUnload.push(spritesheetPath);
+        this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
             shock: this.animationManager.createAnimation({

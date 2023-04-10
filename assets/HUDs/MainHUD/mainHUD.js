@@ -24,6 +24,7 @@ export default class MainHUD extends ASHUD
         this.components.push(this._lowHealthFlash);
         this.components.push(new HealthBar(100, 50, 800, 60, 0)); //0 will always be the player's index
         
+        // move this to parent load()?
         this.loadComponents(canvasCtx, camera);
     }
     

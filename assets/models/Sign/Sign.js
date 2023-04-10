@@ -6,7 +6,7 @@ export default class Sign extends ASModel
     {
         super(ASModel);
         
-        this._text = {
+        this.text = {
             content: displayText,
             x: 460,
             y: 145,

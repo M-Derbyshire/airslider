@@ -17,7 +17,7 @@ export default class ElectricHornet extends Monster {
         super.load();
         
         const spritesheetPath = "/assets/models/monsters/ElectricHornet/anim/electricHornet_spritesheet.png";
-        this._assetsToUnload.push(spritesheetPath);
+        this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
             flapping: this.animationManager.createAnimation({

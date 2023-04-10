@@ -27,7 +27,7 @@ export default class BabyDragon extends Monster {
         super.load();
         
         const spritesheetPath = "/assets/models/monsters/BabyDragon/anim/babyDragon-spritesheet.png";
-        this._assetsToUnload.push(spritesheetPath);
+        this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
             left: this.animationManager.createAnimation({

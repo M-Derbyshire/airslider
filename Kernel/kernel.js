@@ -4,18 +4,24 @@ import GraphicEn from '/engines/GraphicEn/GraphicEn';
 import SoundEn from '/engines/SoundEn/SoundEn';
 import TimeHelper from '/Kernel/helpers/TimeHelper';
 import UnitHelper from '/Kernel/helpers/UnitHelper';
-import ZCalc from '/Kernel/helpers/zCalc';
+import ZCalc from '/Kernel/helpers/ZCalc';
 import Camera from '/engines/GraphicEn/Camera';
 import FrameManager from '/engines/GraphicEn/FrameManager';
 import devSettings from '/settings/settings.development';
 import prodSettings from '/settings/settings.production';
 import fonts from '/assets/fonts/fonts';
 
-// This class provides a Singleton instance
-// So, other than the first time, you should use Kernel.getInstance()
+/**
+ * Controls the entire game (this will be a singleton)
+ */
 export default class Kernel {
     
     static _instance = null; //The single instance of Kernel
+    
+    /**
+     * Returns the singleton instance of the kernel
+     * @returns The singleton instance of the kernel
+     */
     static getInstance()
     {
         //The Kernel constructor will return the single instance
@@ -27,6 +33,10 @@ export default class Kernel {
         return new Kernel();
     }
     
+    /**
+     * Constructor
+     * @returns The singleton instance of the kernel
+     */
     constructor()
     {
         if(Kernel._instance !== null)
@@ -36,7 +46,7 @@ export default class Kernel {
         Kernel._instance = this;
         
         const settings = (process.env.GAME_ENV === "development") ? devSettings : prodSettings;
-        this._settings = settings;
+        this._settings:ISettings = settings;
         
         this._isOnMobile = !!settings.isOnMobile; //is this a mobile app (such as through Cordova)?
         
@@ -44,9 +54,6 @@ export default class Kernel {
         this._highestFpsReached = 0;
         this._fpsLimit = (!isNaN(settings.fpsLimit)) ? settings.fpsLimit : 70;
         this._lastTime = new Date(); //used when calculating fps and enforcing fps limit
-        
-		//how many drawSpace x/y units are there within the camera's size
-        this.unitsWithinCamera = (!isNaN(settings.unitsWithinCamera)) ? settings.unitsWithinCamera : 1000;
         
         this._totalLevelActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
         this._active = true;
@@ -56,69 +63,146 @@ export default class Kernel {
         
         this._assetHandler = new AssetHandler(this._rootPath);
         
-        this._levelQueue = []; // [{ level: Level, hasBeenPrepared: boolean, loadedModels: Model[], preparedEngines: { gameEn:GameEn, graphicEn:GraphicEn, soundEn:SoundEn } }]
-        this._gameEn;
-        this._graphicEn;
-        this._soundEn;
+        this._levelQueue:ILoadedLevel[] = [];
         
-        this._helpers;
+        this._helpers:IHelpers;
 		
 		this._gameCanvasElementID = settings.gameCanvasElementID;
 		this._gameCanvas = document.getElementById(this.gameCanvasElementID);
 		this._gameContext = this.gameCanvas.getContext("2d");
         this._correctCanvasStyleAndDevicePixelRatio = settings.correctCanvasStyleAndDevicePixelRatio;
         
+        this._controlInitialiser = new settings.controlsInitialiserClass();
+        
+        /**
+         * Should the current FPS counter be displayed on the canvas?
+         */
         this.displayFps = settings.displayFps;
+        
+        /**
+         * If we're displaying the FPS counter, what color should the text be?
+         */
         this.fpsDisplayColor = settings.fpsDisplayColor;
         
-        this._controlInitialiser = new settings.controlsInitialiserClass();
+        /**
+         * How many drawSpace x/y units are there within the camera's size?
+         */
+        this.unitsWithinCamera = (!isNaN(settings.unitsWithinCamera)) ? settings.unitsWithinCamera : 1000;
     }
     
     //getters and setters ----------------------------------------------------------------------
+    
+    /**
+     * Is the level currently active (e.g. not paused)?
+     */
+    get active(){return this._active;}
+    
+    /**
+     * The different settings for the game
+     */
     get settings(){return this._settings;}
     
+    /**
+     * Is this a mobile app (such as through Cordova)?
+     */
     get isOnMobile(){return this._isOnMobile;}
     
+    /**
+     * The current Frames Per Second of the game
+     */
     get fps(){return this._fps;}
     
+    /**
+     * The maximum FPS that the game should be allowed to run at
+     */
     get fpsLimit(){return this._fpsLimit;}
     
+    /**
+     * The total milliseconds that the level has not been paused or stopped for any reason
+     */
     get totalLevelActiveMilliseconds(){return this._totalLevelActiveMilliseconds;}
     
-    get active(){return this._active;}
-    set active(newVal){this._active = newVal;}
-    
+    /**
+     * The root directory/path, added to the beginning of all asset file paths
+     */
     get rootPath(){return this._rootPath;}
     
+    /**
+     * Provides a number of "helper" objects, that each calculate and/or provide useful values
+     */
     get helpers() {return this._helpers;}
     
+    /**
+     * The current level that is being ran
+     */
     get level(){return (this._levelQueue.length > 0) ? this._levelQueue[0].level : undefined;}
     
+    /**
+     * The models loaded by the current level
+     */
     get loadedModels(){return (this._levelQueue.length > 0) ? this._levelQueue[0].loadedModels : [];}
-    set loadedModels(newVal){if(this._levelQueue.length > 0) this._levelQueue[0].loadedModels = newVal;}
     
+    /**
+     * Has the current level been prepared? (using the Level.prepare method)
+     */
     get levelHasBeenPrepared(){return (this._levelQueue.length > 0) ? this._levelQueue[0].hasBeenPrepared : undefined}
-    set levelHasBeenPrepared(newVal){if(this._levelQueue.length > 0) this._levelQueue[0].hasBeenPrepared = newVal;}
     
+    /**
+     * The loaded image/audio assets
+     */
     get loadedAssets(){return this._assetHandler.loadedAssets;}
+    
+    /**
+     * Loads and handles assets
+     */
     get assetHandler(){return this._assetHandler;}
+    
+    /**
+     * How many assets are still loading?
+     */
     get assetsStillLoading(){return this.assetHandler._assetsStillLoading;}
     
-    get gameEn(){return this._gameEn;}
+    /**
+     * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
+     */
+    get gameEn(){return this._levelQueue[0].preparedEngines.gameEn;}
     
-    get graphicEn(){return this._graphicEn;}
+    /**
+     * The engine that controls the drawing to the screen
+     */
+    get graphicEn(){return this._levelQueue[0].preparedEngines.graphicEn;}
     
-    get soundEn(){return this._soundEn;}
-    
-    get menuEn(){return this._menuEn;}
+    /**
+     * The engine that controls the sound/music of the game
+     */
+    get soundEn(){return this._levelQueue[0].preparedEngines.soundEn;}
 	
+    /**
+     * The ID of the HTML canvas element
+     */
 	get gameCanvasElementID(){return this._gameCanvasElementID;}
+    
+    /**
+     * The canvas element that the game should be drawn on
+     */
 	get gameCanvas(){return this._gameCanvas;}
+    
+    /**
+     * The 2D context from the HTML canvas element
+     */
 	get gameContext(){return this._gameContext;}
+    
+    /**
+     * Should the canvas's styling width/height be corrected, based on the Device Pixel Ratio?
+     */
     get correctCanvasStyleAndDevicePixelRatio(){return this._correctCanvasStyleAndDevicePixelRatio;}
     
     
     // loading/unloading methods --------------------------------------------------------------------------
+    
+    /**
+     * Loads the elements needed for the kernel, and the initial level
+     */
     load()
     {
         this._helpers = {
@@ -129,10 +213,14 @@ export default class Kernel {
         
         Object.keys(fonts).forEach(key => this.loadFont(key, fonts[key]));
         
-        this.loadLevel(new this.settings.initialLevelClass(...this.settings.initialLevelConstructorParameters));
+        this._loadLevel(new this.settings.initialLevelClass(...this.settings.initialLevelConstructorParameters));
     }
     
-    loadLevel(level)
+    /**
+     * Loads the given level, and adds it to the kernel's internal level queue
+     * @param level the level to load
+     */
+    _loadLevel(level)
     {
 		this._initialiseControls();
         
@@ -154,9 +242,11 @@ export default class Kernel {
         
         //hasBeenPrepared should be set to true if the level (and it's models) have had the prepare() method called
         this._levelQueue.push({ level, hasBeenPrepared: false, loadedModels, preparedEngines });
-        
     }
     
+    /**
+     * Unloads the current level, releasing any assets that need releasing
+     */
     unloadCurrentLevel()
     {
         this.loadedModels.forEach(model => model.unload());
@@ -165,8 +255,13 @@ export default class Kernel {
         this._controlInitialiser.unregisterEventListeners();
         this._levelQueue.shift();
     }
-	
-	_loadModels(models, engines)
+    
+    /**
+     * Loads the given models
+     * @param models the models to be loaded
+     * @param engines the engines used by the level that provided these models
+     */
+    _loadModels(models, engines)
 	{
         models.forEach((model, idx) => {
             model.loadedIndex = idx;
@@ -175,16 +270,23 @@ export default class Kernel {
         });
 	}
     
-    prepareCurrentLevelAndModels()
+    /**
+     * Triggers the preparation of the level, and all models
+     */
+    _prepareCurrentLevelAndModels()
     {
         this.level.prepare();
         this.loadedModels.forEach(model => model.prepare());
         
-        this.levelHasBeenPrepared = true;
+        this._levelQueue[0].hasBeenPrepared = true;
     }
     
-    
-	// Returns new instances of all engines
+	/**
+     * Returns a new instances of all engines
+     * @param camera The level's camera
+     * @param frameManager Manages the frames of a level
+     * @returns The new instances of all engines
+     */
 	_initialiseAllEngines(camera, frameManager)
 	{
 		const gameEn = new GameEn();
@@ -194,38 +296,55 @@ export default class Kernel {
         return { gameEn, graphicEn, soundEn };
 	}
     
-    replaceEngines()
-    {
-        this._gameEn = this._levelQueue[0].preparedEngines.gameEn;
-        this._graphicEn = this._levelQueue[0].preparedEngines.graphicEn;
-        this._soundEn = this._levelQueue[0].preparedEngines.soundEn;
-    }
-    
-	
+    /**
+     * Triggers the initialisation of the game's controls
+     */
 	_initialiseControls()
 	{
 		this._controlInitialiser.initialiseControls();
 	}
     
     // Asset management
+    
+    /**
+     * Loads an image (if not already loaded) with the asset handler
+     * @param path the file path to the image
+     * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
+     * @returns the image object
+     */
     loadImage(path, callback = this._assetHandler.getDefaultAssetCallback())
     {
         return this._assetHandler.loadAsset(new Image, path, callback);
     }
     
+    /**
+     * Loads an audio file (if not already loaded) with the asset handler
+     * @param path the file path to the audio file
+     * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
+     * @returns the audio object
+     */
     loadAudio(path, callback = this._assetHandler.getDefaultAssetCallback())
     {
         return this._assetHandler.loadAsset(new Audio, path, callback);
     }
     
+    /**
+     * Starts the loading of a font file into the HTML document
+     * @param name the name of the font
+     * @param path the path to the font file
+     * @param callback a callback function, to run when the font has finished loading (this function should still call the asset handler's default asset callback)
+     */
     loadFont(name, path, callback = this._assetHandler.getDefaultAssetCallback())
     {
-        return this._assetHandler.loadFont(name, path, callback);
+        this._assetHandler.loadFont(name, path, callback);
     }
     
-    // Finds the loaded asset with the given file path, and reduces the usage count against it.
-    // The asset should stay loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it.
-    // (fonts cannot be unloaded)
+    /**
+     * Finds the loaded asset with the given file path, and reduces the usage count against it. The asset should stay 
+     * loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it. (fonts 
+     * cannot be unloaded)
+     * @param path the file path of the asset
+     */
     releaseAsset(path)
     {
         this._assetHandler.releaseAsset(path);
@@ -233,6 +352,10 @@ export default class Kernel {
     
     
     //running the game ---------------------------------------------------------------
+    
+    /**
+     * Runs the game
+     */
     run()
     {
         requestAnimationFrame(this.run.bind(this));
@@ -246,24 +369,42 @@ export default class Kernel {
         
         if(!this.levelHasBeenPrepared)
         {
-            this.replaceEngines();
-            this.prepareCurrentLevelAndModels();
+            this._prepareCurrentLevelAndModels();
         }
         
-        this._fps = this.getNewFps(dt);
+        this._fps = this._getNewFps(dt);
         
-        this.updateTotalTime(dt);
+        this._updateTotalTime(dt);
         this._lastTime = dt;
         
         if(this.active)
         {
-            this._gameEn.run();
-            this._graphicEn.run();
-            this._soundEn.run();
+            this.gameEn.run();
+            this.graphicEn.run();
         }
     }
     
-    getNewFps(currentDateTime)
+    /**
+     * Paues/unpauses the game
+     */
+    toggleGamePause()
+    {
+        if(this._active)
+        {
+            this._soundEn.pauseMusic();
+        } else {
+            this._soundEn.playMusic();
+        }
+        
+        this._active = !this._active;
+    }
+    
+    /**
+     * Calculates an estimate of the game's current FPS
+     * @param currentDateTime The current date/time
+     * @returns the current (estimated) FPS
+     */
+    _getNewFps(currentDateTime)
     {
         //If the browser window/tab is not open, requestAnimationFrame can pause.
         //However, this can cause unexpected behaviour because the frame rate will drop for one 
@@ -278,19 +419,11 @@ export default class Kernel {
         return (currentFps < (this._highestFpsReached - 10)) ? this._highestFpsReached : currentFps;
     }
     
-    toggleGamePause()
-    {
-        if(this._active)
-        {
-            this._soundEn.pauseMusic();
-        } else {
-            this._soundEn.playMusic();
-        }
-        
-        this._active = !this._active;
-    }
-    
-    updateTotalTime(currentDateTime)
+    /**
+     * Updates the kernel's internal count of the total time the current level has been active
+     * @param currentDateTime The current date/time
+     */
+    _updateTotalTime(currentDateTime)
     {
         let timePassed = Math.floor(currentDateTime.getMilliseconds()) - Math.floor(this._lastTime.getMilliseconds());
         
@@ -301,6 +434,10 @@ export default class Kernel {
     }
     
     // Initiating the game -----------------------------------------------------------------
+    
+    /**
+     * Loads the kernel, and starts the game running
+     */
     initiate()
     {
         this.load();

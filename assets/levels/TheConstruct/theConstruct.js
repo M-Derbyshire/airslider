@@ -67,7 +67,7 @@ export default class TheConstruct extends ASLevel
     {
         super.load(canvas, canvasCtx, camera, frameManager);
         
-        this._frameManager = frameManager;
+        this.frameManager = frameManager;
         
         this._tunnelSprite = this.kernel.loadImage("/assets/levels/TheConstruct/images/theConstructTunnel.png");
         this._tunnelSpriteLength = 60;
@@ -98,7 +98,7 @@ export default class TheConstruct extends ASLevel
             0.25
         );
         
-        this._assetsToUnload.push(
+        this.assetsToUnload.push(
             "/assets/levels/TheConstruct/images/theConstructTunnel.png",
             "/assets/levels/TheConstruct/images/testBackground.png",
             "/assets/levels/TheConstruct/images/testBackgroundMask.png",
@@ -107,7 +107,7 @@ export default class TheConstruct extends ASLevel
         );
         
         
-        this.frameIndex = this._frameManager.addFrame(frame);
+        this.frameIndex = this.frameManager.addFrame(frame);
         
         
         this.outsideVisible = true;

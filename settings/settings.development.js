@@ -16,4 +16,4 @@ export default {
 	controlsInitialiserClass: ASControlsInitialiser,
 	initialLevelClass: TheConstruct,
 	initialLevelConstructorParameters: []
-};
+} as ISettings;

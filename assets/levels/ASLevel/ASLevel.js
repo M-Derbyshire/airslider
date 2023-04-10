@@ -1,4 +1,5 @@
 import Level from '/assets/levels/Level/Level';
+import MainHUD from '/assets/HUDs/MainHUD/MainHUD';
 import LevelRoad from './LevelRoad';
 import ShockerManager from './ShockerManager';
 import ModelXPositionPatternManager from './ModelXPositionPatternManager';
@@ -21,6 +22,8 @@ export default class ASLevel extends Level {
 	constructor()
 	{
 		super(Level);
+        
+        this._HUD = new MainHUD();
 		
 		this.road = new LevelRoad();
         this.roadColor = "#999999";
@@ -139,7 +142,7 @@ export default class ASLevel extends Level {
 	
 	
 	
-	_registerLevelEvents()
+	registerLevelEvents()
 	{
 		//These are the events that are valid across all levels
         this._eventManager.registerEventsArray([
@@ -250,11 +253,11 @@ export default class ASLevel extends Level {
             this.tunnelManager.tunnel[this.tunnelManager.tunnel.length - 2].image
         )
         {
-            this._frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
+            this.frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
                 this.tunnelLightMaskIndex
             );
         } else {
-            this._frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
+            this.frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
                 this.outsideLightMaskIndex
             );
         }

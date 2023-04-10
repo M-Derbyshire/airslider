@@ -1,31 +1,55 @@
 import Kernel from '/Kernel/kernel';
 
+/**
+ * Contains methods that provide information related to time
+ */
 export default class TimeHelper
 {
+    /**
+     * Constructor
+     */
     constructor()
     {
-        this.kernel = Kernel.getInstance();
+        this._kernel = Kernel.getInstance();
     }
     
-    //these will only be estimates, as they are based on a dynamic fps (nevertheless, they have their uses)
+    /**
+     * Calculates the amount of frames that will be rendered during a given amount of seconds (as this 
+     * is based on a dynamic FPS, the returned value can only be considered an estimate).
+     * @param seconds the amount of seconds
+     * @returns the estimated amount of frames that will have been rendered during the given number of seconds
+     */
     secondsToFrames(seconds)
     {
-        return Math.floor(seconds * this.kernel.fps);
+        return Math.floor(seconds * this._kernel.fps);
     }
 
+    /**
+     * Calculates the amount of frames that will be rendered during a given amount of minutes (as this 
+     * is based on a dynamic FPS, the returned value can only be considered an estimate).
+     * @param minutes the amount of minutes
+     * @returns the estimated amount of frames that will have been rendered during the given number of minutes
+     */
     minutesToFrames(minutes)
     {
         return secondsToFrames(minutes) * 60;
     }
 
-    //these are more accurate
+    /**
+     * Gets the total amount of seconds that the level has been active for
+     * @returns the amount of seconds that the level has been active for
+     */
     getTotalSeconds()
     {
-        return this.kernel.totalLevelActiveMilliseconds / 1000;
+        return this.getTotalMilliseconds() / 1000;
     }
 
+    /**
+     * Gets the total amount of milliseconds that the level has been active for
+     * @returns the amount of milliseconds that the level has been active for
+     */
     getTotalMilliseconds()
     {
-        return this.kernel.totalLevelActiveMilliseconds;
+        return this._kernel.totalLevelActiveMilliseconds;
     }
 }

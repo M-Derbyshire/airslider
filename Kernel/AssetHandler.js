@@ -1,39 +1,63 @@
+/**
+ * Loads and handles assets
+ */
 export default class AssetHandler
 {
+    /**
+     * Constructor
+     * @param rootPath the root directory/path, added to the beginning of all asset file paths
+     */
     constructor(rootPath)
     {
         this._rootPath = rootPath;
         this._assetsStillLoading = 0; //increased when asset starts loading, decrease when done
-        this.loadedAssets = [];
         
         // Start of development asset path
         this._baseUrl = window.location.href.replace("/index.html", "");
+        
+        /**
+         * The loaded image/audio assets
+         */
+        this.loadedAssets:(HTMLImageElement|HTMLAudioElement)[] = [];
     }
     
+    /**
+     * How many assets are still loading?
+     */
     get assetsStillLoading(){return this._assetsStillLoading;}
     set assetsStillLoading(newVal){this._assetsStillLoading = newVal;}
     
-    defaultAssetCallback()
+    /**
+     * Will be called when an asset has finished loading (Needs to be bound to this AssetHandler instance when being used)
+     */
+    _defaultAssetCallback()
     {
-		//Need to bind this when using this on an asset
         this.assetsStillLoading--;
     }
     
+    /**
+     * Returns the asset handler's default callback (that will be called when an asset has finished loading)
+     */
     getDefaultAssetCallback()
     {
-        return this.defaultAssetCallback;
+        return this._defaultAssetCallback;
     }
     
     
     
-    //Loads the asset, or finds it if already loaded, then returns the asset.
-    //Takes the object to store (a new Image or Audio), the source path of the asset,
-    //and a callback to run when the asset has loaded.
+    /**
+     * Starts the loading of an asset into the asset handler, and returns a reference to it. If the asset has already been 
+     * loaded, the reference to it will be returned, and the handler's internal usage count for that asset will be incremented
+     * @param obj an object of the correct asset type (will be used as the asset object)
+     * @param path the path to the asset file
+     * @param callback a function to be called, once the asset has finished loading (see the getDefaultAssetCallback method)
+     * @returns the asset object
+     */
     loadAsset(obj, path, callback)
     {
 		const boundCallback = callback.bind(this);
-        path = this.prepareAssetPath(path);
-        const heldAssetIdx = this.checkAssetHeld(path); //Returns either the index number, or -1
+        path = this._prepareAssetPath(path);
+        const heldAssetIdx = this._checkAssetHeld(path); //Returns either the index number, or -1
         
         
 		if(heldAssetIdx > -1)
@@ -65,12 +89,15 @@ export default class AssetHandler
         return newLoadedAsset.asset;
     }
     
-    // Finds the loaded asset with the given file path, and reduces the usage count against it.
-    // The asset should stay loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it
+    /**
+     * Reduces the usage count against the loaded asset with the given file path.
+     * The asset should stay loaded if there are still entities using it, but if the usage count goes down to 0, it will be removed
+     * @param path the path to the asset file
+     */
     releaseAsset(path)
     {
-        path = this.prepareAssetPath(path);
-        const heldAssetIdx = this.checkAssetHeld(path);
+        path = this._prepareAssetPath(path);
+        const heldAssetIdx = this._checkAssetHeld(path);
         
         if(heldAssetIdx === -1)
         {
@@ -85,13 +112,22 @@ export default class AssetHandler
         }
     }
     
-    prepareAssetPath(path)
+    /**
+     * Makes any required modifications to the asset path, before it is used
+     * @param path the original asset path
+     * @returns the modified asset path
+     */
+    _prepareAssetPath(path)
     {
         return this._rootPath + path;
     }
     
-    //Returns the index of the asset if it has been loaded, or -1 if not
-    checkAssetHeld(path)
+    /**
+     * Checks if an asset is currently held, and returns its index (or -1 if it isn't)
+     * @param path the path to the asset file
+     * @returns the index of the asset if it has been loaded, or -1 if not
+     */
+    _checkAssetHeld(path)
     {
         for(let i = 0; i < this.loadedAssets.length; i++)
         {
@@ -103,6 +139,12 @@ export default class AssetHandler
         return -1;
     }
     
+    /**
+     * Starts the loading of a font file into the HTML document
+     * @param name the name of the font
+     * @param path the path to the font file
+     * @param callback a function to be called, once the font has finished loading (see the getDefaultAssetCallback method)
+     */
     loadFont(name, path, callback)
     {
         const boundCallback = callback.bind(this);

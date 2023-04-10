@@ -1,0 +1,193 @@
+import ILevel from "../assets/levels/Level/ILevel";
+import IModel from "../assets/models/Model/IModel";
+import IGameEn from "../engines/GameEn/IGameEn";
+import IGraphicEn from "../engines/GraphicEn/IGraphicEn";
+import ISoundEn from "../engines/SoundEn/ISoundEn";
+import ISettings from "../settings/ISettings";
+import IHelpers from "./helpers/IHelpers";
+import IAssetHandler from "./IAssetHandler";
+
+/**
+ * Controls the entire game (this will be a singleton)
+ */
+export default interface IKernel {
+    
+    /**
+     * Should the current FPS counter be displayed on the canvas?
+     */
+    displayFps:boolean;
+        
+    /**
+     * If we're displaying the FPS counter, what color should the text be?
+     */
+    fpsDisplayColor:string;
+    
+    /**
+     * How many drawSpace x/y units are there within the camera's size?
+     */
+    unitsWithinCamera:number;
+    
+    /**
+     * Is the level currently active (e.g. not paused)?
+     */
+    readonly active:boolean;
+    
+    /**
+     * The different settings for the game
+     */
+    readonly settings:ISettings;
+    
+    /**
+     * Is this a mobile app (such as through Cordova)?
+     */
+    readonly isOnMobile:boolean;
+    
+    /**
+     * The current Frames Per Second of the game
+     */
+    readonly fps:number;
+    
+    /**
+     * The maximum FPS that the game should be allowed to run at
+     */
+    readonly fpsLimit:number;
+    
+    /**
+     * The total milliseconds that the level has not been paused or stopped for any reason
+     */
+    readonly totalLevelActiveMilliseconds:number;
+    
+    /**
+     * The root directory/path, added to the beginning of all asset file paths
+     */
+    readonly rootPath:string;
+    
+    /**
+     * Provides a number of "helper" objects, that each calculate and/or provide useful values
+     */
+    readonly helpers:IHelpers;
+    
+    /**
+     * The current level that is being ran
+     */
+    readonly level:ILevel;
+    
+    /**
+     * The models loaded by the current level
+     */
+    readonly loadedModels:IModel[];
+    
+    /**
+     * Has the current level been prepared? (using the Level.prepare method)
+     */
+    readonly levelHasBeenPrepared:boolean;
+    
+    /**
+     * The loaded image/audio assets
+     */
+    readonly loadedAssets:(HTMLImageElement|HTMLAudioElement)[];
+    
+    /**
+     * Loads and handles assets
+     */
+    readonly assetHandler:IAssetHandler;
+    
+    /**
+     * How many assets are still loading?
+     */
+    readonly assetsStillLoading:number;
+    
+    /**
+     * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
+     */
+    readonly gameEn:IGameEn;
+    
+    /**
+     * The engine that controls the drawing to the screen
+     */
+    readonly graphicEn:IGraphicEn;
+    
+    /**
+     * The engine that controls the sound/music of the game
+     */
+    readonly soundEn:ISoundEn;
+    
+    /**
+     * The ID of the HTML canvas element
+     */
+    readonly gameCanvasElementID:string;
+    
+    /**
+     * The canvas element that the game should be drawn on
+     */
+    readonly gameCanvas:HTMLCanvasElement;
+    
+    /**
+     * The 2D context from the HTML canvas element
+     */
+    readonly gameContext:CanvasRenderingContext2D;
+    
+    /**
+     * Should the canvas's styling width/height be corrected, based on the Device Pixel Ratio?
+     */
+    readonly correctCanvasStyleAndDevicePixelRatio:boolean;
+    
+    
+    /**
+     * Loads the elements needed for the kernel, and the initial level
+     */
+    load():void;
+    
+    /**
+     * Unloads the current level, releasing any assets that need releasing
+     */
+    unloadCurrentLevel():void;
+    
+    /**
+     * Loads an image (if not already loaded) with the asset handler
+     * @param path the file path to the image
+     * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
+     * @returns the image object
+     */
+    loadImage(path:string, callback?:()=>void):HTMLImageElement;
+    
+    /**
+     * Loads an audio file (if not already loaded) with the asset handler
+     * @param path the file path to the audio file
+     * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
+     * @returns the audio object
+     */
+    loadAudio(path:string, callback?:()=>void):HTMLAudioElement;
+    
+    /**
+     * Starts the loading of a font file into the HTML document
+     * @param name the name of the font
+     * @param path the path to the font file
+     * @param callback a callback function, to run when the font has finished loading (this function should still call the asset handler's default asset callback)
+     */
+    loadFont(name:string, path:string, callback?:()=>void):void;
+    
+    /**
+     * Finds the loaded asset with the given file path, and reduces the usage count against it. The asset should stay 
+     * loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it. (fonts 
+     * cannot be unloaded)
+     * @param path the file path of the asset
+     */
+    releaseAsset(path:string):void;
+    
+    /**
+     * Runs the game
+     */
+    run():void;
+    
+    /**
+     * Paues/unpauses the game
+     */
+    toggleGamePause():void;
+    
+    /**
+     * Loads the kernel, and starts the game running
+     */
+    initiate():void;
+    
+};

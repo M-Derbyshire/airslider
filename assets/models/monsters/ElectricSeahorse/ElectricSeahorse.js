@@ -20,7 +20,7 @@ export default class ElectricSeahorse extends Monster {
         
         const spritesheetPath = "/assets/models/monsters/ElectricSeahorse/anim/electricSeahorse-spritesheet.png";
         
-        this._assetsToUnload.push(spritesheetPath);
+        this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
             move: this.animationManager.createAnimation({

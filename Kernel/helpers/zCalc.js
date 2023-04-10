@@ -1,5 +1,12 @@
+/**
+ * Provides methods to calculate the correct drawing position/dimensions for an element, based on it position on the z axis.
+ * Also provides methods relating to consistent speed (regardless of a changing FPS) on the z axis
+ */
 export default class ZCalc 
 {
+    /**
+     * Constructor
+     */
     constructor()
     {
         //Vanishing point settings
@@ -12,21 +19,34 @@ export default class ZCalc
         //The vanishing point is defined in literal canvas positions,
         //so these functions will be used to calculate the new values
         //on a screen resize.
-        this._calcVPointX = () => {};
-        this._calcVPointY = () => {};
+        this._calcVPointX = () => 0;
+        this._calcVPointY = () => 0;
     }
     
     //-------------------------- getters and setters ----------------------------
     
+	/**
+     * The x position (not in units) of the vanishing point
+     */
     get vPointX(){return this._vPointX;}
-         
+	
+	/**
+     * The y position (not in units) of the vanishing point
+     */
     get vPointY(){return this._vPointY;}
     
+	/**
+     * the "z unit" position of the vanishing point, on the z axis
+     */
     get vPointDepth(){return this._vPointDepth;}
     
-    //Here you can provide the functions that will set the exact canvas position (these 
-	//should be called by the graphic engine if the canvas is resized). Also, you can 
-	//provide how many units you want in depth.
+    /**
+     * Used to set the vanishing point. The x and y positions are provided through callback functions, as they may need to change if 
+     * the canvas element is resized
+     * @param canvasXPosCalcFunction a function that returns the correct x position (not in units) of the vanishing point, on the canvas
+     * @param canvasYPosCalcFunction a function that returns the correct y position (not in units) of the vanishing point, on the canvas
+     * @param depth how many possible positions should there be on the z axis?
+     */
     setVanishPoint(canvasXPosCalcFunction, canvasYPosCalcFunction, depth = 1000)
      {
         this._calcVPointX = canvasXPosCalcFunction;
@@ -38,6 +58,10 @@ export default class ZCalc
 		this._precalculateScalingMultipliers();
     }
     
+	/**
+     * Calls the callback functions (that were passed to the setVanishPoint method) for the x/y positions of the vanishing point, and 
+     * resets the values in the internal state
+     */
     resetVanishPointPosition()
     {
         this._vPointX = this._calcVPointX();
@@ -47,7 +71,12 @@ export default class ZCalc
     
     //-------------------------- Z Axis Speed ----------------------------------
     
-    //This is used to keep the speed on the z-axis consistent (so the changing fps is not a problem)
+	/**
+     * Converts a speed on the z axis into a value that remains consistent, regardless of a changing FPS
+     * @param speed the z speed
+     * @param fps the game's current Frames Per Second
+     * @returns a more consistent value to be used as the actual speed
+     */
     speed(speed, fps)
     {
         return speed / fps;
@@ -140,35 +169,64 @@ export default class ZCalc
 	}
 	
 	
-	//Provide the position/dimension value, the z-axis position,
-	//and a boolean to confirm if you want to allow negative z 
-	//positions.
-	
+	/**
+     * Takes an x position (not in units), and calculates the correct x position to use, based on the given z position
+     * @param xPosition the original x position (not in units)
+     * @param zPosition the z position of the element being drawn
+     * @param showNegative should the element still be drawn if the z position is negative?
+     * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected x position will be returned
+     */
     x(xPosition, zPosition, showNegative = false)
     {
         return this._position(zPosition, xPosition, this._vPointX, showNegative);
     }
     
+	/**
+     * Takes an y position (not in units), and calculates the correct y position to use, based on the given z position
+     * @param yPosition the original y position (not in units)
+     * @param zPosition the z position of the element being drawn
+     * @param showNegative should the element still be drawn if the z position is negative?
+     * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected y position will be returned
+     */
     y(yPosition, zPosition, showNegative = false)
     {
         return this._position(zPosition, yPosition, this._vPointY, showNegative);
     }
     
+	/**
+     * Takes a width value (not in units) and calculates the correct value to use, based on the given z position
+     * @param width the original width (not in units)
+     * @param zPosition the z position of the element being drawn
+     * @param showNegative should the element still be drawn if the z position is negative?
+     * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected width will be returned
+     */
     width(width, zPosition, showNegative = false)
     {
         return this._dimension(zPosition, width, showNegative);
     }
     
+	/**
+     * Takes a height value (not in units) and calculates the correct value to use, based on the given z position
+     * @param height the original height (not in units)
+     * @param zPosition the z position of the element being drawn
+     * @param showNegative should the element still be drawn if the z position is negative?
+     * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected height will be returned
+     */
     height(height, zPosition, showNegative = false)
     {
         return this._dimension(zPosition, height, showNegative);
     }
     
 	
-	
-    //Takes the model's z position, the model's x or y position,
-    //and the vanishing point position on that axis.
-    //Returns the scaled value for the position on that axis.
+	/**
+	 * Takes a z position, x/y position, and the vanishing point's position on that axis.
+	 * Returns the scaled value for the position on that axis.
+	 * @param zPosition the z position of the element being drawn
+	 * @param axisPosition the x/y position
+	 * @param axisVPoint the position of the vanishing point on this axis
+	 * @param showNegative should the element still be drawn if the z position is negative?
+	 * @returns the scaled value for the position on the given axis, or 0 if the z position is "out of view"
+	 */
     _position(zPosition, axisPosition, axisVPoint, showNegative)
     {
         if(this._isOutOfView(zPosition, showNegative))
@@ -192,7 +250,13 @@ export default class ZCalc
         }
     }
     
-    //Same concept as above, except does this with the dimensions instead of the positions
+    /**
+	 * Takes a z position and a width/height value. Returns the scaled value for the width/height.
+	 * @param zPosition the z position of the element being drawn
+	 * @param dimension the width/height value
+	 * @param showNegative should the element still be drawn if the z position is negative?
+	 * @returns the scaled width/height value on the given axis, or 0 if the z position is "out of view"
+	 */
     _dimension(zPosition, dimension, showNegative)
     {
         if(this._isOutOfView(zPosition, showNegative))
@@ -214,7 +278,12 @@ export default class ZCalc
     }
 	
 	
-	//Is the given z position not viewable?
+	/**
+	 * Is the given z position not visible?
+	 * @param zPosition the z position to check
+	 * @param showNegative are negative z positions still considered visible?
+	 * @returns true if the position is considered out of view, otherwise false
+	 */
 	_isOutOfView(zPosition, showNegative)
     {
         return (zPosition > this.vPointDepth || (!showNegative && zPosition < 0));

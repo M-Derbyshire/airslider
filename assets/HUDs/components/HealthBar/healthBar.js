@@ -25,11 +25,11 @@ export default class HealthBar extends ASHUDComponent
     
     draw()
     {
-		this._ctx.lineCap = "round";
+		this.ctx.lineCap = "round";
 		
         const health = this.kernel.loadedModels[this.targetIndex].health;
-        const cameraX = this._camera.canvasPositionX;
-        const cameraY = this._camera.canvasPositionY;
+        const cameraX = this.camera.canvasPositionX;
+        const cameraY = this.camera.canvasPositionY;
 		
 		this._drawBarBorder(cameraX, cameraY);
         this._drawHealthLevel(cameraX, cameraY, health);
@@ -42,29 +42,29 @@ export default class HealthBar extends ASHUDComponent
         const backWidth = this.helpers.unit.xUnit(this.width);
         const backHeight = this.helpers.unit.yUnit(this.height);
         
-        this._ctx.strokeStyle = this.backColor;
-        this._ctx.lineWidth = backHeight;
-        this._ctx.beginPath();
-        this._ctx.moveTo(cameraX + backX + (backHeight / 2), cameraY + backY);
-        this._ctx.lineTo((cameraX + backX - (backHeight / 2)) + backWidth, cameraY + backY);
-        this._ctx.stroke();
+        this.ctx.strokeStyle = this.backColor;
+        this.ctx.lineWidth = backHeight;
+        this.ctx.beginPath();
+        this.ctx.moveTo(cameraX + backX + (backHeight / 2), cameraY + backY);
+        this.ctx.lineTo((cameraX + backX - (backHeight / 2)) + backWidth, cameraY + backY);
+        this.ctx.stroke();
 	}
 	
 	_drawHealthLevel(cameraX, cameraY, health)
 	{
 		if(health > 0)
         {
-            this._ctx.strokeStyle = this.barColor;
+            this.ctx.strokeStyle = this.barColor;
             
             const healthX = this.helpers.unit.xUnit(this.x + (this.height / 2));
             const healthY = this.helpers.unit.yUnit(this.y);
             const healthWidth = this.helpers.unit.xUnit(((this.width - this.height) / 100) * health);
-            this._ctx.lineWidth = this.helpers.unit.yUnit((this.height / 5) * 2);
+            this.ctx.lineWidth = this.helpers.unit.yUnit((this.height / 5) * 2);
             
-            this._ctx.beginPath();
-            this._ctx.moveTo(cameraX + healthX, cameraY + healthY);
-            this._ctx.lineTo(cameraX + healthX + healthWidth, cameraY + healthY);
-            this._ctx.stroke();
+            this.ctx.beginPath();
+            this.ctx.moveTo(cameraX + healthX, cameraY + healthY);
+            this.ctx.lineTo(cameraX + healthX + healthWidth, cameraY + healthY);
+            this.ctx.stroke();
         }
 	}
 }

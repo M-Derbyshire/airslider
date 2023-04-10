@@ -6,15 +6,14 @@ export default class ASControlsInitialiser extends ControlsInitialiser
 	{
 		super(ControlsInitialiser);
 		
-		this.currentMove;
-		this.playerModelIndex = (!isNaN(this.kernel.settings.playerModelIndex)) ? this.kernel.settings.playerModelIndex : 0;
-		
-		this._initialisingFunctions = [
+		this._currentMove;
+		this._playerModelIndex = (!isNaN(this._kernel.settings.playerModelIndex)) ? this._kernel.settings.playerModelIndex : 0;
+        this._settings = this._kernel.settings;
+        
+        this.initialisingFunctions = [
 			this.keyboardControls.bind(this),
 			this.touchControls.bind(this)
 		];
-        
-        this._settings = this.kernel.settings;
 	}
 	
     keyboardControls() //This is for keyboard controls, for playing in browser
@@ -22,9 +21,9 @@ export default class ASControlsInitialiser extends ControlsInitialiser
         if(!this._settings.isOnMobile)
         {
             const keyDownListener = (e) => {
-                const playerModel = this.kernel.loadedModels[this.playerModelIndex];
+                const playerModel = this._kernel.loadedModels[this._playerModelIndex];
                 
-                if(this.currentMove !== e.key && playerModel.canBeControlled)
+                if(this._currentMove !== e.key && playerModel.canBeControlled)
                 {
                     switch(e.key)
                     {
@@ -35,22 +34,22 @@ export default class ASControlsInitialiser extends ControlsInitialiser
                             playerModel.state = "right";
                             break;
                     }
-                    this.currentMove = e.key;
+                    this._currentMove = e.key;
                 }
             };
             
             const keyUpListener = (e) => {
-                const playerModel = this.kernel.loadedModels[this.playerModelIndex];
+                const playerModel = this._kernel.loadedModels[this._playerModelIndex];
                 
-                if(this.currentMove == e.key)
+                if(this._currentMove == e.key)
                 {
                     playerModel.state = "forward";
-                    this.currentMove = "";
+                    this._currentMove = "";
                 }
             };
             
-            this._registeredEventListeners.push({ type: "keydown", listener: keyDownListener, options: true });
-            this._registeredEventListeners.push({ type: "keyup", listener: keyUpListener, options: true });
+            this.registeredEventListeners.push({ type: "keydown", listener: keyDownListener });
+            this.registeredEventListeners.push({ type: "keyup", listener: keyUpListener });
         }
     }
     
@@ -58,23 +57,23 @@ export default class ASControlsInitialiser extends ControlsInitialiser
     touchControls()
     {
         const touchStartListener = (e) => {
-            const playerModel = this.kernel.loadedModels[this.playerModelIndex];
+            const playerModel = this._kernel.loadedModels[this._playerModelIndex];
             
             for(let i = 0; i < e.touches.length; i++)
             {
                 if(e.touches[i].pageX < (window.innerWidth / 2) && playerModel.canBeControlled)
                 {
                     playerModel.state = "left";
-                    this.currentMove = "ArrowLeft";
+                    this._currentMove = "ArrowLeft";
                 } else {
                     playerModel.state = "right";
-                    this.currentMove = "ArrowRight";
+                    this._currentMove = "ArrowRight";
                 }
             }
         };
         
         const touchEndListener = (e) => {
-            const playerModel = this.kernel.loadedModels[this.playerModelIndex];
+            const playerModel = this._kernel.loadedModels[this._playerModelIndex];
             
             let newMove = null;
             for(let i = 0; i < e.touches.length; i++)
@@ -87,9 +86,9 @@ export default class ASControlsInitialiser extends ControlsInitialiser
                 }
             }
             
-            if(newMove && this.currentMove != newMove)
+            if(newMove && this._currentMove != newMove)
             {
-                this.currentMove = newMove;
+                this._currentMove = newMove;
                 
                 switch(newMove)
                 {
@@ -105,11 +104,11 @@ export default class ASControlsInitialiser extends ControlsInitialiser
             if(!newMove)
             {
                 playerModel.state = "forward";
-                this.currentMove = "";
+                this._currentMove = "";
             }
         };
         
-        this._registeredEventListeners.push({ type: "touchstart", listener: touchStartListener, options: true });
-        this._registeredEventListeners.push({ type: "touchend", listener: touchEndListener, options: true });
+        this.registeredEventListeners.push({ type: "touchstart", listener: touchStartListener });
+        this.registeredEventListeners.push({ type: "touchend", listener: touchEndListener });
     }
 };

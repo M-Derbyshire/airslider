@@ -1,64 +1,94 @@
 import Kernel from '/Kernel/kernel';
 
+/**
+ * Contains methods that perform calculations to convert "unit" values into actual canvas positions/dimensions. Also provides 
+ * methods for keeping speeds consistent when the FPS changes
+ */
 export default class UnitHelper
 {
+    /**
+     * Constructor
+     * @param unitsWithinCamera how many "units" are there within the camera's screen (for both axis')?
+     */
     constructor(unitsWithinCamera)
     {
-        this.kernel = Kernel.getInstance();
-        this.unitsWithinCamera = unitsWithinCamera;
+        this._kernel = Kernel.getInstance();
+        this._unitsWithinCamera = unitsWithinCamera;
         
-        //These will need to be set with setDimensions()
-        this._camera = { 
-            canvasHeight: 0, 
-            canvasWidth: 0 
-        };
+        // The width/height of the screen on the canvas (not in units)
+        this._canvasHeight = 0;
+        this._canvasWidth = 0;
     }
     
+    /**
+     * Passes the camera's dimensions (not in units) into the helper's internal state
+     * @param cameraCanvasWidth the width of the camera's screen, on the canvas
+     * @param cameraCanvasHeight the height of the camera's screen, on the canvas
+     */
     setDimensions(cameraCanvasWidth, cameraCanvasHeight)
     {
-        this._camera.canvasWidth = cameraCanvasWidth;
-        this._camera.canvasHeight = cameraCanvasHeight;
+        this._canvasWidth = cameraCanvasWidth;
+        this._canvasHeight = cameraCanvasHeight;
     }
     
-    
-    //helpers to create relative positioning/sizings.
-    //They give you a certain amount of units (both ways) 
-    //within the camera size.
-    
-    //xUnit and yUnit will take a position/dimension unit value, and provide an actual canvas position/size
-    
+    /**
+     * Converts an x position (in units) into the correct position on canvas
+     * @param unitVal the x position in units
+     * @returns the correct x position on canvas
+     */
     xUnit(unitVal)
     {
-        return this._unitValToCanvasVal(unitVal, this._camera.canvasWidth);
+        return this._unitValToCanvasVal(unitVal, this._canvasWidth);
     }
+    
+    /**
+     * Converts a y position (in units) into the correct position on canvas
+     * @param unitVal the y position in units
+     * @returns the correct y position on canvas
+     */
     yUnit(unitVal)
     {
-        return this._unitValToCanvasVal(unitVal, this._camera.canvasHeight);
+        return this._unitValToCanvasVal(unitVal, this._canvasHeight);
     }
     
-    _unitValToCanvasVal(unitVal, canvasAxisSize)
+    /**
+     * Converts a "unit" position/dimension value into an actual value, based on the size of the canvas/camera
+     * @param unitVal the position/dimension value, in "units"
+     * @param cameraAxisSize the size of the camera on the given axis (in actual canvas dimensions)
+     * @returns the actual value to use when drawing to the canvas
+     */
+    _unitValToCanvasVal(unitVal, cameraAxisSize)
     {
-        return ((canvasAxisSize / this.unitsWithinCamera) * unitVal);
+        return ((cameraAxisSize / this._unitsWithinCamera) * unitVal);
     }
     
-    
-    //xSpeed and ySpeed will take a unit amount (to be used as a movement speed)
-    //and return the actual amount of units that needs to be added to the axis to 
-    //give the movement a consistent speed (so it won't be changed by the changing
-    //fps)
-    
+    /**
+     * Converts a speed on the x axis into a value that remains consistent, regardless of a changing FPS
+     * @param speed the x speed
+     * @returns a more consistent value to be used as the actual speed
+     */
     xSpeed(speed)
     {
         return this._consistentSpeed(speed);
     }
 
+    /**
+     * Converts a speed on the y axis into a value that remains consistent, regardless of a changing FPS
+     * @param speed the y speed
+     * @returns a more consistent value to be used as the actual speed
+     */
     ySpeed(speed)
     {
         return this._consistentSpeed(speed);
     }
     
+    /**
+     * Converts a given speed value into a value that will remain consistent, regardless of changes in the FPS
+     * @param speed the speed to convert into a consistent value
+     * @returns the consistent speed value
+     */
     _consistentSpeed(speed)
     {
-        return speed / this.kernel.fps; 
+        return speed / this._kernel.fps; 
     }
 }

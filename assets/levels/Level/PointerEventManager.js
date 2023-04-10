@@ -1,22 +1,38 @@
+/**
+ * Manages any events relating to mouse clicks or screen touches
+ */
 export default class PointerEventManager {
 	
-	constructor(canvas)
+	/**
+	 * Constructor
+	 * @param canvas The canvas element that the game is displayed on
+	 */
+	constructor(canvas:HTMLCanvasElement)
 	{
 		this.subjects = [];
-		this.canvas = canvas;
+		this._canvas = canvas;
 		
 		canvas.addEventListener("click", this.onPointCallback.bind(this));
 		canvas.addEventListener("touchStart", this.onPointCallback.bind(this));
 	}
 	
-	addPointerEventSubject(subject)
+	/**
+     * Adds an object to the list of objects that should react to being clicked
+     * (the subject object must have both an "onClick" and "isPointerOverlapping" method)
+     * @param subject an object that should react to being clicked
+     */
+	addPointerEventSubject(subject:any)
 	{
 		if(subject.onClick && subject.isPointerOverlapping)
 			this.subjects.push(subject);
 	}
 	
-	
-	onPointCallback(e)
+	/**
+	 * A callback function, to be triggered by event listeners.
+	 * This triggers the onClick method of any clicked objects.
+	 * @param e the canvas element that is displaying the game
+	 */
+	onPointCallback(e:HTMLCanvasElement)
 	{
 		e.preventDefault();
 		const canvasRect = e.target.getBoundingClientRect();
@@ -33,7 +49,7 @@ export default class PointerEventManager {
 		{
 			const subject = this.subjects[i];
 			
-			if(subject.onClick && subject.isPointerOverlapping && subject.isPointerOverlapping(clickX, clickY))
+			if(subject.isPointerOverlapping(clickX, clickY))
 				subject.onClick();
 		}
 	}

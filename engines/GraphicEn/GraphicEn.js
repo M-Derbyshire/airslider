@@ -1,17 +1,28 @@
 import Kernel from '/Kernel/kernel';
 
+/**
+ * The engine that controls the drawing to the screen
+ */
 export default class GraphicEn{
+    
+    /**
+     * Constructor
+     * @param gameCanvas The canvas element that the game should be drawn on
+     * @param gameContext The 2D canvas context
+     * @param camera The game's camera
+     * @param frameManager The level's frame manager
+     */
     constructor(gameCanvas, gameContext, camera, frameManager)
     {
-        this.kernel = Kernel.getInstance();
-        this.helpers = this.kernel.helpers;
+        this._kernel = Kernel.getInstance();
+        this._helpers = this._kernel.helpers;
 		
-        this.gameCan = gameCanvas;
-        this.gameCtx = gameContext;
-        this.camera = camera;
-        this.frameManager = frameManager;
+        this._gameCan = gameCanvas;
+        this._gameCtx = gameContext;
+        this._camera = camera;
+        this._frameManager = frameManager;
         
-        //These will be set on the first frame, in the run() method, by the cavas-size-change handler
+        // The current width/height of the canvas element
         this._lastFrameCanvasWidth = 0;
         this._lastFrameCanvasHeight = 0;
         
@@ -21,6 +32,9 @@ export default class GraphicEn{
     
     //----------------------------------------------------------
     
+    /**
+     * Triggers the clearing and re-drawing of the screen
+     */
     run()
     {
         //Need to do this, rather than use an event listener, as the onResize listener
@@ -29,42 +43,42 @@ export default class GraphicEn{
         if(this.canvasSizeHasChanged()) this.setCanvasCorrectWidthHeight();
         
         //clear everything on the gameCan
-        this.gameCtx.clearRect(0, 0, this.gameCan.width, this.gameCan.height);
+        this._gameCtx.clearRect(0, 0, this._gameCan.width, this._gameCan.height);
         
         
         //Draw the parts of the screen that are behind the models
-        this.camera.drawBack();
-        this.frameManager.determineFramesToDraw();
-        this.frameManager.drawFramesBack();
-        this.kernel.level.drawBack();
+        this._camera.drawBack();
+        this._frameManager.determineFramesToDraw();
+        this._frameManager.drawFramesBack();
+        this._kernel.level.drawBack();
         
         
         this.drawModels();
         
         
         //Draw everything that needs to be drawn on top of the models
-        this.kernel.level.drawFront();
-        this.frameManager.drawFramesFront();
-        this.kernel.level.HUD.draw();
-        this.camera.drawFront();
+        this._kernel.level.drawFront();
+        this._frameManager.drawFramesFront();
+        this._kernel.level.HUD.draw();
+        this._camera.drawFront();
         
-        if(this.kernel.displayFps)
+        if(this._kernel.displayFps)
             this.fpsMeter();
     }
     
-    
+    /**
+     * Trigger the drawing of all of the models, in the correct order
+     */
     drawModels()
     {
 		//We need to make sure the models are drawn ordered by z-index.
-		//Array.sort() will affect the original array (which needs to stay in order,
-		//as indexes may be used by other classes to reference models). Therefore, we
-		//create a new array first.
-		const zSortedModels = [...this.kernel.loadedModels];
+		//Array.sort() will affect the original array, so we create a new array first.
+		const zSortedModels = [...this._kernel.loadedModels];
 		zSortedModels.sort((a, b) => b.z - a.z);
         
 		zSortedModels.forEach(modelToDraw => {
 			
-			if(this.camera.isOnCamera(
+			if(this._camera.isOnCamera(
                         modelToDraw.x, 
                         modelToDraw.y, 
                         modelToDraw.width, 
@@ -77,22 +91,27 @@ export default class GraphicEn{
 		});
     }
     
-    
+    /**
+     * Draw the Frames Per Second counter
+     */
     fpsMeter()
     {
         let fontSize = 30
-        this.gameCtx.font = fontSize + "px Arial";
-        this.gameCtx.fillStyle = this.kernel.fpsDisplayColor;
-        const fpsDisplay = Math.round(this.kernel.fps * 100) / 100; // 2 decimal places
-        this.gameCtx.fillText("FPS: " + fpsDisplay, 10, (10 + fontSize));
+        this._gameCtx.font = fontSize + "px Arial";
+        this._gameCtx.fillStyle = this._kernel.fpsDisplayColor;
+        const fpsDisplay = Math.round(this._kernel.fps * 100) / 100; // 2 decimal places
+        this._gameCtx.fillText("FPS: " + fpsDisplay, 10, (10 + fontSize));
     }
     
-    
+    /**
+     * Checks to see if the size of the canvas element has changed
+     * @returns true if the size has changed, false if not
+     */
     canvasSizeHasChanged()
     {
         //slice() is used here to remove the "px"
-        const currentWidth = window.getComputedStyle(this.gameCan).width.slice(0, -2);
-        const currentHeight = window.getComputedStyle(this.gameCan).height.slice(0, -2);
+        const currentWidth = window.getComputedStyle(this._gameCan).width.slice(0, -2);
+        const currentHeight = window.getComputedStyle(this._gameCan).height.slice(0, -2);
         
         if(currentWidth !== this._lastFrameCanvasWidth || currentHeight !== this._lastFrameCanvasHeight)
         {
@@ -105,10 +124,14 @@ export default class GraphicEn{
         return false;
     }
     
-    
+    /**
+     * Corrects the canvas element's styling width/height, based on the Device Pixel Ratio.
+     * Will then call reset methods on any elements that need to be aware of the canvas element 
+     * changing size
+     */
     setCanvasCorrectWidthHeight()
     {
-        if(this.kernel.correctCanvasStyleAndDevicePixelRatio)
+        if(this._kernel.correctCanvasStyleAndDevicePixelRatio)
         {
             //Need to change the styling for the canvas, based on the DPI,
             //to avoid it being stretched and blurry.
@@ -117,13 +140,13 @@ export default class GraphicEn{
             //.width and .height are not the same as .style.width and .style.height, and if they
             //are less than the style values, the image can be blurry (we also need to take into
             //account the devicePixelRatio)
-            this.gameCan.width = window.getComputedStyle(this.gameCan).width.slice(0, -2) * (window.devicePixelRatio || 1);
-            this.gameCan.height = window.getComputedStyle(this.gameCan).height.slice(0, -2) * (window.devicePixelRatio || 1);
+            this._gameCan.width = window.getComputedStyle(this._gameCan).width.slice(0, -2) * (window.devicePixelRatio || 1);
+            this._gameCan.height = window.getComputedStyle(this._gameCan).height.slice(0, -2) * (window.devicePixelRatio || 1);
         }
         
         //It should be noted that this should be ran on loading as well (it is the first setting of the below)
-        this.camera.setCameraSize();
-        this.helpers.zCalc.resetVanishPointPosition();
-        this.helpers.unit.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
+        this._camera.setCameraSize();
+        this._helpers.zCalc.resetVanishPointPosition();
+        this._helpers.unit.setDimensions(this._camera.canvasPositionWidth, this._camera.canvasPositionHeight);
     }
 }

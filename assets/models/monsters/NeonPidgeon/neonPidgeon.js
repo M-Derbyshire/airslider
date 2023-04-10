@@ -18,7 +18,7 @@ export default class NeonPidgeon extends Monster {
         super.load();
         
         const spritesheetPath = "/assets/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png";
-        this._assetsToUnload.push(spritesheetPath);
+        this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
             falling: this.animationManager.createAnimation({

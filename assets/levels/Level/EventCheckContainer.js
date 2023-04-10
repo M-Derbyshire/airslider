@@ -4,7 +4,7 @@ export default class EventCheckContainer
 {
     constructor()
     {
-        this.kernel = Kernel.getInstance();
+        this._kernel = Kernel.getInstance();
     }
     
     //Place any event check methods here, so they can be called by the EventManager
@@ -45,7 +45,7 @@ export default class EventCheckContainer
     hitPlayerOrGroundEventCheck(modelA, modelAActionMethodName, modelB, modelBActionMethodName)
     {
         //Ground hit check
-        if(modelA.y + modelA.height >= this.kernel.unitsWithinCamera)
+        if(modelA.y + modelA.height >= this._kernel.unitsWithinCamera)
         {
             modelA[modelAActionMethodName](modelB);
             return;

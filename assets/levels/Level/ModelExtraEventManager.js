@@ -1,18 +1,23 @@
 import Kernel from '/Kernel/kernel';
 
+/**
+ * Manages any extra events associated with the level's models
+ */
 export default class ModelExtraEventManager
 {
+    /**
+     * Constructor
+     */
     constructor()
     {
-        this.kernel = Kernel.getInstance();
+        this._kernel = Kernel.getInstance();
     }
     
+    /**
+     * Runs the check for extra events on all of the loaded models for this level
+     */
     checkForEvents()
     {
-        //loadedModels is a collection, so no foreach method
-        for(let i = 0; i < this.kernel.loadedModels.length; i++)
-        {
-            this.kernel.loadedModels[i].checkForExtraEvents();
-        }
+        this.kernel.loadedModels.foreach(model => model.checkForExtraEvents());
     }
 }

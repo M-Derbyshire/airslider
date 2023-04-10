@@ -20,7 +20,7 @@ export default class LavaBall extends ASModel {
         let ballHeight = 40;
         
         const spritesheetPath = "/assets/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png";
-        this._assetsToUnload.push(spritesheetPath);
+        this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
             drop: this.animationManager.createAnimation({
