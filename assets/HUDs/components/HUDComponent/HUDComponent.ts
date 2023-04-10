@@ -1,10 +1,28 @@
-import Kernel from '/Kernel/kernel';
+import Kernel from '../../../../Kernel/kernel';
+import IKernel from '../../../../Kernel/IKernel';
+import IHUDComponent from './IHUDComponent';
+import IHelpers from '../../../../Kernel/helpers/IHelpers';
+import ICamera from '../../../../engines/GraphicEn/ICamera';
+import ITextContent from '../../../../engines/GraphicEn/ITextContent';
 
 /**
  * A component of the Heads Up Display
  */
-export default class HUDComponent
+export default class HUDComponent implements IHUDComponent
 {
+    protected kernel: IKernel;
+    protected helpers: IHelpers;
+    protected ctx: CanvasRenderingContext2D;
+    protected camera: ICamera;
+    protected assetsToUnload: string[];
+    
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    active: boolean;
+    text: ITextContent;
+    
     /**
      * Constructor
      */
@@ -63,7 +81,7 @@ export default class HUDComponent
      * @param canvasCtx the 2D context from the HTML canvas element
      * @param camera the game's camera
      */
-    load(canvasCtx, camera)
+    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
     {
         this.ctx = canvasCtx;
         this.camera = camera;
@@ -72,7 +90,7 @@ export default class HUDComponent
     /**
      * Unloads any assets that need to be unloaded by the component
      */
-    unload()
+    unload():void
     {
         this.assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
     }
@@ -80,7 +98,7 @@ export default class HUDComponent
     /**
      * Draws the text content setup within this component
      */
-    drawText()
+    drawText():void
     {
         const drawX = this.helpers.unit.xUnit(this.text.x);
         const drawY = this.helpers.unit.yUnit(this.text.y);
@@ -98,12 +116,12 @@ export default class HUDComponent
     /**
      * Draws the component
      */
-    draw(){}
+    draw():void {}
     
     /**
      * Prepares the component before the level starts
      */
-    prepare(){}
+    prepare():void {}
 	
     /**
      * Is the mouse pointer overlapping this component?
@@ -111,7 +129,7 @@ export default class HUDComponent
      * @param pointY the y position (within the canvas's space) of the mouse pointer
      * @returns true if it is overlapping, false if not
      */
-	isPointerOverlapping(pointX, pointY)
+	isPointerOverlapping(pointX:number, pointY:number):boolean
 	{
 		const xUnit = this.helpers.unit.xUnit.bind(this.helpers.unit);
 		const yUnit = this.helpers.unit.yUnit.bind(this.helpers.unit);

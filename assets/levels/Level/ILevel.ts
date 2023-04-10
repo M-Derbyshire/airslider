@@ -33,11 +33,6 @@ export default interface ILevel {
     prepare():void;
     
     /**
-     * Registers any events that will need to be monitored for during gameplay
-     */
-    registerLevelEvents():void;
-    
-    /**
      * Runs the registered event checks
      */
     checkForEvents():void;

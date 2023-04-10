@@ -121,7 +121,7 @@ export default interface IModel {
      * Creates and returns the current array of boundary boxes for the model.
      * @returns An array of box's that can be used for events (e.g. boxes covering a character, for use by collision events)
      */
-    getBoundaryBoxes():IBoundaryBox;
+    getBoundaryBoxes():IBoundaryBox[];
     
     /**
      * Moves the model to the left

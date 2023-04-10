@@ -19,7 +19,7 @@ export default class TheConstruct extends ASLevel
     {
         super(ASLevel);
         
-        this._levelClosingSectionNumber = 3;
+        this.levelClosingSectionNumber = 3;
     }
     
     getModels()
@@ -28,9 +28,9 @@ export default class TheConstruct extends ASLevel
         
         let models = [];
         
-		this._player = new Tarian();
-        const playerExplosion = new TarianExplosion(this._player);
-        models.push(this._player); //add main character (has to be 0)
+		this.player = new Tarian();
+        const playerExplosion = new TarianExplosion(this.player);
+        models.push(this.player); //add main character (has to be 0)
         models.push(playerExplosion);
         
         // models.push(new NeonPidgeon(player, true));
@@ -44,7 +44,7 @@ export default class TheConstruct extends ASLevel
         // models.push(new Lightning());
         // models.push(new ElectricSeahorse(player, models[models.length - 2], models[models.length - 1]));
         // models.push(new ElectricHornet(player));
-		this._monsters = [
+		this.monsters = [
             // models[models.length - 1],
             // models[models.length - 2]
         ];
@@ -141,29 +141,29 @@ export default class TheConstruct extends ASLevel
         
 		
 		//Start the monster going
-		if(this.helpers.time.getTotalSeconds() >= 15 && this._levelSection === 1)
+		if(this.helpers.time.getTotalSeconds() >= 15 && this.levelSection === 1)
 		{
-			this._monsters.forEach(monster => monster.start());
-            this._levelSection = 2;
+			this.monsters.forEach(monster => monster.start());
+            this.levelSection = 2;
 		}
         
         //Stop the monster
-        // if(this.helpers.time.getTotalSeconds() >= 40 && this._levelSection === 2)
+        // if(this.helpers.time.getTotalSeconds() >= 40 && this.levelSection === 2)
         // {
-        //     this._monsters.forEach(monster => monster.stop());
-        //     this._levelSection = this._levelClosingSectionNumber;
+        //     this.monsters.forEach(monster => monster.stop());
+        //     this.levelSection = this.levelClosingSectionNumber;
         // }
         
-        if(this.helpers.time.getTotalSeconds() >= 25 && this._levelSection === 2)
+        if(this.helpers.time.getTotalSeconds() >= 25 && this.levelSection === 2)
         {
-            this._levelSection = this._levelClosingSectionNumber;
+            this.levelSection = this.levelClosingSectionNumber;
         }
 		
 		
 		//Set a pattern of shockers going
-        if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this._levelSection < 1)
+        if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this.levelSection < 1)
         {
-			// this._levelSection = 1;
+			// this.levelSection = 1;
 			
 			// const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
 			

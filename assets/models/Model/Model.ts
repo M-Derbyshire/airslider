@@ -1,10 +1,42 @@
-import Kernel from '/Kernel/kernel';
+import Kernel from '../../../Kernel/Kernel';
 import ModelAnimationsManager from './ModelAnimationsManager/ModelAnimationsManager';
+import IModel from './IModel';
+import IKernel from '../../../Kernel/IKernel';
+import IHelpers from '../../../Kernel/helpers/IHelpers';
+import IModelAnimationsManager from './ModelAnimationsManager/IModelAnimationsManager';
+import ITextContent from '../../../engines/GraphicEn/ITextContent';
+import ICamera from '../../../engines/GraphicEn/ICamera';
+import IBoundaryBox from './IBoundaryBox';
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)
  */
-export default class Model {
+export default class Model implements IModel {
+    
+    protected kernel: IKernel;
+    protected helpers: IHelpers;
+    protected animationManager: IModelAnimationsManager;
+    protected assetsToUnload:string[]; // file paths of assets that need to be released when this is unloaded
+    protected drawBoundaryBoxes:boolean; // If we set this to true, we'll draw the boxes from this.getBoundaryBoxes()
+    
+    private _state:string;
+    private _active:boolean;
+    private _display:boolean;
+    
+    private _x:number;
+    private _y:number;
+    private _z:number;
+    private _xSpeed:number;
+    private _ySpeed:number;
+    private _zSpeed:number;
+    
+    private _loadedIndex:number;
+    
+    /**
+     * Details for displaying an entity's text content
+     */
+    text:ITextContent;
+    
     
     /**
      * Constructor
@@ -15,13 +47,10 @@ export default class Model {
         this.helpers = this.kernel.helpers;
         this.animationManager = new ModelAnimationsManager(this);
         
-        this.assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
+        this.assetsToUnload = [];
         
-        this.drawBoundaryBoxes = false; // If we set this to true, we'll draw the boxes from this.getBoundaryBoxes()
+        this.drawBoundaryBoxes = false;
         
-        /**
-         * Details for displaying an entity's text content
-         */
         this.text = {
             content: "",
             x: 0, // relative to model x
@@ -32,9 +61,9 @@ export default class Model {
             style: "bolder", // See the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
         };
         
-        this._state; //string with the current state of the model
-        this._active; //is this active
-        this._display = true; //should this be drawn
+        this._state;
+        this._active;
+        this._display = true;
         
         this._x;
         this._y;
@@ -43,7 +72,7 @@ export default class Model {
         this._ySpeed;
         this._zSpeed;
         
-        this._loadedIndex; //will hold current index in this.kernel.loadedModels
+        this._loadedIndex;
     }
     
     //getters and setters --------------------------------------
@@ -128,22 +157,22 @@ export default class Model {
     /**
      * Runs the model's actions. This is ran on every frame.
      */
-    act() {}
+    act():void {}
     
     /**
      * Loads and sets up the model 
      */
-    load() {}
+    load():void {}
     
     /**
      * Prepares the model, before the gameplay starts
      */
-    prepare() {}
+    prepare():void {}
     
     /**
      * Unloads any assets used by the model
      */
-    unload()
+    unload():void
     {
         this.assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
     }
@@ -153,7 +182,7 @@ export default class Model {
      * @param canvasCtx The 2D canvas context
      * @param camera The game's camera
      */
-    loadAnimationsManager(canvasCtx, camera)
+    loadAnimationsManager(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
     {
         this.animationManager.load(canvasCtx, camera);
     }
@@ -161,7 +190,7 @@ export default class Model {
     /**
      * Draws the model's sprite
      */
-    draw()
+    draw():void
     {
         this.animationManager.drawNextFrame();
         
@@ -175,11 +204,11 @@ export default class Model {
     /**
      * Runs any extra events specific to this model. These event checks should be called in the extraEvents method
      */
-    checkForExtraEvents()
+    checkForExtraEvents():void
     {
-        if(this.extraEvents)
+        if(this["extraEvents"] && typeof this["extraEvents"] === "function")
         {
-            this.extraEvents();
+            this["extraEvents"]();
         }
     }
     
@@ -189,7 +218,7 @@ export default class Model {
     * @param pointY the y position (within the canvas's space) of the mouse pointer
     * @returns true if it is overlapping, false if not
     */
-    isPointerOverlapping(pointX, pointY)
+    isPointerOverlapping(pointX:number, pointY:number):boolean
 	{
 		const drawPositions = this.animationManager.getDrawPositionsAndDimensions(this);
 		
@@ -203,7 +232,7 @@ export default class Model {
      * Creates and returns the current array of boundary boxes for the model.
      * @returns An array of box's that can be used for events (e.g. boxes covering a character, for use by collision events)
      */
-    getBoundaryBoxes():IBoundaryBox
+    getBoundaryBoxes():IBoundaryBox[]
     {
         return [
             {
@@ -220,7 +249,7 @@ export default class Model {
      * Moves the model to the left
      * @param speed the speed of the movement
      */
-    moveLeft(speed)
+    moveLeft(speed:number):void
     {
         this.x -= this.helpers.unit.xSpeed(speed);
     }
@@ -229,7 +258,7 @@ export default class Model {
      * Moves the model to the right
      * @param speed the speed of the movement
      */
-    moveRight(speed)
+    moveRight(speed:number):void
     {
         this.x += this.helpers.unit.xSpeed(speed);
     }
@@ -238,7 +267,7 @@ export default class Model {
      * Moves the model up
      * @param speed the speed of the movement
      */
-    moveUp(speed)
+    moveUp(speed:number):void
     {
         this.y -= this.helpers.unit.ySpeed(speed);
     }
@@ -247,7 +276,7 @@ export default class Model {
      * Moves the model down
      * @param speed the speed of the movement
      */
-    moveDown(speed)
+    moveDown(speed:number):void
     {
         this.y += this.helpers.unit.ySpeed(speed);
     }
@@ -256,7 +285,7 @@ export default class Model {
      * Moves the model further into the distance
      * @param speed the speed of the movement
      */
-    moveIn(speed)
+    moveIn(speed:number):void
     {
         this.z += this.helpers.zCalc.speed(speed, this.kernel.fps);
     }
@@ -265,7 +294,7 @@ export default class Model {
      * Moves the model closer to the camera
      * @param speed the speed of the movement
      */
-    moveOut(speed)
+    moveOut(speed:number):void
     {
         this.z -= this.helpers.zCalc.speed(speed, this.kernel.fps);
     }

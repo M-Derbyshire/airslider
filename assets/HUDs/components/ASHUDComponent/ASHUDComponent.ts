@@ -1,10 +1,15 @@
 import HUDComponent from '../HUDComponent/HUDComponent';
 
+/**
+ * The game's base HUDComponent class
+ */
 export default class ASHUDComponent extends HUDComponent {
 	
+	/**
+	 * Constructor
+	 */
 	constructor()
 	{
-		super(HUDComponent);
-	}
-	
+		super();
+	}	
 }

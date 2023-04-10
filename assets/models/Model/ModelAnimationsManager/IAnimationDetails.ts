@@ -3,12 +3,12 @@ import IFrameCoordinates from './IFrameCoordinates';
 /**
  * The details required to create a new animation for a model
  */
-export default interface IAnimation {
+export default interface IAnimationDetails {
     
     /**
-     * The spritesheet for this animation
+     * The file path to the spritesheet
      */
-    spritesheet:HTMLImageElement;
+    sheetPath:string;
     
     /**
      * The Frames Per Second that this animation should play at

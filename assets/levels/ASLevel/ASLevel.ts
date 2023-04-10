@@ -1,29 +1,81 @@
-import Level from '/assets/levels/Level/Level';
-import MainHUD from '/assets/HUDs/MainHUD/MainHUD';
+import Level from '../Level/Level';
+import MainHUD from '../../HUDs/MainHUD/mainHUD';
 import LevelRoad from './LevelRoad';
 import ShockerManager from './ShockerManager';
 import ModelXPositionPatternManager from './ModelXPositionPatternManager';
 import LevelGround from './LevelGround';
 import LevelTunnel from './LevelTunnel';
-import Sign from '/assets/models/Sign/Sign';
-import SignDisplay from '/assets/models/SignDisplay/SignDisplay';
-import Tarian from '/assets/models/Tarian/Tarian';
-import Shocker from '/assets/models/Shocker/Shocker';
-import NeonPidgeon from '/assets/models/Monsters/NeonPidgeon/NeonPidgeon';
-import LavaBall from '/assets/models/Monsters/attacks/LavaBall/LavaBall';
-import Lightning from '/assets/models/Monsters/attacks/Lightning/Lightning';
-import Falcon from '/assets/models/Monsters/Falcon/Falcon';
-import Ghost from '/assets/models/Monsters/Ghost/Ghost';
-import ElectricHornet from '/assets/models/Monsters/ElectricHornet/ElectricHornet';
+import Sign from '../../models/Sign/Sign';
+import SignDisplay from '../../models/SignDisplay/SignDisplay';
+import Tarian from '../../models/Tarian/Tarian';
+import Shocker from '../..//models/Shocker/Shocker';
+import NeonPidgeon from '../../models/Monsters/NeonPidgeon/NeonPidgeon';
+import LavaBall from '../../models/Monsters/attacks/LavaBall/LavaBall';
+import Lightning from '../../models/Monsters/attacks/Lightning/Lightning';
+import Falcon from '../../models/Monsters/Falcon/Falcon';
+import Ghost from '../../models/Monsters/Ghost/Ghost';
+import ElectricHornet from '../../models/Monsters/ElectricHornet/ElectricHornet';
+import Monster from '../../models/Monster/Monster';
+import ICamera from '../../../engines/GraphicEn/ICamera';
+import IPointerEventManager from '../Level/IPointerEventManager';
+import IModel from '../../models/Model/IModel';
+import ASModel from '../../models/ASModel/ASModel';
+import IFrameManager from '../../../engines/GraphicEn/IFrameManager';
 
-
-export default class ASLevel extends Level {
-	
+/**
+ * The game's base Level class
+ */
+export default class ASLevel extends Level 
+{
+    //The edges of the playable area
+    leftEdge:number;
+    rightEdge:number;
+    
+    protected road: LevelRoad;
+    protected roadColor: string;
+    protected ground: LevelGround;
+    protected tunnelManager: LevelTunnel;
+    
+    protected shockerManager: ShockerManager;
+    protected patternManager: ModelXPositionPatternManager;
+    
+    protected levelSection: number; // The section the level is currently on (0 is the opening sequence)
+    protected levelClosingSectionNumber:number; // The closing section number is defined by the child level.
+    protected timeLevelClosingBeginMS:number; // When (in milliseconds) did the closing sequence begin
+    
+    protected monsters:Monster;
+    protected player:IModel;
+    
+    protected outsideVisible:boolean;
+    protected tunnelLightMaskIndex:number;
+    protected outsideLightMaskIndex: number;
+    
+    protected levelMoving:boolean;
+    protected levelSpeed:number;
+    protected levelSpeedRaw:number;
+    protected maxLevelSpeedRaw:number;
+    protected levelSpeedAccl; // How quickly does the speed accelerate at the start?
+    
+    
+    private _tunnelSprite: HTMLImageElement;
+    private _tunnelSpriteLength: number;
+    
+    // Models/info for opening and closing of level
+    private _startSign: IModel;
+    private _startSignDisplay:IModel;
+    private _finishSign:IModel;
+    private _finishFlagsActive:boolean;
+    private _signStartingZPosition:number;
+    private _finishFlagsManager:LevelGround;
+    
+    /**
+     * Constructor
+     */
 	constructor()
 	{
-		super(Level);
+		super();
         
-        this._HUD = new MainHUD();
+        this.HUD = new MainHUD();
 		
 		this.road = new LevelRoad();
         this.roadColor = "#999999";
@@ -37,16 +89,15 @@ export default class ASLevel extends Level {
         this._tunnelSprite;
         this._tunnelSpriteLength;
 		
-		this._levelSection = 0; // The section the level is currently on (0 is the opening sequence)
-        this._levelClosingSectionNumber = 1; // The closing section number is defined by the child level.
-        this._timeLevelClosingBeginMS = 0; // When (in milliseconds) did the closing sequence begin
+		this.levelSection = 0;
+        this.levelClosingSectionNumber = 1;
+        this.timeLevelClosingBeginMS = 0;
 		
-        //The edges of the playable area
         this.leftEdge;
         this.rightEdge;
         
-        this._monsters;
-        this._player;
+        this.monsters;
+        this.player;
 		
 		this.outsideVisible = false;
 		
@@ -67,7 +118,7 @@ export default class ASLevel extends Level {
         this._signStartingZPosition = 50;
 	}
     
-    getModels()
+    getModels():IModel[]
     {
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
         this._startSignDisplay = new SignDisplay(this._startSign);
@@ -80,7 +131,7 @@ export default class ASLevel extends Level {
         ];
     }
 	
-	load(gameCanvas, gameContext, camera, frameManager)
+	load(gameCanvas:HTMLCanvasElement, gameContext:CanvasRenderingContext2D, camera:ICamera, frameManager:IFrameManager):void
 	{
 		super.load(gameCanvas, gameContext, camera, frameManager);
         
@@ -104,7 +155,7 @@ export default class ASLevel extends Level {
 		this._setupPatternManager();
 	}
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         this.ground.setupGround();
@@ -114,18 +165,29 @@ export default class ASLevel extends Level {
         this.levelMoving = false;
     }
     
-    unload()
+    unload():void
     {
         super.unload();
     }
+    
+    /**
+     * Run any setup required by the level's HUD
+     * @param gameContext The 2D canvas context
+     * @param camera The game's camera
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     */
+	setupHUD(gameContext:CanvasRenderingContext2D, camera:ICamera, pointerEventManager:IPointerEventManager):void
+	{
+		this.HUD.models.push(this.kernel.loadedModels[0]);
+	}
 	
 	
-	_setupPatternManager()
+	private _setupPatternManager():void
 	{
 		this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
 	}
 	
-	_setupLevelSpeed()
+	private _setupLevelSpeed():void
 	{
 		//levelSpeedRaw can be used if you need to check for a change in level speed, or to change it
 		this.maxLevelSpeedRaw = 1000;
@@ -134,7 +196,7 @@ export default class ASLevel extends Level {
         this._updateLevelSpeed();
 	}
 	
-	_setupShockerManager(leftEdge, rightEdge)
+	private _setupShockerManager(leftEdge:number, rightEdge:number):void
 	{
 		this.shockerManager.setAreaEdges(leftEdge, rightEdge);
 		this.shockerManager.setPlayerModelIndex(0);
@@ -142,10 +204,10 @@ export default class ASLevel extends Level {
 	
 	
 	
-	registerLevelEvents()
+	protected registerLevelEvents():void
 	{
 		//These are the events that are valid across all levels
-        this._eventManager.registerEventsArray([
+        this.eventManager.registerEventsArray([
             { 
                 eventCheckMethodName: "zCollisionEventCheck",
                 class1: Tarian,
@@ -205,7 +267,7 @@ export default class ASLevel extends Level {
         ]);
 	}
     
-    act()
+    act():void
     {
         super.act();
         this._updateLevelSpeed(); //keeps level speed consistent via fps
@@ -214,19 +276,19 @@ export default class ASLevel extends Level {
         this._setLightMask();
         
         // Opening
-        if(this._levelSection === 0)
+        if(this.levelSection === 0)
         {
             this._levelOpening();
         }
         
         // closing
-        if(this.levelMoving && this._levelSection === this._levelClosingSectionNumber)
+        if(this.levelMoving && this.levelSection === this.levelClosingSectionNumber)
         {
             this._levelClosing();
         }
     }
 	
-	_updateLevelSpeed()
+	private _updateLevelSpeed():void
     {
         if(this.levelMoving)
         {
@@ -245,7 +307,7 @@ export default class ASLevel extends Level {
         }
     }
     
-    _setLightMask()
+    private _setLightMask():void
     {
         if(
             this.tunnelManager.tunnel.length > 1 && 
@@ -264,23 +326,19 @@ export default class ASLevel extends Level {
     }
     
     // Start the forward movement of the level (increases until it reaches max)
-    _levelMovementStart()
+    private _levelMovementStart():void
     {
         this.levelMoving = true;
-        this.kernel.loadedModels[this.kernel.settings.playerModelIndex].canBeControlled = true;
+        (this.kernel.loadedModels[this.kernel.settings.playerModelIndex] as ASModel).canBeControlled = true;
     }
 	
-	levelStop()
+	levelStop():void
     {
         this.levelMoving = false;
-        
-        for(let i = 0; i < this.kernel.loadedModels.length; i++)
-        {
-            this.kernel.loadedModels[i].levelStopped();
-        }
+        this.kernel.loadedModels.forEach(model => (model as ASModel).levelStopped());
     }
     
-    drawBack()
+    drawBack():void
     {
         if(this.outsideVisible)
         {
@@ -296,46 +354,46 @@ export default class ASLevel extends Level {
     }
     
     // Opening and closing sequences for the levels
-    _levelOpening()
+    private _levelOpening()
     {
         // SignDisplay will start the countdown automatically
         
         if(this._startSignDisplay.state === "go")
         {
             this._levelMovementStart();
-            this._levelSection++;
+            this.levelSection++;
         }
     }
     
-    _levelClosing()
+    private _levelClosing()
     {
         // Start the finish flags, and record when the closing sequence began
-        if(!this._timeLevelClosingBeginMS)
+        if(!this.timeLevelClosingBeginMS)
         {
-            this._timeLevelClosingBeginMS = this.helpers.time.getTotalMilliseconds();
+            this.timeLevelClosingBeginMS = this.helpers.time.getTotalMilliseconds();
             this._finishFlagsActive = true;
         }
         
         // End the finish flags, before starting the sign's entrance
-        if(!this._finishSign.active && this.helpers.time.getTotalMilliseconds() >= (this._timeLevelClosingBeginMS + 3500))
+        if(!this._finishSign.active && this.helpers.time.getTotalMilliseconds() >= (this.timeLevelClosingBeginMS + 3500))
         {
             this._finishFlagsManager.removeGround();
         }
         
         // Trigger the finish sign's entrance
-        if(!this._finishSign.active && this.helpers.time.getTotalMilliseconds() >= (this._timeLevelClosingBeginMS + 4000))
+        if(!this._finishSign.active && this.helpers.time.getTotalMilliseconds() >= (this.timeLevelClosingBeginMS + 4000))
         {
             this._finishSign.active = true;
         }
         
         // If the sign is in position, stop the level
-        if(this._finishSign.z === this._signStartingZPosition && this._player.zSpeed === 0)
+        if(this._finishSign.z === this._signStartingZPosition && this.player.zSpeed === 0)
         {
-            this._player.zSpeed = this.levelSpeedRaw;
+            this.player.zSpeed = this.levelSpeedRaw;
             this.levelMoving = false;
         }
         
-        if(this._player.z > this.helpers.zCalc.vPointDepth)
+        if(this.player.z > this.helpers.zCalc.vPointDepth)
             this.levelStop();
     }
 }

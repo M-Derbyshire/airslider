@@ -1,9 +1,33 @@
-import Kernel from '/Kernel/kernel';
+import Kernel from '../../../../Kernel/Kernel';
+import IKernel from '../../../../Kernel/IKernel';
+import IModel from '../IModel';
+import IHelpers from '../../../../Kernel/helpers/IHelpers';
+import ICamera from '../../../../engines/GraphicEn/ICamera';
+import IAnimation from './IAnimation';
+import IAnimationDetails from './IAnimationDetails';
+import IFrameCoordinates from './IFrameCoordinates';
+import IModelAnimationsManager from './IModelAnimationsManager';
 
 /**
  * Manages a model's animations
  */
-export default class ModelAnimationsManager {
+export default class ModelAnimationsManager implements IModelAnimationsManager {
+    
+    private _model:IModel;
+    private _kernel:IKernel;
+    private _helpers:IHelpers;
+    private _camera:ICamera;
+    private _canvasCtx:CanvasRenderingContext2D;
+    
+    /**
+     * The animations created for the model
+     */
+    animations:IAnimation[];
+    
+    /**
+     * A map of spritesheets, used by the animations. The asset filepath is the key
+     */
+    sheetMap:Map<string, HTMLImageElement>;
     
     /**
      * Constructor
@@ -18,15 +42,8 @@ export default class ModelAnimationsManager {
         this._camera;
         this._canvasCtx;
         
-        /**
-         * The animations created for the model
-         */
-        this.animations:IAnimation[];
-        
-        /**
-         * A map of spritesheets, used by the animations. The asset filepath is the key
-         */
-        this.sheetMap = new Map<string, HTMLImageElement>(); //Stores the spritesheets. The key is the sheet path
+        this.animations;
+        this.sheetMap = new Map<string, HTMLImageElement>();
     }
     
     /**
@@ -34,7 +51,7 @@ export default class ModelAnimationsManager {
      * @param canvasCtx The 2D canvas context
      * @param camera The game's camera
      */
-    load(canvasCtx, camera)
+    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
     {
         this._camera = camera;
         this._canvasCtx = canvasCtx;
@@ -51,7 +68,7 @@ export default class ModelAnimationsManager {
             this.sheetMap.set(sheetPath, this._kernel.loadImage(sheetPath));
         
         let anim:IAnimation = {
-			spritesheet: this.sheetMap.get(sheetPath),
+			spritesheet: this.sheetMap.get(sheetPath)!,
 			frameCoordinates,
             fps,
             waitCount: 0, //increased when waiting to move to next frame
@@ -71,7 +88,7 @@ export default class ModelAnimationsManager {
      * Registers an array of animations with this manager
      * @param animations The animations to register with this manager
      */
-    registerAnimations(animations:IAnimation[])
+    registerAnimations(animations:IAnimation[]):void
     {
         //animations will be an object of animations (the property names are the state names),
         //created with the below createAnimation() method.
@@ -81,7 +98,7 @@ export default class ModelAnimationsManager {
     /**
      * Draws the correct frame of the animation (moving to the next frame if it's time to do so)
      */
-    drawNextFrame()
+    drawNextFrame():void
     {
 		//Need to call this here, as if this is an animation that changes state at the end,
 		//the below settings (preZCalc* variables) may have the wrong width/height for the 
@@ -107,7 +124,7 @@ export default class ModelAnimationsManager {
     /**
      * Draws the text content of the linked model
      */
-    drawText()
+    drawText():void
     {
         const text = this._model.text;
             
@@ -130,7 +147,7 @@ export default class ModelAnimationsManager {
     /**
      * Draws the model's boundary boxes
      */
-    drawBoundaryBoxes()
+    drawBoundaryBoxes():void
     {
         const boxes = this._model.getBoundaryBoxes();
         
@@ -174,7 +191,7 @@ export default class ModelAnimationsManager {
      * Gets the coordinates of the next frame on the spritesheet
      * @returns The coordinates of the next frame on the spritesheet
      */
-    _getNextFrameCoordinates():IFrameCoordinates
+    private _getNextFrameCoordinates():IFrameCoordinates
     {
 		let currentFrameIndex = this.animations[this._model.state].currentFrameIndex;
 		
