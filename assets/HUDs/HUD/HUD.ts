@@ -5,11 +5,12 @@ import ICamera from '../../../engines/GraphicEn/ICamera';
 import IHUDComponent from '../components/HUDComponent/IHUDComponent';
 import IPointerEventManager from '../../levels/Level/IPointerEventManager';
 import IModel from '../../models/Model/IModel';
+import IHUD from './IHUD';
 
 /**
  * A level's Heads Up Display
  */
-export default class HUD
+export default class HUD implements IHUD
 {
     protected kernel: IKernel;
     protected helpers: IHelpers;
@@ -33,10 +34,7 @@ export default class HUD
         
         this.assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
         
-        /**
-         * Models that can be referenced by the HUD components
-         */
-        this.models = [];
+        this.models = []; // Models that can be referenced by the HUD components
     }
     
     /**
