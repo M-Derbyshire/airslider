@@ -1,6 +1,6 @@
-import Kernel from '/Kernel/kernel';
+import Kernel from './Kernel/Kernel';
 
 // start up the kernel
 window.addEventListener("load", function() {
-	new Kernel().initiate();
+	Kernel.getInstance().initiate();
 }, true);
