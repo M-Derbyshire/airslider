@@ -1,11 +1,22 @@
-import Kernel from '/Kernel/kernel';
+import Kernel from '../../../Kernel/Kernel';
+import IKernel from '../../../Kernel/IKernel';
+import IModel from '../../models/Model/IModel';
 
+/**
+ * A container for any event-check methods
+ */
 export default class EventCheckContainer
 {
+    private _kernel:IKernel;
+    
+    /**
+     * Constructor
+     */
     constructor()
     {
         this._kernel = Kernel.getInstance();
     }
+    
     
     //Place any event check methods here, so they can be called by the EventManager
     
@@ -15,7 +26,7 @@ export default class EventCheckContainer
     
     //Every model's action method is passed a reference to the other model.
     
-    zCollisionEventCheck(modelA, modelAActionMethodName, modelB, modelBActionMethodName)
+    zCollisionEventCheck(modelA:IModel, modelAActionMethodName:string, modelB:IModel, modelBActionMethodName:string):void
     {
         const boxesA = modelA.getBoundaryBoxes();
         const boxesB = modelB.getBoundaryBoxes();
@@ -42,7 +53,7 @@ export default class EventCheckContainer
         }
     }
     
-    hitPlayerOrGroundEventCheck(modelA, modelAActionMethodName, modelB, modelBActionMethodName)
+    hitPlayerOrGroundEventCheck(modelA:IModel, modelAActionMethodName:string, modelB:IModel, modelBActionMethodName:string):void
     {
         //Ground hit check
         if(modelA.y + modelA.height >= this._kernel.unitsWithinCamera)
@@ -77,7 +88,7 @@ export default class EventCheckContainer
     }
     
     //NeonPidgeon events
-    neonPidgeonOverlappingEventCheck(modelA, modelAActionMethodName, modelB, modelBActionMethodName)
+    neonPidgeonOverlappingEventCheck(modelA:IModel, modelAActionMethodName:string, modelB:IModel, modelBActionMethodName:string):void
     {
         if(((modelA.x + modelA.width) >= modelB.x) &&
         (modelA.x <= (modelB.x + modelB.width)))

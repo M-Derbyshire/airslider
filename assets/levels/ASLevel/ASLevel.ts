@@ -50,12 +50,11 @@ export default class ASLevel extends Level
     protected tunnelLightMaskIndex:number;
     protected outsideLightMaskIndex: number;
     
-    protected levelMoving:boolean;
-    protected levelSpeed:number;
-    protected levelSpeedRaw:number;
-    protected maxLevelSpeedRaw:number;
-    protected levelSpeedAccl; // How quickly does the speed accelerate at the start?
-    
+    levelMoving:boolean; // Is the player moving forwards?
+    levelSpeed:number; // The level speed (after being calculated by the zCalc)
+    levelSpeedRaw:number; // The level speed (before being calculated by the zCalc)
+    maxLevelSpeedRaw:number; // The maximum speed (before being calculated by the zCalc)
+    protected levelSpeedAccl:number; // How quickly does the speed accelerate at the start?
     
     private _tunnelSprite: HTMLImageElement;
     private _tunnelSpriteLength: number;
@@ -90,34 +89,22 @@ export default class ASLevel extends Level
         this._tunnelSpriteLength;
 		
 		this.levelSection = 0;
-        this.levelClosingSectionNumber = 1;
+        this.levelClosingSectionNumber = 1; // The section of the level that should be the closing section
         this.timeLevelClosingBeginMS = 0;
 		
-        this.leftEdge;
-        this.rightEdge;
-        
-        this.monsters;
-        this.player;
-		
 		this.outsideVisible = false;
-		
-		this.tunnelLightMaskIndex;
-        this.outsideLightMaskIndex;
         
         this.levelMoving = false;
-        this.levelSpeed;
-        this.levelSpeedRaw;
-        this.maxLevelSpeedRaw;
-        this.levelSpeedAccl; // How quickly does the speed accelerate at the start?
         
-        // Models/info for opening and closing of level
-        this._startSign;
-        this._startSignDisplay;
-        this._finishSign;
+        // info for opening and closing of level
         this._finishFlagsActive = false;
         this._signStartingZPosition = 50;
 	}
     
+    /**
+     * Creates and returns the models for the start/finish sequences
+     * @returns the models for the start/finish sequences
+     */
     getModels():IModel[]
     {
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
@@ -131,6 +118,13 @@ export default class ASLevel extends Level
         ];
     }
 	
+    /**
+     * Loads and sets up the level
+     * @param gameCanvas The canvas element that the game is displayed on
+     * @param gameContext The 2D canvas context
+     * @param camera The game's camera
+     * @param frameManager The frame manager for the level
+     */
 	load(gameCanvas:HTMLCanvasElement, gameContext:CanvasRenderingContext2D, camera:ICamera, frameManager:IFrameManager):void
 	{
 		super.load(gameCanvas, gameContext, camera, frameManager);
@@ -155,6 +149,9 @@ export default class ASLevel extends Level
 		this._setupPatternManager();
 	}
     
+    /**
+     * Prepares the level, before the gameplay starts
+     */
     prepare():void
     {
         super.prepare();
@@ -163,11 +160,6 @@ export default class ASLevel extends Level
         
         this._finishFlagsActive = false;
         this.levelMoving = false;
-    }
-    
-    unload():void
-    {
-        super.unload();
     }
     
     /**
@@ -181,12 +173,17 @@ export default class ASLevel extends Level
 		this.HUD.models.push(this.kernel.loadedModels[0]);
 	}
 	
-	
+	/**
+     * Sets up the model patter manager
+     */
 	private _setupPatternManager():void
 	{
 		this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
 	}
 	
+    /**
+     * Sets up the initial level speed
+     */
 	private _setupLevelSpeed():void
 	{
 		//levelSpeedRaw can be used if you need to check for a change in level speed, or to change it
@@ -196,6 +193,11 @@ export default class ASLevel extends Level
         this._updateLevelSpeed();
 	}
 	
+    /**
+     * Sets up the shocker manager
+     * @param leftEdge the left edge (in units) of the level
+     * @param rightEdge the right edge (in units) of the level
+     */
 	private _setupShockerManager(leftEdge:number, rightEdge:number):void
 	{
 		this.shockerManager.setAreaEdges(leftEdge, rightEdge);
@@ -203,7 +205,9 @@ export default class ASLevel extends Level
 	}
 	
 	
-	
+	/**
+     * Registers all model events for the level
+     */
 	protected registerLevelEvents():void
 	{
 		//These are the events that are valid across all levels
@@ -267,6 +271,9 @@ export default class ASLevel extends Level
         ]);
 	}
     
+    /**
+     * Runs the level's actions. This is ran on every frame.
+     */
     act():void
     {
         super.act();
@@ -288,6 +295,9 @@ export default class ASLevel extends Level
         }
     }
 	
+    /**
+     * This increases the raw level speed to its max (or stops it, if level is not moving), and calculates the real z-speed
+     */
 	private _updateLevelSpeed():void
     {
         if(this.levelMoving)
@@ -307,6 +317,9 @@ export default class ASLevel extends Level
         }
     }
     
+    /**
+     * Sets the light mask, dependant on the whether or not the player's going through a tunnel
+     */
     private _setLightMask():void
     {
         if(
@@ -325,19 +338,27 @@ export default class ASLevel extends Level
         }
     }
     
-    // Start the forward movement of the level (increases until it reaches max)
+    /**
+     * Start the forward movement of the level
+     */
     private _levelMovementStart():void
     {
         this.levelMoving = true;
         (this.kernel.loadedModels[this.kernel.settings.playerModelIndex] as ASModel).canBeControlled = true;
     }
 	
+    /**
+     * Stops the level (and triggers the stop on all models)
+     */
 	levelStop():void
     {
         this.levelMoving = false;
         this.kernel.loadedModels.forEach(model => (model as ASModel).levelStopped());
     }
     
+    /**
+     * Draws anything that needs to be in the back (before the models) of the level
+     */
     drawBack():void
     {
         if(this.outsideVisible)
@@ -353,7 +374,13 @@ export default class ASLevel extends Level
         this.road.draw(this.roadColor);
     }
     
+    
+    
     // Opening and closing sequences for the levels
+    
+    /**
+     * Runs the level opening sequence
+     */
     private _levelOpening()
     {
         // SignDisplay will start the countdown automatically
@@ -365,6 +392,9 @@ export default class ASLevel extends Level
         }
     }
     
+    /**
+     * Runs the level closing sequence
+     */
     private _levelClosing()
     {
         // Start the finish flags, and record when the closing sequence began

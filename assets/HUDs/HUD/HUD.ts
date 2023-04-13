@@ -18,7 +18,11 @@ export default class HUD implements IHUD
     protected components: IHUDComponent[];
     protected pointerEventManager: IPointerEventManager;
     protected assetsToUnload: string[];
-    protected models: IModel[];
+    
+    /**
+     * Models that can be referenced by the HUD components
+     */
+    models: IModel[];
     
     /**
      * Constructor
@@ -34,7 +38,7 @@ export default class HUD implements IHUD
         
         this.assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
         
-        this.models = []; // Models that can be referenced by the HUD components
+        this.models = []; 
     }
     
     /**

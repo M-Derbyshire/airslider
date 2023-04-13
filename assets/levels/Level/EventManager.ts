@@ -1,26 +1,35 @@
-import Kernel from '/Kernel/kernel';
+import Kernel from '../../../Kernel/Kernel';
+import IEventManager from './IEventManager';
+import EventCheckContainer from './EventCheckContainer';
+import IModelExtraEventManager from './IModelExtraEventManager';
+import IEventDetails from './IEventDetails';
+import IModel from '../../models/Model/IModel';
+import IKernel from '../../../Kernel/IKernel';
+import IEvent from './IEvent';
 
 /**
  * Manages the event monitoring for a level
  */
-export default class EventManager
+export default class EventManager implements IEventManager
 {
+    private _kernel:IKernel;
+    private _eventCheckContainer:EventCheckContainer;
+    private _modelExtraEventManager:IModelExtraEventManager;
+    private _events:IEvent[];
+    
     /**
      * Constructor
      * @param eventCheckContainer An instance of the EventCheckContainer (which contains custom methods that will check for events)
      * @param modelExtraEventManager Manages any extra events associated with the level's models
      */
-    constructor(eventCheckContainer, modelExtraEventManager)
+    constructor(eventCheckContainer:EventCheckContainer, modelExtraEventManager:IModelExtraEventManager)
     {
         this._kernel = Kernel.getInstance();
         
         this._eventCheckContainer = eventCheckContainer;
         this._modelExtraEventManager = modelExtraEventManager;
         
-        //This will be an array of objects. Each object has these attributes:
-        // eventCheckMethodName; class1Models; class1EventActionName;
-        // class2Models; class2EventActionName.
-        this._events:IEvent[] = [];
+        this._events = [];
     }
     
     /**
@@ -29,16 +38,17 @@ export default class EventManager
      * if the event has occurred between them.
      * @param event The details of an event to be registered
      */
-    registerEvent(event:IEventDetails)
+    registerEvent(event:IEventDetails):void
     {
-        const class1Models = [];
-        const class2Models = [];
+        const class1Models:IModel[] = [];
+        const class2Models:IModel[] = [];
         
         //LoadedModels is a collection, so can't use foreach
         for(let i = 0; i < this._kernel.loadedModels.length; i++)
         {
-            if(this._kernel.loadedModels[i] instanceof event.class1) class1Models.push(this._kernel.loadedModels[i]);
-            if(this._kernel.loadedModels[i] instanceof event.class2) class2Models.push(this._kernel.loadedModels[i]);
+            const model = this._kernel.loadedModels[i];
+            if(model.constructor.name === event.class1.constructor.name) class1Models.push(model);
+            if(model.constructor.name === event.class2.constructor.name) class2Models.push(model);
         }
         
         this._events.push({ 
@@ -54,18 +64,17 @@ export default class EventManager
      * Registers multiple event checks. See registerEvent method for more details
      * @param events The details of the events to be registered
      */
-    registerEventsArray(events:IEventDetails[])
+    registerEventsArray(events:IEventDetails[]):void
     {
         events.forEach(e => {
-            this.registerEvent(e.eventCheckMethodName, e.class1, e.class1EventActionName, e.class2,
-                e.class2EventActionName);
+            this.registerEvent(e);
         });
     }
     
     /**
      * Runs the event checks, along with any extra events associated with the level's models
      */
-    checkForEvents()
+    checkForEvents():void
     {
         //For each event, go through the models for class1, and then
         //check them against each model for class2.
@@ -93,7 +102,7 @@ export default class EventManager
     /**
      * Runs any extra events associated with the level's models
      */
-    _checkForExtraModelEvents()
+    private _checkForExtraModelEvents():void
     {
         this._modelExtraEventManager.checkForEvents();
     }

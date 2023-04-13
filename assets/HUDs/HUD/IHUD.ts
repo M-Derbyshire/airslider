@@ -8,6 +8,11 @@ import IModel from "../../models/Model/IModel";
 export default interface IHUD {
     
     /**
+     * Models that can be referenced by the HUD components
+     */
+    models:IModel[];
+    
+    /**
      * Loads the HUD
      * @param canvasCtx the 2D context from the HTML canvas element
      * @param camera the game's camera
