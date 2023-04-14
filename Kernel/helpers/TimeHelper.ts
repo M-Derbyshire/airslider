@@ -1,10 +1,14 @@
-import Kernel from '/Kernel/kernel';
+import Kernel from '../Kernel';
+import IKernel from '../IKernel';
+import ITimeHelper from './ITimeHelper';
 
 /**
  * Contains methods that provide information related to time
  */
-export default class TimeHelper
+export default class TimeHelper implements ITimeHelper
 {
+    private _kernel:IKernel;
+    
     /**
      * Constructor
      */
@@ -19,7 +23,7 @@ export default class TimeHelper
      * @param seconds the amount of seconds
      * @returns the estimated amount of frames that will have been rendered during the given number of seconds
      */
-    secondsToFrames(seconds)
+    secondsToFrames(seconds:number):number
     {
         return Math.floor(seconds * this._kernel.fps);
     }
@@ -30,16 +34,16 @@ export default class TimeHelper
      * @param minutes the amount of minutes
      * @returns the estimated amount of frames that will have been rendered during the given number of minutes
      */
-    minutesToFrames(minutes)
+    minutesToFrames(minutes:number):number
     {
-        return secondsToFrames(minutes) * 60;
+        return this.secondsToFrames(minutes) * 60;
     }
 
     /**
      * Gets the total amount of seconds that the level has been active for
      * @returns the amount of seconds that the level has been active for
      */
-    getTotalSeconds()
+    getTotalSeconds():number
     {
         return this.getTotalMilliseconds() / 1000;
     }
@@ -48,7 +52,7 @@ export default class TimeHelper
      * Gets the total amount of milliseconds that the level has been active for
      * @returns the amount of milliseconds that the level has been active for
      */
-    getTotalMilliseconds()
+    getTotalMilliseconds():number
     {
         return this._kernel.totalLevelActiveMilliseconds;
     }

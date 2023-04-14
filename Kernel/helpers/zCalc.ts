@@ -1,9 +1,19 @@
+import IZCalc from "./IZCalc";
+
 /**
  * Provides methods to calculate the correct drawing position/dimensions for an element, based on it position on the z axis.
  * Also provides methods relating to consistent speed (regardless of a changing FPS) on the z axis
  */
-export default class ZCalc 
+export default class ZCalc implements IZCalc
 {
+    private _vPointX:number;
+    private _vPointY:number;
+    private _vPointDepth:number;
+    
+    private _precalculatedScalingMultipliers:number[];
+    private _calcVPointX:()=>number;
+    private _calcVPointY:()=>number;
+    
     /**
      * Constructor
      */
@@ -14,7 +24,7 @@ export default class ZCalc
         this._vPointY;
         this._vPointDepth; //the max z position
 		
-		this._precalculatedScalingMultipliers = [];
+		this._precalculatedScalingMultipliers = []; // This is explained in the "Scaled Positions and Dimensions" below
         
         //The vanishing point is defined in literal canvas positions,
         //so these functions will be used to calculate the new values
@@ -47,7 +57,7 @@ export default class ZCalc
      * @param canvasYPosCalcFunction a function that returns the correct y position (not in units) of the vanishing point, on the canvas
      * @param depth how many possible positions should there be on the z axis?
      */
-    setVanishPoint(canvasXPosCalcFunction, canvasYPosCalcFunction, depth = 1000)
+    setVanishPoint(canvasXPosCalcFunction:()=>number, canvasYPosCalcFunction:()=>number, depth:number = 1000):void
      {
         this._calcVPointX = canvasXPosCalcFunction;
         this._calcVPointY = canvasYPosCalcFunction;
@@ -62,7 +72,7 @@ export default class ZCalc
      * Calls the callback functions (that were passed to the setVanishPoint method) for the x/y positions of the vanishing point, and 
      * resets the values in the internal state
      */
-    resetVanishPointPosition()
+    resetVanishPointPosition():void
     {
         this._vPointX = this._calcVPointX();
         this._vPointY = this._calcVPointY();
@@ -77,7 +87,7 @@ export default class ZCalc
      * @param fps the game's current Frames Per Second
      * @returns a more consistent value to be used as the actual speed
      */
-    speed(speed, fps)
+    speed(speed:number, fps:number):number
     {
         return speed / fps;
     }
@@ -156,7 +166,7 @@ export default class ZCalc
 				make the sprite move towards/from it.
     */
 	
-	_precalculateScalingMultipliers()
+    private _precalculateScalingMultipliers():void
 	{
 		const shrunkDepth = this._vPointDepth / 8;
 		
@@ -176,7 +186,7 @@ export default class ZCalc
      * @param showNegative should the element still be drawn if the z position is negative?
      * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected x position will be returned
      */
-    x(xPosition, zPosition, showNegative = false)
+    x(xPosition:number, zPosition:number, showNegative:boolean = false):number
     {
         return this._position(zPosition, xPosition, this._vPointX, showNegative);
     }
@@ -188,7 +198,7 @@ export default class ZCalc
      * @param showNegative should the element still be drawn if the z position is negative?
      * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected y position will be returned
      */
-    y(yPosition, zPosition, showNegative = false)
+    y(yPosition:number, zPosition:number, showNegative:boolean = false):number
     {
         return this._position(zPosition, yPosition, this._vPointY, showNegative);
     }
@@ -200,7 +210,7 @@ export default class ZCalc
      * @param showNegative should the element still be drawn if the z position is negative?
      * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected width will be returned
      */
-    width(width, zPosition, showNegative = false)
+    width(width:number, zPosition:number, showNegative:boolean = false):number
     {
         return this._dimension(zPosition, width, showNegative);
     }
@@ -212,7 +222,7 @@ export default class ZCalc
      * @param showNegative should the element still be drawn if the z position is negative?
      * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected height will be returned
      */
-    height(height, zPosition, showNegative = false)
+    height(height:number, zPosition:number, showNegative:boolean = false):number
     {
         return this._dimension(zPosition, height, showNegative);
     }
@@ -227,7 +237,7 @@ export default class ZCalc
 	 * @param showNegative should the element still be drawn if the z position is negative?
 	 * @returns the scaled value for the position on the given axis, or 0 if the z position is "out of view"
 	 */
-    _position(zPosition, axisPosition, axisVPoint, showNegative)
+    private _position(zPosition:number, axisPosition:number, axisVPoint:number, showNegative:boolean):number
     {
         if(this._isOutOfView(zPosition, showNegative))
         {
@@ -257,7 +267,7 @@ export default class ZCalc
 	 * @param showNegative should the element still be drawn if the z position is negative?
 	 * @returns the scaled width/height value on the given axis, or 0 if the z position is "out of view"
 	 */
-    _dimension(zPosition, dimension, showNegative)
+    private _dimension(zPosition:number, dimension:number, showNegative:boolean):number
     {
         if(this._isOutOfView(zPosition, showNegative))
         {
@@ -284,7 +294,7 @@ export default class ZCalc
 	 * @param showNegative are negative z positions still considered visible?
 	 * @returns true if the position is considered out of view, otherwise false
 	 */
-	_isOutOfView(zPosition, showNegative)
+	private _isOutOfView(zPosition:number, showNegative:boolean):boolean
     {
         return (zPosition > this.vPointDepth || (!showNegative && zPosition < 0));
     }

@@ -1,16 +1,23 @@
-import Kernel from '/Kernel/kernel';
+import IKernel from '../IKernel';
+import Kernel from '../Kernel';
+import IUnitHelper from './IUnitHelper';
 
 /**
  * Contains methods that perform calculations to convert "unit" values into actual canvas positions/dimensions. Also provides 
  * methods for keeping speeds consistent when the FPS changes
  */
-export default class UnitHelper
+export default class UnitHelper implements IUnitHelper
 {
+    private _kernel:IKernel;
+    private _unitsWithinCamera:number;
+    private _canvasHeight:number;
+    private _canvasWidth:number;
+    
     /**
      * Constructor
      * @param unitsWithinCamera how many "units" are there within the camera's screen (for both axis')?
      */
-    constructor(unitsWithinCamera)
+    constructor(unitsWithinCamera:number)
     {
         this._kernel = Kernel.getInstance();
         this._unitsWithinCamera = unitsWithinCamera;
@@ -25,7 +32,7 @@ export default class UnitHelper
      * @param cameraCanvasWidth the width of the camera's screen, on the canvas
      * @param cameraCanvasHeight the height of the camera's screen, on the canvas
      */
-    setDimensions(cameraCanvasWidth, cameraCanvasHeight)
+    setDimensions(cameraCanvasWidth:number, cameraCanvasHeight:number):void
     {
         this._canvasWidth = cameraCanvasWidth;
         this._canvasHeight = cameraCanvasHeight;
@@ -36,7 +43,7 @@ export default class UnitHelper
      * @param unitVal the x position in units
      * @returns the correct x position on canvas
      */
-    xUnit(unitVal)
+    xUnit(unitVal:number):number
     {
         return this._unitValToCanvasVal(unitVal, this._canvasWidth);
     }
@@ -46,7 +53,7 @@ export default class UnitHelper
      * @param unitVal the y position in units
      * @returns the correct y position on canvas
      */
-    yUnit(unitVal)
+    yUnit(unitVal:number):number
     {
         return this._unitValToCanvasVal(unitVal, this._canvasHeight);
     }
@@ -57,7 +64,7 @@ export default class UnitHelper
      * @param cameraAxisSize the size of the camera on the given axis (in actual canvas dimensions)
      * @returns the actual value to use when drawing to the canvas
      */
-    _unitValToCanvasVal(unitVal, cameraAxisSize)
+    private _unitValToCanvasVal(unitVal:number, cameraAxisSize:number):number
     {
         return ((cameraAxisSize / this._unitsWithinCamera) * unitVal);
     }
@@ -67,7 +74,7 @@ export default class UnitHelper
      * @param speed the x speed
      * @returns a more consistent value to be used as the actual speed
      */
-    xSpeed(speed)
+    xSpeed(speed:number):number
     {
         return this._consistentSpeed(speed);
     }
@@ -77,7 +84,7 @@ export default class UnitHelper
      * @param speed the y speed
      * @returns a more consistent value to be used as the actual speed
      */
-    ySpeed(speed)
+    ySpeed(speed:number):number
     {
         return this._consistentSpeed(speed);
     }
@@ -87,7 +94,7 @@ export default class UnitHelper
      * @param speed the speed to convert into a consistent value
      * @returns the consistent speed value
      */
-    _consistentSpeed(speed)
+    private _consistentSpeed(speed:number):number
     {
         return speed / this._kernel.fps; 
     }
