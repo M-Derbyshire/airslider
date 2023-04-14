@@ -1,14 +1,20 @@
-import ControlsInitialiser from '/settings/ControlsInitialiser/ControlsInitialiser';
+import ISettings from '../ISettings';
+import ControlsInitialiser from './ControlsInitialiser';
+import ASModel from '../../assets/models/ASModel/ASModel';
 
 export default class ASControlsInitialiser extends ControlsInitialiser
 {
+    private _currentMove:string;
+    private _playerModelIndex:number;
+    private _settings:ISettings;
+    
 	constructor()
 	{
-		super(ControlsInitialiser);
+		super();
 		
 		this._currentMove;
-		this._playerModelIndex = (!isNaN(this._kernel.settings.playerModelIndex)) ? this._kernel.settings.playerModelIndex : 0;
-        this._settings = this._kernel.settings;
+		this._playerModelIndex = (!isNaN(this.kernel.settings.playerModelIndex)) ? this.kernel.settings.playerModelIndex : 0;
+        this._settings = this.kernel.settings;
         
         this.initialisingFunctions = [
 			this.keyboardControls.bind(this),
@@ -16,12 +22,13 @@ export default class ASControlsInitialiser extends ControlsInitialiser
 		];
 	}
 	
-    keyboardControls() //This is for keyboard controls, for playing in browser
+    //This is for keyboard controls, for playing in browser
+    keyboardControls():void
     {
         if(!this._settings.isOnMobile)
         {
             const keyDownListener = (e) => {
-                const playerModel = this._kernel.loadedModels[this._playerModelIndex];
+                const playerModel = this.kernel.loadedModels[this._playerModelIndex] as ASModel;
                 
                 if(this._currentMove !== e.key && playerModel.canBeControlled)
                 {
@@ -39,7 +46,7 @@ export default class ASControlsInitialiser extends ControlsInitialiser
             };
             
             const keyUpListener = (e) => {
-                const playerModel = this._kernel.loadedModels[this._playerModelIndex];
+                const playerModel = this.kernel.loadedModels[this._playerModelIndex];
                 
                 if(this._currentMove == e.key)
                 {
@@ -54,10 +61,10 @@ export default class ASControlsInitialiser extends ControlsInitialiser
     }
     
     //these are touch controls for game on mobile
-    touchControls()
+    touchControls():void
     {
         const touchStartListener = (e) => {
-            const playerModel = this._kernel.loadedModels[this._playerModelIndex];
+            const playerModel = this.kernel.loadedModels[this._playerModelIndex] as ASModel;
             
             for(let i = 0; i < e.touches.length; i++)
             {
@@ -73,9 +80,9 @@ export default class ASControlsInitialiser extends ControlsInitialiser
         };
         
         const touchEndListener = (e) => {
-            const playerModel = this._kernel.loadedModels[this._playerModelIndex];
+            const playerModel = this.kernel.loadedModels[this._playerModelIndex];
             
-            let newMove = null;
+            let newMove:string|null = null;
             for(let i = 0; i < e.touches.length; i++)
             {
                 if(e.touches[i].pageX < (window.innerWidth / 2))

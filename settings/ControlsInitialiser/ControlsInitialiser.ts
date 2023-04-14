@@ -1,0 +1,57 @@
+import IRegisteredEventListener from './IRegisteredEventListener';
+import Kernel from '../../Kernel/Kernel';
+import IKernel from '../../Kernel/IKernel';
+import IControlsInitialiser from './IControlsInitialiser';
+
+/**
+ * Handles the initialising of the game's controls. 
+ * Children of this class should contain methods that add event listeners to this.registeredEventListeners
+ */
+export default class ControlsInitialiser implements IControlsInitialiser
+{
+	protected kernel:IKernel;
+	
+	/**
+	 * Any event-listener functions should be added to this, so they can be registered/unregistered
+	 */
+	registeredEventListeners:IRegisteredEventListener[];
+	
+	/**
+	 * An array of functions that add the required event listeners to this.registeredEventListeners
+	 */
+	initialisingFunctions:{():void;}[];
+	
+	/**
+	 * Constructor
+	 */
+    constructor()
+    {
+        this.kernel = Kernel.getInstance();
+		
+		this.registeredEventListeners = [];
+		this.initialisingFunctions = [];
+    }
+	
+	/**
+	 * Calls all control-initialising functions, and sets up the event listeners
+	 */
+	initialiseControls():void
+	{
+		this.initialisingFunctions.forEach(func => func());
+		this.registeredEventListeners.forEach(
+			listenerInfo => window.addEventListener(listenerInfo.type, listenerInfo.listener, listenerInfo.options)
+		);
+	}
+	
+	/**
+	 * Removes any registered event listeners
+	 */
+	unregisterEventListeners():void
+	{
+		this.registeredEventListeners.forEach(
+			listenerInfo => window.removeEventListener(listenerInfo.type, listenerInfo.listener, listenerInfo.options)
+		);
+		
+		this.registeredEventListeners = [];
+	}
+}
