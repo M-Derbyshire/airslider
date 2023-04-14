@@ -1,18 +1,18 @@
-import Kernel from '/Kernel/kernel';
+import ISoundEn from './ISoundEn';
 
 /**
  * The engine that controls the sound/music of the game
  */
-export default class SoundEn{
+export default class SoundEn implements ISoundEn {
+    
+    private _music:HTMLAudioElement;
+    private _musicIsPlaying:boolean;
     
     /**
      * Constructor
      */
     constructor()
     {
-        this._kernel = Kernel.getInstance();
-        
-        this._music;
         this._musicIsPlaying = false;
     }
     
@@ -20,18 +20,19 @@ export default class SoundEn{
      * The level's music
      */
     get music() { return this._music; }
-    set music(ref)
+    set music(ref:HTMLAudioElement)
     {
-        this._music = this._kernel.loadedAssets[ref].asset;
+        this._music = ref;
     }
     
     /**
-     * Should the music be played on repeat?
+     * Should the music be played on repeat? (music must be set before this can be set, and will need to be set whenever changing the music)
      */
     get musicRepeat() { return this._music.loop; }
     set musicRepeat(repeat)
     {
-        this._music.loop = repeat;
+        if(this._music)
+            this._music.loop = repeat;
     }
     
     /**
@@ -42,7 +43,7 @@ export default class SoundEn{
     /**
      * Triggers the playing of the level's music
      */
-    playMusic()
+    playMusic():void
     {
         this._music.play();
         this._musicIsPlaying = true;
@@ -51,7 +52,7 @@ export default class SoundEn{
     /**
      * Pauses the level's music
      */
-    pauseMusic()
+    pauseMusic():void
     {
         this._music.pause();
         this._musicIsPlaying = false;
@@ -60,7 +61,7 @@ export default class SoundEn{
     /**
      * Stops the level's music (and sets it back to the start of the audio track)
      */
-    stopMusic()
+    stopMusic():void
     {
         this._music.pause();
         this._music.currentTime = 0;
@@ -72,22 +73,22 @@ export default class SoundEn{
      * @param ref The sound effect to be played
      * @param loop Should this sound effect be played on repeat
      */
-    playSound(ref, loop = false)
+    playSound(ref:HTMLAudioElement, loop:boolean = false):void
     {
         //position needs to be reset so sounds will restart
         //if they're triggered mid-way through playing
-        this._kernel.loadedAssets[ref].asset.currentTime = 0;
-        this._kernel.loadedAssets[ref].asset.loop = loop;
-        this._kernel.loadedAssets[ref].asset.play();
+        ref.currentTime = 0;
+        ref.loop = loop;
+        ref.play();
     }
     
     /**
      * Stops the playing of the given sound
      * @param ref The sound effect to be stopped
      */
-    stopSound(ref)
+    stopSound(ref:HTMLAudioElement):void
     {
-        //sound position will be reset in playSound() method
-        this._kernel.loadedAssets[ref].asset.pause();
+        ref.currentTime = 0;
+        ref.pause();
     }
 }

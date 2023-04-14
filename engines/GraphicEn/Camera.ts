@@ -1,9 +1,31 @@
-import Kernel from '/Kernel/kernel';
+import Kernel from '../../Kernel/Kernel';
+import IKernel from '../../Kernel/IKernel';
+import ICamera from './ICamera';
+import IHelpers from '../../Kernel/helpers/IHelpers';
 
 /**
  * A level's camera
  */
-export default class Camera {
+export default class Camera implements ICamera {
+    
+    private _kernel:IKernel;
+    private _helpers:IHelpers;
+    
+    private _canvas:HTMLCanvasElement;
+    private _canvasCtx:CanvasRenderingContext2D;
+    private _aspectRatioHorizontal:number;
+    private _aspectRatioVertical:number;
+    
+    private _positions:ICameraPositions;
+    
+    private _emptySpaceColor:string;
+    private _letterBoxColor:string;
+    
+    unitCameraPositionCalc:{
+        x(xUnit:number):number;
+        y(yUnit:number):number;
+    };
+    
     
     /**
      * Constructor
@@ -12,13 +34,15 @@ export default class Camera {
      * @param aspectRatioHorizontal The horizontal aspect ratio value (e.g. the "16" in "16:9")
      * @param aspectRatioVertical The vertical aspect ratio value (e.g. the "9" in "16:9")
      */
-    constructor(canvas, canvasCtx, aspectRatioHorizontal = 17, aspectRatioVertical = 9)
+    constructor(canvas:HTMLCanvasElement, canvasCtx:CanvasRenderingContext2D, aspectRatioHorizontal:number = 17, aspectRatioVertical:number = 9)
     {
-        this.kernel = Kernel.getInstance();
-        this.helpers = this.kernel.helpers;
+        this._kernel = Kernel.getInstance();
+        this._helpers = this._kernel.helpers;
         
         this._canvas = canvas;
         this._canvasCtx = canvasCtx;
+        this._aspectRatioHorizontal = aspectRatioHorizontal;
+        this._aspectRatioVertical = aspectRatioVertical;
         
         
         this._positions = {
@@ -27,10 +51,16 @@ export default class Camera {
             //These are stored as actual canvas position values (not in game units)
             canvas: { x: 0, y: 0, width: 0, height: 0 },
             
-            //The drawSpace positions set where the camera exists within the level's available space.
+            //The drawSpace positions define where the camera exists within the level's available space.
             //These values are in units, not actual canvas drawing positions.
             drawSpace: { x: 0, y: 0 }
         };
+        
+        this._emptySpaceColor = "#000000"; // The color of any empty space (not covered by the frame's background, or other elements)
+        this._letterBoxColor = "#000000"; // The color of the letterboxing that surrounds the game (depending on the aspect ratio)
+        
+        
+        
         
         // Used by frames/models to determine where to actually draw on canvas (based on camera position)
         this.unitCameraPositionCalc = {
@@ -51,13 +81,8 @@ export default class Camera {
             y: (yUnit) => (yUnit - this._positions.drawSpace.y)
         };
         
-        this._aspectRatioHorizontal = aspectRatioHorizontal;
-        this._aspectRatioVertical = aspectRatioVertical;
         
         this.setCameraSize();
-        
-        this._emptySpaceColor = "#000000";
-        this._letterBoxColor = "#000000";
     }
     
     /**
@@ -93,7 +118,7 @@ export default class Camera {
     /**
      * Sets the camera's width and height to match the game's aspect ratio values
      */
-    setCameraSize()
+    setCameraSize():void
     {
         let width;
         let height;
@@ -119,7 +144,7 @@ export default class Camera {
      * @param emptySpaceColor the color of any empty space on the canvas
      * @param letterBoxColor the color of the letterbox around the game
      */
-    setColors(emptySpaceColor, letterBoxColor)
+    setColors(emptySpaceColor:string, letterBoxColor:string):void
     {
         this._emptySpaceColor = emptySpaceColor;
         this._letterBoxColor = letterBoxColor;
@@ -135,12 +160,12 @@ export default class Camera {
      * @param zPosition The z position of the object
      * @returns true if the object is on camera, false if not
      */
-    isOnCamera(drawSpaceX, drawSpaceY, widthUnits, heightUnits, zPosition = 0)
+    isOnCamera(drawSpaceX:number, drawSpaceY:number, widthUnits:number, heightUnits:number, zPosition:number = 0):boolean
     {
-        const objectRealX = this.helpers.zCalc.x(this.helpers.unit.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this._positions.canvas.x, zPosition);
-        const objectRealY = this.helpers.zCalc.y(this.helpers.unit.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this._positions.canvas.y, zPosition);
-        const objectRealWidth = this.helpers.zCalc.width(this.helpers.unit.xUnit(widthUnits), zPosition);
-        const objectRealHeight = this.helpers.zCalc.height(this.helpers.unit.yUnit(heightUnits), zPosition);
+        const objectRealX = this._helpers.zCalc.x(this._helpers.unit.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this._positions.canvas.x, zPosition);
+        const objectRealY = this._helpers.zCalc.y(this._helpers.unit.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this._positions.canvas.y, zPosition);
+        const objectRealWidth = this._helpers.zCalc.width(this._helpers.unit.xUnit(widthUnits), zPosition);
+        const objectRealHeight = this._helpers.zCalc.height(this._helpers.unit.yUnit(heightUnits), zPosition);
         
         return (
             (objectRealX + objectRealWidth >= this._positions.canvas.x &&
@@ -153,7 +178,7 @@ export default class Camera {
     /**
      * Draws anything that the camera needs to place in the background (such as the empty space color)
      */
-    drawBack()
+    drawBack():void
     {
         this.drawEmptySpaceColor();
     }
@@ -161,7 +186,7 @@ export default class Camera {
     /**
      * Draws anthing that the camera needs to place over everything else (such as the letterbox)
      */
-    drawFront()
+    drawFront():void
     {
         this.drawLetterbox();
     }
@@ -169,7 +194,7 @@ export default class Camera {
     /**
      * Draws the color of any empty space on the canvas (this color is set with the setColors() method)
      */
-    drawEmptySpaceColor()
+    drawEmptySpaceColor():void
     {
         this._canvasCtx.fillStyle = this._emptySpaceColor;
         this._canvasCtx.rect(0, 0, this._canvas.width, this._canvas.height);
@@ -179,7 +204,7 @@ export default class Camera {
     /**
      * Draws the letterbox around the game (the color is set with the setColors() method)
      */
-    drawLetterbox()
+    drawLetterbox():void
     {
         this._canvasCtx.fillStyle = this._letterBoxColor;
         
@@ -220,35 +245,64 @@ export default class Camera {
      * Moves the camera's position to the left, within the level's space
      * @param speed the speed of the movement
      */
-    moveLeft(speed)
+    moveLeft(speed:number):void
     {
-        this._positions.drawSpace.x -= this.helpers.unit.xSpeed(speed);
+        this._positions.drawSpace.x -= this._helpers.unit.xSpeed(speed);
     }
     
     /**
      * Moves the camera's position to the right, within the level's space
      * @param speed the speed of the movement
      */
-    moveRight(speed)
+    moveRight(speed:number):void
     {
-        this._positions.drawSpace.x += this.helpers.unit.xSpeed(speed);
+        this._positions.drawSpace.x += this._helpers.unit.xSpeed(speed);
     }
     
     /**
      * Moves the camera's position up, within the level's space
      * @param speed the speed of the movement
      */
-    moveUp(speed)
+    moveUp(speed:number):void
     {
-        this._positions.drawSpace.y -= this.helpers.unit.ySpeed(speed);
+        this._positions.drawSpace.y -= this._helpers.unit.ySpeed(speed);
     }
     
     /**
      * Moves the camera's position down, within the level's space
      * @param speed the speed of the movement
      */
-    moveDown(speed)
+    moveDown(speed:number):void
     {
-        this._positions.drawSpace.y += this.helpers.unit.ySpeed(speed);
+        this._positions.drawSpace.y += this._helpers.unit.ySpeed(speed);
     }
 }
+
+
+/**
+ * Position data used by a camera
+ */
+export interface ICameraPositions {
+    
+    /**
+     * The canvas positions/dimensions are the positions/sizes of the camera on the canvas
+     * (any canvas space outside of this will be filled in by the drawLetterbox() method).
+     * These are stored as actual canvas position values (not in game units)
+     */
+    canvas:{
+        x:number;
+        y:number;
+        width:number;
+        height:number;
+    };
+    
+    /**
+     * The drawSpace positions define where the camera exists within the level's available space.
+     * These values are in units, not actual canvas drawing positions.
+     */
+    drawSpace:{
+        x:number;
+        y:number;
+    };
+    
+};

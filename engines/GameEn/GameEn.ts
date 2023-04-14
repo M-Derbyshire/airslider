@@ -1,9 +1,13 @@
-import Kernel from '/Kernel/kernel';
+import Kernel from '../../Kernel/Kernel';
+import IKernel from '../../Kernel/IKernel';
+import IGameEn from './IGameEn';
 
 /**
  * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
  */
-export default class GameEn{
+export default class GameEn implements IGameEn {
+    
+    private _kernel:IKernel;
     
     /**
      * Constructor
@@ -16,7 +20,7 @@ export default class GameEn{
     /**
      * Triggers the actions of levels/models, and then triggers the event checking/handling
      */
-    run()
+    run():void
     {
         this._kernel.level.act();
         
