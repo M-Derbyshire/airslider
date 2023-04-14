@@ -1,24 +1,32 @@
+import IAssetHandler from "./IAssetHandler";
+import ILoadedAsset from "./ILoadedAsset";
+
 /**
  * Loads and handles assets
  */
-export default class AssetHandler
+export default class AssetHandler implements IAssetHandler
 {
+    private _rootPath:string;
+    private _assetsStillLoading:number;
+    private _baseUrl:string;
+    
+    /**
+     * The loaded image/audio assets
+     */
+    loadedAssets:ILoadedAsset[];
+    
     /**
      * Constructor
      * @param rootPath the root directory/path, added to the beginning of all asset file paths
      */
-    constructor(rootPath)
+    constructor(rootPath:string)
     {
         this._rootPath = rootPath;
         this._assetsStillLoading = 0; //increased when asset starts loading, decrease when done
         
-        // Start of development asset path
-        this._baseUrl = window.location.href.replace("/index.html", "");
+        this._baseUrl = window.location.href.replace("/index.html", ""); // Start of development asset path
         
-        /**
-         * The loaded image/audio assets
-         */
-        this.loadedAssets:(HTMLImageElement|HTMLAudioElement)[] = [];
+        this.loadedAssets = [];
     }
     
     /**
@@ -30,7 +38,7 @@ export default class AssetHandler
     /**
      * Will be called when an asset has finished loading (Needs to be bound to this AssetHandler instance when being used)
      */
-    _defaultAssetCallback()
+    private _defaultAssetCallback():void
     {
         this.assetsStillLoading--;
     }
@@ -38,7 +46,7 @@ export default class AssetHandler
     /**
      * Returns the asset handler's default callback (that will be called when an asset has finished loading)
      */
-    getDefaultAssetCallback()
+    getDefaultAssetCallback():()=>void
     {
         return this._defaultAssetCallback;
     }
@@ -53,7 +61,7 @@ export default class AssetHandler
      * @param callback a function to be called, once the asset has finished loading (see the getDefaultAssetCallback method)
      * @returns the asset object
      */
-    loadAsset(obj, path, callback)
+    loadAsset(obj:HTMLImageElement|HTMLAudioElement, path:string, callback:()=>void):HTMLImageElement|HTMLAudioElement
     {
 		const boundCallback = callback.bind(this);
         path = this._prepareAssetPath(path);
@@ -70,7 +78,7 @@ export default class AssetHandler
         const newLoadedAsset = {
             path,
             asset: obj,
-            usageCount: 1 //How many entities are currently using this?
+            usageCount: 1 // How many entities are currently using this?
         }; 
         
 		
@@ -94,7 +102,7 @@ export default class AssetHandler
      * The asset should stay loaded if there are still entities using it, but if the usage count goes down to 0, it will be removed
      * @param path the path to the asset file
      */
-    releaseAsset(path)
+    releaseAsset(path:string):void
     {
         path = this._prepareAssetPath(path);
         const heldAssetIdx = this._checkAssetHeld(path);
@@ -117,7 +125,7 @@ export default class AssetHandler
      * @param path the original asset path
      * @returns the modified asset path
      */
-    _prepareAssetPath(path)
+    private _prepareAssetPath(path:string):string
     {
         return this._rootPath + path;
     }
@@ -127,7 +135,7 @@ export default class AssetHandler
      * @param path the path to the asset file
      * @returns the index of the asset if it has been loaded, or -1 if not
      */
-    _checkAssetHeld(path)
+    private _checkAssetHeld(path:string):number
     {
         for(let i = 0; i < this.loadedAssets.length; i++)
         {
@@ -145,7 +153,7 @@ export default class AssetHandler
      * @param path the path to the font file
      * @param callback a function to be called, once the font has finished loading (see the getDefaultAssetCallback method)
      */
-    loadFont(name, path, callback)
+    loadFont(name:string, path:string, callback:()=>void):void
     {
         const boundCallback = callback.bind(this);
         

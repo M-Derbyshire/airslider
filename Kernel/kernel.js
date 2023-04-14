@@ -150,7 +150,7 @@ export default class Kernel {
     /**
      * The loaded image/audio assets
      */
-    get loadedAssets(){return this._assetHandler.loadedAssets;}
+    get loadedAssets(){return this._assetHandler.loadedAssets.map(loadedAsset => loadedAsset.asset);}
     
     /**
      * Loads and handles assets

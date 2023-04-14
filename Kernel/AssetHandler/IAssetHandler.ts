@@ -1,3 +1,5 @@
+import ILoadedAsset from "./ILoadedAsset";
+
 /**
  * Loads and handles assets
  */
@@ -6,7 +8,7 @@ export default interface IAssetHandler {
     /**
      * The loaded image/audio assets
      */
-    loadedAssets:(HTMLImageElement|HTMLAudioElement)[];
+    loadedAssets:ILoadedAsset[];
     
     /**
      * How many assets are still loading?

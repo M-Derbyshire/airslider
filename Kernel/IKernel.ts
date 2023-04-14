@@ -5,7 +5,7 @@ import IGraphicEn from "../engines/GraphicEn/IGraphicEn";
 import ISoundEn from "../engines/SoundEn/ISoundEn";
 import ISettings from "../settings/ISettings";
 import IHelpers from "./helpers/IHelpers";
-import IAssetHandler from "./IAssetHandler";
+import IAssetHandler from "./AssetHandler/IAssetHandler";
 
 /**
  * Controls the entire game (this will be a singleton)
