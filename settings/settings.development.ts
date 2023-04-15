@@ -14,7 +14,7 @@ export default {
 	aspectRatioHorizontal: 17,
 	aspectRatioVertical: 9,
 	playerModelIndex: 0,
-	controlsInitialiserClass: ASControlsInitialiser.prototype,
-	initialLevelClass: TheConstruct.prototype,
+	controlsInitialiserClass: ASControlsInitialiser,
+	initialLevelClass: TheConstruct,
 	initialLevelConstructorParameters: []
 } as ISettings;

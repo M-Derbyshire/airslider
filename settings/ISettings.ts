@@ -64,12 +64,12 @@ export default interface ISettings {
     /**
      * The class of the controls initialiser
      */
-	controlsInitialiserClass:IControlsInitialiser;
+	controlsInitialiserClass:new()=>IControlsInitialiser;
     
     /**
      * The class of the initial level
      */
-	initialLevelClass:ILevel;
+	initialLevelClass:new()=>ILevel;
     
     /**
      * Any parameters required by the constructor of the initial level

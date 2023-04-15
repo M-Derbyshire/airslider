@@ -210,58 +210,58 @@ export default class ASLevel extends Level
         this.eventManager.registerEventsArray([
             { 
                 eventCheckMethodName: "zCollisionEventCheck",
-                class1: Tarian as IModel,
+                class1: Tarian,
                 class1EventActionName: "zCollisionEventAction",
-                class2: Shocker as IModel,
+                class2: Shocker,
                 class2EventActionName: "zCollisionEventAction"
             },
             { 
                 eventCheckMethodName: "zCollisionEventCheck",
-                class1: ElectricHornet as IModel,
+                class1: ElectricHornet,
                 class1EventActionName: "zCollisionEventAction",
-                class2: Tarian as IModel,
+                class2: Tarian,
                 class2EventActionName: "zCollisionEventAction"
             },
             { 
                 eventCheckMethodName: "hitPlayerOrGroundEventCheck",
-                class1: NeonPidgeon as IModel,
+                class1: NeonPidgeon,
                 class1EventActionName: "hitPlayerOrGroundEventAction",
-                class2: Tarian as IModel,
+                class2: Tarian,
                 class2EventActionName: "zCollisionEventAction"
             },
             { 
                 eventCheckMethodName: "neonPidgeonOverlappingEventCheck",
-                class1: NeonPidgeon as IModel,
+                class1: NeonPidgeon,
                 class1EventActionName: "neonPidgeonOverlappingEventAction",
-                class2: Tarian as IModel,
+                class2: Tarian,
                 class2EventActionName: "" //Doesn't have one, and doesn't try to call one
             },
             { 
                 eventCheckMethodName: "zCollisionEventCheck",
-                class1: Tarian as IModel,
+                class1: Tarian,
                 class1EventActionName: "zCollisionEventAction",
-                class2: LavaBall as IModel,
+                class2: LavaBall,
                 class2EventActionName: "hitPlayerEventAction"
             },
             { 
                 eventCheckMethodName: "hitPlayerOrGroundEventCheck",
-                class1: Falcon as IModel,
+                class1: Falcon,
                 class1EventActionName: "hitPlayerOrGroundEventAction",
-                class2: Tarian as IModel,
+                class2: Tarian,
                 class2EventActionName: "zCollisionEventAction"
             },
             { 
                 eventCheckMethodName: "zCollisionEventCheck",
-                class1: Tarian as IModel,
+                class1: Tarian,
                 class1EventActionName: "zCollisionEventAction",
-                class2: Ghost as IModel,
+                class2: Ghost,
                 class2EventActionName: "zCollisionEventAction"
             },
             {
               eventCheckMethodName: "zCollisionEventCheck",
-              class1: Tarian as IModel,
+              class1: Tarian,
               class1EventActionName: "zCollisionEventAction",
-              class2: Lightning as IModel,
+              class2: Lightning,
               class2EventActionName: "hitPlayerEventAction"
             },
         ]);

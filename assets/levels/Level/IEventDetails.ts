@@ -13,7 +13,7 @@ export default interface IEventDetails {
     /**
      * The first model class that is involved in this type of event
      */
-    class1:IModel;
+    class1:new()=>IModel;
     
     /**
      * The name of the method (on the first model type) that should be triggered when this event occurs
@@ -23,7 +23,7 @@ export default interface IEventDetails {
     /**
      * The second model class that is involved in this type of event
      */
-    class2:IModel;
+    class2:new()=>IModel;
     
     /**
      * The name of the method (on the second model type) that should be triggered when this event occurs
