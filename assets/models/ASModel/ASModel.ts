@@ -23,7 +23,7 @@ export default class ASModel extends Model {
     /**
      * Should handle the level being stopped
      */
-    protected levelStopped() {}
+    levelStopped() {}
     
     /**
      * Center the model on the x axis
