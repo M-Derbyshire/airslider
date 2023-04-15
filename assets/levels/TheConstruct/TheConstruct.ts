@@ -1,37 +1,46 @@
-import Kernel from '/Kernel/kernel';
-import Tarian from '/assets/models/Tarian/Tarian';
-import NeonPidgeon from '/assets/models/Monsters/NeonPidgeon/NeonPidgeon';
-import Falcon from '/assets/models/Monsters/Falcon/Falcon';
-import BabyDragon from '/assets/models/Monsters/BabyDragon/BabyDragon';
-import LavaBall from '/assets/models/Monsters/attacks/LavaBall/LavaBall';
-import Ghost from '/assets/models/Monsters/Ghost/Ghost';
-import Shocker from '/assets/models/Shocker/Shocker';
-import ElectricSeahorse from '/assets/models/Monsters/ElectricSeahorse/ElectricSeahorse';
-import Lightning from '/assets/models/Monsters/attacks/Lightning/Lightning';
-import Frame from '/engines/GraphicEn/Frame';
-import ASLevel from '/assets/levels/ASLevel/ASLevel';
-import TarianExplosion from '/assets/models/TarianExplosion/TarianExplosion';
-import ElectricHornet from '/assets/models/Monsters/ElectricHornet/ElectricHornet';
+import Tarian from '../../models/Tarian/Tarian';
+import NeonPidgeon from '../../models/Monsters/NeonPidgeon/NeonPidgeon';
+import Falcon from '../../models/Monsters/Falcon/Falcon';
+import BabyDragon from '../../models/Monsters/BabyDragon/BabyDragon';
+import LavaBall from '../../models/Monsters/attacks/LavaBall/LavaBall';
+import Ghost from '../../models/Monsters/Ghost/Ghost';
+import Shocker from '../../models/Shocker/Shocker';
+import ElectricSeahorse from '../../models/Monsters/ElectricSeahorse/ElectricSeahorse';
+import Lightning from '../../models/Monsters/attacks/Lightning/Lightning';
+import Frame from '../../../engines/GraphicEn/Frame';
+import ASLevel from '../ASLevel/ASLevel';
+import TarianExplosion from '../../models/TarianExplosion/TarianExplosion';
+import ElectricHornet from '../../models/Monsters/ElectricHornet/ElectricHornet';
+import IModel from '../../models/Model/IModel';
+import ASModel from '../../models/ASModel/ASModel';
+import ICamera from '../../../engines/GraphicEn/ICamera';
+import IFrameManager from '../../../engines/GraphicEn/IFrameManager';
 
+/**
+ * Testing/development level
+ */
 export default class TheConstruct extends ASLevel
 {
+    /**
+     * Constructor
+     */
     constructor()
     {
-        super(ASLevel);
+        super();
         
         this.levelClosingSectionNumber = 3;
     }
     
-    getModels()
+    getModels():IModel[]
     {
         const stdModels = super.getModels();
         
-        let models = [];
+        let models:ASModel[] = [];
         
 		this.player = new Tarian();
-        const playerExplosion = new TarianExplosion(this.player);
+        
         models.push(this.player); //add main character (has to be 0)
-        models.push(playerExplosion);
+        models.push(new TarianExplosion(this.player));
         
         // models.push(new NeonPidgeon(player, true));
         // models.push(new NeonPidgeon(player));
@@ -63,14 +72,14 @@ export default class TheConstruct extends ASLevel
         return [...models, ...stdModels];
     }
     
-    load(canvas, canvasCtx, camera, frameManager)
+    load(canvas:HTMLCanvasElement, canvasCtx:CanvasRenderingContext2D, camera:ICamera, frameManager:IFrameManager):void
     {
         super.load(canvas, canvasCtx, camera, frameManager);
         
         this.frameManager = frameManager;
         
-        this._tunnelSprite = this.kernel.loadImage("/assets/levels/TheConstruct/images/theConstructTunnel.png");
-        this._tunnelSpriteLength = 60;
+        this.tunnelSprite = this.kernel.loadImage("/assets/levels/TheConstruct/images/theConstructTunnel.png");
+        this.tunnelSpriteLength = 60;
         
         this.ground.load(
             "/assets/levels/TheConstruct/images/ground.png",
@@ -113,17 +122,17 @@ export default class TheConstruct extends ASLevel
         this.outsideVisible = true;
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         
         // this.tunnelManager.createStartingTunnel([
-        //     this.tunnelManager.newTunnelPart(this._tunnelSprite, this._tunnelSpriteLength)
+        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
         // ]);
     }
     
     
-    act()
+    act():void
     {
         super.act();
 		
@@ -135,7 +144,7 @@ export default class TheConstruct extends ASLevel
         }
         
         // this.tunnelManager.continueTunnel([
-        //     this.tunnelManager.newTunnelPart(this._tunnelSprite, this._tunnelSpriteLength),
+        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
         //     this.tunnelManager.newTunnelPart(null, this.tunnelSpriteLength)
         // ]);
         

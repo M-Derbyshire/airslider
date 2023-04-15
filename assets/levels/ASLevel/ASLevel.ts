@@ -43,8 +43,8 @@ export default class ASLevel extends Level
     protected levelClosingSectionNumber:number; // The closing section number is defined by the child level.
     protected timeLevelClosingBeginMS:number; // When (in milliseconds) did the closing sequence begin
     
-    protected monsters:Monster;
-    protected player:IModel;
+    protected monsters:Monster[];
+    protected player:ASModel;
     
     protected outsideVisible:boolean;
     protected tunnelLightMaskIndex:number;
@@ -56,8 +56,8 @@ export default class ASLevel extends Level
     maxLevelSpeedRaw:number; // The maximum speed (before being calculated by the zCalc)
     protected levelSpeedAccl:number; // How quickly does the speed accelerate at the start?
     
-    private _tunnelSprite: HTMLImageElement;
-    private _tunnelSpriteLength: number;
+    protected tunnelSprite: HTMLImageElement;
+    protected tunnelSpriteLength: number;
     
     // Models/info for opening and closing of level
     private _startSign:IModel;
@@ -82,11 +82,7 @@ export default class ASLevel extends Level
         this.shockerManager = new ShockerManager();
 		this.patternManager = new ModelXPositionPatternManager();
         
-        this.ground;
-        
         this.tunnelManager = new LevelTunnel();
-        this._tunnelSprite;
-        this._tunnelSpriteLength;
 		
 		this.levelSection = 0;
         this.levelClosingSectionNumber = 1; // The section of the level that should be the closing section
