@@ -15,11 +15,15 @@ export default class GraphicEn implements IGraphicEn {
     
     private _gameCan:HTMLCanvasElement;
     private _gameCtx:CanvasRenderingContext2D;
-    private _camera:ICamera;
     private _frameManager:IFrameManager;
     
     private _lastFrameCanvasWidth:number;
     private _lastFrameCanvasHeight:number;
+    
+    /**
+     * The camera for the level
+     */
+    camera:ICamera;
     
     /**
      * Constructor
@@ -35,7 +39,7 @@ export default class GraphicEn implements IGraphicEn {
 		
         this._gameCan = gameCanvas;
         this._gameCtx = gameContext;
-        this._camera = camera;
+        this.camera = camera;
         this._frameManager = frameManager;
         
         // The current width/height of the canvas element
@@ -63,7 +67,7 @@ export default class GraphicEn implements IGraphicEn {
         
         
         //Draw the parts of the screen that are behind the models
-        this._camera.drawBack();
+        this.camera.drawBack();
         this._frameManager.determineFramesToDraw();
         this._frameManager.drawFramesBack();
         this._kernel.level.drawBack();
@@ -76,7 +80,7 @@ export default class GraphicEn implements IGraphicEn {
         this._kernel.level.drawFront();
         this._frameManager.drawFramesFront();
         this._kernel.level.HUD.draw();
-        this._camera.drawFront();
+        this.camera.drawFront();
         
         if(this._kernel.displayFps)
             this._fpsMeter();
@@ -94,7 +98,7 @@ export default class GraphicEn implements IGraphicEn {
         
 		zSortedModels.forEach(modelToDraw => {
 			
-			if(this._camera.isOnCamera(
+			if(this.camera.isOnCamera(
                         modelToDraw.x, 
                         modelToDraw.y, 
                         modelToDraw.width, 
@@ -161,8 +165,8 @@ export default class GraphicEn implements IGraphicEn {
         }
         
         //It should be noted that this should be ran on loading as well (it is the first setting of the below)
-        this._camera.setCameraSize();
+        this.camera.setCameraSize();
         this._helpers.zCalc.resetVanishPointPosition();
-        this._helpers.unit.setDimensions(this._camera.canvasPositionWidth, this._camera.canvasPositionHeight);
+        this._helpers.unit.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
     }
 }

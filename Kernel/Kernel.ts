@@ -1,22 +1,33 @@
-import AssetHandler from './AssetHandler';
-import GameEn from '/engines/GameEn/GameEn';
-import GraphicEn from '/engines/GraphicEn/GraphicEn';
-import SoundEn from '/engines/SoundEn/SoundEn';
-import TimeHelper from '/Kernel/helpers/TimeHelper';
-import UnitHelper from '/Kernel/helpers/UnitHelper';
-import ZCalc from '/Kernel/helpers/ZCalc';
-import Camera from '/engines/GraphicEn/Camera';
-import FrameManager from '/engines/GraphicEn/FrameManager';
-import devSettings from '/settings/settings.development';
-import prodSettings from '/settings/settings.production';
-import fonts from '/assets/fonts/fonts';
+import AssetHandler from './AssetHandler/AssetHandler';
+import GameEn from '../engines/GameEn/GameEn';
+import GraphicEn from '../engines/GraphicEn/GraphicEn';
+import SoundEn from '../engines/SoundEn/SoundEn';
+import TimeHelper from './helpers/TimeHelper';
+import UnitHelper from './helpers/UnitHelper';
+import ZCalc from './helpers/ZCalc';
+import Camera from '../engines/GraphicEn/Camera';
+import FrameManager from '../engines/GraphicEn/FrameManager';
+import devSettings from '../settings/settings.development';
+import prodSettings from '../settings/settings.production';
+import fonts from '../assets/fonts/fonts';
+import IKernel from './IKernel';
+import ISettings from '../settings/ISettings';
+import IAssetHandler from './AssetHandler/IAssetHandler';
+import IControlsInitialiser from '../settings/ControlsInitialiser/IControlsInitialiser';
+import IHelpers from './helpers/IHelpers';
+import ILoadedLevel from './ILoadedLevel';
+import ILevel from '../assets/levels/Level/ILevel';
+import IModel from '../assets/models/Model/IModel';
+import IPreparedEngines from './IPreparedEngines';
+import ICamera from '../engines/GraphicEn/ICamera';
+import IFrameManager from '../engines/GraphicEn/IFrameManager';
 
 /**
  * Controls the entire game (this will be a singleton)
  */
-export default class Kernel {
+export default class Kernel implements IKernel {
     
-    static _instance = null; //The single instance of Kernel
+    private static _instance:Kernel|null = null; //The single instance of Kernel
     
     /**
      * Returns the singleton instance of the kernel
@@ -33,6 +44,47 @@ export default class Kernel {
         return new Kernel();
     }
     
+    
+    private _settings:ISettings;
+    private _isOnMobile:boolean;
+    private _gameCanvasElementID:string;
+    private _gameCanvas:HTMLCanvasElement;
+    private _gameContext:CanvasRenderingContext2D;
+    private _correctCanvasStyleAndDevicePixelRatio:boolean;
+    
+    private _fps:number;
+    private _highestFpsReached:number;
+    private _fpsLimit:number;
+    private _lastTime:Date;
+    
+    private _totalLevelActiveMilliseconds:number;
+    private _active:boolean;
+    
+    private _rootPath:string;
+    private _assetHandler:IAssetHandler;
+    
+    private _levelQueue:ILoadedLevel[];
+    
+    private _helpers:IHelpers;
+    
+    private _controlInitialiser:IControlsInitialiser;
+    
+    /**
+     * Should the current FPS counter be displayed on the canvas?
+     */
+    displayFps:boolean;
+    
+    /**
+     * If we're displaying the FPS counter, what color should the text be?
+     */
+    fpsDisplayColor:string;
+    
+    /**
+     * How many drawSpace x/y units are there within the camera's size?
+     */
+    unitsWithinCamera:number;
+    
+    
     /**
      * Constructor
      * @returns The singleton instance of the kernel
@@ -46,7 +98,7 @@ export default class Kernel {
         Kernel._instance = this;
         
         const settings = (process.env.GAME_ENV === "development") ? devSettings : prodSettings;
-        this._settings:ISettings = settings;
+        this._settings = settings;
         
         this._isOnMobile = !!settings.isOnMobile; //is this a mobile app (such as through Cordova)?
         
@@ -63,30 +115,18 @@ export default class Kernel {
         
         this._assetHandler = new AssetHandler(this._rootPath);
         
-        this._levelQueue:ILoadedLevel[] = [];
+        this._levelQueue = [];
         
-        this._helpers:IHelpers;
-		
 		this._gameCanvasElementID = settings.gameCanvasElementID;
-		this._gameCanvas = document.getElementById(this.gameCanvasElementID);
-		this._gameContext = this.gameCanvas.getContext("2d");
+		this._gameCanvas = document.getElementById(this.gameCanvasElementID) as HTMLCanvasElement;
+		this._gameContext = this.gameCanvas.getContext("2d")!;
         this._correctCanvasStyleAndDevicePixelRatio = settings.correctCanvasStyleAndDevicePixelRatio;
         
-        this._controlInitialiser = new settings.controlsInitialiserClass();
+        this._controlInitialiser = new (settings.controlsInitialiserClass as unknown as ObjectConstructor)() as IControlsInitialiser;
         
-        /**
-         * Should the current FPS counter be displayed on the canvas?
-         */
+        
         this.displayFps = settings.displayFps;
-        
-        /**
-         * If we're displaying the FPS counter, what color should the text be?
-         */
         this.fpsDisplayColor = settings.fpsDisplayColor;
-        
-        /**
-         * How many drawSpace x/y units are there within the camera's size?
-         */
         this.unitsWithinCamera = (!isNaN(settings.unitsWithinCamera)) ? settings.unitsWithinCamera : 1000;
     }
     
@@ -135,7 +175,7 @@ export default class Kernel {
     /**
      * The current level that is being ran
      */
-    get level(){return (this._levelQueue.length > 0) ? this._levelQueue[0].level : undefined;}
+    get level(){return this._levelQueue[0]!.level}
     
     /**
      * The models loaded by the current level
@@ -145,7 +185,7 @@ export default class Kernel {
     /**
      * Has the current level been prepared? (using the Level.prepare method)
      */
-    get levelHasBeenPrepared(){return (this._levelQueue.length > 0) ? this._levelQueue[0].hasBeenPrepared : undefined}
+    get levelHasBeenPrepared(){return (this._levelQueue.length > 0) ? this._levelQueue[0].hasBeenPrepared : false}
     
     /**
      * The loaded image/audio assets
@@ -160,7 +200,7 @@ export default class Kernel {
     /**
      * How many assets are still loading?
      */
-    get assetsStillLoading(){return this.assetHandler._assetsStillLoading;}
+    get assetsStillLoading(){return this.assetHandler.assetsStillLoading;}
     
     /**
      * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
@@ -203,7 +243,7 @@ export default class Kernel {
     /**
      * Loads the elements needed for the kernel, and the initial level
      */
-    load()
+    load():void
     {
         this._helpers = {
             zCalc: new ZCalc(),
@@ -213,14 +253,16 @@ export default class Kernel {
         
         Object.keys(fonts).forEach(key => this.loadFont(key, fonts[key]));
         
-        this._loadLevel(new this.settings.initialLevelClass(...this.settings.initialLevelConstructorParameters));
+        const initialLevelClass = this.settings.initialLevelClass as unknown as ObjectConstructor;
+        const initialLevel = initialLevelClass.apply(null, ...this.settings.initialLevelConstructorParameters) as ILevel;
+        this._loadLevel(initialLevel);
     }
     
     /**
      * Loads the given level, and adds it to the kernel's internal level queue
      * @param level the level to load
      */
-    _loadLevel(level)
+    private _loadLevel(level:ILevel):void
     {
 		this._initialiseControls();
         
@@ -247,7 +289,7 @@ export default class Kernel {
     /**
      * Unloads the current level, releasing any assets that need releasing
      */
-    unloadCurrentLevel()
+    unloadCurrentLevel():void
     {
         this.loadedModels.forEach(model => model.unload());
         this.level.unload();
@@ -261,7 +303,7 @@ export default class Kernel {
      * @param models the models to be loaded
      * @param engines the engines used by the level that provided these models
      */
-    _loadModels(models, engines)
+    private _loadModels(models:IModel[], engines:IPreparedEngines):void
 	{
         models.forEach((model, idx) => {
             model.loadedIndex = idx;
@@ -273,7 +315,7 @@ export default class Kernel {
     /**
      * Triggers the preparation of the level, and all models
      */
-    _prepareCurrentLevelAndModels()
+    private _prepareCurrentLevelAndModels():void
     {
         this.level.prepare();
         this.loadedModels.forEach(model => model.prepare());
@@ -287,7 +329,7 @@ export default class Kernel {
      * @param frameManager Manages the frames of a level
      * @returns The new instances of all engines
      */
-	_initialiseAllEngines(camera, frameManager)
+	private _initialiseAllEngines(camera:ICamera, frameManager:IFrameManager):IPreparedEngines
 	{
 		const gameEn = new GameEn();
         const graphicEn = new GraphicEn(this.gameCanvas, this.gameContext, camera, frameManager);
@@ -299,7 +341,7 @@ export default class Kernel {
     /**
      * Triggers the initialisation of the game's controls
      */
-	_initialiseControls()
+	private _initialiseControls():void
 	{
 		this._controlInitialiser.initialiseControls();
 	}
@@ -312,9 +354,9 @@ export default class Kernel {
      * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
      * @returns the image object
      */
-    loadImage(path, callback = this._assetHandler.getDefaultAssetCallback())
+    loadImage(path:string, callback:()=>void = this._assetHandler.getDefaultAssetCallback()):HTMLImageElement
     {
-        return this._assetHandler.loadAsset(new Image, path, callback);
+        return this._assetHandler.loadAsset(new Image, path, callback) as HTMLImageElement;
     }
     
     /**
@@ -323,9 +365,9 @@ export default class Kernel {
      * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
      * @returns the audio object
      */
-    loadAudio(path, callback = this._assetHandler.getDefaultAssetCallback())
+    loadAudio(path:string, callback:()=>void = this._assetHandler.getDefaultAssetCallback()):HTMLAudioElement
     {
-        return this._assetHandler.loadAsset(new Audio, path, callback);
+        return this._assetHandler.loadAsset(new Audio, path, callback) as HTMLAudioElement;
     }
     
     /**
@@ -334,7 +376,7 @@ export default class Kernel {
      * @param path the path to the font file
      * @param callback a callback function, to run when the font has finished loading (this function should still call the asset handler's default asset callback)
      */
-    loadFont(name, path, callback = this._assetHandler.getDefaultAssetCallback())
+    loadFont(name:string, path, callback:()=>void = this._assetHandler.getDefaultAssetCallback()):void
     {
         this._assetHandler.loadFont(name, path, callback);
     }
@@ -345,7 +387,7 @@ export default class Kernel {
      * cannot be unloaded)
      * @param path the file path of the asset
      */
-    releaseAsset(path)
+    releaseAsset(path:string):void
     {
         this._assetHandler.releaseAsset(path);
     }
@@ -356,7 +398,7 @@ export default class Kernel {
     /**
      * Runs the game
      */
-    run()
+    run():void
     {
         requestAnimationFrame(this.run.bind(this));
         
@@ -387,13 +429,13 @@ export default class Kernel {
     /**
      * Paues/unpauses the game
      */
-    toggleGamePause()
+    toggleGamePause():void
     {
         if(this._active)
         {
-            this._soundEn.pauseMusic();
+            this.soundEn.pauseMusic();
         } else {
-            this._soundEn.playMusic();
+            this.soundEn.playMusic();
         }
         
         this._active = !this._active;
@@ -404,7 +446,7 @@ export default class Kernel {
      * @param currentDateTime The current date/time
      * @returns the current (estimated) FPS
      */
-    _getNewFps(currentDateTime)
+    private _getNewFps(currentDateTime:Date):number
     {
         //If the browser window/tab is not open, requestAnimationFrame can pause.
         //However, this can cause unexpected behaviour because the frame rate will drop for one 
@@ -423,7 +465,7 @@ export default class Kernel {
      * Updates the kernel's internal count of the total time the current level has been active
      * @param currentDateTime The current date/time
      */
-    _updateTotalTime(currentDateTime)
+    private _updateTotalTime(currentDateTime:Date):void
     {
         let timePassed = Math.floor(currentDateTime.getMilliseconds()) - Math.floor(this._lastTime.getMilliseconds());
         
@@ -438,7 +480,7 @@ export default class Kernel {
     /**
      * Loads the kernel, and starts the game running
      */
-    initiate()
+    initiate():void
     {
         this.load();
         this.run();
