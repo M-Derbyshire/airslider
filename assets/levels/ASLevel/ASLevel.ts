@@ -103,9 +103,9 @@ export default class ASLevel extends Level
      */
     getModels():IModel[]
     {
-        this._startSign = new Sign("", this._signStartingZPosition, -1, true) as unknown as IModel;
-        this._startSignDisplay = new SignDisplay(this._startSign) as unknown as IModel;
-        this._finishSign = new Sign("FINISH", this.helpers.zCalc.vPointDepth, this._signStartingZPosition, false) as unknown as IModel;
+        this._startSign = new Sign("", this._signStartingZPosition, -1, true) as IModel;
+        this._startSignDisplay = new SignDisplay(this._startSign) as IModel;
+        this._finishSign = new Sign("FINISH", this.helpers.zCalc.vPointDepth, this._signStartingZPosition, false) as IModel;
         
         return [
             this._startSign,
@@ -210,58 +210,58 @@ export default class ASLevel extends Level
         this.eventManager.registerEventsArray([
             { 
                 eventCheckMethodName: "zCollisionEventCheck",
-                class1: Tarian as unknown as IModel,
+                class1: Tarian as IModel,
                 class1EventActionName: "zCollisionEventAction",
-                class2: Shocker as unknown as IModel,
+                class2: Shocker as IModel,
                 class2EventActionName: "zCollisionEventAction"
             },
             { 
                 eventCheckMethodName: "zCollisionEventCheck",
-                class1: ElectricHornet as unknown as IModel,
+                class1: ElectricHornet as IModel,
                 class1EventActionName: "zCollisionEventAction",
-                class2: Tarian as unknown as IModel,
+                class2: Tarian as IModel,
                 class2EventActionName: "zCollisionEventAction"
             },
             { 
                 eventCheckMethodName: "hitPlayerOrGroundEventCheck",
-                class1: NeonPidgeon as unknown as IModel,
+                class1: NeonPidgeon as IModel,
                 class1EventActionName: "hitPlayerOrGroundEventAction",
-                class2: Tarian as unknown as IModel,
+                class2: Tarian as IModel,
                 class2EventActionName: "zCollisionEventAction"
             },
             { 
                 eventCheckMethodName: "neonPidgeonOverlappingEventCheck",
-                class1: NeonPidgeon as unknown as IModel,
+                class1: NeonPidgeon as IModel,
                 class1EventActionName: "neonPidgeonOverlappingEventAction",
-                class2: Tarian as unknown as IModel,
+                class2: Tarian as IModel,
                 class2EventActionName: "" //Doesn't have one, and doesn't try to call one
             },
             { 
                 eventCheckMethodName: "zCollisionEventCheck",
-                class1: Tarian as unknown as IModel,
+                class1: Tarian as IModel,
                 class1EventActionName: "zCollisionEventAction",
-                class2: LavaBall as unknown as IModel,
+                class2: LavaBall as IModel,
                 class2EventActionName: "hitPlayerEventAction"
             },
             { 
                 eventCheckMethodName: "hitPlayerOrGroundEventCheck",
-                class1: Falcon as unknown as IModel,
+                class1: Falcon as IModel,
                 class1EventActionName: "hitPlayerOrGroundEventAction",
-                class2: Tarian as unknown as IModel,
+                class2: Tarian as IModel,
                 class2EventActionName: "zCollisionEventAction"
             },
             { 
                 eventCheckMethodName: "zCollisionEventCheck",
-                class1: Tarian as unknown as IModel,
+                class1: Tarian as IModel,
                 class1EventActionName: "zCollisionEventAction",
-                class2: Ghost as unknown as IModel,
+                class2: Ghost as IModel,
                 class2EventActionName: "zCollisionEventAction"
             },
             {
               eventCheckMethodName: "zCollisionEventCheck",
-              class1: Tarian as unknown as IModel,
+              class1: Tarian as IModel,
               class1EventActionName: "zCollisionEventAction",
-              class2: Lightning as unknown as IModel,
+              class2: Lightning as IModel,
               class2EventActionName: "hitPlayerEventAction"
             },
         ]);
