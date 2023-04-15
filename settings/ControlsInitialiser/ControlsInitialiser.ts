@@ -39,7 +39,7 @@ export default class ControlsInitialiser implements IControlsInitialiser
 	{
 		this.initialisingFunctions.forEach(func => func());
 		this.registeredEventListeners.forEach(
-			listenerInfo => window.addEventListener(listenerInfo.type, listenerInfo.listener, listenerInfo.options)
+			listenerInfo => window.addEventListener(listenerInfo.type, listenerInfo.listener)
 		);
 	}
 	
@@ -49,7 +49,7 @@ export default class ControlsInitialiser implements IControlsInitialiser
 	unregisterEventListeners():void
 	{
 		this.registeredEventListeners.forEach(
-			listenerInfo => window.removeEventListener(listenerInfo.type, listenerInfo.listener, listenerInfo.options)
+			listenerInfo => window.removeEventListener(listenerInfo.type, listenerInfo.listener)
 		);
 		
 		this.registeredEventListeners = [];
