@@ -1,5 +1,5 @@
 import Level from '../Level/Level';
-import MainHUD from '../../HUDs/MainHUD/mainHUD';
+import MainHUD from '../../HUDs/MainHUD/MainHUD';
 import LevelRoad from './LevelRoad';
 import ShockerManager from './ShockerManager';
 import ModelXPositionPatternManager from './ModelXPositionPatternManager';

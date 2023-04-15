@@ -1,16 +1,22 @@
-import DamageFlash from "/assets/HUDs/components/DamageFlash/damageFlash";
+import ICamera from "../../../../engines/GraphicEn/ICamera";
+import DamageFlash from "../DamageFlash/DamageFlash";
 
-export default class LowHealthFlash extends DamageFlash {
-    constructor() {
-        super(DamageFlash);
+/**
+ * Repeatably flashes a "low health" image on the screen
+ */
+export default class LowHealthFlash extends DamageFlash 
+{
+    /**
+     * Constructor
+     */
+    constructor() 
+    {
+        super();
     }
     
-    load(canvasCtx, camera) {
+    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void 
+    {
         super.load(canvasCtx, camera);
-        
-        this.images = {
-            damage: this.kernel.loadImage("/assets/HUDs/components/LowHealthFlash/images/damage.png")
-        };
         
         this.color = "damage";
         this.active = false;
@@ -19,10 +25,16 @@ export default class LowHealthFlash extends DamageFlash {
     // The idea here is to utilise the DamageFlash functionality, but keep 
     // it going until stop is called.
     
+    /**
+     * Starts the flashing
+     */
     startFlashRepeat() {
         this.active = true;
     }
     
+    /**
+     * Stops the flashing
+     */
     stopFlashRepeat() {
         this.active = false;
     }

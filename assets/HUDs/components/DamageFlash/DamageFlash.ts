@@ -1,19 +1,31 @@
-import ASHUDComponent from '/assets/HUDs/components/ASHUDComponent/ASHUDComponent';
+import ICamera from '../../../../engines/GraphicEn/ICamera';
+import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
 
+/**
+ * Flashes an image on the screen (such as a border, when the player take damage)
+ */
 export default class DamageFlash extends ASHUDComponent
 {
+    protected images:IDamageFlashImages;
+    protected opacity:number;
+    protected flashSpeed:number;
+    protected flashSpeedDivider:number;
+    protected color:keyof IDamageFlashImages;
+    
+    /**
+     * Constructor
+     */
     constructor()
     {
-        super(ASHUDComponent);
+        super();
         
-        this.images;
         this.opacity = 0;
         this.flashSpeed = 0.1; //this will be changed when drawing it to match fps
         this.flashSpeedDivider = 4; //change this to change flash speed
-        this.color;
+        this.color = "none";
     }
     
-    draw()
+    draw():void
     {
         this.flashSpeed = this._getFPSConsistentSpeed(this.flashSpeed);
         
@@ -47,27 +59,37 @@ export default class DamageFlash extends ASHUDComponent
         }
     }
 	
-	_getFPSConsistentSpeed(lastFrameSpeed)
+    /**
+     * Generates a speed for the flash that is consistent, regardless of a changing FPS
+     * @param lastFrameSpeed the speed used on the last frame
+     * @returns a consistent speed for the flash
+     */
+	private _getFPSConsistentSpeed(lastFrameSpeed:number):number
 	{
 		const newSpeed = (this.flashSpeedDivider / this.kernel.fps);
 		return (lastFrameSpeed >= 0) ? newSpeed : -newSpeed;
 	}
 	
-	_switchToFadeOut()
+    /**
+     * Starts the fading out of the image
+     */
+	private _switchToFadeOut():void
 	{
 		this.opacity = 1;
         this.flashSpeed = -this.flashSpeed;
 	}
 	
-	_stopFlash()
+    /**
+     * Stops the image flash, and flips its speed
+     */
+	private _stopFlash():void
 	{
 		this.opacity = 0;
         this.flashSpeed = -this.flashSpeed;
 	}
 	
 	
-    
-    load(canvasCtx, camera)
+    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
     {
         super.load(canvasCtx, camera);
         
@@ -77,13 +99,17 @@ export default class DamageFlash extends ASHUDComponent
             purple: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png"),
             none: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/none.png"),
             fire: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/fire.png"),
-            ghost: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/ghost.png")
+            ghost: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/ghost.png"),
+            damage: this.kernel.loadImage("/assets/HUDs/components/LowHealthFlash/images/damage.png")
         };
         
     }
     
-    //This is called by the player's model, and starts the flash going
-    start(color)
+    /**
+     * Starts the image flash going
+     * @param color the image to use as the flash
+     */
+    start(color:keyof IDamageFlashImages):void
     {
         if(this.opacity === 0)
         {
@@ -92,3 +118,15 @@ export default class DamageFlash extends ASHUDComponent
         }
     }
 }
+
+/**
+ * The possible images that can be flashed
+ */
+export interface IDamageFlashImages {
+    yellow: HTMLImageElement;
+    purple: HTMLImageElement;
+    none: HTMLImageElement;
+    fire: HTMLImageElement;
+    ghost: HTMLImageElement;
+    damage: HTMLImageElement;
+};
