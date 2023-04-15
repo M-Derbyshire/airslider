@@ -122,7 +122,7 @@ export default class Kernel implements IKernel {
 		this._gameContext = this.gameCanvas.getContext("2d")!;
         this._correctCanvasStyleAndDevicePixelRatio = settings.correctCanvasStyleAndDevicePixelRatio;
         
-        this._controlInitialiser = new (settings.controlsInitialiserClass as unknown as ObjectConstructor)() as IControlsInitialiser;
+        this._controlInitialiser = new settings.controlsInitialiserClass();
         
         
         this.displayFps = settings.displayFps;
@@ -253,7 +253,7 @@ export default class Kernel implements IKernel {
         
         Object.keys(fonts).forEach(key => this.loadFont(key, fonts[key]));
         
-        const initialLevelClass = this.settings.initialLevelClass as unknown as ObjectConstructor;
+        const initialLevelClass = this.settings.initialLevelClass;
         const initialLevel = initialLevelClass.apply(null, ...this.settings.initialLevelConstructorParameters) as ILevel;
         this._loadLevel(initialLevel);
     }
