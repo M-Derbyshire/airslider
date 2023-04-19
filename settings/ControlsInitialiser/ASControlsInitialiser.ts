@@ -27,7 +27,7 @@ export default class ASControlsInitialiser extends ControlsInitialiser
     {
         if(!this._settings.isOnMobile)
         {
-            const keyDownListener = (e) => {
+            const keyDownListener = (e:KeyboardEvent) => {
                 const playerModel = this.kernel.loadedModels[this._playerModelIndex] as ASModel;
                 
                 if(this._currentMove !== e.key && playerModel.canBeControlled)
@@ -45,7 +45,7 @@ export default class ASControlsInitialiser extends ControlsInitialiser
                 }
             };
             
-            const keyUpListener = (e) => {
+            const keyUpListener = (e:KeyboardEvent) => {
                 const playerModel = this.kernel.loadedModels[this._playerModelIndex];
                 
                 if(this._currentMove == e.key)
@@ -63,7 +63,7 @@ export default class ASControlsInitialiser extends ControlsInitialiser
     //these are touch controls for game on mobile
     touchControls():void
     {
-        const touchStartListener = (e) => {
+        const touchStartListener = (e:TouchEvent) => {
             const playerModel = this.kernel.loadedModels[this._playerModelIndex] as ASModel;
             
             for(let i = 0; i < e.touches.length; i++)
@@ -79,7 +79,7 @@ export default class ASControlsInitialiser extends ControlsInitialiser
             }
         };
         
-        const touchEndListener = (e) => {
+        const touchEndListener = (e:TouchEvent) => {
             const playerModel = this.kernel.loadedModels[this._playerModelIndex];
             
             let newMove:string|null = null;

@@ -22,18 +22,20 @@ import IPreparedEngines from './IPreparedEngines';
 import ICamera from '../engines/GraphicEn/ICamera';
 import IFrameManager from '../engines/GraphicEn/IFrameManager';
 
+let kernelInstance:Kernel|null = null;
+
 /**
  * Controls the entire game (this will be a singleton)
  */
 export default class Kernel implements IKernel {
     
-    private static _instance:Kernel|null = null; //The single instance of Kernel
+    static _instance:Kernel; //The single instance of Kernel
     
     /**
      * Returns the singleton instance of the kernel
      * @returns The singleton instance of the kernel
      */
-    static getInstance()
+    static getInstance():Kernel
     {
         //The Kernel constructor will return the single instance
         //if it has already been created, and if not then it will create
@@ -89,9 +91,9 @@ export default class Kernel implements IKernel {
      * Constructor
      * @returns The singleton instance of the kernel
      */
-    constructor()
+    private constructor()
     {
-        if(Kernel._instance !== null)
+        if(Kernel._instance)
         {
             return Kernel._instance;
         }
@@ -251,10 +253,10 @@ export default class Kernel implements IKernel {
             unit: new UnitHelper(this.unitsWithinCamera)
         };
         
-        Object.keys(fonts).forEach(key => this.loadFont(key, fonts[key]));
+        Object.keys(fonts).forEach((key:string) => this.loadFont(key, fonts[key as keyof typeof fonts]));
         
         const initialLevelClass = this.settings.initialLevelClass;
-        const initialLevel = initialLevelClass.apply(null, ...this.settings.initialLevelConstructorParameters) as ILevel;
+        const initialLevel = initialLevelClass.apply(Object.create(initialLevelClass.prototype), this.settings.initialLevelConstructorParameters) as ILevel;
         this._loadLevel(initialLevel);
     }
     
@@ -376,7 +378,7 @@ export default class Kernel implements IKernel {
      * @param path the path to the font file
      * @param callback a callback function, to run when the font has finished loading (this function should still call the asset handler's default asset callback)
      */
-    loadFont(name:string, path, callback:()=>void = this._assetHandler.getDefaultAssetCallback()):void
+    loadFont(name:string, path:string, callback:()=>void = this._assetHandler.getDefaultAssetCallback()):void
     {
         this._assetHandler.loadFont(name, path, callback);
     }

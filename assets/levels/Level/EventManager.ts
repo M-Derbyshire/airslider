@@ -84,7 +84,7 @@ export default class EventManager implements IEventManager
                 
                 event.class2Models.forEach((model2) => {
                     
-                    this._eventCheckContainer[event.eventCheckMethodName](
+                    (this._eventCheckContainer[event.eventCheckMethodName as keyof EventCheckContainer] as Function)(
                         model1, 
                         event.class1EventActionName, 
                         model2,

@@ -61,18 +61,7 @@ export default class Model implements IModel {
             style: "bolder", // See the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
         };
         
-        this._state;
-        this._active;
         this._display = true;
-        
-        this._x;
-        this._y;
-        this._z;
-        this._xSpeed;
-        this._ySpeed;
-        this._zSpeed;
-        
-        this._loadedIndex;
     }
     
     //getters and setters --------------------------------------
@@ -206,11 +195,13 @@ export default class Model implements IModel {
      */
     checkForExtraEvents():void
     {
-        if(this["extraEvents"] && typeof this["extraEvents"] === "function")
-        {
-            this["extraEvents"]();
-        }
+        this.extraEvents();
     }
+    
+    /**
+     * Any extra event checks specific to this model
+     */
+    protected extraEvents():void {}
     
     /**
     * Is the mouse pointer overlapping this model?

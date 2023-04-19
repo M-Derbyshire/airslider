@@ -18,8 +18,8 @@ export default class Frame implements IFrame {
     
     //These are the indexes of the set background and lightmask in the 
     //_loadedBackgrounds and _loadedLightMasks arrays.
-    private _backgroundIndex:number;
-    private _lightMaskIndex:number;
+    private _backgroundIndex:number|null = null;
+    private _lightMaskIndex:number|null = null;
     
     private _loadedLightMasks:ILightMask[];
     private _loadedBackgrounds:HTMLImageElement[];
@@ -124,7 +124,7 @@ export default class Frame implements IFrame {
      */
     drawFront(xUnitPos:number, yUnitPos:number):void
     {
-        if(this._lightMaskIndex)
+        if(this._lightMaskIndex !== null)
         {
             const lightMaskInfo = this._loadedLightMasks[this._lightMaskIndex];
 			
@@ -147,7 +147,7 @@ export default class Frame implements IFrame {
      */
     drawBack(xUnitPos:number, yUnitPos:number):void
     {
-        if(this._backgroundIndex)
+        if(this._backgroundIndex !== null)
         {
             this._canvasCtx.drawImage(
                 this._loadedBackgrounds[this._backgroundIndex],

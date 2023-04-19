@@ -146,8 +146,6 @@ export default class Tarian extends ASModel {
         super.prepare();
         
         this.z = 20;
-        this.centerXPosition();
-        this.setYPositionFromBottom(this.height);
         
         this._lastSpeedChange = 0;
         this._accl = 800;
@@ -164,6 +162,9 @@ export default class Tarian extends ASModel {
         this.canBeControlled = false; //should the directional controls be operational?
         this.state = "forward";
         this.active = true;
+        
+        this.centerXPosition();
+        this.setYPositionFromBottom(this.height);
     }
     
     getBoundaryBoxes():IBoundaryBox[]
@@ -407,7 +408,7 @@ export default class Tarian extends ASModel {
      * Is the player's x speed too fast?
      * @returns true if above top speed, false if not
      */
-	private _isAboveTopSpeedEitherDirection()
+	private _isAboveTopSpeedEitherDirection():boolean
 	{
 		return (this.xSpeed > this.topSpeed || this.xSpeed < -this.topSpeed);
 	}
@@ -417,7 +418,7 @@ export default class Tarian extends ASModel {
      * @param speedChange The current amount the x speed is changing by
      * @returns true if the x movement should now stop, false if not
      */
-	private _isReadyToStopMovement(speedChange)
+	private _isReadyToStopMovement(speedChange:number):boolean
 	{
 		return ((this.state !== "left" && this.state !== "right") && 
 					(this.xSpeed > -speedChange && this.xSpeed < speedChange));

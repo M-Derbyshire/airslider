@@ -100,9 +100,11 @@ export default class HUD implements IHUD
             } 
         });
         
-        if(this["extraDraw"] && typeof this["extraDraw"] === "function")
-        {
-            this["extraDraw"]();
-        }
+        this.extraDraw();
     }
+    
+    /**
+     * Does any extra drawing required for the HUD
+     */
+    protected extraDraw():void {}
 }

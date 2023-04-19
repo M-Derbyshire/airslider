@@ -1,4 +1,4 @@
-import Kernel from '../../../../Kernel/kernel';
+import Kernel from '../../../../Kernel/Kernel';
 import IKernel from '../../../../Kernel/IKernel';
 import IHUDComponent from './IHUDComponent';
 import IHelpers from '../../../../Kernel/helpers/IHelpers';

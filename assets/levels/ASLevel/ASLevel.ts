@@ -105,7 +105,7 @@ export default class ASLevel extends Level
     {
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
         this._startSignDisplay = new SignDisplay(this._startSign);
-        this._finishSign = new Sign("FINISH", this.helpers.zCalc.vPointDepth, this._signStartingZPosition, false);
+        this._finishSign = new Sign("FINISH", 1000, this._signStartingZPosition, false);
         
         return [
             this._startSign,

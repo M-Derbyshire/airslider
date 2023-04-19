@@ -3,8 +3,20 @@ const Dotenv = require('dotenv-webpack');
 
 module.exports = env => ({
 	entry: {
-		entry: __dirname + `/initialiseGame.${env.development ? "development" : "production"}.ts`
+		entry: `./initialiseGame.${env.development ? "development" : "production"}.ts`
 	},
+	module: {
+		rules: [
+		  {
+			test: /\.ts?$/,
+			use: 'ts-loader',
+			exclude: /node_modules/,
+		  },
+		],
+	  },
+	  resolve: {
+		extensions: ['.ts', '.js'],
+	  },
 	output: {
 		filename: './game.bundle.js',
 	},

@@ -7,7 +7,10 @@
     "webpack": "^5.36.2"
   },
   "devDependencies": {
+    "@babel/register": "^7.21.0",
     "dotenv-webpack": "^8.0.1",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.4",
     "webpack-cli": "^4.6.0"
   },
   "scripts": {

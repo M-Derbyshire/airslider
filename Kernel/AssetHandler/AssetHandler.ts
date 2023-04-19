@@ -36,7 +36,7 @@ export default class AssetHandler implements IAssetHandler
     set assetsStillLoading(newVal){this._assetsStillLoading = newVal;}
     
     /**
-     * Will be called when an asset has finished loading (Needs to be bound to this AssetHandler instance when being used)
+     * Will be called when an asset has finished loading
      */
     private _defaultAssetCallback():void
     {
@@ -48,7 +48,7 @@ export default class AssetHandler implements IAssetHandler
      */
     getDefaultAssetCallback():()=>void
     {
-        return this._defaultAssetCallback;
+        return this._defaultAssetCallback.bind(this);
     }
     
     
@@ -63,7 +63,7 @@ export default class AssetHandler implements IAssetHandler
      */
     loadAsset(obj:HTMLImageElement|HTMLAudioElement, path:string, callback:()=>void):HTMLImageElement|HTMLAudioElement
     {
-		const boundCallback = callback.bind(this);
+		const boundCallback = callback;
         path = this._prepareAssetPath(path);
         const heldAssetIdx = this._checkAssetHeld(path); //Returns either the index number, or -1
         
@@ -155,11 +155,11 @@ export default class AssetHandler implements IAssetHandler
      */
     loadFont(name:string, path:string, callback:()=>void):void
     {
-        const boundCallback = callback.bind(this);
+        const boundCallback = callback;
         
         const font = new FontFace(name, `url(${this._baseUrl}/${path})`);
         font.load().then((font) => {
-            document.fonts.add(font);
+            (document.fonts as FontFaceSet & { add:(f:FontFace)=>void }).add(font);
             boundCallback();
         });
         

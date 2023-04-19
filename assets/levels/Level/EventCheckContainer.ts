@@ -46,8 +46,8 @@ export default class EventCheckContainer
                 (boxA.y + boxA.height >= boxB.y) &&
                 (boxA.y <= boxB.y + boxB.height))
                 {
-                    modelA[modelAActionMethodName](modelB);
-                    modelB[modelBActionMethodName](modelA);
+                    (modelA[modelAActionMethodName as keyof typeof modelA] as Function)(modelB);
+                    (modelB[modelBActionMethodName as keyof typeof modelB] as Function)(modelA);
                 }
             }
         }
@@ -58,7 +58,7 @@ export default class EventCheckContainer
         //Ground hit check
         if(modelA.y + modelA.height >= this._kernel.unitsWithinCamera)
         {
-            modelA[modelAActionMethodName](modelB);
+            (modelA[modelAActionMethodName as keyof typeof modelA] as Function)(modelB);
             return;
         }
         
@@ -79,8 +79,8 @@ export default class EventCheckContainer
                 (boxA.y + boxA.height >= boxB.y) &&
                 (boxA.y <= boxB.y + boxB.height))
                 {
-                    modelA[modelAActionMethodName](modelB);
-                    modelB[modelBActionMethodName](modelA);
+                    (modelA[modelAActionMethodName as keyof typeof modelA] as Function)(modelB);
+                    (modelB[modelBActionMethodName as keyof typeof modelB] as Function)(modelA);
                     return;
                 }
             }
@@ -94,7 +94,7 @@ export default class EventCheckContainer
         (modelA.x <= (modelB.x + modelB.width)))
         {
             //Other model doesn't have an action for this
-            modelA[modelAActionMethodName](modelB);
+            (modelA[modelAActionMethodName as keyof typeof modelA] as Function)(modelB);
         }
     }
     

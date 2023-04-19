@@ -1,6 +1,7 @@
 import IKernel from '../../../Kernel/IKernel';
 import Kernel from '../../../Kernel/Kernel';
 import IHelpers from '../../../Kernel/helpers/IHelpers';
+import IModel from '../../models/Model/IModel';
 
 /**
  * Manages the shocker models, setting their x positions and sending them down the road
@@ -191,7 +192,7 @@ export default class ShockerManager
 		return (Math.random() * (((this._rightEdge - currentShockerWidth) - this._leftEdge) / 2));
 	}
 	
-	private _getShockerXPositionCenteredOnPlayer(currentShocker, player)
+	private _getShockerXPositionCenteredOnPlayer(currentShocker:IModel, player:IModel)
 	{
 		const playerCenter = (player.x + (player.width / 2));
 		const shockerCenter = (currentShocker.width / 2)

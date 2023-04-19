@@ -28,7 +28,7 @@ export default class LevelTunnel
      * Loads the level tunnel manager
      * @param camera the level's camera
      */
-    load(camera)
+    load(camera:ICamera)
     {
         this._camera = camera;
     }
