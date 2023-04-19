@@ -17,7 +17,11 @@ export default class Tarian extends ASModel {
     // x movement accelatration, deacceleration and top speed
     private _accl:number;
     private _deaccl:number;
-    private _topSpeed:number;
+    
+    /**
+     * The top x speed of the player
+     */
+    topSpeed:number;
     
     /**
      * The current health of the player
@@ -148,7 +152,7 @@ export default class Tarian extends ASModel {
         this._lastSpeedChange = 0;
         this._accl = 800;
         this._deaccl = 100;
-        this._topSpeed = 1000;
+        this.topSpeed = 1000;
         this.xSpeed = 0;
         this.zSpeed = 0;
         
@@ -391,7 +395,7 @@ export default class Tarian extends ASModel {
 	{
 		if(this._isAboveTopSpeedEitherDirection())
 		{
-			this.xSpeed = this._topSpeed * directionMultiplier;
+			this.xSpeed = this.topSpeed * directionMultiplier;
 		} 
 		else if (this._isReadyToStopMovement(speedChange))
 		{
@@ -405,7 +409,7 @@ export default class Tarian extends ASModel {
      */
 	private _isAboveTopSpeedEitherDirection()
 	{
-		return (this.xSpeed > this._topSpeed || this.xSpeed < -this._topSpeed);
+		return (this.xSpeed > this.topSpeed || this.xSpeed < -this.topSpeed);
 	}
 	
     /**
