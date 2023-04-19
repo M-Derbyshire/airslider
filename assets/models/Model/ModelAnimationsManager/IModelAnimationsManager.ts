@@ -11,7 +11,7 @@ export default interface IModelAnimationsManager {
     /**
      * The animations created for the model
      */
-    animations:IAnimation[];
+    animations:AnimationsObject;
     
     /**
      * A map of spritesheets, used by the animations. The asset filepath is the key
@@ -36,7 +36,7 @@ export default interface IModelAnimationsManager {
      * Registers an array of animations with this manager
      * @param animations The animations to register with this manager
      */
-    registerAnimations(animations:IAnimation[]):void;
+    registerAnimations(animations:AnimationsObject):void;
     
     /**
      * Draws the correct frame of the animation (moving to the next frame if it's time to do so)
@@ -60,4 +60,12 @@ export default interface IModelAnimationsManager {
      */
 	getDrawPositionsAndDimensions(originalValues:IFrameCoordinates & { z:number }):IFrameCoordinates
     
+};
+
+
+/**
+ * The type for the animations object
+ */
+export type AnimationsObject = {
+    [key:string]: IAnimation;
 };

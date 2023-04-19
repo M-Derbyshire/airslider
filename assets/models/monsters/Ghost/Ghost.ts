@@ -1,18 +1,61 @@
-import Monster from '/assets/models/Monster/monster';
+import { IDamageFlashImages } from '../../../HUDs/components/DamageFlash/DamageFlash';
+import IModel from '../../Model/IModel';
+import Monster from '../../Monster/Monster';
+import Tarian from '../../Tarian/Tarian';
 
+/**
+ * The ghost monster
+ */
 export default class Ghost extends Monster {
-    constructor(playerModel)
+    
+    /**
+     * The total dmamage value this monster can have
+     */
+    damageDealtOrig:number;
+    
+    /**
+     * The current damage dealt by this monster
+     */
+    damageDealt:number;
+    
+    /**
+     * The image for the damage flash hud component
+     */
+    color:keyof IDamageFlashImages;
+    
+    /**
+     * The speed that this monster should exit at, on the z axis
+     */
+    exitZSpeed:number;
+    
+    private _playerModel:Tarian; // The player's model
+    private _minXSpeed:number;
+    private _maxXSpeed:number;
+    private _directionMultiplier:number;
+    
+    //outLimit is how far back the monster will go, before moving forward
+    //inLimit is the point it will start it's sweeping again
+    private _outLimit:number;
+    private _inLimit:number;
+    
+    
+    
+    /**
+     * Constructor
+     * @param playerModel 
+     */
+    constructor(playerModel:Tarian)
     {
-        super(Monster);
+        super();
         
-        this.playerModel = playerModel;
+        this._playerModel = playerModel;
         
         this.damageDealtOrig = 2;
         this.damageDealt = this.damageDealtOrig;
         this.color = "ghost";
     }
     
-    load()
+    load():void
     {
         super.load();
         
@@ -35,7 +78,7 @@ export default class Ghost extends Monster {
         
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         
@@ -52,26 +95,26 @@ export default class Ghost extends Monster {
         this.centerXPosition();
         this.startX = this.x
         this.startZ = this.helpers.zCalc.vPointDepth;
-        this.minXSpeed = 1000;
-        this.maxXSpeed = 2000;
+        this._minXSpeed = 1000;
+        this._maxXSpeed = 2000;
         this.zSpeed = 12; // this will be multiplied by 10, as 120 was affecting Tarian's zCollision event
         
         //outLimit is how far back the monster will go, before moving forward
         //inLimit is the point it will start it's sweeping again
-        this.outLimit = 1;
-        this.inLimit = (this.playerModel.z + 100);
+        this._outLimit = 1;
+        this._inLimit = (this._playerModel.z + 100);
         
         this.reset();
     }
     
     //entering and exiting and reseting-----------------------------------------
     
-    enter()
+    enter():void
     {
         this.entering = false; //go straight to the sweeping
     }
     
-    exit()
+    exit():void
     {
         //move
         this.moveIn(this.exitZSpeed);
@@ -83,71 +126,88 @@ export default class Ghost extends Monster {
         }
     }
     
-    reset()
+    reset():void
     {
-        this.xSpeed = this.minXSpeed;
+        this.xSpeed = this._minXSpeed;
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
-        this.directionMultiplier = 1; //Multiply speed by this; Negate to change direction
+        this._directionMultiplier = 1; //Multiply speed by this; Negate to change direction
     }
     
     //movement-----------------------------------------------------
     
-    getNewSpeed() //again, not an action
+    /**
+     * Generates a new speed for the monster
+     * @returns the new speed
+     */
+    private _getNewSpeed():number
     {
-        return this.minXSpeed + (Math.random() * (this.maxXSpeed - this.minXSpeed));
+        return this._minXSpeed + (Math.random() * (this._maxXSpeed - this._minXSpeed));
     }
     
-    sweep()
+    /**
+     * Sweeping movement
+     */
+    sweep():void
     {
         this._handleMonsterOverlappingLevelEdges();
 		
-        this.moveRight(this.xSpeed * this.directionMultiplier);
+        this.moveRight(this.xSpeed * this._directionMultiplier);
         
         this.moveOut(this.zSpeed * 10);
         
-        if(this.z <= this.outLimit)
+        if(this.z <= this._outLimit)
         {
             this._handleMonsterReachingOutLimit();
         }
     }
 	
-	_handleMonsterOverlappingLevelEdges()
+    /**
+     * Keeps the monster within the x edges of the level;
+     */
+	private _handleMonsterOverlappingLevelEdges():void
 	{
-		if(this.x < this._levelLeftEdge)
+		if(this.x < this.levelLeftEdge)
         {
-            this.x = this._levelLeftEdge;
-            this.directionMultiplier = 1;
-        } else if (this.x + this.width > this._levelRightEdge)
+            this.x = this.levelLeftEdge;
+            this._directionMultiplier = 1;
+        } else if (this.x + this.width > this.levelRightEdge)
         {
-            this.x = this._levelRightEdge - this.width;
-            this.directionMultiplier = -1;
+            this.x = this.levelRightEdge - this.width;
+            this._directionMultiplier = -1;
         }
 	}
 	
-	_handleMonsterReachingOutLimit()
+    /**
+     * Keeps the monster from coming to far out on the z axis
+     */
+	private _handleMonsterReachingOutLimit():void
 	{
-		this.z = this.outLimit;
+		this.z = this._outLimit;
         this.nextAction();
 	}
 	
-	
-    
-    moveUp()
+    /**
+     * Moves the monster away from the camera
+     */
+    moveUp():void
     {
         this.moveIn(this.zSpeed * 10);
         
-        if(this.z >= this.inLimit)
+        if(this.z >= this._inLimit)
         {
             this._handleMonsterReachingInLimit();
         }
     }
 	
-	_handleMonsterReachingInLimit()
+    /**
+     * Keeps the monster from going to far in on the z axis
+     */
+	_handleMonsterReachingInLimit():void
 	{
-		this.xSpeed = this.getNewSpeed();
-		this.z = this.inLimit;
+		this.xSpeed = this._getNewSpeed();
+		this.z = this._inLimit;
 		this.damageDealt = this.damageDealtOrig;
 		this.nextAction();
 	}
@@ -155,7 +215,11 @@ export default class Ghost extends Monster {
     
     //events------------------------------------------------------------
     
-    zCollisionEventAction(otherModel)
+    /**
+     * What to do when the player collides with this monster
+     * @param otherModel the player
+     */
+    zCollisionEventAction(otherModel:IModel):void
     {
         if(this.currentAction == 0 && !this.exiting) //the index number of the current action method in the array in Monster class
         {

@@ -1,18 +1,34 @@
-import ASModel from '/assets/models/ASModel/ASModel';
+import { IDamageFlashImages } from '../../../../HUDs/components/DamageFlash/DamageFlash';
+import ASModel from '../../../ASModel/ASModel';
+import IModel from '../../../Model/IModel';
+import Tarian from '../../../Tarian/Tarian';
 
+/**
+ * The Dragon's lava ball attack
+ */
 export default class LavaBall extends ASModel {
-    constructor(playerModel)
+    
+    protected playerModel:Tarian;
+    protected color:keyof IDamageFlashImages; // The image used by the DamageFlash
+    
+    private _initialYSpeed:number;
+    
+    /**
+     * Constructor
+     * @param playerModel The player's model
+     */
+    constructor(playerModel:Tarian)
     {
-        super(ASModel);
+        super();
         
         this.playerModel = playerModel;
         this.active = false;
         this.damageDealt = 2;
         this.color = "fire";
-        this.zSpeed = 1; //value required for Tarian to recognise hit
+        this.zSpeed = 1; // a value is required for Tarian to recognise hit
     }
     
-    load()
+    load():void
     {
         super.load();
         
@@ -60,14 +76,14 @@ export default class LavaBall extends ASModel {
         
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         this._initialYSpeed = 1000;
         this.ySpeed = this._initialYSpeed;
     }
     
-    act()
+    act():void
     {
         if(this.state == "drop")
         {
@@ -87,8 +103,10 @@ export default class LavaBall extends ASModel {
         }
     }
     
-    // Called by the dragon when it's ready to drop
-    aimAtPlayer()
+    /**
+     * The dragon can use this to aim the lava ball at the player, before it drops it
+     */
+    aimAtPlayer():void
     {
         const speedMultiplier = 2.25;
         const xSpeedLimit = 250; // A limit on the x speed
@@ -109,7 +127,7 @@ export default class LavaBall extends ASModel {
         }
     }
     
-    hitPlayerEventAction(otherModel)
+    hitPlayerEventAction(otherModel:IModel):void
     {
         if(this.state == "drop")
         {

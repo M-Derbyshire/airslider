@@ -6,7 +6,7 @@ import ICamera from '../../../../engines/GraphicEn/ICamera';
 import IAnimation from './IAnimation';
 import IAnimationDetails from './IAnimationDetails';
 import IFrameCoordinates from './IFrameCoordinates';
-import IModelAnimationsManager from './IModelAnimationsManager';
+import IModelAnimationsManager, { AnimationsObject } from './IModelAnimationsManager';
 
 /**
  * Manages a model's animations
@@ -22,7 +22,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     /**
      * The animations created for the model
      */
-    animations:IAnimation[];
+    animations:AnimationsObject;
     
     /**
      * A map of spritesheets, used by the animations. The asset filepath is the key
@@ -88,10 +88,10 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      * Registers an array of animations with this manager
      * @param animations The animations to register with this manager
      */
-    registerAnimations(animations:IAnimation[]):void
+    registerAnimations(animations:AnimationsObject):void
     {
         //animations will be an object of animations (the property names are the state names),
-        //created with the below createAnimation() method.
+        //created with the createAnimation() method.
         this.animations = animations;
     }
     

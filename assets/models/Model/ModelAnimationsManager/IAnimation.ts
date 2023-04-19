@@ -13,7 +13,7 @@ export default interface IAnimation {
     /**
      * The coordinates of a frame on a spritesheet
      */
-    frameCoordinates:IFrameCoordinates;
+    frameCoordinates:IFrameCoordinates[];
         
     /**
      * The Frames Per Second that this animation should play at

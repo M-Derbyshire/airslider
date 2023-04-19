@@ -1,10 +1,28 @@
-import Monster from '/assets/models/Monster/monster';
+import IBoundaryBox from '../../Model/IBoundaryBox';
+import IModel from '../../Model/IModel';
+import Monster from '../../Monster/Monster';
+import Tarian from '../../Tarian/Tarian';
 
+/**
+ * The Electric Hornet monster
+ */
 export default class ElectricHornet extends Monster {
     
-    constructor(playerModel)
+    private _dropWaitOffset:number;
+    private _dropWaitRange:number;
+    private _initialDropWait:number;
+    
+    private _startXSpeed:number;
+    
+    private _nextDropTime:number;
+    
+    /**
+     * Constructor
+     * @param playerModel The model of the player
+     */
+    constructor(playerModel:Tarian)
     {
-        super(Monster);
+        super();
         
         this.playerModel = playerModel;
         
@@ -12,7 +30,7 @@ export default class ElectricHornet extends Monster {
         this.color = "yellow";
     }
     
-    load()
+    load():void
     {
         super.load();
         
@@ -33,34 +51,34 @@ export default class ElectricHornet extends Monster {
         });
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         
         this.actions = [
-            this.fly,
-            this.drop,
-            this.rise
+            this._fly,
+            this._drop,
+            this._rise
         ];
         
         this.enterXSpeed = 90;
         this.exitXSpeed = 240;
         this.offScreenUnits = 500;
         this.startY = 100;
-        this.startX = this._levelRightEdge + this.offScreenUnits;
+        this.startX = this.levelRightEdge + this.offScreenUnits;
         this.startZ = this.playerModel.z;
         this.ySpeed = 1250;
         
         // How long till the hornet will drop?
-        this.dropWaitOffset = 2000; // 2 seconds
-        this.dropWaitRange = 2000;
-        this.initialDropWait = 4000;
+        this._dropWaitOffset = 2000; // 2 seconds
+        this._dropWaitRange = 2000;
+        this._initialDropWait = 4000;
         
         this.reset();
     }
     
     // Collision boxes --------------------------------------------------------
-    getBoundaryBoxes()
+    getBoundaryBoxes():IBoundaryBox[]
     {
         if(this.currentAction !== 0)
         {
@@ -80,34 +98,34 @@ export default class ElectricHornet extends Monster {
     
     //entering and exiting and reseting-----------------------------------------
     
-    enter()
+    enter():void
     {
-        if(this._levelRightEdge < (this.x + this.width))
+        if(this.levelRightEdge < (this.x + this.width))
         {
             this.moveLeft(this.enterXSpeed);
         } else {
             this.entering = false;
-            this.nextDrop = this.helpers.time.getTotalMilliseconds() + this.initialDropWait;
+            this._nextDropTime = this.helpers.time.getTotalMilliseconds() + this._initialDropWait;
         }
     }
     
-    exit()
+    exit():void
     {
         if(this.y != this.startY)
         {
             //if not at correct height, don't leave yet
-            this.rise();
+            this._rise();
         } else {        
             this.moveLeft(this.exitXSpeed);
             
-            if((this.x + this.width) < (this._levelLeftEdge - this.offScreenUnits))
+            if((this.x + this.width) < (this.levelLeftEdge - this.offScreenUnits))
             {
                 this._handleMonsterExitingScreen();
             }
         }
     }
     
-    _handleMonsterExitingScreen()
+    private _handleMonsterExitingScreen():void
 	{
 		this.exiting = false;
     	this.active = false;
@@ -115,25 +133,25 @@ export default class ElectricHornet extends Monster {
 	
 	
     
-    reset()
+    reset():void
     {
-        this.nextDrop = -1;
+        this._nextDropTime = -1;
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
-        this.startXSpeed = -400;
-        this.xSpeed = this.startXSpeed;
+        this._startXSpeed = -400;
+        this.xSpeed = this._startXSpeed;
         this.state = "flapping";
     }
     
     //movement-----------------------------------------------------
     
-    fly()
+    private _fly():void
     {
         // Handle collision with level edges
         // (if the model is over an edge, and still moving in that direction)
-        if((this.x <= this._levelLeftEdge && this.xSpeed < 0) || 
-            ((this.x + this.width) >= this._levelRightEdge && this.xSpeed > 0))
+        if((this.x <= this.levelLeftEdge && this.xSpeed < 0) || 
+            ((this.x + this.width) >= this.levelRightEdge && this.xSpeed > 0))
         {
             this.xSpeed = -this.xSpeed;
         }
@@ -142,44 +160,44 @@ export default class ElectricHornet extends Monster {
         this.moveRight(this.xSpeed); // Can be a negative number
         
         // Now determine if monster should start to attack
-        if(this.nextDrop === -1)
+        if(this._nextDropTime === -1)
         {
-            this.nextDrop = this._getNextDropTime();
+            this._nextDropTime = this._getNextDropTime();
         } 
-        else if(this.helpers.time.getTotalMilliseconds() >= this.nextDrop)
+        else if(this.helpers.time.getTotalMilliseconds() >= this._nextDropTime)
         {
             this._triggerDrop();
         }
     }
     
-    _getNextDropTime()
+    private _getNextDropTime():number
 	{
 		return this.helpers.time.getTotalMilliseconds() + 
-									this.dropWaitOffset + 
-									Math.floor(Math.random() * this.dropWaitRange);
+									this._dropWaitOffset + 
+									Math.floor(Math.random() * this._dropWaitRange);
 	}
     
-    drop()
+    private _drop():void
     {
         this.moveDown(this.ySpeed);
         this.moveRight(this.xSpeed);
     }
     
-    rise()
+    private _rise():void
     {
         this.moveUp(this.ySpeed);
         
         if(this.y <= this.startY)
         {
             this.y = this.startY;
-            this.xSpeed = this.startXSpeed;
+            this.xSpeed = this._startXSpeed;
             this.nextAction();
         }
     }
     
-    _triggerDrop()
+    private _triggerDrop()
     {
-        this.nextDrop = -1;
+        this._nextDropTime = -1;
         
         // We need to calculate the x/y speed needed to get to the player (can be negative values)
         const distanceToPlayerTop = this.playerModel.y - (this.y + this.height);
@@ -198,13 +216,13 @@ export default class ElectricHornet extends Monster {
     
     // events------------------------------------------------------
 
-    zCollisionEventAction(otherModel)
+    zCollisionEventAction(otherModel:IModel):void
     {
         if(this.currentAction === 1)
             this.nextAction();
     }
     
-    extraEvents()
+    extraEvents():void
     {
         // Check for missing the player on swoop
         if(this.currentAction === 1 && (this.y + this.height) > (this.playerModel.y + 100))

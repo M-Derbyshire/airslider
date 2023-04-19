@@ -1,19 +1,70 @@
-import Monster from '/assets/models/Monster/monster';
+import { IDamageFlashImages } from '../../../HUDs/components/DamageFlash/DamageFlash';
+import IBoundaryBox from '../../Model/IBoundaryBox';
+import IModel from '../../Model/IModel';
+import Monster from '../../Monster/Monster';
+import Tarian from '../../Tarian/Tarian';
 
+/**
+ * The Neon Pidgeon monster (should be 2 in the level, at the same time)
+ */
 export default class NeonPidgeon extends Monster {
-    constructor(playerModel, topLevelMonster = false)
+    
+    private _playerModel:Tarian;
+    private _topLevelMonster:boolean; // Is this pidgeon above another, on the y axis?
+    private _nextDrop:number; // The next drop time (in milliseconds)
+    
+    /**
+     * Is this pidgeon currently overlapping the player?
+     */
+    overlapping:boolean;
+    
+    /**
+     * How much damage does this monster do?
+     */
+    damageDealt:number;
+    
+    /**
+     * The color of the DamageFlash
+     */
+    color:keyof IDamageFlashImages;
+    
+    /**
+     * A minimum span of time (in milliseconds) before the next drop
+     */
+    dropWaitOffset:number;
+    
+    /**
+     * A span of time, in milliseconds.
+     * This is the total amount that can be added to the dropWaitOffset, to get a new drop time.
+     */
+    dropWaitRange:number;
+    
+    /**
+     * The amount of time (in milliseconds) the monster will wait before its initial drop
+     */
+    initialDropWait:number;
+    
+    
+    
+    /**
+     * Constructor
+     * @param playerModel the model of the player 
+     * @param topLevelMonster is this pidgeon above another, on the y axis?
+     */
+    constructor(playerModel:Tarian, topLevelMonster:boolean = false)
     {
-        super(Monster);
+        super();
         
-        this.playerModel = playerModel;
+        this._playerModel = playerModel;
         this._topLevelMonster = topLevelMonster;
+        
         this.overlapping = false;
         
         this.damageDealt = 10;
         this.color = "none";
     }
     
-    load()
+    load():void
     {
         super.load();
         
@@ -59,7 +110,7 @@ export default class NeonPidgeon extends Monster {
         
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         
@@ -73,8 +124,8 @@ export default class NeonPidgeon extends Monster {
         this.exitXSpeed = 240;
         this.offScreenUnits = (this._topLevelMonster) ? 650 : 500;
         this.startY = (this._topLevelMonster) ? 150 : 250;
-        this.startX = this._levelRightEdge + this.offScreenUnits;
-        this.startZ = this.playerModel.z;
+        this.startX = this.levelRightEdge + this.offScreenUnits;
+        this.startZ = this._playerModel.z;
         this.ySpeed = 1250;
         this.dropWaitOffset = 2000; //2 seconds
         this.dropWaitRange = 2000; //2 seconds
@@ -84,7 +135,7 @@ export default class NeonPidgeon extends Monster {
     }
     
     // Collision boxes --------------------------------------------------------
-    getBoundaryBoxes()
+    getBoundaryBoxes():IBoundaryBox[]
     {
         if(this.state === "falling")
         {
@@ -111,18 +162,18 @@ export default class NeonPidgeon extends Monster {
     
     //entering and exiting and resetting-----------------------------------------
     
-    enter()
+    enter():void
     {
-        if(this._levelRightEdge < (this.x + this.width))
+        if(this.levelRightEdge < (this.x + this.width))
         {
             this.moveLeft(this.enterXSpeed);
         } else {
             this.entering = false;
-            this.nextDrop = this.helpers.time.getTotalMilliseconds() + this.initialDropWait;
+            this._nextDrop = this.helpers.time.getTotalMilliseconds() + this.initialDropWait;
         }
     }
     
-    exit()
+    exit():void
     {
         if(this.y != this.startY)
         {
@@ -134,24 +185,25 @@ export default class NeonPidgeon extends Monster {
         
             this.moveLeft(this.exitXSpeed);
             
-            if((this.x + this.width) < (this._levelLeftEdge - this.offScreenUnits))
+            if((this.x + this.width) < (this.levelLeftEdge - this.offScreenUnits))
             {
                 this._handleMonsterExitingScreen();
             }
         }
     }
 	
-	_handleMonsterExitingScreen()
+    /**
+     * Handle the monster leaving the screen, on exit
+     */
+	private _handleMonsterExitingScreen():void
 	{
 		this.exiting = false;
     	this.active = false;
 	}
 	
-	
-    
-    reset()
+    reset():void
     {
-        this.nextDrop = -1;
+        this._nextDrop = -1;
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
@@ -161,15 +213,18 @@ export default class NeonPidgeon extends Monster {
     
     //movement-----------------------------------------------------
     
-    moveSideways()
+    /**
+     * Handles the monster moving left and right
+     */
+    moveSideways():void
     {
         this.moveRight(this.xSpeed);
         
         this._handleMonsterOverlappingLevelEdges();
         
-        if(this.nextDrop === -1)
+        if(this._nextDrop === -1)
         {
-            this.nextDrop = this._getNextDropTime();
+            this._nextDrop = this._getNextDropTime();
         } 
 		else if(this._monsterShouldDrop())
         {
@@ -180,48 +235,67 @@ export default class NeonPidgeon extends Monster {
         this.overlapping = false;
     }
 	
-	_startMonsterDrop()
+    /**
+     * Starts the monster's drop
+     */
+	private _startMonsterDrop():void
 	{
-		this.nextDrop = -1;
+		this._nextDrop = -1;
         this.state = "falling";
         this.nextAction();
 	}
 	
-	_getNextDropTime()
+    /**
+     * Generates the next time to drop
+     * @returns the next time (in milliseconds)
+     */
+	private _getNextDropTime():number
 	{
 		return this.helpers.time.getTotalMilliseconds() + 
 									this.dropWaitOffset + 
 									Math.floor(Math.random() * this.dropWaitRange);
 	}
 	
-	_monsterShouldDrop()
+    /**
+     * Should the monster drop?
+     * @returns true if the monster should drop, false if not
+     */
+	private _monsterShouldDrop():boolean
 	{
-		return ((this.helpers.time.getTotalMilliseconds() >= this.nextDrop) && 
+		return ((this.helpers.time.getTotalMilliseconds() >= this._nextDrop) && 
 				!this.overlapping && 
-            	((this.x + this.width >= this.playerModel.x) && 
-				(this.x <= this.playerModel.x + this.playerModel.width)));
+            	((this.x + this.width >= this._playerModel.x) && 
+				(this.x <= this._playerModel.x + this._playerModel.width)));
 	}
 	
-	_handleMonsterOverlappingLevelEdges()
+    /**
+     * Stops the monster from going outside the level's edges
+     */
+	private _handleMonsterOverlappingLevelEdges():void
 	{
-		if(this.x <= this._levelLeftEdge || this.x + this.width >= this._levelRightEdge)
+		if(this.x <= this.levelLeftEdge || this.x + this.width >= this.levelRightEdge)
         {
             this.xSpeed = -this.xSpeed;
             
             this.x = (this.xSpeed > 0) ? 
-                (this._levelLeftEdge + 1) :
-                ((this._levelRightEdge - this.width) - 1);
+                (this.levelLeftEdge + 1) :
+                ((this.levelRightEdge - this.width) - 1);
         }
 	}
 	
 	
-    
-    drop()
+    /**
+     * The monster diving down at the player
+     */
+    drop():void
     {
         this.moveDown(this.ySpeed);
     }
     
-    rise()
+    /**
+     * The monster rising back up
+     */
+    rise():void
     {
         this.moveUp(this.ySpeed);
         
@@ -235,12 +309,20 @@ export default class NeonPidgeon extends Monster {
     
     //events------------------------------------------------------------
     
-    neonPidgeonOverlappingEventAction(otherModel)
+    /**
+     * Handles the pidgeon's x position overlapping the player's x position
+     * @param otherModel the player model
+     */
+    neonPidgeonOverlappingEventAction(otherModel:IModel):void
     {
         this.overlapping = true;
     }
     
-    hitPlayerOrGroundEventAction(otherModel)
+    /**
+     * Handles collision with the player
+     * @param otherModel the player model
+     */
+    hitPlayerOrGroundEventAction(otherModel:IModel):void
     {
         if(((this.y + this.height) > otherModel.y) && 
             (this.y + this.height < this.kernel.unitsWithinCamera))

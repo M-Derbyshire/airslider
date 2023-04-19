@@ -1,20 +1,72 @@
-import Monster from '/assets/models/Monster/monster';
+import { IDamageFlashImages } from '../../../HUDs/components/DamageFlash/DamageFlash';
+import IModel from '../../Model/IModel';
+import Monster from '../../Monster/Monster';
+import Tarian from '../../Tarian/Tarian';
 
+/**
+ * The falcon monster
+ */
 export default class Falcon extends Monster {
-    constructor(playerModel)
+    
+    /**
+     * The player model
+     */
+    playerModel:Tarian;
+    
+    /**
+     * Is this monster overlapping (on the x axis) the player?
+     */
+    overlapping:boolean;
+    
+    /**
+     * The total damage that can be done by this monster
+     */
+    damageDealtOrig:number;
+    
+    /**
+     * The current damage this monster will do
+     */
+    damageDealt:number;
+    
+    /**
+     * The color of the damage flash
+     */
+    color:keyof IDamageFlashImages;
+    
+    /**
+     * In frames
+     */
+    dropWaitOffset:number;
+    
+    /**
+     * In frames
+     */
+    dropWaitRange:number;
+    
+    lastSwoop:number;
+    
+    directionMultiplier:number;
+    
+    swoopWait:number;
+    
+    
+    /**
+     * Constructor
+     * @param playerModel The model of the player
+     */
+    constructor(playerModel:Tarian)
     {
-        super(Monster);
+        super();
         
         this.playerModel = playerModel;
         
         this.overlapping = false;
         
         this.damageDealtOrig = 12;
-        this.damageDealt; // will be 0 when rising, so as to not do more damage
         this.color = "none";
     }
     
-    load()
+    load():void
     {
         super.load();
         
@@ -41,7 +93,6 @@ export default class Falcon extends Monster {
             }),
             flapping: this.animationManager.createAnimation({
                 sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
-                frameCount: 8,
                 fps: 24,
                 drawWidth: 350,
                 drawHeight: 200,
@@ -58,7 +109,6 @@ export default class Falcon extends Monster {
             }),
             left: this.animationManager.createAnimation({
                 sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
-                frameCount: 1,
                 fps: 24,
                 drawWidth: 350,
                 drawHeight: 200,
@@ -68,7 +118,6 @@ export default class Falcon extends Monster {
             }),
             right: this.animationManager.createAnimation({
                 sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
-                frameCount: 1,
                 fps: 24,
                 drawWidth: 350,
                 drawHeight: 200,
@@ -78,7 +127,6 @@ export default class Falcon extends Monster {
             }),
             riseLeft: this.animationManager.createAnimation({
                 sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
-                frameCount: 1,
                 fps: 24,
                 drawWidth: 170,
                 drawHeight: 300,
@@ -88,7 +136,6 @@ export default class Falcon extends Monster {
             }),
             riseRight: this.animationManager.createAnimation({
                 sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
-                frameCount: 1,
                 fps: 24,
                 drawWidth: 170,
                 drawHeight: 300,
@@ -100,7 +147,7 @@ export default class Falcon extends Monster {
         
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         
@@ -112,12 +159,10 @@ export default class Falcon extends Monster {
             this.reposition
         ];
         
-        this.player = this.playerModel;
-        
         this.enterXSpeed = 140;
         this.offScreenUnits = 800;
         this.startY = 75;
-        this.startX = this._levelLeftEdge - this.offScreenUnits;
+        this.startX = this.levelLeftEdge - this.offScreenUnits;
         this.startZ = this.playerModel.z;
         this.dropWaitOffset = this.helpers.time.secondsToFrames(5);
         this.dropWaitRange = this.helpers.time.secondsToFrames(5);
@@ -127,10 +172,10 @@ export default class Falcon extends Monster {
     
     //entering and exiting and reseting-----------------------------------------
     
-    enter()
+    enter():void
     {
         // move until centered above player
-        if(this.x + (this.width / 2) < this.player.x + (this.player.width / 2))
+        if(this.x + (this.width / 2) < this.playerModel.x + (this.playerModel.width / 2))
         {
             this.moveRight(this.enterXSpeed);
         } else {
@@ -139,7 +184,7 @@ export default class Falcon extends Monster {
         }
     }
     
-    exit()
+    exit():void
     {
         if(this.y === this.startY)
         {
@@ -147,7 +192,7 @@ export default class Falcon extends Monster {
         
             this.moveRight(this.enterXSpeed);
             
-            if(this.x > (this._levelRightEdge + this.offScreenUnits))
+            if(this.x > (this.levelRightEdge + this.offScreenUnits))
             {
                 this.exiting = false;
                 this.active = false;
@@ -157,7 +202,7 @@ export default class Falcon extends Monster {
         }
     }
     
-    reset()
+    reset():void
     {
         this.lastSwoop = -1;
         this.directionMultiplier = 1; //1 for right, -1 for left
@@ -168,7 +213,7 @@ export default class Falcon extends Monster {
         
         //This means that if the player moves in the same direction 
         //during strafe(), the monster doesn't end up off screen.
-        this.xSpeed = this.player.topSpeed * 1.5;
+        this.xSpeed = this.playerModel.topSpeed * 1.5;
         
         this.ySpeed = this.xSpeed;
         this.state = "flapping";
@@ -176,13 +221,13 @@ export default class Falcon extends Monster {
     
     //movement-----------------------------------------------------
     
-    stalking()
+    stalking():void
     {
         //Reset the damage (It's set to 0 in swoopUp() to avoid dealing extra damage to the player)
         this.damageDealt = this.damageDealtOrig;
         
         //keep monster centered above player
-        this.x = this.player.x + (this.player.width / 2) - (this.width / 2);
+        this.x = this.playerModel.x + (this.playerModel.width / 2) - (this.width / 2);
         
         if(this.helpers.time.getTotalMilliseconds() - this.lastSwoop >= this.swoopWait)
         {
@@ -195,9 +240,9 @@ export default class Falcon extends Monster {
         }
     }
 	
-	_setSwoopDirection()
+	private _setSwoopDirection():void
 	{
-		if(this.x + (this.width / 2) > (this._levelRightEdge - this._levelLeftEdge) / 2)
+		if(this.x + (this.width / 2) > (this.levelRightEdge - this.levelLeftEdge) / 2)
 		{
 			this.directionMultiplier = -1;
 			this.state = "left";
@@ -209,7 +254,7 @@ export default class Falcon extends Monster {
     
 	
 	
-    strafe()
+    strafe():void
     {
         if(this._isItTimeToSwoop())
         {
@@ -223,7 +268,7 @@ export default class Falcon extends Monster {
         }
     }
 	
-	_isItTimeToSwoop()
+	private _isItTimeToSwoop():boolean
 	{
 		//The width will be the same for both left and right drop anims, 
 		//so just getting one of them here.
@@ -232,7 +277,7 @@ export default class Falcon extends Monster {
         const monsterSwoopXCenter = this.x + (monsterDropLeftAnim.width / 2);
         const monsterSwoopYCenter = this.y + (monsterDropLeftAnim.height / 2);
         
-        const player = this.player;
+        const player = this.playerModel;
         const playerXCenter = player.x + (player.width / 2);
         const playerYCenter = player.y + (player.height / 2);
         
@@ -252,7 +297,7 @@ export default class Falcon extends Monster {
     
 	
 	
-    swoopDown()
+    swoopDown():void
     {
         //y speed is used for both x and y movement, so it's diagonal.
         //This is important to make sure the falcon hits the target
@@ -262,7 +307,7 @@ export default class Falcon extends Monster {
     
 	
 	
-    swoopUp()
+    swoopUp():void
     {
         if(this.y <= this.startY)
         {
@@ -281,10 +326,10 @@ export default class Falcon extends Monster {
     
 	
 	
-    reposition()
+    reposition():void
     {
         //get player center and monster center; also pre-calculate the real speed of the monster
-        const playerCenter = this.player.x + (this.player.width / 2)
+        const playerCenter = this.playerModel.x + (this.playerModel.width / 2)
         const monsterCenter = this.x + (this.width / 2);
         const preCalculatedMonsterSpeed = this.helpers.unit.xSpeed(this.xSpeed);
         
@@ -297,13 +342,13 @@ export default class Falcon extends Monster {
         }
     }
 	
-	_isFalconCenteredAbovePlayer(playerCenter, monsterCenter, preCalculatedMonsterSpeed)
+	private _isFalconCenteredAbovePlayer(playerCenter:number, monsterCenter:number, preCalculatedMonsterSpeed:number):boolean
 	{
 		return ((monsterCenter < playerCenter + preCalculatedMonsterSpeed) && 
 					(monsterCenter > playerCenter - preCalculatedMonsterSpeed));
 	}
 	
-	_moveFalconToCenterAbovePlayer(playerCenter, monsterCenter)
+	private _moveFalconToCenterAbovePlayer(playerCenter:number, monsterCenter:number):void
 	{
 		this.directionMultiplier = (playerCenter < monsterCenter) ? -1 : 1;
         this.moveRight(this.xSpeed * this.directionMultiplier);
@@ -313,7 +358,7 @@ export default class Falcon extends Monster {
 	
     //events------------------------------------------------------------
     
-    hitPlayerOrGroundEventAction(otherModel)
+    hitPlayerOrGroundEventAction(otherModel:IModel):void
     {
         if(this.state == "dropLeft" || this.state == "dropRight")
         {

@@ -28,7 +28,7 @@ export default interface IAnimationDetails {
     /**
      * The coordinates of a frame on a spritesheet
      */
-    frameCoordinates:IFrameCoordinates;
+    frameCoordinates:IFrameCoordinates[];
     
     /**
      * If the x position of the model needs to change when switching to this animation, it will be changed by this value

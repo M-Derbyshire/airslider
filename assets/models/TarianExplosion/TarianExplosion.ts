@@ -1,13 +1,27 @@
-import ASModel from '/assets/models/ASModel/ASModel';
+import ASModel from '../ASModel/ASModel';
+import IAnimation from '../Model/ModelAnimationsManager/IAnimation';
+import Tarian from '../Tarian/Tarian';
 
+/**
+ * Explosion effect, to be used during Tarian's loss sequence
+ */
 export default class TarianExplosion extends ASModel {
     
-    constructor(playerModel) {
-        super(ASModel);
+    private _player:Tarian;
+    private _maxHeight:number;
+    private _maxWidth:number;
+    private _resizeSpeedX:number;
+    private _resizeSpeedY:number;
+    private _animFrame:IAnimation;
+    
+    /**
+     * Constructor
+     * @param playerModel The model of the player
+     */
+    constructor(playerModel:Tarian) {
+        super();
         
         this._player = playerModel;
-        
-        this.active = true;
         
         this._maxHeight = 750;
         this._maxWidth = 2000;
@@ -15,15 +29,16 @@ export default class TarianExplosion extends ASModel {
         this._resizeSpeedY = 1500;
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         this.display = false;
-        this._state = "std";
+        this.state = "std";
+        this.active = true;
         this.z = 1;
     }
     
-    load()
+    load():void
     {
         super.load();
         
@@ -43,7 +58,7 @@ export default class TarianExplosion extends ASModel {
         this._animFrame = this.animationManager.animations.std;
     }
     
-    act()
+    act():void
     {
         if(this._player.lost)
         {
@@ -62,7 +77,10 @@ export default class TarianExplosion extends ASModel {
         }
     }
     
-    _resize()
+    /**
+     * Resizes the sprite, to create the exploding effect
+     */
+    private _resize():void
     {
         this._animFrame.width += this.kernel.helpers.unit.xSpeed(this._resizeSpeedX);
         this._animFrame.height += this.kernel.helpers.unit.ySpeed(this._resizeSpeedY);
@@ -73,19 +91,28 @@ export default class TarianExplosion extends ASModel {
             this._animFrame.height = 0;
         }
     }
-    
-    _centreOnPlayer()
+
+    /**
+     * Centers the x position on the player
+     */
+    private _centreOnPlayer():void
     {
         this.x = this._player.x + (this._player.width / 2) - (this.width / 2);
     }
-    
-    _setYPosition()
+
+    /**
+     * Sets the correct y position
+     */
+    private _setYPosition():void
     {
         // Place the bottom of the explosion at the bottom of the player
         this.y = ((this._player.y + this._player.height) - this._animFrame.height) + 25;
     }
-    
-    _setZPosition()
+
+    /**
+     * Sets the z position, based on the player's
+     */
+    private _setZPosition():void
     {
         this.z = this._player.z - 1;
     }

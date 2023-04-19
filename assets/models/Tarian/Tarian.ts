@@ -1,27 +1,51 @@
-import ASModel from '/assets/models/ASModel/ASModel';
+import MainHUD from '../../HUDs/MainHUD/MainHUD';
+import { IDamageFlashImages } from '../../HUDs/components/DamageFlash/DamageFlash';
+import ASLevel from '../../levels/ASLevel/ASLevel';
+import ASModel from '../ASModel/ASModel';
+import IBoundaryBox from '../Model/IBoundaryBox';
+import IModel from '../Model/IModel';
 
+/**
+ * The main character of the game, controlled by the player
+ */
 export default class Tarian extends ASModel {
+    
+    private _lastSpeedChange:number;
+    private _lostAtTimeMS:number;
+    private _lostZSpeed:number;
+    
+    // x movement accelatration, deacceleration and top speed
+    private _accl:number;
+    private _deaccl:number;
+    private _topSpeed:number;
+    
+    /**
+     * The current health of the player
+     */
+    health:number;
+    
+    /**
+     * Is the player currently exploding?
+     */
+    exploding:boolean;
+    
+    /**
+     * Is the player in the "lost" state?
+     */
+    lost:boolean;
+    
+    
+    /**
+     * Constructor
+     */
     constructor()
     {
-        super(ASModel);
+        super();
         
-        this._state = "forward";
-        this._active = true;
-        this.health = 100;
-        
-        this.exploding = false;
-        this.lost = false;
-        this._lostZSpeed = 35;
-        this.lastFlashChange = 0; //used in the flashing
-        this.flashSpeed = 50;
-        
-        this.lastSpeedChange = 0; //used when changing the speed
-        
-        this.canBeControlled = false; //should the directional controls be operational?
-        this._lostAtTimeMS = 0; //the time (in milliseconds) that the player entered the lost state
+        this._lostZSpeed = 35; //the exiting z speed, when the player has lost the level
     }
     
-    load()
+    load():void
     {
         super.load();
         
@@ -113,7 +137,7 @@ export default class Tarian extends ASModel {
         });
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         
@@ -121,18 +145,24 @@ export default class Tarian extends ASModel {
         this.centerXPosition();
         this.setYPositionFromBottom(this.height);
         
-        this.accl = 800;
-        this.deaccl = 100;
-        this.topSpeed = 1000;
+        this._lastSpeedChange = 0;
+        this._accl = 800;
+        this._deaccl = 100;
+        this._topSpeed = 1000;
         this.xSpeed = 0;
-        
         this.zSpeed = 0;
         
-        this.canBeControlled = false;
+        this.health = 100;
+        this.exploding = false;
+        this.lost = false;
         this._lostAtTimeMS = 0;
+        
+        this.canBeControlled = false; //should the directional controls be operational?
+        this.state = "forward";
+        this.active = true;
     }
     
-    getBoundaryBoxes()
+    getBoundaryBoxes():IBoundaryBox[]
     {
         if(this.state === "forward")
         {
@@ -213,7 +243,7 @@ export default class Tarian extends ASModel {
 	
 	
     
-    act()
+    act():void
     {
         this._movePlayer();
         
@@ -222,20 +252,28 @@ export default class Tarian extends ASModel {
 		this._handleExplodingAndLoss();
     }
     
-    _handleLowHealthFlash()
+    /**
+     * Triggers the HUD's low-health flash, if health is low
+     */
+    private _handleLowHealthFlash():void
     {
-        if(this.health <= 10 && this.health > 0 && !this.kernel.level.HUD.isLowHealthFlashActive())
+        const hud = this.kernel.level.HUD as MainHUD;
+        
+        if(this.health <= 10 && this.health > 0 && !hud.isLowHealthFlashActive())
         {
-            this.kernel.level.HUD.startLowHealthFlash();
+            hud.startLowHealthFlash();
         }
         
-        if(this.health <= 0 && this.kernel.level.HUD.isLowHealthFlashActive())
+        if(this.health <= 0 && hud.isLowHealthFlashActive())
         {
-            this.kernel.level.HUD.stopLowHealthFlash();
+            hud.stopLowHealthFlash();
         }
     }
 	
-	_handleExplodingAndLoss()
+    /**
+     * Handles the exploding and loss of the player
+     */
+	private _handleExplodingAndLoss():void
 	{
 		if(this.exploding && this.state != "exploding")
         {
@@ -258,7 +296,10 @@ export default class Tarian extends ASModel {
 		this._handleLeavingScreenAfterLoss();
 	}
 	
-	_handleOnScreenAfterLoss()
+    /**
+     * Handles the sequence where the player is in the "lost" state, but is still on screen
+     */
+	private _handleOnScreenAfterLoss():void
 	{
         if(this.lost && this.z >= -5)
         {
@@ -269,23 +310,22 @@ export default class Tarian extends ASModel {
         }
 	}
 	
-	_handleLeavingScreenAfterLoss()
+    /**
+     * Handles the player leaving the screen after a loss, and trigger the level's levelStop method
+     */
+	private _handleLeavingScreenAfterLoss()
 	{
 		if(this.lost && this.z < 0)
         {
             this.active = false;
-            this.kernel.level.levelStop();
+            (this.kernel.level as ASLevel).levelStop();
         }
 	}
-    
-    levelStopped()
-    {
-        this.active = false;
-    }
-    
 	
-	
-    _movePlayer() //this will just use moveRight(), but can also feed in negative numbers
+	/**
+     * Handles the x and z movement of the player
+     */
+    private _movePlayer():void
     {
         this._setSpeedBasedOnAcceleration();
         
@@ -294,19 +334,25 @@ export default class Tarian extends ASModel {
         this.moveIn(this.zSpeed);
     }
 	
-	_setSpeedBasedOnAcceleration()
+    /**
+     * Determines and sets the player's speed, based on the acceleration/de-acceleration
+     */
+	private _setSpeedBasedOnAcceleration():void
 	{
-		if(this.helpers.time.getTotalMilliseconds() - this.lastSpeedChange >= 100) //1 tenth of a second
+		if(this.helpers.time.getTotalMilliseconds() - this._lastSpeedChange >= 100) //1 tenth of a second
         {
-            this.lastSpeedChange = this.helpers.time.getTotalMilliseconds();
+            this._lastSpeedChange = this.helpers.time.getTotalMilliseconds();
 			this._changeSpeed();
         }
 	}
 	
-	_changeSpeed()
+    /**
+     * Sets the player's speed, based on the acceleration/de-acceleration
+     */
+	private _changeSpeed():void
 	{
 		let directionMultiplier = 0;
-		let speedChange = this.accl;
+		let speedChange = this._accl;
 		
 		if(this.state == "right")
 		{
@@ -327,7 +373,7 @@ export default class Tarian extends ASModel {
 				directionMultiplier = 1;
 			}
 			
-			speedChange = this.deaccl;
+			speedChange = this._deaccl;
 		}
 		
 		speedChange *= directionMultiplier;
@@ -336,11 +382,16 @@ export default class Tarian extends ASModel {
 		this._handleTooFastOrNegativeSpeed(speedChange, directionMultiplier);
 	}
 	
-	_handleTooFastOrNegativeSpeed(speedChange, directionMultiplier)
+    /**
+     * Handles the player's movement being above the top speed or ready to stop
+     * @param speedChange how much is the player's speed changing by?
+     * @param directionMultiplier speed can be multiplied by this, to set the correct direction
+     */
+	private _handleTooFastOrNegativeSpeed(speedChange:number, directionMultiplier:number):void
 	{
 		if(this._isAboveTopSpeedEitherDirection())
 		{
-			this.xSpeed = this.topSpeed * directionMultiplier;
+			this.xSpeed = this._topSpeed * directionMultiplier;
 		} 
 		else if (this._isReadyToStopMovement(speedChange))
 		{
@@ -348,12 +399,21 @@ export default class Tarian extends ASModel {
 		}
 	}
 	
-	_isAboveTopSpeedEitherDirection()
+    /**
+     * Is the player's x speed too fast?
+     * @returns true if above top speed, false if not
+     */
+	private _isAboveTopSpeedEitherDirection()
 	{
-		return (this.xSpeed > this.topSpeed || this.xSpeed < -this.topSpeed);
+		return (this.xSpeed > this._topSpeed || this.xSpeed < -this._topSpeed);
 	}
 	
-	_isReadyToStopMovement(speedChange)
+    /**
+     * Is the player about to stop moving (on the x axis, based on de-acceleration)
+     * @param speedChange The current amount the x speed is changing by
+     * @returns true if the x movement should now stop, false if not
+     */
+	private _isReadyToStopMovement(speedChange)
 	{
 		return ((this.state !== "left" && this.state !== "right") && 
 					(this.xSpeed > -speedChange && this.xSpeed < speedChange));
@@ -361,39 +421,42 @@ export default class Tarian extends ASModel {
 	
 	
 	
-	
-	
-    
-    extraEvents()
+    extraEvents():void
     {
         //check for leaving the game area
-        if(this.x < this._levelLeftEdge)
+        if(this.x < this.levelLeftEdge)
         {
             if(this.state == "left")
             {
                 this.state = "forward";
             }
             
-            this.x = this._levelLeftEdge;
+            this.x = this.levelLeftEdge;
             this.xSpeed = 0;
         }
-        if(this.x + this.width > this._levelRightEdge)
+        if(this.x + this.width > this.levelRightEdge)
         {
             if(this.state == "right")
             {
                 this.state = "forward";
             }
             
-            this.x = this._levelRightEdge - this.width;
+            this.x = this.levelRightEdge - this.width;
             this.xSpeed = 0;
         }
     }
     
-    zCollisionEventAction(otherModel)
+    /**
+     * Event handler for collisions
+     * @param otherModel The other model involved in the collision
+     */
+    zCollisionEventAction(otherModel:IModel):void
     {
-        if("damageDealt" in otherModel && otherModel.damageDealt > 0 && this.state != "exploding" && this.state != "lost")
+        const other = otherModel as ASModel & { color:keyof IDamageFlashImages };
+        
+        if(other.damageDealt > 0 && this.state != "exploding" && this.state != "lost")
         {
-            this.health -= otherModel.damageDealt;
+            this.health -= other.damageDealt;
             if(this.health <= 0)
             {
                 this.health = 0;
@@ -401,7 +464,8 @@ export default class Tarian extends ASModel {
                 this.display = true;
             }
             
-            this.kernel.level.HUD.startDamageFlash(otherModel.color);
+            if(other.color)
+                (this.kernel.level.HUD as MainHUD).startDamageFlash(other.color);
         }
     }
 }

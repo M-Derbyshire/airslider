@@ -1,28 +1,48 @@
-import Monster from '/assets/models/Monster/monster';
+import IBoundaryBox from '../../Model/IBoundaryBox';
+import Monster from '../../Monster/Monster';
+import Tarian from '../../Tarian/Tarian';
+import LavaBall from '../attacks/LavaBall/LavaBall';
 
-export default class BabyDragon extends Monster {
-    constructor(playerModel, lavaBall1, lavaBall2)
+/**
+ * The Baby Dragon monster
+ */
+export default class BabyDragon extends Monster 
+{
+    private _playerModel:Tarian;
+    private _lavaBalls:LavaBall[];
+    private _nextLavaBallIndex:number;
+    private _nextDirectionToggleTime:number; // determines when the monster should next toggle its direction
+    private _initialXSpeed:number;
+    
+    /**
+     * Constructor
+     * @param playerModel The player model
+     * @param lavaBall1 The model of the first lava ball
+     * @param lavaBall2 The model of the second lava ball
+     */
+    constructor(playerModel:Tarian, lavaBall1:LavaBall, lavaBall2:LavaBall)
     {
-        super(Monster);
+        super();
         
-        this.playerModel = playerModel;
-        this.lavaBalls = [lavaBall1, lavaBall2];
+        this._playerModel = playerModel;
+        this._lavaBalls = [lavaBall1, lavaBall2];
         
         //The "next" lava ball refers to the next one to drop (not the next one to select)
-        //Also see the getter for prevLavaBallIndex
-        this.nextLavaBallIndex = 0;
-        
-        this._nextDirectionToggleTime; // determines when the monster should next toggle its direction
+        //Also see the getter for _prevLavaBallIndex
+        this._nextLavaBallIndex = 0;
     }
     
-    get prevLavaBallIndex() {
-        if(this.nextLavaBallIndex === this.lavaBalls.length - 1)
+    /**
+     * The alternate lava ball to the one we're dropping next
+     */
+    private get _prevLavaBallIndex() {
+        if(this._nextLavaBallIndex === this._lavaBalls.length - 1)
                 return 0;
         
-        return this.nextLavaBallIndex + 1;
+        return this._nextLavaBallIndex + 1;
     }
     
-    load()
+    load():void
     {
         super.load();
         
@@ -72,37 +92,37 @@ export default class BabyDragon extends Monster {
         
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         
         this.actions = [
-            this.move
+            this._move
         ];
         
         this.offScreenUnits = 500;
         this.startY = 10,
-        this.startX = this._levelRightEdge + this.offScreenUnits;
+        this.startX = this.levelRightEdge + this.offScreenUnits;
         
-        this.startZ = this.playerModel.z;
+        this.startZ = this._playerModel.z;
         this.enterXSpeed = 90;
         this._initialXSpeed = -720;
         
-        this.lavaBalls.forEach(lb => lb.z = this.startZ);
+        this._lavaBalls.forEach(lb => lb.z = this.startZ);
         
         this.reset();
     }
     
-    getBoundaryBoxes()
+    getBoundaryBoxes():IBoundaryBox[]
     {
         return [];
     }
     
     //entering and exiting and reseting-----------------------------------------
     
-    enter()
+    enter():void
     {
-        if(this._levelRightEdge < (this.x + this.width))
+        if(this.levelRightEdge < (this.x + this.width))
         {
             this.moveLeft(this.enterXSpeed);
         } else {
@@ -110,19 +130,19 @@ export default class BabyDragon extends Monster {
         }
     }
     
-    exit()
+    exit():void
     {
         this.state = "left";
         this.moveLeft(this.enterXSpeed);
         
-        if((this.x + this.width) < (this._levelLeftEdge - this.offScreenUnits))
+        if((this.x + this.width) < (this.levelLeftEdge - this.offScreenUnits))
         {
             this.exiting = false;
             this.active = false;
         }
     }
     
-    reset()
+    reset():void
     {
         this.xSpeed = this._initialXSpeed;
         
@@ -134,7 +154,7 @@ export default class BabyDragon extends Monster {
     
     //movement-----------------------------------------------------
     
-    move()
+    private _move():void
     {
         this.moveRight(this.xSpeed);
         
@@ -146,10 +166,10 @@ export default class BabyDragon extends Monster {
             this._toggleDirection();
     }
 	
-	_handleOverlappingOfLevelEdges()
+	private _handleOverlappingOfLevelEdges():void
 	{
-		const hasOverlappedLeftEdge = (this.x + (this.width / 2) <= this._levelLeftEdge);
-		const hasOverlappedRightEdge = (this.x + (this.width / 2) >= this._levelRightEdge);
+		const hasOverlappedLeftEdge = (this.x + (this.width / 2) <= this.levelLeftEdge);
+		const hasOverlappedRightEdge = (this.x + (this.width / 2) >= this.levelRightEdge);
 		
         if(hasOverlappedLeftEdge || hasOverlappedRightEdge)
         {
@@ -157,12 +177,12 @@ export default class BabyDragon extends Monster {
             this.state = (this.state == "left") ? "right" : "left";
             
             this.x = (this.xSpeed > 0) ? 
-                ((this._levelLeftEdge - (this.width / 2)) + 1) :
-                ((this._levelRightEdge - (this.width / 2)) - 1);
+                ((this.levelLeftEdge - (this.width / 2)) + 1) :
+                ((this.levelRightEdge - (this.width / 2)) - 1);
         }
 	}
     
-    _shouldChangeDirection()
+    private _shouldChangeDirection():boolean
     {
         const runningTime = this.kernel.totalLevelActiveMilliseconds;
         
@@ -174,8 +194,8 @@ export default class BabyDragon extends Monster {
         
         // We only want to change direction if monster is a certain distance from the edge of the level
         const areaSize = this.width / 8;
-        const leftArea = this._levelLeftEdge + areaSize;
-        const rightArea = this._levelRightEdge - areaSize;
+        const leftArea = this.levelLeftEdge + areaSize;
+        const rightArea = this.levelRightEdge - areaSize;
         const monsterRightEdge = (this.x + this.width);
         
         const monsterIsWithinLeftArea = (this.x <= leftArea); 
@@ -197,31 +217,31 @@ export default class BabyDragon extends Monster {
         return false;
     }
     
-    _toggleDirection()
+    private _toggleDirection():void
     {
         this.xSpeed = -this.xSpeed;
         this.state = (this.state === "left") ? "right" : "left";
     }
 	
-	_dropBallIfTime()
+	private _dropBallIfTime():void
 	{
-        const prevLavaBall = this.lavaBalls[this.prevLavaBallIndex];
+        const prevLavaBall = this._lavaBalls[this._prevLavaBallIndex];
         
-        if ((!prevLavaBall.active && !this.lavaBalls[this.nextLavaBallIndex].active && this.fireWeapon) //This will trigger the first drop
+        if ((!prevLavaBall.active && !this._lavaBalls[this._nextLavaBallIndex].active && this.fireWeapon) //This will trigger the first drop
             //After the first drop, the below triggers an further drops
             || (this.fireWeapon 
-            && !this.lavaBalls[this.nextLavaBallIndex].state !== "drop" //When we test this with .active, there's a bug where occasionally it stops dropping both balls
+            && this._lavaBalls[this._nextLavaBallIndex].state !== "drop" //When we test this with .active, there's a bug where occasionally it stops dropping both balls
             && (prevLavaBall.y > this.kernel.unitsWithinCamera / 1.5)))
         {
-            this.dropBall();
-            this.nextLavaBallIndex = this.prevLavaBallIndex;
+            this._dropBall();
+            this._nextLavaBallIndex = this._prevLavaBallIndex;
         }
 	}
     
     //attacks-----------------------------------------------------
-    dropBall()
+    private _dropBall():void
     {
-        let l = this.lavaBalls[this.nextLavaBallIndex];
+        let l = this._lavaBalls[this._nextLavaBallIndex];
         
         //center it
         let xOffset = -65;

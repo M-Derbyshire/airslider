@@ -1,11 +1,23 @@
-import ASModel from '/assets/models/ASModel/ASModel';
+import ASModel from '../ASModel/ASModel';
+import Sign from '../Sign/Sign';
 
+/**
+ * A starting light display, to be "attached" to a starting sign
+ */
 export default class SignDisplay extends ASModel 
 {
-    // "sign" param is the Sign that this display is "attached" to
-    constructor(sign)
+    private _sign:Sign;
+    private _lastLightChangeMS:number;
+    private _lightChangeWaitMS:number;
+    private _lightChangeStartWaitMS:number;
+    
+    /**
+     * Constructor
+     * @param sign the Sign that this display is "attached" to
+     */
+    constructor(sign:Sign)
     {
-        super(ASModel);
+        super();
         
         this._sign = sign;
         
@@ -14,7 +26,7 @@ export default class SignDisplay extends ASModel
         this._lightChangeStartWaitMS = 3000; // how long before the light sequence starts (milliseconds)
     }
     
-    load()
+    load():void
     {
         super.load();
         
@@ -74,7 +86,7 @@ export default class SignDisplay extends ASModel
         });
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         this.x = 325;
@@ -83,7 +95,7 @@ export default class SignDisplay extends ASModel
         this.active = true;
     }
     
-    act()
+    act():void
     {
         this._setZPosition();
         
@@ -94,12 +106,19 @@ export default class SignDisplay extends ASModel
             this.active = false;
     }
     
-    _setZPosition()
+    /**
+     * Sets the z position, based on the Sign's z position
+     */
+    private _setZPosition():void
     {
         this.z = this._sign.z - 1;
     }
     
-    _lightsShouldChangeToNext()
+    /**
+     * Should the lights change to the next part of the sequence? (off, one, two, three, go)
+     * @returns true if the lights should change, false if not
+     */
+    private _lightsShouldChangeToNext():boolean
     {
         const changeWaitMS = (this.state === "off") ? this._lightChangeStartWaitMS : this._lightChangeWaitMS;
         
@@ -109,7 +128,10 @@ export default class SignDisplay extends ASModel
         );
     }
     
-    _changeToNextLightState()
+    /**
+     * Changes the lights to the next phase of the sequence (off, one, two, three, go)
+     */
+    private _changeToNextLightState():void
     {
         this._lastLightChangeMS = this.helpers.time.getTotalMilliseconds();
         

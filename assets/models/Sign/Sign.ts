@@ -1,10 +1,29 @@
-import ASModel from '/assets/models/ASModel/ASModel';
+import ASLevel from '../../levels/ASLevel/ASLevel';
+import ASModel from '../ASModel/ASModel';
 
+/**
+ * A sign on the track (e.g. the start or finish sign)
+ */
 export default class Sign extends ASModel 
 {
-    constructor(displayText, startPosition, targetPosition, active)
+    /**
+     * Has this sign reached its target z position?
+     */
+    hasReachedTargetPosition:boolean;
+    
+    private _startPosition:number;
+    private _targetPosition:number;
+    
+    /**
+     * Constructor
+     * @param displayText Text to display on the sign
+     * @param startPosition The starting z position of the sign
+     * @param targetPosition The z position that the sign should stop moving at
+     * @param active Is the sign active initially?
+     */
+    constructor(displayText:string, startPosition:number, targetPosition:number, active:boolean)
     {
-        super(ASModel);
+        super();
         
         this.text = {
             content: displayText,
@@ -23,7 +42,7 @@ export default class Sign extends ASModel
         this.active = active;
     }
     
-    load()
+    load():void
     {
         super.load();
         
@@ -40,7 +59,7 @@ export default class Sign extends ASModel
         });
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         this.x = -100;
@@ -51,7 +70,7 @@ export default class Sign extends ASModel
         this.hasReachedTargetPosition = false;
     }
     
-    act()
+    act():void
     {
         if (!this.hasReachedTargetPosition) 
         {
@@ -65,7 +84,10 @@ export default class Sign extends ASModel
             this.active = false;
     }
     
-    _checkForTargetPosition()
+    /**
+     * Checks to see if the sign is in its target position, and sets hasReachedTargetPosition to true
+     */
+    private _checkForTargetPosition():void
     {
         if(this.z <= this._targetPosition)
         {
@@ -74,11 +96,14 @@ export default class Sign extends ASModel
         }
     }
     
-    _setZSpeedBasedOnLevelSpeed()
+    /**
+     * Updates the speed of the sign, based on the level speed
+     */
+    private _setZSpeedBasedOnLevelSpeed():void
 	{
-		if(this.kernel.level.levelMoving)
+		if((this.kernel.level as ASLevel).levelMoving)
         {
-            this.zSpeed = this.kernel.level.levelSpeed;
+            this.zSpeed = (this.kernel.level as ASLevel).levelSpeed;
         }
 	}
 }

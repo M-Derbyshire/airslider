@@ -12,10 +12,7 @@ export default class ASModel extends Model {
 	constructor()
 	{
 		super();
-		
-        this.levelLeftEdge;
-        this.levelRightEdge;
-		
+        
 		this.damageDealt = 0;
         this.canBeControlled = false;
 	}

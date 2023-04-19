@@ -1,12 +1,24 @@
-import ASModel from '/assets/models/ASModel/ASModel';
+import { IDamageFlashImages } from '../../../../HUDs/components/DamageFlash/DamageFlash';
+import ASModel from '../../../ASModel/ASModel';
+import IModel from '../../../Model/IModel';
 
+/**
+ * The lighting used by the ElectricSeahorse
+ */
 export default class Lightning extends ASModel {
     
+    protected color:keyof IDamageFlashImages; // The image used by the DamageFlash
+    
+    private _damageValue:number;
+    
+    /**
+     * Constructor
+     */
     constructor()
     {
-        super(ASModel);
+        super();
         
-        this.color = "yellow"; //Used for the damage flash hud component
+        this.color = "yellow";
         this.zSpeed = 1; //value required for Tarian to recognise hit
         
         //See the act method for explanation of the below
@@ -14,7 +26,7 @@ export default class Lightning extends ASModel {
         this.damageDealt = 0;
     }
     
-    load()
+    load():void
     {
         super.load();
         
@@ -37,19 +49,19 @@ export default class Lightning extends ASModel {
         });
     }
     
-    prepare()
+    prepare():void
     {
         super.prepare();
         this.reset();
     }
     
-    reset()
+    reset():void
     {
         this.state = "shock";
         this.active = false;
     }
     
-    act()
+    act():void
     {
         //With most other models, the collision will end after one frame (because of the attacks movement).
         //However, in this instance, that's not the case, so we need to account for the frame rate.
@@ -58,5 +70,5 @@ export default class Lightning extends ASModel {
         this.damageDealt = this._damageValue / this.kernel.fps;
     }
     
-    hitPlayerEventAction(otherModel){} //no action actually required
+    hitPlayerEventAction(otherModel:IModel):void {} //no action actually required
 }
