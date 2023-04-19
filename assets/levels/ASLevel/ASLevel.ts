@@ -44,7 +44,7 @@ export default class ASLevel extends Level
     protected timeLevelClosingBeginMS:number; // When (in milliseconds) did the closing sequence begin
     
     protected monsters:Monster[];
-    protected player:ASModel;
+    protected player:Tarian;
     
     protected outsideVisible:boolean;
     protected tunnelLightMaskIndex:number;
