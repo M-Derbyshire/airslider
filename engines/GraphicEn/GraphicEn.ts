@@ -14,7 +14,6 @@ export default class GraphicEn implements IGraphicEn {
     private _helpers:IHelpers;
     
     private _gameCan:HTMLCanvasElement;
-    private _gameCtx:CanvasRenderingContext2D;
     private _frameManager:IFrameManager;
     
     private _lastFrameCanvasWidth:number;
@@ -24,6 +23,11 @@ export default class GraphicEn implements IGraphicEn {
      * The camera for the level
      */
     camera:ICamera;
+    
+    /**
+     * The 2D canvas context
+     */
+    gameCtx:CanvasRenderingContext2D;
     
     /**
      * Constructor
@@ -38,7 +42,7 @@ export default class GraphicEn implements IGraphicEn {
         this._helpers = this._kernel.helpers;
 		
         this._gameCan = gameCanvas;
-        this._gameCtx = gameContext;
+        this.gameCtx = gameContext;
         this.camera = camera;
         this._frameManager = frameManager;
         
@@ -63,7 +67,7 @@ export default class GraphicEn implements IGraphicEn {
         if(this._canvasSizeHasChanged()) this._setCanvasCorrectWidthHeight();
         
         //clear everything on the gameCan
-        this._gameCtx.clearRect(0, 0, this._gameCan.width, this._gameCan.height);
+        this.gameCtx.clearRect(0, 0, this._gameCan.width, this._gameCan.height);
         
         
         //Draw the parts of the screen that are behind the models
@@ -117,10 +121,10 @@ export default class GraphicEn implements IGraphicEn {
     private _fpsMeter():void
     {
         let fontSize = 30
-        this._gameCtx.font = fontSize + "px Arial";
-        this._gameCtx.fillStyle = this._kernel.fpsDisplayColor;
+        this.gameCtx.font = fontSize + "px Arial";
+        this.gameCtx.fillStyle = this._kernel.fpsDisplayColor;
         const fpsDisplay = Math.round(this._kernel.fps * 100) / 100; // 2 decimal places
-        this._gameCtx.fillText("FPS: " + fpsDisplay, 10, (10 + fontSize));
+        this.gameCtx.fillText("FPS: " + fpsDisplay, 10, (10 + fontSize));
     }
     
     /**

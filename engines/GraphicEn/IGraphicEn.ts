@@ -6,6 +6,11 @@ import ICamera from "./ICamera";
 export default interface IGraphicEn {
     
     /**
+     * The 2D canvas context
+     */
+    gameCtx:CanvasRenderingContext2D;
+    
+    /**
      * The camera for the level
      */
     camera:ICamera;

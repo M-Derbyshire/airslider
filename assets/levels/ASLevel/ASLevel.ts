@@ -60,9 +60,9 @@ export default class ASLevel extends Level
     protected tunnelSpriteLength: number;
     
     // Models/info for opening and closing of level
-    private _startSign:IModel;
-    private _startSignDisplay:IModel;
-    private _finishSign:IModel;
+    private _startSign:Sign;
+    private _startSignDisplay:SignDisplay;
+    private _finishSign:Sign;
     private _finishFlagsActive:boolean;
     private _signStartingZPosition:number;
     private _finishFlagsManager:LevelGround;
@@ -103,9 +103,9 @@ export default class ASLevel extends Level
      */
     getModels():IModel[]
     {
-        this._startSign = new Sign("", this._signStartingZPosition, -1, true) as IModel;
-        this._startSignDisplay = new SignDisplay(this._startSign) as IModel;
-        this._finishSign = new Sign("FINISH", this.helpers.zCalc.vPointDepth, this._signStartingZPosition, false) as IModel;
+        this._startSign = new Sign("", this._signStartingZPosition, -1, true);
+        this._startSignDisplay = new SignDisplay(this._startSign);
+        this._finishSign = new Sign("FINISH", this.helpers.zCalc.vPointDepth, this._signStartingZPosition, false);
         
         return [
             this._startSign,

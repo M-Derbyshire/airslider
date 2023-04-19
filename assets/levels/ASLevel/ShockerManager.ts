@@ -99,7 +99,7 @@ export default class ShockerManager
 	 */
 	setPlayerModelIndex(index:number):void
 	{
-		this._playerModelIndex = index;
+		this.playerModelIndex = index;
 	}
     
     /**
