@@ -22,8 +22,6 @@ import IPreparedEngines from './IPreparedEngines';
 import ICamera from '../engines/GraphicEn/ICamera';
 import IFrameManager from '../engines/GraphicEn/IFrameManager';
 
-let kernelInstance:Kernel|null = null;
-
 /**
  * Controls the entire game (this will be a singleton)
  */
