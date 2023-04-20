@@ -56,10 +56,6 @@ export default class Level implements ILevel
          */
         this.HUD;
         
-        this._gameCanvas;
-        this._gameContext;
-        this._camera;
-        
         this.eventManager = new EventManager(new EventCheckContainer, new ModelExtraEventManager);
 		this._pointerEventManager; //Setup in load method
     }
@@ -78,6 +74,7 @@ export default class Level implements ILevel
         this._camera = camera;
         this.frameManager = frameManager;
         
+        this.setupZCalc(this._gameCanvas);
         this._pointerEventManager = new PointerEventManager(this._gameCanvas);
         this._loadHUD(gameContext, camera, this._pointerEventManager);
     }
