@@ -28,7 +28,7 @@ export default class SoundEn implements ISoundEn {
     /**
      * Should the music be played on repeat? (music must be set before this can be set, and will need to be set whenever changing the music)
      */
-    get musicRepeat() { return this._music.loop; }
+    get musicRepeat() { return (this._music) ? this._music.loop : false }
     set musicRepeat(repeat)
     {
         if(this._music)
