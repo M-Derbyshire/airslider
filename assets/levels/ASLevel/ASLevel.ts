@@ -381,7 +381,8 @@ export default class ASLevel extends Level
     {
         // SignDisplay will start the countdown automatically
         
-        if(this._startSignDisplay.state === "go")
+        
+        if(this._startSignDisplay.state === "finished")
         {
             this._levelMovementStart();
             this.levelSection++;

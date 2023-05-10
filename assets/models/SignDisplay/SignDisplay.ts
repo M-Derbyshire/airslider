@@ -9,7 +9,11 @@ export default class SignDisplay extends ASModel
     private _sign:Sign;
     private _lastLightChangeMS:number;
     private _lightChangeWaitMS:number;
+    private _finalLightChangeWaitMS:number;
     private _lightChangeStartWaitMS:number;
+    
+    private _countdownBeep:HTMLAudioElement;
+    private _startBeep:HTMLAudioElement;
     
     /**
      * Constructor
@@ -22,13 +26,17 @@ export default class SignDisplay extends ASModel
         this._sign = sign;
         
         this._lastLightChangeMS = 0; // the millisecond count when the light sequence last changed
-        this._lightChangeWaitMS = 1000; // how long does the light sequence wait before changing (milliseconds)
+        this._lightChangeWaitMS = 1500; // how long does the light sequence wait before changing (milliseconds)
+        this._finalLightChangeWaitMS = 500; // how long does the end of the light sequence last, before state changes to "finished"
         this._lightChangeStartWaitMS = 3000; // how long before the light sequence starts (milliseconds)
     }
     
     load():void
     {
         super.load();
+        
+        this._countdownBeep = this.kernel.loadAudio("/assets/models/SignDisplay/sounds/countdown_beep.mp3");
+        this._startBeep = this.kernel.loadAudio("/assets/models/SignDisplay/sounds/countdown_go.mp3");
         
         const sheetPath = "/assets/models/SignDisplay/anim/display_open_spritesheet.png";
         
@@ -82,7 +90,16 @@ export default class SignDisplay extends ASModel
                 fps: 1,
                 drawWidth,
                 drawHeight
-            })
+            }),
+            finished: this.animationManager.createAnimation({
+                sheetPath,
+                frameCoordinates: [
+                    { x: 0, y: 456, width, height }
+                ],
+                fps: 1,
+                drawWidth,
+                drawHeight
+            }),
         });
     }
     
@@ -115,21 +132,26 @@ export default class SignDisplay extends ASModel
     }
     
     /**
-     * Should the lights change to the next part of the sequence? (off, one, two, three, go)
+     * Should the lights change to the next part of the sequence? (off, one, two, three, go, off)
      * @returns true if the lights should change, false if not
      */
     private _lightsShouldChangeToNext():boolean
     {
-        const changeWaitMS = (this.state === "off") ? this._lightChangeStartWaitMS : this._lightChangeWaitMS;
+        let changeWaitMS = this._lightChangeWaitMS;
+        
+        if(this._lastLightChangeMS === 0)
+            changeWaitMS = this._lightChangeStartWaitMS;
+        else if(this.state === "go")
+            changeWaitMS = this._finalLightChangeWaitMS;
         
         return (
-            this.state !== "go" && 
+            this.state !== "finish" && 
             this.helpers.time.getTotalMilliseconds() >= (this._lastLightChangeMS + changeWaitMS)
         );
     }
     
     /**
-     * Changes the lights to the next phase of the sequence (off, one, two, three, go)
+     * Changes the lights to the next phase of the sequence (off, one, two, three, go, finished)
      */
     private _changeToNextLightState():void
     {
@@ -139,15 +161,22 @@ export default class SignDisplay extends ASModel
         {
             case "off":
                 this.state = "one";
+                this.kernel.soundEn.playSound(this._countdownBeep);
                 break;
             case "one":
                 this.state = "two";
+                this.kernel.soundEn.playSound(this._countdownBeep);
                 break;
             case "two":
                 this.state = "three";
+                this.kernel.soundEn.playSound(this._countdownBeep);
                 break;
             case "three":
                 this.state = "go";
+                this.kernel.soundEn.playSound(this._startBeep);
+                break;
+            case "go":
+                this.state = "finished";
         }
     }
 }
