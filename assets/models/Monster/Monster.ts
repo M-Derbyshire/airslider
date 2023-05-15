@@ -134,7 +134,6 @@ export default class Monster extends ASModel {
     {
         super.prepare();
         this.fireWeapon = true;
-        this.realZSpeedRaw = (this.kernel.level as ASLevel).maxLevelSpeedRaw;
     }
     
     /**
