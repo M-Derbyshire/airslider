@@ -96,13 +96,12 @@ export default class Monster extends ASModel {
 	private _handlePlayerLoss():void
 	{
 		//If we (the player) has stopped moving forward (lost)
-        
         const level = this.kernel.level as ASLevel;
-        
-		if(level.levelSpeedRaw < this.realZSpeedRaw && this.active)
+        console.log(level.levelSpeedRaw)
+		if(!level.levelMoving && this.active)
         {
 			//Fly/float off into the distance
-            this.z += (this.helpers.zCalc.speed(this.realZSpeedRaw, this.kernel.fps) - this.helpers.zCalc.speed(level.levelSpeed, this.kernel.fps));
+            this.moveIn(this.realZSpeedRaw);
             this.fireWeapon = false;
             
             if(this.z >= this.helpers.zCalc.vPointDepth)
@@ -135,7 +134,7 @@ export default class Monster extends ASModel {
     {
         super.prepare();
         this.fireWeapon = true;
-        this.realZSpeedRaw = (this.kernel.level as ASLevel).levelSpeedRaw;
+        this.realZSpeedRaw = (this.kernel.level as ASLevel).maxLevelSpeedRaw;
     }
     
     /**
