@@ -97,7 +97,7 @@ export default class Monster extends ASModel {
 	{
 		//If we (the player) has stopped moving forward (lost)
         const level = this.kernel.level as ASLevel;
-        console.log(level.levelSpeedRaw)
+        
 		if(!level.levelMoving && this.active)
         {
 			//Fly/float off into the distance
