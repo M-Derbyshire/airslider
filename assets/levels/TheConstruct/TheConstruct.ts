@@ -15,6 +15,7 @@ import IModel from '../../models/Model/IModel';
 import ASModel from '../../models/ASModel/ASModel';
 import ICamera from '../../../engines/GraphicEn/ICamera';
 import IFrameManager from '../../../engines/GraphicEn/IFrameManager';
+import Monster from '../../models/Monster/Monster';
 
 /**
  * Testing/development level
@@ -42,8 +43,8 @@ export default class TheConstruct extends ASLevel
         models.push(this.player); //add main character (has to be 0)
         models.push(new TarianExplosion(this.player));
         
-        // models.push(new NeonPidgeon(player, true));
-        // models.push(new NeonPidgeon(player));
+        models.push(new NeonPidgeon(this.player, true));
+        models.push(new NeonPidgeon(this.player));
         // models.push(new Falcon(models[0]));
         // models.push(new Ghost(models[0]));
 		// models.push(new LavaBall(models[0]));
@@ -54,8 +55,8 @@ export default class TheConstruct extends ASLevel
         // models.push(new ElectricSeahorse(player, models[models.length - 2], models[models.length - 1]));
         // models.push(new ElectricHornet(player));
 		this.monsters = [
-            // models[models.length - 1],
-            // models[models.length - 2]
+            models[models.length - 1] as Monster,
+            models[models.length - 2] as Monster
         ];
 
         // this.shockerManager.setShockerModelRange(models.length, models.length + 10);
@@ -163,7 +164,7 @@ export default class TheConstruct extends ASLevel
         //     this.levelSection = this.levelClosingSectionNumber;
         // }
         
-        if(this.helpers.time.getTotalSeconds() >= 25 && this.levelSection === 2)
+        if(this.helpers.time.getTotalSeconds() >= 90 && this.levelSection === 2)
         {
             this.levelSection = this.levelClosingSectionNumber;
         }

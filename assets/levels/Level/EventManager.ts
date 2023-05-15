@@ -47,8 +47,8 @@ export default class EventManager implements IEventManager
         for(let i = 0; i < this._kernel.loadedModels.length; i++)
         {
             const model = this._kernel.loadedModels[i];
-            if(model.constructor.name === event.class1.constructor.name) class1Models.push(model);
-            if(model.constructor.name === event.class2.constructor.name) class2Models.push(model);
+            if(model.constructor.name === event.class1.name) class1Models.push(model);
+            if(model.constructor.name === event.class2.name) class2Models.push(model);
         }
         
         this._events.push({ 
