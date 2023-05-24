@@ -101,7 +101,7 @@ export default class Monster extends ASModel {
 		if(!level.levelMoving && this.active)
         {
 			//Fly/float off into the distance
-            this.moveIn(this.realZSpeedRaw);
+            this.moveIn(level.maxLevelSpeedRaw);
             this.fireWeapon = false;
             
             if(this.z >= this.helpers.zCalc.vPointDepth)
