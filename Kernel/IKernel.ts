@@ -149,23 +149,21 @@ export default interface IKernel {
      * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
      * @returns the image object
      */
-    loadImage(path:string, callback?:()=>void):HTMLImageElement;
+    loadImage(path:string):HTMLImageElement;
     
     /**
      * Loads an audio file (if not already loaded) with the asset handler
      * @param path the file path to the audio file
-     * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
      * @returns the audio object
      */
-    loadAudio(path:string, callback?:()=>void):HTMLAudioElement;
+    loadAudio(path:string):HTMLAudioElement;
     
     /**
      * Starts the loading of a font file into the HTML document
      * @param name the name of the font
      * @param path the path to the font file
-     * @param callback a callback function, to run when the font has finished loading (this function should still call the asset handler's default asset callback)
      */
-    loadFont(name:string, path:string, callback?:()=>void):void;
+    loadFont(name:string, path:string):void;
     
     /**
      * Finds the loaded asset with the given file path, and reduces the usage count against it. The asset should stay 

@@ -354,9 +354,9 @@ export default class Kernel implements IKernel {
      * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
      * @returns the image object
      */
-    loadImage(path:string, callback:()=>void = this._assetHandler.getDefaultAssetCallback()):HTMLImageElement
+    loadImage(path:string):HTMLImageElement
     {
-        return this._assetHandler.loadAsset(new Image, path, callback) as HTMLImageElement;
+        return this._assetHandler.loadAsset(new Image, path) as HTMLImageElement;
     }
     
     /**
@@ -365,20 +365,19 @@ export default class Kernel implements IKernel {
      * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
      * @returns the audio object
      */
-    loadAudio(path:string, callback:()=>void = this._assetHandler.getDefaultAssetCallback()):HTMLAudioElement
+    loadAudio(path:string):HTMLAudioElement
     {
-        return this._assetHandler.loadAsset(new Audio, path, callback) as HTMLAudioElement;
+        return this._assetHandler.loadAsset(new Audio, path) as HTMLAudioElement;
     }
     
     /**
      * Starts the loading of a font file into the HTML document
      * @param name the name of the font
      * @param path the path to the font file
-     * @param callback a callback function, to run when the font has finished loading (this function should still call the asset handler's default asset callback)
      */
-    loadFont(name:string, path:string, callback:()=>void = this._assetHandler.getDefaultAssetCallback()):void
+    loadFont(name:string, path:string):void
     {
-        this._assetHandler.loadFont(name, path, callback);
+        this._assetHandler.loadFont(name, path);
     }
     
     /**
