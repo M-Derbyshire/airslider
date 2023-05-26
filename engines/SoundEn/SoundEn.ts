@@ -75,9 +75,8 @@ export default class SoundEn implements ISoundEn {
      */
     playSound(ref:HTMLAudioElement, loop:boolean = false):void
     {
-        //position needs to be reset so sounds will restart
-        //if they're triggered mid-way through playing
-        ref.currentTime = 0;
+        ref.currentTime = 0; // Position needs to be reset so sounds will restart if they're triggered mid-way through playing
+        ref.muted = false; // Sound may be muted, if it was in the middle of being force-loaded
         ref.loop = loop;
         ref.play();
     }
@@ -90,5 +89,22 @@ export default class SoundEn implements ISoundEn {
     {
         ref.currentTime = 0;
         ref.pause();
+    }
+    
+    /**
+     * Forces a sound to be loaded by playing it while muted
+     * @param ref The sound to be forced to load
+     */
+    forceLoad(ref:HTMLAudioElement):void
+    {
+        const unmute = () => {
+            ref.muted = false;
+            ref.removeEventListener("ended", unmute);
+        };
+        
+        ref.loop = false;
+        ref.muted = true;
+        ref.addEventListener("ended", unmute);
+        ref.play();
     }
 }

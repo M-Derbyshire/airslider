@@ -46,4 +46,10 @@ export default interface ISoundEn {
      */
     stopSound(ref:HTMLAudioElement):void;
     
+    /**
+     * Forces a sound to be loaded by playing it while muted
+     * @param ref The sound to be forced to load
+     */
+    forceLoad(ref:HTMLAudioElement):void;
+    
 };

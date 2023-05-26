@@ -110,6 +110,8 @@ export default class SignDisplay extends ASModel
         this.y = 115;
         this.state = "off";
         this.active = true;
+        this.kernel.soundEn.forceLoad(this._countdownBeep);
+        this.kernel.soundEn.forceLoad(this._startBeep);
     }
     
     act():void
