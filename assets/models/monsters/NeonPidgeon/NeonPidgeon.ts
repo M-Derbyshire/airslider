@@ -134,6 +134,19 @@ export default class NeonPidgeon extends Monster {
         this.reset();
     }
     
+    // This is required to run the flapping sound effect while flapping, entering and exiting
+    act():void
+    {
+        super.act();
+        
+        const flappingAnimation = this.animationManager.animations.flapping;
+        
+        // The frame index will always be 0 when off screen, as the animation won't be progressed (since the model won't be drawn),
+        // so play the sound every time it's on the second frame
+        if(this.state === "flapping" && flappingAnimation.currentFrameIndex === 1) 
+            console.log("play sound right now");
+    }
+    
     // Collision boxes --------------------------------------------------------
     getBoundaryBoxes():IBoundaryBox[]
     {

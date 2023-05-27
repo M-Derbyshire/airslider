@@ -264,8 +264,6 @@ export default class Kernel implements IKernel {
      */
     private _loadLevel(level:ILevel):void
     {
-		this._initialiseControls();
-        
 		const aspectRatioHorizontal = (!isNaN(this.settings.aspectRatioHorizontal)) ? this.settings.aspectRatioHorizontal : 17;
 		const aspectRatioVertical = (!isNaN(this.settings.aspectRatioVertical)) ? this.settings.aspectRatioVertical : 9;
 		const camera = new Camera(this.gameCanvas, this.gameContext, aspectRatioHorizontal, aspectRatioVertical);
@@ -319,6 +317,7 @@ export default class Kernel implements IKernel {
     {
         this.level.prepare();
         this.loadedModels.forEach(model => model.prepare());
+        this._initialiseControls();
         
         this._levelQueue[0].hasBeenPrepared = true;
     }
