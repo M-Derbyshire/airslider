@@ -158,16 +158,18 @@ export default class TheConstruct extends ASLevel
 		}
         
         //Stop the monster
-        // if(this.helpers.time.getTotalSeconds() >= 40 && this.levelSection === 2)
-        // {
-        //     this.monsters.forEach(monster => monster.stop());
-        //     this.levelSection = this.levelClosingSectionNumber;
-        // }
-        
         if(this.helpers.time.getTotalSeconds() >= 90 && this.levelSection === 2)
         {
-            this.levelSection = this.levelClosingSectionNumber;
+            this.monsters.forEach(monster => monster.stop());
+            
+            if(this.monsters.every(monster => monster.active === false))
+                this.levelSection = this.levelClosingSectionNumber;
         }
+        
+        // if(this.helpers.time.getTotalSeconds() >= 90 && this.levelSection === 2)
+        // {
+        //     this.levelSection = this.levelClosingSectionNumber;
+        // }
 		
 		
 		//Set a pattern of shockers going
