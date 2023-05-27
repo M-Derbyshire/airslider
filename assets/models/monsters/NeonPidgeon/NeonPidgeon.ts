@@ -12,6 +12,7 @@ export default class NeonPidgeon extends Monster {
     private _playerModel:Tarian;
     private _topLevelMonster:boolean; // Is this pidgeon above another, on the y axis?
     private _nextDrop:number; // The next drop time (in milliseconds)
+    private _edgeOverflow:number; // Without breaking out of the level edges, the player can just stay on one side, and not get hit
     
     /**
      * Is this pidgeon currently overlapping the player?
@@ -68,6 +69,9 @@ export default class NeonPidgeon extends Monster {
     {
         super.load();
         
+        const fullModelWidth = 337;
+        this._edgeOverflow = fullModelWidth / 2;
+        
         const spritesheetPath = "/assets/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         
@@ -78,7 +82,7 @@ export default class NeonPidgeon extends Monster {
                 drawWidth: 250,
                 drawHeight: 200,
 				frameCoordinates: [
-					{ x: 0, y: 0, width: 337, height: 240 },
+					{ x: 0, y: 0, width: fullModelWidth, height: 240 },
 				],
             }),
             flapping: this.animationManager.createAnimation({
@@ -87,14 +91,14 @@ export default class NeonPidgeon extends Monster {
                 drawWidth: 250,
                 drawHeight: 200,
 				frameCoordinates: [
-					{ x: 0, y: 242, width: 337, height: 228 },
-					{ x: 0, y: 471, width: 337, height: 228 },
-					{ x: 0, y: 700, width: 337, height: 228 },
-					{ x: 0, y: 929, width: 337, height: 228 },
-					{ x: 0, y: 1158, width: 337, height: 228 },
-					{ x: 0, y: 1387, width: 337, height: 228 },
-					{ x: 0, y: 1616, width: 337, height: 228 },
-					{ x: 0, y: 1845, width: 337, height: 228 },
+					{ x: 0, y: 242, width: fullModelWidth, height: 228 },
+					{ x: 0, y: 471, width: fullModelWidth, height: 228 },
+					{ x: 0, y: 700, width: fullModelWidth, height: 228 },
+					{ x: 0, y: 929, width: fullModelWidth, height: 228 },
+					{ x: 0, y: 1158, width: fullModelWidth, height: 228 },
+					{ x: 0, y: 1387, width: fullModelWidth, height: 228 },
+					{ x: 0, y: 1616, width: fullModelWidth, height: 228 },
+					{ x: 0, y: 1845, width: fullModelWidth, height: 228 },
 				],
             }),
             rising: this.animationManager.createAnimation({
@@ -103,7 +107,7 @@ export default class NeonPidgeon extends Monster {
                 drawWidth: 250,
                 drawHeight: 200,
 				frameCoordinates: [
-					{ x: 0, y: 2074, width: 337, height: 240 },
+					{ x: 0, y: 2074, width: fullModelWidth, height: 240 },
 				],
             }),
         });
@@ -275,10 +279,7 @@ export default class NeonPidgeon extends Monster {
      */
 	private _monsterShouldDrop():boolean
 	{
-		return ((this.helpers.time.getTotalMilliseconds() >= this._nextDrop) && 
-				!this.overlapping && 
-            	((this.x + this.width >= this._playerModel.x) && 
-				(this.x <= this._playerModel.x + this._playerModel.width)));
+		return ((this.helpers.time.getTotalMilliseconds() >= this._nextDrop) && this.overlapping);
 	}
 	
     /**
@@ -286,13 +287,13 @@ export default class NeonPidgeon extends Monster {
      */
 	private _handleMonsterOverlappingLevelEdges():void
 	{
-		if(this.x <= this.levelLeftEdge || this.x + this.width >= this.levelRightEdge)
+		if(this.x <= (this.levelLeftEdge - this._edgeOverflow) || this.x + this.width >= (this.levelRightEdge + this._edgeOverflow))
         {
             this.xSpeed = -this.xSpeed;
             
             this.x = (this.xSpeed > 0) ? 
-                (this.levelLeftEdge + 1) :
-                ((this.levelRightEdge - this.width) - 1);
+                (this.levelLeftEdge - this._edgeOverflow + 1) :
+                ((this.levelRightEdge - this.width) + this._edgeOverflow - 1);
         }
 	}
 	

@@ -90,8 +90,10 @@ export default class EventCheckContainer
     //NeonPidgeon events
     neonPidgeonOverlappingEventCheck(modelA:IModel, modelAActionMethodName:string, modelB:IModel, modelBActionMethodName:string):void
     {
-        if(((modelA.x + modelA.width) >= modelB.x) &&
-        (modelA.x <= (modelB.x + modelB.width)))
+        const overlapIndent = modelB.width * 0.2; // Add an extra "indent", before this is considered an overlap
+        
+        if(((modelA.x + modelA.width) >= (modelB.x + overlapIndent)) &&
+        (modelA.x <= (modelB.x + modelB.width - overlapIndent)))
         {
             //Other model doesn't have an action for this
             (modelA[modelAActionMethodName as keyof typeof modelA] as Function)(modelB);
