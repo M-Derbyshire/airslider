@@ -13,6 +13,7 @@ export default class NeonPidgeon extends Monster {
     private _topLevelMonster:boolean; // Is this pidgeon above another, on the y axis?
     private _nextDrop:number; // The next drop time (in milliseconds)
     private _edgeOverflow:number; // Without breaking out of the level edges, the player can just stay on one side, and not get hit
+    private _flapSound:HTMLAudioElement; // The wings flapping sound effect
     
     /**
      * Is this pidgeon currently overlapping the player?
@@ -71,6 +72,10 @@ export default class NeonPidgeon extends Monster {
         
         const fullModelWidth = 337;
         this._edgeOverflow = fullModelWidth / 2;
+        
+        const flapSoundPath = "/assets/models/monsters/NeonPidgeon/sounds/flap.mp3";
+        this._flapSound = this.kernel.loadAudio(flapSoundPath);
+        this.assetsToUnload.push(flapSoundPath);
         
         const spritesheetPath = "/assets/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
@@ -143,12 +148,14 @@ export default class NeonPidgeon extends Monster {
     {
         super.act();
         
+        this._flapSound.volume = this.getVolumeForDistance();
+        
         const flappingAnimation = this.animationManager.animations.flapping;
         
         // The frame index will always be 0 when off screen, as the animation won't be progressed (since the model won't be drawn),
         // so play the sound every time it's on the second frame
         if(this.state === "flapping" && flappingAnimation.currentFrameIndex === 1) 
-            console.log("play sound right now");
+            this.kernel.soundEn.playSound(this._flapSound);
     }
     
     // Collision boxes --------------------------------------------------------
@@ -178,6 +185,12 @@ export default class NeonPidgeon extends Monster {
     }
     
     //entering and exiting and resetting-----------------------------------------
+    
+    start(): void {
+        super.start();
+        
+        this.kernel.soundEn.forceLoad(this._flapSound);
+    }
     
     enter():void
     {

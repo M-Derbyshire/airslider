@@ -38,6 +38,23 @@ export default class ASModel extends Model {
     {
         this.y = this.kernel.unitsWithinCamera - pos;
     }
+    
+    /**
+     * Calculates a volume value, based on how far 
+     * @returns The volume value for any sound effects, based on the model's z position
+     */
+    protected getVolumeForDistance():number
+    {
+        // This is the point where the sound should be inaudible
+        const soundInaudiblePoint = this.kernel.helpers.zCalc.vPointDepth / 2;
+        
+        // First we figure out what the volume should change by if the model moved 1 unit on the z axis
+        const singleUnitValue = 1 / soundInaudiblePoint;
+        
+        // Then we can calculate the correct volume for the current z position (getting quieter the further away it goes)
+        const vol = singleUnitValue * (soundInaudiblePoint - this.z);
+        return (vol >= 0) ? vol : 0;
+    }
 	
 	load():void
     {
