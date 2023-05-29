@@ -239,6 +239,7 @@ export default class NeonPidgeon extends Monster {
         this.z = this.startZ;
         this.xSpeed = (this._topLevelMonster) ? -760 : -880;
         this.state = "flapping";
+        this._flapSound.volume = 1;
     }
     
     //movement-----------------------------------------------------
