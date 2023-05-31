@@ -13,6 +13,7 @@ export default class BabyDragon extends Monster
     private _nextLavaBallIndex:number;
     private _nextDirectionToggleTime:number; // determines when the monster should next toggle its direction
     private _initialXSpeed:number;
+    private _wingSound:HTMLAudioElement;
     
     /**
      * Constructor
@@ -45,6 +46,10 @@ export default class BabyDragon extends Monster
     load():void
     {
         super.load();
+        
+        const wingSoundPath = "/assets/models/monsters/BabyDragon/sounds/flap.mp3";
+        this._wingSound = this.kernel.loadAudio(wingSoundPath);
+        this.assetsToUnload.push(wingSoundPath);
         
         const spritesheetPath = "/assets/models/monsters/BabyDragon/anim/babyDragon-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
@@ -118,7 +123,26 @@ export default class BabyDragon extends Monster
         return [];
     }
     
+    act(): void {
+        super.act();
+        
+        this._wingSound.volume = this.getVolumeForDistance();
+        
+        const flappingAnimation = this.animationManager.animations[this.state];
+        
+        // The sound may restart too soon when changing between left/right animations.
+        // Therefore, we run the sound on the last frame, not the first.
+        if(flappingAnimation.currentFrameIndex === flappingAnimation.frameCoordinates.length - 1)
+            this.kernel.soundEn.playSound(this._wingSound);
+    }
+    
     //entering and exiting and reseting-----------------------------------------
+    
+    start(): void {
+        super.start();
+        
+        this.kernel.soundEn.forceLoad(this._wingSound);
+    }
     
     enter():void
     {
@@ -150,6 +174,7 @@ export default class BabyDragon extends Monster
         this.y = this.startY;
         this.z = this.startZ;
         this.state = "left";
+        this._wingSound.volume = 1;
     }
     
     //movement-----------------------------------------------------
@@ -179,6 +204,8 @@ export default class BabyDragon extends Monster
             this.x = (this.xSpeed > 0) ? 
                 ((this.levelLeftEdge - (this.width / 2)) + 1) :
                 ((this.levelRightEdge - (this.width / 2)) - 1);
+            
+            this.animationManager.resetCurrentFrameNumber();
         }
 	}
     

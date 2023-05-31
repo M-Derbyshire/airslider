@@ -60,6 +60,10 @@ export default interface IModelAnimationsManager {
      */
 	getDrawPositionsAndDimensions(originalValues:IFrameCoordinates & { z:number }):IFrameCoordinates
     
+    /**
+     * Resets the currently active animation back to the first frame
+     */
+    resetCurrentFrameNumber():void;
 };
 
 

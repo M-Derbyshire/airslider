@@ -121,6 +121,11 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         );
     }
     
+    resetCurrentFrameNumber():void
+    {
+        this.animations[this._model.state].currentFrameIndex = 0;
+    }
+    
     /**
      * Draws the text content of the linked model
      */
