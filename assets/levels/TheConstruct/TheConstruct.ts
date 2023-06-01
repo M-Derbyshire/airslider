@@ -43,20 +43,20 @@ export default class TheConstruct extends ASLevel
         models.push(this.player); //add main character (has to be 0)
         models.push(new TarianExplosion(this.player));
         
-        // models.push(new NeonPidgeon(this.player, true));
-        // models.push(new NeonPidgeon(this.player));
+        models.push(new NeonPidgeon(this.player, true));
+        models.push(new NeonPidgeon(this.player));
         // models.push(new Falcon(models[0]));
         // models.push(new Ghost(models[0]));
 		// models.push(new LavaBall(this.player));
         // models.push(new LavaBall(this.player));
 		// models.push(new BabyDragon(this.player, models[models.length - 1] as LavaBall, models[models.length - 2] as LavaBall));
-        models.push(new Lightning());
-        models.push(new Lightning());
-        models.push(new ElectricSeahorse(this.player, models[models.length - 2] as Lightning, models[models.length - 1] as Lightning));
+        // models.push(new Lightning());
+        // models.push(new Lightning());
+        // models.push(new ElectricSeahorse(this.player, models[models.length - 2] as Lightning, models[models.length - 1] as Lightning));
         // models.push(new ElectricHornet(player));
 		this.monsters = [
             models[models.length - 1] as Monster,
-            // models[models.length - 2] as Monster
+            models[models.length - 2] as Monster
         ];
 
         // this.shockerManager.setShockerModelRange(models.length, models.length + 10);

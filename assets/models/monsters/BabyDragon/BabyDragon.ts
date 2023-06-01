@@ -14,6 +14,7 @@ export default class BabyDragon extends Monster
     private _nextDirectionToggleTime:number; // determines when the monster should next toggle its direction
     private _initialXSpeed:number;
     private _wingSound:HTMLAudioElement;
+    private _lastAnimFrame:number;
     
     /**
      * Constructor
@@ -113,6 +114,8 @@ export default class BabyDragon extends Monster
         this.enterXSpeed = 90;
         this._initialXSpeed = -720;
         
+        this._lastAnimFrame = 0;
+        
         this._lavaBalls.forEach(lb => lb.z = this.startZ);
         
         this.reset();
@@ -127,13 +130,19 @@ export default class BabyDragon extends Monster
         super.act();
         
         this._wingSound.volume = this.getVolumeForDistance();
-        
         const flappingAnimation = this.animationManager.animations[this.state];
+        
+        // The animation runs at a lower FPS to the rest of the game. We were having a buzzing sound because 
+        // the current animation frame equaled 1 for quite a few game frames, so was being repeatedly restarted.
+        // Therefore, we only want to run the sound when the animation frame has actually changed.
+        const animationChangedFrame = this._lastAnimFrame !== flappingAnimation.currentFrameIndex;
         
         // The sound may restart too soon when changing between left/right animations.
         // Therefore, we run the sound on the last frame, not the first.
-        if(flappingAnimation.currentFrameIndex === flappingAnimation.frameCoordinates.length - 1)
+        if(animationChangedFrame && flappingAnimation.currentFrameIndex === flappingAnimation.frameCoordinates.length - 1)
             this.kernel.soundEn.playSound(this._wingSound);
+        
+        this._lastAnimFrame = flappingAnimation.currentFrameIndex;
     }
     
     //entering and exiting and reseting-----------------------------------------
