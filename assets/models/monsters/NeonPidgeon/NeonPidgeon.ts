@@ -14,7 +14,7 @@ export default class NeonPidgeon extends Monster {
     private _nextDrop:number; // The next drop time (in milliseconds)
     private _edgeOverflow:number; // Without breaking out of the level edges, the player can just stay on one side, and not get hit
     private _flapSound:HTMLAudioElement; // The wings flapping sound effect
-    private _lastAnimFrame:number;
+    private _lastFlappingAnimFrame:number;
     
     /**
      * Is this pidgeon currently overlapping the player?
@@ -140,7 +140,7 @@ export default class NeonPidgeon extends Monster {
         this.dropWaitOffset = 2000; //2 seconds
         this.dropWaitRange = 2000; //2 seconds
         this.initialDropWait = 8000;
-        this._lastAnimFrame = 0;
+        this._lastFlappingAnimFrame = 0;
         
         this.reset();
     }
@@ -156,14 +156,14 @@ export default class NeonPidgeon extends Monster {
         // The animation runs at a lower FPS to the rest of the game. We were having a buzzing sound because 
         // the current animation frame equaled 1 for quite a few game frames, so was being repeatedly restarted.
         // Therefore, we only want to run the sound when the animation frame has actually changed.
-        const animationChangedFrame = this._lastAnimFrame !== flappingAnimation.currentFrameIndex;
+        const animationChangedFrame = this._lastFlappingAnimFrame !== flappingAnimation.currentFrameIndex;
         
         // The frame index will always be 0 when off screen, as the animation won't be progressed (since the model won't be drawn),
         // so play the sound every time it's on the second frame
         if(this.state === "flapping" && animationChangedFrame && flappingAnimation.currentFrameIndex === 1) 
             this.kernel.soundEn.playSound(this._flapSound);
         
-        this._lastAnimFrame = flappingAnimation.currentFrameIndex;
+        this._lastFlappingAnimFrame = flappingAnimation.currentFrameIndex;
     }
     
     // Collision boxes --------------------------------------------------------
