@@ -11,6 +11,8 @@ export default class ElectricSeahorse extends Monster {
     private _playerModel:Tarian;
     private _leftLightningModel:Lightning;
     private _rightLightningModel:Lightning;
+    private _wingSound:HTMLAudioElement;
+    private _lastAnimFrame:number;
     
     private _nextDirectionChangeMilliSeconds:number; // Used when deciding when to change movement direction
     
@@ -35,8 +37,11 @@ export default class ElectricSeahorse extends Monster {
     {
         super.load();
         
-        const spritesheetPath = "/assets/models/monsters/ElectricSeahorse/anim/electricSeahorse-spritesheet.png";
+        const wingSoundPath = "/assets/models/monsters/ElectricSeahorse/sounds/flap.mp3";
+        this._wingSound = this.kernel.loadAudio(wingSoundPath);
+        this.assetsToUnload.push(wingSoundPath);
         
+        const spritesheetPath = "/assets/models/monsters/ElectricSeahorse/anim/electricSeahorse-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
@@ -79,6 +84,8 @@ export default class ElectricSeahorse extends Monster {
         this._leftLightningModel.y = lightningYPos;
         this._rightLightningModel.y = lightningYPos;
         
+        this._lastAnimFrame = 0;
+        
         this.reset();
     }
     
@@ -88,6 +95,12 @@ export default class ElectricSeahorse extends Monster {
     }
     
     //entering and exiting and reseting-----------------------------------------
+    
+    start(): void {
+        super.start();
+        
+        this.kernel.soundEn.forceLoad(this._wingSound);
+    }
     
     enter():void
     {
@@ -133,6 +146,22 @@ export default class ElectricSeahorse extends Monster {
     act():void
     {
         super.act();
+        
+        // Wing flap sound effect
+        this._wingSound.volume = this.getVolumeForDistance();
+        const flappingAnimation = this.animationManager.animations.move;
+        
+        // The animation runs at a lower FPS to the rest of the game. We were having a buzzing sound because 
+        // the current animation frame equaled 1 for quite a few game frames, so was being repeatedly restarted.
+        // Therefore, we only want to run the sound when the animation frame has actually changed.
+        const animationChangedFrame = this._lastAnimFrame !== flappingAnimation.currentFrameIndex;
+        
+        if(this.state === "move" && animationChangedFrame && flappingAnimation.currentFrameIndex === 1)
+        {
+            this.kernel.soundEn.playSound(this._wingSound);
+        }
+        
+        this._lastAnimFrame = flappingAnimation.currentFrameIndex;
         
         //In case of player loss
         if(!this.fireWeapon)
