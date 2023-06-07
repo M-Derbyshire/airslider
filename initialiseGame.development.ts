@@ -1,6 +1,6 @@
 import Kernel from './Kernel/Kernel';
 
 // start up the kernel
-window.addEventListener("load", function() {
+window.addEventListener("click", function() {
 	Kernel.getInstance().initiate();
 }, true);

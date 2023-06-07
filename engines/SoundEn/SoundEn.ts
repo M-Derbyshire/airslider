@@ -8,12 +8,22 @@ export default class SoundEn implements ISoundEn {
     private _music:HTMLAudioElement;
     private _musicIsPlaying:boolean;
     
+    private _audioContext:AudioContext;
+    private _trackMap:Map<string, MediaElementAudioSourceNode>; // A map of tracks from the AudioContext
+    
     /**
      * Constructor
      */
     constructor()
     {
         this._musicIsPlaying = false;
+        
+        this._trackMap = new Map<string, MediaElementAudioSourceNode>();
+        
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        this._audioContext = new AudioContext();
+        
+        if (this._audioContext.state === "suspended") this._audioContext.resume();
     }
     
     /**
@@ -22,6 +32,7 @@ export default class SoundEn implements ISoundEn {
     get music() { return this._music; }
     set music(ref:HTMLAudioElement)
     {
+        this._setupContextTrack(ref);
         this._music = ref;
     }
     
@@ -75,6 +86,8 @@ export default class SoundEn implements ISoundEn {
      */
     playSound(ref:HTMLAudioElement, loop:boolean = false):void
     {
+        this._setupContextTrack(ref);
+        
         ref.currentTime = 0; // Position needs to be reset so sounds will restart if they're triggered mid-way through playing
         ref.muted = false; // Sound may be muted, if it was in the middle of being force-loaded
         ref.loop = loop;
@@ -97,6 +110,8 @@ export default class SoundEn implements ISoundEn {
      */
     forceLoad(ref:HTMLAudioElement):void
     {
+        this._setupContextTrack(ref);
+        
         const unmute = () => {
             ref.muted = false;
             ref.removeEventListener("ended", unmute);
@@ -106,5 +121,16 @@ export default class SoundEn implements ISoundEn {
         ref.muted = true;
         ref.addEventListener("ended", unmute);
         ref.play();
+    }
+    
+    
+    private _setupContextTrack(ref:HTMLAudioElement)
+    {
+        if(!this._trackMap.has(ref.src))
+        {
+            const track = this._audioContext.createMediaElementSource(ref);
+            track.connect(this._audioContext.destination);
+            this._trackMap.set(ref.src, track);
+        }
     }
 }
