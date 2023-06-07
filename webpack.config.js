@@ -21,5 +21,14 @@ module.exports = env => ({
 	},
 	plugins: [
 		new Dotenv({ systemvars: true, path: `.env.${env.development ? "development" : "production"}` }),
-	]
+	],
+	devServer: {
+		port: 3000,
+		static: {
+			directory: "."
+		},
+		historyApiFallback: {
+			index: './index.html'
+		}
+	}
 });
