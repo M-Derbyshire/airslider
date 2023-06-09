@@ -28,7 +28,7 @@ module.exports = env => ({
 			directory: "."
 		},
 		historyApiFallback: {
-			index: './index.html'
+			index: './dist/index.html'
 		}
 	}
 });
