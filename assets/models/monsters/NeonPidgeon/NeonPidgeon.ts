@@ -3,6 +3,7 @@ import IBoundaryBox from '../../Model/IBoundaryBox';
 import IModel from '../../Model/IModel';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
+import PidgeonSoundController from './PidgeonSoundController';
 
 /**
  * The Neon Pidgeon monster (should be 2 in the level, at the same time)
@@ -10,11 +11,12 @@ import Tarian from '../../Tarian/Tarian';
 export default class NeonPidgeon extends Monster {
     
     private _playerModel:Tarian;
-    private _topLevelMonster:boolean; // Is this pidgeon above another, on the y axis?
     private _nextDrop:number; // The next drop time (in milliseconds)
     private _edgeOverflow:number; // Without breaking out of the level edges, the player can just stay on one side, and not get hit
     private _flapSound:HTMLAudioElement; // The wings flapping sound effect
-    private _lastFlappingAnimFrame:number;
+    private _lowerPidgeon?:NeonPidgeon; // If this is the pidgeon on top, the pidgeon beneath it is stored here
+    private _soundController:PidgeonSoundController; // Controls sound effects for all pidgeons
+    private _leftScreen:boolean; // Has this monster left the screen after exiting
     
     /**
      * Is this pidgeon currently overlapping the player?
@@ -54,12 +56,15 @@ export default class NeonPidgeon extends Monster {
      * @param playerModel the model of the player 
      * @param topLevelMonster is this pidgeon above another, on the y axis?
      */
-    constructor(playerModel:Tarian, topLevelMonster:boolean = false)
+    constructor(playerModel:Tarian, lowerPidgeon:NeonPidgeon = undefined)
     {
         super();
         
         this._playerModel = playerModel;
-        this._topLevelMonster = topLevelMonster;
+        this._lowerPidgeon = lowerPidgeon;
+        
+        if(this._lowerPidgeon)
+            this._soundController = new PidgeonSoundController(this, this._lowerPidgeon);
         
         this.overlapping = false;
         
@@ -132,15 +137,14 @@ export default class NeonPidgeon extends Monster {
         
         this.enterXSpeed = 90;
         this.exitXSpeed = 240;
-        this.offScreenUnits = (this._topLevelMonster) ? 650 : 500;
-        this.startY = (this._topLevelMonster) ? 150 : 250;
+        this.offScreenUnits = this._lowerPidgeon ? 500 : 650;
+        this.startY = this._lowerPidgeon ? 150 : 250;
         this.startX = this.levelRightEdge + this.offScreenUnits;
         this.startZ = this._playerModel.z;
         this.ySpeed = 1250;
         this.dropWaitOffset = 2000; //2 seconds
         this.dropWaitRange = 2000; //2 seconds
         this.initialDropWait = 8000;
-        this._lastFlappingAnimFrame = 0;
         
         this.reset();
     }
@@ -150,20 +154,29 @@ export default class NeonPidgeon extends Monster {
     {
         super.act();
         
-        this._flapSound.volume = this.getVolumeForDistance();
-        const flappingAnimation = this.animationManager.animations.flapping;
+        const flappingAnimFrame = this.getCurrentFlappingFrame();
         
-        // The animation runs at a lower FPS to the rest of the game. We were having a buzzing sound because 
-        // the current animation frame equaled 1 for quite a few game frames, so was being repeatedly restarted.
-        // Therefore, we only want to run the sound when the animation frame has actually changed.
-        const animationChangedFrame = this._lastFlappingAnimFrame !== flappingAnimation.currentFrameIndex;
-        
-        // The frame index will always be 0 when off screen, as the animation won't be progressed (since the model won't be drawn),
-        // so play the sound every time it's on the second frame
-        if(this.state === "flapping" && animationChangedFrame && flappingAnimation.currentFrameIndex === 1) 
-            this.kernel.soundEn.playSound(this._flapSound);
-        
-        this._lastFlappingAnimFrame = flappingAnimation.currentFrameIndex;
+        // If this is the upper pidgeon, it should trigger the sound controller
+        if(this._soundController && this._lowerPidgeon)
+        {
+            this._flapSound.volume = this.getVolumeForDistance();
+            
+            this._soundController.act(this._flapSound); // Run the sound(s) if necessary
+            
+            if(this.state === "flapping")
+                this._lowerPidgeon.animationManager.animations.flapping.currentFrameIndex = flappingAnimFrame;
+        }
+    }
+    
+    // 
+    /**
+     * Gets the current frame index of the flapping animation. 
+     * This is used by the PidgeonSoundController to time the flapping sound effect.
+     * @returns the current frame index of this pidgeon's flapping animation
+     */
+    getCurrentFlappingFrame():number
+    {
+        return this.animationManager.animations.flapping.currentFrameIndex;
     }
     
     // Collision boxes --------------------------------------------------------
@@ -221,7 +234,13 @@ export default class NeonPidgeon extends Monster {
         } else {
             this.state = "flapping";
         
-            this.moveLeft(this.exitXSpeed);
+            // Because of how the sound effects work, the lower pidgeon needs to leave first.
+            // So, move upper pidgeon to the right until it's in position
+            if(!this._lowerPidgeon || (this._lowerPidgeon.x + this._lowerPidgeon.width < this.x))
+                this.moveLeft(this.exitXSpeed);
+            else
+                this.moveRight(Math.abs(this.xSpeed));
+            
             
             if((this.x + this.width) < (this.levelLeftEdge - this.offScreenUnits))
             {
@@ -235,17 +254,18 @@ export default class NeonPidgeon extends Monster {
      */
 	private _handleMonsterExitingScreen():void
 	{
-		this.exiting = false;
-    	this.active = false;
+        this.exiting = false;
+        this.active = false;
 	}
 	
     reset():void
     {
+        this._leftScreen = false;
         this._nextDrop = -1;
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
-        this.xSpeed = (this._topLevelMonster) ? -760 : -880;
+        this.xSpeed = this._lowerPidgeon ? -760 : -880;
         this.state = "flapping";
     }
     
