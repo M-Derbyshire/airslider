@@ -8,6 +8,8 @@ import Tarian from '../../Tarian/Tarian';
  */
 export default class ElectricHornet extends Monster {
     
+    private _buzzSound:HTMLAudioElement;
+    
     private _dropWaitOffset:number;
     private _dropWaitRange:number;
     private _initialDropWait:number;
@@ -33,6 +35,10 @@ export default class ElectricHornet extends Monster {
     load():void
     {
         super.load();
+        
+        const buzzSoundPath = "/assets/models/monsters/ElectricHornet/sounds/buzz.mp3";
+        this._buzzSound = this.kernel.loadAudio(buzzSoundPath);
+        this.assetsToUnload.push(buzzSoundPath);
         
         const spritesheetPath = "/assets/models/monsters/ElectricHornet/anim/electricHornet_spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
@@ -77,6 +83,12 @@ export default class ElectricHornet extends Monster {
         this.reset();
     }
     
+    act(): void {
+        super.act();
+        
+        this._buzzSound.volume = this.getVolumeForDistance();
+    }
+    
     // Collision boxes --------------------------------------------------------
     getBoundaryBoxes():IBoundaryBox[]
     {
@@ -97,6 +109,12 @@ export default class ElectricHornet extends Monster {
     }
     
     //entering and exiting and reseting-----------------------------------------
+    
+    start(): void {
+        super.start();
+        
+        this.kernel.soundEn.playSound(this._buzzSound, true);
+    }
     
     enter():void
     {
@@ -129,6 +147,7 @@ export default class ElectricHornet extends Monster {
 	{
 		this.exiting = false;
     	this.active = false;
+        this.kernel.soundEn.stopSound(this._buzzSound);
 	}
 	
 	
