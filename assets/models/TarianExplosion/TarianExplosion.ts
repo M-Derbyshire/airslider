@@ -13,6 +13,7 @@ export default class TarianExplosion extends ASModel {
     private _resizeSpeedX:number;
     private _resizeSpeedY:number;
     private _animFrame:IAnimation;
+    private _alarmSound:HTMLAudioElement;
     
     /**
      * Constructor
@@ -41,6 +42,8 @@ export default class TarianExplosion extends ASModel {
     load():void
     {
         super.load();
+        
+        this._alarmSound = this.kernel.loadAudio("/assets/models/TarianExplosion/sounds/alarm.mp3");
         
         this.animationManager.registerAnimations({
             std: this.animationManager.createAnimation({
@@ -82,6 +85,11 @@ export default class TarianExplosion extends ASModel {
      */
     private _resize():void
     {
+        if(this._animFrame.width === 0)
+        {
+            this.kernel.soundEn.playSound(this._alarmSound);
+        }
+        
         this._animFrame.width += this.kernel.helpers.unit.xSpeed(this._resizeSpeedX);
         this._animFrame.height += this.kernel.helpers.unit.ySpeed(this._resizeSpeedY);
         
