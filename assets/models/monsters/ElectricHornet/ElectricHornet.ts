@@ -46,7 +46,7 @@ export default class ElectricHornet extends Monster {
         this.animationManager.registerAnimations({
             flapping: this.animationManager.createAnimation({
                 sheetPath: spritesheetPath,
-                fps: 16,
+                fps: 22,
                 drawWidth: 337,
                 drawHeight: 315,
 				frameCoordinates: [
