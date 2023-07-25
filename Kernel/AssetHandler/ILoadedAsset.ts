@@ -18,4 +18,8 @@ export default interface ILoadedAsset {
      */
     usageCount:number;
     
+    /**
+     * Has this asset finished its initial load?
+     */
+    loaded:boolean;
 };

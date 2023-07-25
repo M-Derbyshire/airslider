@@ -16,6 +16,11 @@ export default class AssetHandler implements IAssetHandler
     loadedAssets:ILoadedAsset[];
     
     /**
+     * Asset paths for loaded/loading fonts
+     */
+    loadedFontPaths:string[];
+    
+    /**
      * Constructor
      * @param rootPath the root directory/path, added to the beginning of all asset file paths
      */
@@ -27,6 +32,7 @@ export default class AssetHandler implements IAssetHandler
         this._baseUrl = window.location.href.replace("/index.html", ""); // Start of development asset path
         
         this.loadedAssets = [];
+        this.loadedFontPaths = [];
     }
     
     /**
@@ -65,30 +71,54 @@ export default class AssetHandler implements IAssetHandler
         }
         
         this._assetsStillLoading++;
-        const newLoadedAsset = {
+        const newLoadedAsset:ILoadedAsset = {
             path,
             asset: obj,
-            usageCount: 1 // How many entities are currently using this?
+            usageCount: 1, // How many entities are currently using this?
+            loaded: false
         }; 
+        
+        const afterLoadCallback = () => {
+            if(!newLoadedAsset.loaded)
+            {
+                newLoadedAsset.loaded = true;
+                this._defaultAssetCallback();
+            }
+        };
         
 		
         if(obj instanceof Image)
         {
-            newLoadedAsset.asset.onload = this._defaultAssetCallback.bind(this);
+            newLoadedAsset.asset.onload = afterLoadCallback;
         }
         else if(obj instanceof Audio)
         {
-            const evtListener = () => {
-                this._defaultAssetCallback();
-                newLoadedAsset.asset.removeEventListener("canplaythrough", evtListener);
-            };
-            newLoadedAsset.asset.addEventListener("canplaythrough", evtListener);
+            newLoadedAsset.asset.addEventListener("canplaythrough", afterLoadCallback);
         }
         
         newLoadedAsset.asset.src = path;
         
         this.loadedAssets.push(newLoadedAsset);
         return newLoadedAsset.asset;
+    }
+    
+    /**
+     * Starts the loading of a font file into the HTML document
+     * @param name the name of the font
+     * @param path the path to the font file
+     */
+    loadFont(name:string, path:string):void
+    {
+        if(this.loadedFontPaths.includes(path)) return;
+        
+        const font = new FontFace(name, `url(${this._baseUrl}/${path})`);
+        font.load().then((newFont) => {
+            (document.fonts as FontFaceSet & { add:(f:FontFace)=>void }).add(newFont);
+            this._defaultAssetCallback();
+        });
+        this._assetsStillLoading++;
+        
+        this.loadedFontPaths.push(path);
     }
     
     /**
@@ -139,21 +169,5 @@ export default class AssetHandler implements IAssetHandler
             }
         }
         return -1;
-    }
-    
-    /**
-     * Starts the loading of a font file into the HTML document
-     * @param name the name of the font
-     * @param path the path to the font file
-     */
-    loadFont(name:string, path:string):void
-    {
-        const font = new FontFace(name, `url(${this._baseUrl}/${path})`);
-        font.load().then((font) => {
-            (document.fonts as FontFaceSet & { add:(f:FontFace)=>void }).add(font);
-            this._defaultAssetCallback();
-        });
-        
-        this._assetsStillLoading++;
     }
 }

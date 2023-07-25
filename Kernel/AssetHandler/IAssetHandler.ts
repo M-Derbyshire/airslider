@@ -11,6 +11,11 @@ export default interface IAssetHandler {
     loadedAssets:ILoadedAsset[];
     
     /**
+     * Asset paths for loaded/loading fonts
+     */
+    loadedFontPaths:string[];
+    
+    /**
      * How many assets are still loading?
      */
     assetsStillLoading:number;
