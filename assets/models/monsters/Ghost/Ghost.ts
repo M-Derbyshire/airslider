@@ -51,7 +51,6 @@ export default class Ghost extends Monster {
         this._playerModel = playerModel;
         
         this.damageDealtOrig = 2;
-        this.damageDealt = this.damageDealtOrig;
         this.color = "ghost";
     }
     
@@ -104,7 +103,12 @@ export default class Ghost extends Monster {
         this._outLimit = 1;
         this._inLimit = (this._playerModel.z + 100);
         
-        this.reset();
+        this.xSpeed = this._minXSpeed;
+        this.y = this.startY;
+        this.x = this.startX;
+        this.z = this.startZ;
+        this._directionMultiplier = 1; //Multiply speed by this; Negate to change direction
+        this.damageDealt = this.damageDealtOrig;
     }
     
     //entering and exiting and reseting-----------------------------------------
@@ -124,15 +128,6 @@ export default class Ghost extends Monster {
             this.exiting = false;
             this.active = false;
         }
-    }
-    
-    reset():void
-    {
-        this.xSpeed = this._minXSpeed;
-        this.y = this.startY;
-        this.x = this.startX;
-        this.z = this.startZ;
-        this._directionMultiplier = 1; //Multiply speed by this; Negate to change direction
     }
     
     //movement-----------------------------------------------------

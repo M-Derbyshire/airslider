@@ -60,8 +60,6 @@ export default class Falcon extends Monster {
         
         this.playerModel = playerModel;
         
-        this.overlapping = false;
-        
         this.damageDealtOrig = 12;
         this.color = "none";
     }
@@ -167,7 +165,20 @@ export default class Falcon extends Monster {
         this.dropWaitOffset = this.helpers.time.secondsToFrames(5);
         this.dropWaitRange = this.helpers.time.secondsToFrames(5);
         
-        this.reset();
+        this.overlapping = false;
+        this.lastSwoop = -1;
+        this.directionMultiplier = 1; //1 for right, -1 for left
+        this.swoopWait = 6000; // 6 seconds for first one (will be changed with random() later)
+        this.y = this.startY;
+        this.x = this.startX;
+        this.z = this.startZ;
+        
+        //This means that if the player moves in the same direction 
+        //during strafe(), the monster doesn't end up off screen.
+        this.xSpeed = this.playerModel.topSpeed * 1.5;
+        
+        this.ySpeed = this.xSpeed;
+        this.state = "flapping";
     }
     
     //entering and exiting and reseting-----------------------------------------
@@ -200,23 +211,6 @@ export default class Falcon extends Monster {
         } else {
             this.actions[this.currentAction].apply(this); //run the current action
         }
-    }
-    
-    reset():void
-    {
-        this.lastSwoop = -1;
-        this.directionMultiplier = 1; //1 for right, -1 for left
-        this.swoopWait = 6000; // 6 seconds for first one (will be changed with random() later)
-        this.y = this.startY;
-        this.x = this.startX;
-        this.z = this.startZ;
-        
-        //This means that if the player moves in the same direction 
-        //during strafe(), the monster doesn't end up off screen.
-        this.xSpeed = this.playerModel.topSpeed * 1.5;
-        
-        this.ySpeed = this.xSpeed;
-        this.state = "flapping";
     }
     
     //movement-----------------------------------------------------

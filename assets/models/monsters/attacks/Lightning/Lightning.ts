@@ -52,11 +52,7 @@ export default class Lightning extends ASModel {
     prepare():void
     {
         super.prepare();
-        this.reset();
-    }
-    
-    reset():void
-    {
+        
         this.state = "shock";
         this.active = false;
     }

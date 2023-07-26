@@ -28,10 +28,6 @@ export default class BabyDragon extends Monster
         
         this._playerModel = playerModel;
         this._lavaBalls = [lavaBall1, lavaBall2];
-        
-        //The "next" lava ball refers to the next one to drop (not the next one to select)
-        //Also see the getter for _prevLavaBallIndex
-        this._nextLavaBallIndex = 0;
     }
     
     /**
@@ -118,7 +114,17 @@ export default class BabyDragon extends Monster
         
         this._lavaBalls.forEach(lb => lb.z = this.startZ);
         
-        this.reset();
+        this.xSpeed = this._initialXSpeed;
+        
+        this.x = this.startX;
+        this.y = this.startY;
+        this.z = this.startZ;
+        this.state = "left";
+        this._wingSound.volume = 1;
+        
+        //The "next" lava ball refers to the next one to drop (not the next one to select)
+        //Also see the getter for _prevLavaBallIndex
+        this._nextLavaBallIndex = 0;
     }
     
     getBoundaryBoxes():IBoundaryBox[]
@@ -173,17 +179,6 @@ export default class BabyDragon extends Monster
             this.exiting = false;
             this.active = false;
         }
-    }
-    
-    reset():void
-    {
-        this.xSpeed = this._initialXSpeed;
-        
-        this.x = this.startX;
-        this.y = this.startY;
-        this.z = this.startZ;
-        this.state = "left";
-        this._wingSound.volume = 1;
     }
     
     //movement-----------------------------------------------------

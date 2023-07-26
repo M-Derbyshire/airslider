@@ -63,6 +63,8 @@ export default class ASModel extends Model {
     
     prepare():void
     {
+        super.prepare();
+        
         this.levelLeftEdge = (this.kernel.level as ASLevel).leftEdge;
         this.levelRightEdge = (this.kernel.level as ASLevel).rightEdge;
     }

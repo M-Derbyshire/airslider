@@ -80,7 +80,13 @@ export default class ElectricHornet extends Monster {
         this._dropWaitRange = 2000;
         this._initialDropWait = 4000;
         
-        this.reset();
+        this._nextDropTime = -1;
+        this.y = this.startY;
+        this.x = this.startX;
+        this.z = this.startZ;
+        this._startXSpeed = -400;
+        this.xSpeed = this._startXSpeed;
+        this.state = "flapping";
     }
     
     act(): void {
@@ -149,19 +155,6 @@ export default class ElectricHornet extends Monster {
     	this.active = false;
         this.kernel.soundEn.stopSound(this._buzzSound);
 	}
-	
-	
-    
-    reset():void
-    {
-        this._nextDropTime = -1;
-        this.y = this.startY;
-        this.x = this.startX;
-        this.z = this.startZ;
-        this._startXSpeed = -400;
-        this.xSpeed = this._startXSpeed;
-        this.state = "flapping";
-    }
     
     //movement-----------------------------------------------------
     

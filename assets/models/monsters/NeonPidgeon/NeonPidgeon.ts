@@ -63,9 +63,6 @@ export default class NeonPidgeon extends Monster {
         this._playerModel = playerModel;
         this._lowerPidgeon = lowerPidgeon;
         
-        if(this._lowerPidgeon)
-            this._soundController = new PidgeonSoundController(this, this._lowerPidgeon);
-        
         this.overlapping = false;
         
         this.damageDealt = 10;
@@ -146,7 +143,16 @@ export default class NeonPidgeon extends Monster {
         this.dropWaitRange = 2000; //2 seconds
         this.initialDropWait = 8000;
         
-        this.reset();
+        this._leftScreen = false;
+        this._nextDrop = -1;
+        this.y = this.startY;
+        this.x = this.startX;
+        this.z = this.startZ;
+        this.xSpeed = this._lowerPidgeon ? -760 : -880;
+        this.state = "flapping";
+        
+        if(this._lowerPidgeon)
+            this._soundController = new PidgeonSoundController(this, this._lowerPidgeon);
     }
     
     // This is required to run the flapping sound effect while flapping, entering and exiting
@@ -257,17 +263,6 @@ export default class NeonPidgeon extends Monster {
         this.exiting = false;
         this.active = false;
 	}
-	
-    reset():void
-    {
-        this._leftScreen = false;
-        this._nextDrop = -1;
-        this.y = this.startY;
-        this.x = this.startX;
-        this.z = this.startZ;
-        this.xSpeed = this._lowerPidgeon ? -760 : -880;
-        this.state = "flapping";
-    }
     
     //movement-----------------------------------------------------
     

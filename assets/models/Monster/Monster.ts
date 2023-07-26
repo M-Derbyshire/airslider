@@ -145,9 +145,4 @@ export default class Monster extends ASModel {
      * The exiting sequence for the monster
      */
     exit():void {}
-    
-    /**
-     * Reset the monster
-     */
-    reset():void {}
 }

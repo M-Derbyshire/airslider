@@ -29,8 +29,6 @@ export default class ElectricSeahorse extends Monster {
         this._playerModel = playerModel;
         this._leftLightningModel = leftLightningModel;
         this._rightLightningModel = rightLightningModel;
-        
-        this._nextDirectionChangeMilliSeconds = 0;
     }
     
     load():void
@@ -86,7 +84,13 @@ export default class ElectricSeahorse extends Monster {
         
         this._lastAnimFrame = 0;
         
-        this.reset();
+        this._nextDirectionChangeMilliSeconds = 0;
+        this.xSpeed = 500;
+        this.x = this.startX;
+        this.y = this.startY;
+        this.z = this.startZ;
+        this.state = "move";
+        this._setLightningActiveStatus(false);
     }
     
     getBoundaryBoxes():IBoundaryBox[]
@@ -129,16 +133,6 @@ export default class ElectricSeahorse extends Monster {
             this.exiting = false;
             this.active = false;
         }
-    }
-    
-    reset():void
-    {
-        this.xSpeed = 500;
-        this.x = this.startX;
-        this.y = this.startY;
-        this.z = this.startZ;
-        this.state = "move";
-        this._setLightningActiveStatus(false);
     }
     
     //movement-----------------------------------------------------
