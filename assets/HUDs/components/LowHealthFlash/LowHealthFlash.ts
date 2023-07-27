@@ -17,6 +17,11 @@ export default class LowHealthFlash extends DamageFlash
     load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void 
     {
         super.load(canvasCtx, camera);
+    }
+    
+    prepare():void 
+    {
+        super.prepare();
         
         this.color = "damage";
         this.active = false;

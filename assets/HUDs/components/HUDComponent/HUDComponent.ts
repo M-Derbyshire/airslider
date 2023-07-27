@@ -56,12 +56,13 @@ export default class HUDComponent implements IHUDComponent
          * The height of this component
          */
         this.height;
-        
-        /**
-         * Is this component active?
-         */
-        this.active = true;
-        
+    }
+    
+    /**
+     * Prepares the component before the level starts
+     */
+    prepare():void 
+    {
         /**
          * Details for displaying an entity's text content
          */
@@ -74,6 +75,11 @@ export default class HUDComponent implements IHUDComponent
             color: "red",
             style: "bolder", // See the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
         };
+        
+        /**
+         * Is this component active?
+         */
+        this.active = true;
     }
     
     /**
@@ -117,11 +123,6 @@ export default class HUDComponent implements IHUDComponent
      * Draws the component
      */
     draw():void {}
-    
-    /**
-     * Prepares the component before the level starts
-     */
-    prepare():void {}
 	
     /**
      * Is the mouse pointer overlapping this component?

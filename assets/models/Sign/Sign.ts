@@ -15,6 +15,16 @@ export default class Sign extends ASModel
     private _targetPosition:number;
     
     /**
+     * When this was constructed, was it set to be active?
+     */
+    private _initialActiveStatus:boolean;
+    
+    /**
+     * Text to display on the sign
+     */
+    private _textToDisplay:string;
+    
+    /**
      * Constructor
      * @param displayText Text to display on the sign
      * @param startPosition The starting z position of the sign
@@ -25,21 +35,12 @@ export default class Sign extends ASModel
     {
         super();
         
-        this.text = {
-            content: displayText,
-            x: 460,
-            y: 145,
-            size: 150,
-            font: "Mechanical",
-            color: "white",
-            style: "normal",
-        };
+        this._textToDisplay = displayText;
         
-        this.hasReachedTargetPosition = false;
         this._startPosition = startPosition;
         this._targetPosition = targetPosition;
         
-        this.active = active;
+        this._initialActiveStatus = active;
     }
     
     load():void
@@ -68,6 +69,17 @@ export default class Sign extends ASModel
         this.zSpeed = 0;
         this.state = "sign";
         this.hasReachedTargetPosition = false;
+        this.active = this._initialActiveStatus;
+        
+        this.text = {
+            content: this._textToDisplay,
+            x: 460,
+            y: 145,
+            size: 150,
+            font: "Mechanical",
+            color: "white",
+            style: "normal",
+        };
     }
     
     act():void

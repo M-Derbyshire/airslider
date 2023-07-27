@@ -37,6 +37,9 @@ export default class TarianExplosion extends ASModel {
         this.state = "std";
         this.active = true;
         this.z = 1;
+        
+        this._animFrame.width = 0;
+        this._animFrame.height = 0;
     }
     
     load():void

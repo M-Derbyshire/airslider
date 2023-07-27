@@ -28,8 +28,6 @@ export default class TheConstruct extends ASLevel
     constructor()
     {
         super();
-        
-        this.levelClosingSectionNumber = 3;
     }
     
     getModels():IModel[]
@@ -48,7 +46,7 @@ export default class TheConstruct extends ASLevel
         // models.push(new NeonPidgeon(this.player, lowerPidgeon));
         
         // models.push(new Falcon(models[0]));
-        // models.push(new Ghost(models[0]));
+        // models.push(new Ghost(this.player));
 		// models.push(new LavaBall(this.player));
         // models.push(new LavaBall(this.player));
 		// models.push(new BabyDragon(this.player, models[models.length - 1] as LavaBall, models[models.length - 2] as LavaBall));
@@ -93,7 +91,6 @@ export default class TheConstruct extends ASLevel
         this.tunnelManager.load(camera);
         this.road.load(canvasCtx, camera);
         
-        
         //Setup the frame for the level
         const unitsWithinCamera = this.kernel.unitsWithinCamera;
         let frame = new Frame(canvasCtx, camera, 0, 0, unitsWithinCamera, unitsWithinCamera);
@@ -118,16 +115,15 @@ export default class TheConstruct extends ASLevel
             "/assets/levels/TheConstruct/images/ground.png"
         );
         
-        
         this.frameIndex = this.frameManager.addFrame(frame);
-        
-        
-        this.outsideVisible = true;
     }
     
     prepare():void
     {
         super.prepare();
+        
+        this.outsideVisible = true;
+        this.levelClosingSectionNumber = 3;
         
         // this.tunnelManager.createStartingTunnel([
         //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)

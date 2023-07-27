@@ -25,8 +25,6 @@ export default class SignDisplay extends ASModel
         
         this._sign = sign;
         
-        this._lastLightChangeMS = 0; // the millisecond count when the light sequence last changed
-        this._lightChangeWaitMS = 1500; // how long does the light sequence wait before changing (milliseconds)
         this._finalLightChangeWaitMS = 500; // how long does the end of the light sequence last, before state changes to "finished"
         this._lightChangeStartWaitMS = 3000; // how long before the light sequence starts (milliseconds)
     }
@@ -112,6 +110,9 @@ export default class SignDisplay extends ASModel
         this.active = true;
         this.kernel.soundEn.forceLoad(this._countdownBeep);
         this.kernel.soundEn.forceLoad(this._startBeep);
+        
+        this._lastLightChangeMS = 0; // the millisecond count when the light sequence last changed
+        this._lightChangeWaitMS = 1500; // how long does the light sequence wait before changing (milliseconds)
     }
     
     act():void

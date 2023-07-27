@@ -90,6 +90,8 @@ export default class LevelGround
 	 */
 	private _populateGroundZPositions():void
 	{
+		this.groundZPositions = [];
+		
 		//Start from far away, so we don't draw the distant ones on top of the closer ones
 		for(let i = this.helpers.zCalc.vPointDepth; i >= 0; i -= this.distance)
 		{

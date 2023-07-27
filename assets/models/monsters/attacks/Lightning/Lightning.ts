@@ -20,10 +20,6 @@ export default class Lightning extends ASModel {
         
         this.color = "yellow";
         this.zSpeed = 1; //value required for Tarian to recognise hit
-        
-        //See the act method for explanation of the below
-        this._damageValue = 4;
-        this.damageDealt = 0;
     }
     
     load():void
@@ -55,6 +51,10 @@ export default class Lightning extends ASModel {
         
         this.state = "shock";
         this.active = false;
+        
+        //See the act method for explanation of the below
+        this._damageValue = 4;
+        this.damageDealt = 0;
     }
     
     act():void

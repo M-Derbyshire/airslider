@@ -27,6 +27,7 @@ export default class Shocker extends ASModel
     homingTarget:Tarian|null;
     
     private _homingZStart:number;
+    private _origXSpeed:number;
     
     /**
      * Constructor
@@ -46,8 +47,8 @@ export default class Shocker extends ASModel
 		this.damageDealt = 2;
         
         this.state = "shock";
-        this.active = false;
         this.xSpeed = speedX; //this will be fed through xSpeed()
+        this._origXSpeed = speedX;
         
 		this._homingZStart = 200; //If in "home" mode, at what Z position do we start homing?
     }
@@ -98,10 +99,14 @@ export default class Shocker extends ASModel
         this.setYPositionFromBottom(this.height);
         this.z = this.helpers.zCalc.vPointDepth;
         
+        this.active = false;
+        
         if(this.mode == "sweep")
         {
             //make shocker sweep either left or right
             this.xSpeed = (((Math.floor(Math.random() * 2)) * 2) - 1) * this.xSpeed;
+        } else {
+            this.xSpeed = this._origXSpeed;
         }
     }
     

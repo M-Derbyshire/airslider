@@ -83,17 +83,7 @@ export default class ASLevel extends Level
 		this.patternManager = new ModelXPositionPatternManager();
         
         this.tunnelManager = new LevelTunnel();
-		
-		this.levelSection = 0;
-        this.levelClosingSectionNumber = 1; // The section of the level that should be the closing section
-        this.timeLevelClosingBeginMS = 0;
-		
-		this.outsideVisible = false;
         
-        this.levelMoving = false;
-        
-        // info for opening and closing of level
-        this._finishFlagsActive = false;
         this._signStartingZPosition = 50;
 	}
     
@@ -137,12 +127,6 @@ export default class ASLevel extends Level
             50,
             500
         );
-		
-        this._setupShockerManager(this.leftEdge, this.rightEdge);
-		
-		this._setupLevelSpeed();
-		
-		this._setupPatternManager();
 	}
     
     /**
@@ -151,11 +135,25 @@ export default class ASLevel extends Level
     prepare():void
     {
         super.prepare();
+        
         this.ground.setupGround();
         this._finishFlagsManager.setupGround();
         
-        this._finishFlagsActive = false;
+        this.levelSection = 0;
+        this.levelClosingSectionNumber = 1; // The section of the level that should be the closing section
+        this.timeLevelClosingBeginMS = 0;
+		
+		this.outsideVisible = false;
+        
         this.levelMoving = false;
+        
+        this._finishFlagsActive = false;
+        
+        this._setupShockerManager(this.leftEdge, this.rightEdge);
+		
+		this._setupLevelSpeed();
+		
+		this._setupPatternManager();
     }
     
     /**
@@ -380,7 +378,6 @@ export default class ASLevel extends Level
     private _levelOpening()
     {
         // SignDisplay will start the countdown automatically
-        
         
         if(this._startSignDisplay.state === "finished")
         {

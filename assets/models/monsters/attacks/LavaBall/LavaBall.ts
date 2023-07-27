@@ -22,7 +22,6 @@ export default class LavaBall extends ASModel {
         super();
         
         this.playerModel = playerModel;
-        this.active = false;
         this.damageDealt = 2;
         this.color = "fire";
         this.zSpeed = 1; // a value is required for Tarian to recognise hit
@@ -79,6 +78,8 @@ export default class LavaBall extends ASModel {
     prepare():void
     {
         super.prepare();
+        
+        this.active = false;
         this._initialYSpeed = 1000;
         this.ySpeed = this._initialYSpeed;
     }

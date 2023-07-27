@@ -49,14 +49,6 @@ export default class Monster extends ASModel {
         this.zSpeed = 1; //a value is required for Tarian's collision event to work
         
         this.actions = [];
-        this.currentAction = 0;
-        
-        this.active = false;
-        
-        this.entering = false;
-        this.exiting = false;
-        
-        this.fireWeapon = true;
     }
     
     /**
@@ -133,6 +125,14 @@ export default class Monster extends ASModel {
     prepare():void
     {
         super.prepare();
+        
+        this.currentAction = 0;
+        
+        this.active = false;
+        
+        this.entering = false;
+        this.exiting = false;
+        
         this.fireWeapon = true;
     }
     

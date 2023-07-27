@@ -123,7 +123,7 @@ export default class Ghost extends Monster {
         //move
         this.moveIn(this.exitZSpeed);
         
-        if(this.z <= 0)
+        if(this.z >= this.startZ)
         {
             this.exiting = false;
             this.active = false;

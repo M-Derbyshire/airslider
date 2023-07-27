@@ -18,11 +18,32 @@ export default class DamageFlash extends ASHUDComponent
     constructor()
     {
         super();
+    }
+    
+    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
+    {
+        super.load(canvasCtx, camera);
         
+		//The purple option is purposefully the same as the yellow image, as they're both lightning.
+        this.images = {
+            yellow: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png"),
+            purple: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png"),
+            none: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/none.png"),
+            fire: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/fire.png"),
+            ghost: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/ghost.png"),
+            damage: this.kernel.loadImage("/assets/HUDs/components/LowHealthFlash/images/damage.png")
+        };
+        
+    }
+    
+    prepare():void 
+    {
+        super.prepare();
+        
+        this.color = "none";
         this.opacity = 0;
         this.flashSpeed = 0.1; //this will be changed when drawing it to match fps
         this.flashSpeedDivider = 4; //change this to change flash speed
-        this.color = "none";
     }
     
     draw():void
@@ -87,23 +108,6 @@ export default class DamageFlash extends ASHUDComponent
 		this.opacity = 0;
         this.flashSpeed = -this.flashSpeed;
 	}
-	
-	
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
-    {
-        super.load(canvasCtx, camera);
-        
-		//The purple option is purposefully the same as the yellow image, as they're both lightning.
-        this.images = {
-            yellow: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png"),
-            purple: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png"),
-            none: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/none.png"),
-            fire: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/fire.png"),
-            ghost: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/ghost.png"),
-            damage: this.kernel.loadImage("/assets/HUDs/components/LowHealthFlash/images/damage.png")
-        };
-        
-    }
     
     /**
      * Starts the image flash going

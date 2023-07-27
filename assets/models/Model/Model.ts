@@ -48,20 +48,6 @@ export default class Model implements IModel {
         this.animationManager = new ModelAnimationsManager(this);
         
         this.assetsToUnload = [];
-        
-        this.drawBoundaryBoxes = false;
-        
-        this.text = {
-            content: "",
-            x: 0, // relative to model x
-            y: 0, // relative to model y
-            size: 30, // in pixels
-            font: "Arial",
-            color: "red",
-            style: "bolder", // See the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
-        };
-        
-        this._display = true;
     }
     
     //getters and setters --------------------------------------
@@ -136,8 +122,12 @@ export default class Model implements IModel {
     get state() {return this._state;}
     set state(state)
     {
-        this._x += this.animationManager.animations[state].xOffset;
-        this._y += this.animationManager.animations[state].yOffset;
+        if(this.animationManager?.animations && this.animationManager.animations[state])
+        {
+            this._x += this.animationManager.animations[state].xOffset;
+            this._y += this.animationManager.animations[state].yOffset;
+        }
+        
         this._state = state;
     }
     
@@ -156,7 +146,22 @@ export default class Model implements IModel {
     /**
      * Prepares the model, before the gameplay starts
      */
-    prepare():void {}
+    prepare():void
+    {
+        this.drawBoundaryBoxes = false;
+        
+        this.text = {
+            content: "",
+            x: 0, // relative to model x
+            y: 0, // relative to model y
+            size: 30, // in pixels
+            font: "Arial",
+            color: "red",
+            style: "bolder", // See the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
+        };
+        
+        this._display = true;
+    }
     
     /**
      * Unloads any assets used by the model

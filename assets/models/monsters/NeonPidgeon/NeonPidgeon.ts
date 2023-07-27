@@ -63,8 +63,6 @@ export default class NeonPidgeon extends Monster {
         this._playerModel = playerModel;
         this._lowerPidgeon = lowerPidgeon;
         
-        this.overlapping = false;
-        
         this.damageDealt = 10;
         this.color = "none";
     }
@@ -150,6 +148,7 @@ export default class NeonPidgeon extends Monster {
         this.z = this.startZ;
         this.xSpeed = this._lowerPidgeon ? -760 : -880;
         this.state = "flapping";
+        this.overlapping = false;
         
         if(this._lowerPidgeon)
             this._soundController = new PidgeonSoundController(this, this._lowerPidgeon);
@@ -242,7 +241,7 @@ export default class NeonPidgeon extends Monster {
         
             // Because of how the sound effects work, the lower pidgeon needs to leave first.
             // So, move upper pidgeon to the right until it's in position
-            if(!this._lowerPidgeon || (this._lowerPidgeon.x + this._lowerPidgeon.width < this.x))
+            if(!this._lowerPidgeon || !this._lowerPidgeon.active || (this._lowerPidgeon.x + this._lowerPidgeon.width < this.x))
                 this.moveLeft(this.exitXSpeed);
             else
                 this.moveRight(Math.abs(this.xSpeed));
