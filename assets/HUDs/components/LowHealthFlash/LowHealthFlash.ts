@@ -23,7 +23,7 @@ export default class LowHealthFlash extends DamageFlash
     {
         super.prepare();
         
-        this.color = "damage";
+        this.image = this.kernel.loadImage("/assets/HUDs/components/LowHealthFlash/images/damage.png");
         this.active = false;
     }
     
@@ -48,7 +48,7 @@ export default class LowHealthFlash extends DamageFlash
         super.draw();
         
         if(this.active && this.opacity <= 0) {
-            this.start(this.color);
+            this.start(this.image);
         }
     }
 }

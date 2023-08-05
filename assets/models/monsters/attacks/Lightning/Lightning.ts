@@ -1,4 +1,3 @@
-import { IDamageFlashImages } from '../../../../HUDs/components/DamageFlash/DamageFlash';
 import ASModel from '../../../ASModel/ASModel';
 import IModel from '../../../Model/IModel';
 
@@ -7,7 +6,7 @@ import IModel from '../../../Model/IModel';
  */
 export default class Lightning extends ASModel {
     
-    protected color:keyof IDamageFlashImages; // The image used by the DamageFlash
+    protected damageFlashImage:HTMLImageElement; // The image used by the DamageFlash
     
     private _damageValue:number;
     
@@ -18,7 +17,6 @@ export default class Lightning extends ASModel {
     {
         super();
         
-        this.color = "yellow";
         this.zSpeed = 1; //value required for Tarian to recognise hit
     }
     
@@ -26,8 +24,9 @@ export default class Lightning extends ASModel {
     {
         super.load();
         
-        const spritesheetPath = "/assets/models/monsters/attacks/Lightning/anim/lightning-spritesheet.png";
+        this.damageFlashImage = this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png");
         
+        const spritesheetPath = "/assets/models/monsters/attacks/Lightning/anim/lightning-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({

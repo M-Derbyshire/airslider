@@ -1,4 +1,3 @@
-import { IDamageFlashImages } from '../../../HUDs/components/DamageFlash/DamageFlash';
 import IModel from '../../Model/IModel';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
@@ -29,11 +28,6 @@ export default class Falcon extends Monster {
     damageDealt:number;
     
     /**
-     * The color of the damage flash
-     */
-    color:keyof IDamageFlashImages;
-    
-    /**
      * In frames
      */
     dropWaitOffset:number;
@@ -61,18 +55,22 @@ export default class Falcon extends Monster {
         this.playerModel = playerModel;
         
         this.damageDealtOrig = 12;
-        this.color = "none";
     }
     
     load():void
     {
         super.load();
         
-        this.assetsToUnload.push("/assets/models/monsters/Falcon/anim/falcon-spritesheet.png");
+        const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/none.png";
+        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
+        this.assetsToUnload.push(damageFlashSpritesheet);
+        
+        const spritesheet = "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png";
+        this.assetsToUnload.push(spritesheet);
         
         this.animationManager.registerAnimations({
             dropLeft: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
+                sheetPath: spritesheet,
                 fps: 24,
                 drawWidth: 175,
                 drawHeight: 300,
@@ -81,7 +79,7 @@ export default class Falcon extends Monster {
 				]
             }),
             dropRight: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
+                sheetPath: spritesheet,
                 fps: 24,
                 drawWidth: 175,
                 drawHeight: 300,
@@ -90,7 +88,7 @@ export default class Falcon extends Monster {
 				]
             }),
             flapping: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
+                sheetPath: spritesheet,
                 fps: 24,
                 drawWidth: 350,
                 drawHeight: 200,
@@ -106,7 +104,7 @@ export default class Falcon extends Monster {
 				]
             }),
             left: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
+                sheetPath: spritesheet,
                 fps: 24,
                 drawWidth: 350,
                 drawHeight: 200,
@@ -115,7 +113,7 @@ export default class Falcon extends Monster {
 				]
             }),
             right: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
+                sheetPath: spritesheet,
                 fps: 24,
                 drawWidth: 350,
                 drawHeight: 200,
@@ -124,7 +122,7 @@ export default class Falcon extends Monster {
 				]
             }),
             riseLeft: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
+                sheetPath: spritesheet,
                 fps: 24,
                 drawWidth: 170,
                 drawHeight: 300,
@@ -133,7 +131,7 @@ export default class Falcon extends Monster {
 				]
             }),
             riseRight: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png",
+                sheetPath: spritesheet,
                 fps: 24,
                 drawWidth: 170,
                 drawHeight: 300,

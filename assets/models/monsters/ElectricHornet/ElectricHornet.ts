@@ -29,7 +29,6 @@ export default class ElectricHornet extends Monster {
         this.playerModel = playerModel;
         
         this.damageDealt = 10;
-        this.color = "yellow";
     }
     
     load():void
@@ -39,6 +38,8 @@ export default class ElectricHornet extends Monster {
         const buzzSoundPath = "/assets/models/monsters/ElectricHornet/sounds/buzz.mp3";
         this._buzzSound = this.kernel.loadAudio(buzzSoundPath);
         this.assetsToUnload.push(buzzSoundPath);
+        
+        this.damageFlashImage = this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png");
         
         const spritesheetPath = "/assets/models/monsters/ElectricHornet/anim/electricHornet_spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);

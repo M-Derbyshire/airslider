@@ -1,4 +1,3 @@
-import { IDamageFlashImages } from '../../../HUDs/components/DamageFlash/DamageFlash';
 import IBoundaryBox from '../../Model/IBoundaryBox';
 import IModel from '../../Model/IModel';
 import Monster from '../../Monster/Monster';
@@ -16,7 +15,6 @@ export default class NeonPidgeon extends Monster {
     private _flapSound:HTMLAudioElement; // The wings flapping sound effect
     private _lowerPidgeon?:NeonPidgeon; // If this is the pidgeon on top, the pidgeon beneath it is stored here
     private _soundController:PidgeonSoundController; // Controls sound effects for all pidgeons
-    private _leftScreen:boolean; // Has this monster left the screen after exiting
     
     /**
      * Is this pidgeon currently overlapping the player?
@@ -27,11 +25,6 @@ export default class NeonPidgeon extends Monster {
      * How much damage does this monster do?
      */
     damageDealt:number;
-    
-    /**
-     * The color of the DamageFlash
-     */
-    color:keyof IDamageFlashImages;
     
     /**
      * A minimum span of time (in milliseconds) before the next drop
@@ -64,7 +57,6 @@ export default class NeonPidgeon extends Monster {
         this._lowerPidgeon = lowerPidgeon;
         
         this.damageDealt = 10;
-        this.color = "none";
     }
     
     load():void
@@ -73,6 +65,10 @@ export default class NeonPidgeon extends Monster {
         
         const fullModelWidth = 337;
         this._edgeOverflow = fullModelWidth / 2;
+        
+        const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/none.png";
+        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
+        this.assetsToUnload.push(damageFlashSpritesheet);
         
         const flapSoundPath = "/assets/models/monsters/NeonPidgeon/sounds/flap.mp3";
         this._flapSound = this.kernel.loadAudio(flapSoundPath);
@@ -141,7 +137,6 @@ export default class NeonPidgeon extends Monster {
         this.dropWaitRange = 2000; //2 seconds
         this.initialDropWait = 8000;
         
-        this._leftScreen = false;
         this._nextDrop = -1;
         this.y = this.startY;
         this.x = this.startX;

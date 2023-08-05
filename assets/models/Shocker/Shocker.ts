@@ -1,4 +1,3 @@
-import { IDamageFlashImages } from '../../HUDs/components/DamageFlash/DamageFlash';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
 import IModel from '../Model/IModel';
@@ -12,7 +11,12 @@ export default class Shocker extends ASModel
     /**
      * The damage flash image for this shocker's damage
      */
-    color:keyof IDamageFlashImages;
+    damageFlashImage:HTMLImageElement;
+    
+    /**
+     * The color of the shocker (also determines its width)
+     */
+    color:string;
     
     /**
      * The mode of the shocker
@@ -31,13 +35,13 @@ export default class Shocker extends ASModel
     
     /**
      * Constructor
-     * @param color The damage flash image for this shocker's damage
+     * @param color the color of the shocker (also determines its width)
      * @param mode The shocker's mode. "static" means it will move straight; "sweep" means it will move back and forth
      * on the x axis while moving towards you; "home" means it will try and home on the player
      * @param playerModel The player model. This can be null, as it is only needed for "home" mode
      * @param speedX The x speed of the shocker (only used in "sweep" mode)
      */
-    constructor(color:keyof IDamageFlashImages, mode:shockerModes, playerModel:Tarian|null = null, speedX:number = 0)
+    constructor(color:string, mode:shockerModes, playerModel:Tarian|null = null, speedX:number = 0)
     {
         super();
         
@@ -56,6 +60,9 @@ export default class Shocker extends ASModel
     load():void
     {
         super.load();
+        
+        const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/yellow.png";
+        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
 		
 		let width;
 		let frameCoordinates;

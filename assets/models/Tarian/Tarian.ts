@@ -1,5 +1,4 @@
 import MainHUD from '../../HUDs/MainHUD/MainHUD';
-import { IDamageFlashImages } from '../../HUDs/components/DamageFlash/DamageFlash';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
 import IBoundaryBox from '../Model/IBoundaryBox';
@@ -457,7 +456,7 @@ export default class Tarian extends ASModel {
      */
     zCollisionEventAction(otherModel:IModel):void
     {
-        const other = otherModel as ASModel & { color:keyof IDamageFlashImages };
+        const other = otherModel as ASModel & { damageFlashImage:HTMLImageElement };
         
         if(other.damageDealt > 0 && this.state != "exploding" && this.state != "lost")
         {
@@ -469,8 +468,8 @@ export default class Tarian extends ASModel {
                 this.display = true;
             }
             
-            if(other.color)
-                (this.kernel.level.HUD as MainHUD).startDamageFlash(other.color);
+            if(other.damageFlashImage)
+                (this.kernel.level.HUD as MainHUD).startDamageFlash(other.damageFlashImage);
         }
     }
 }

@@ -32,7 +32,7 @@ export default class PidgeonSoundController {
     
     /**
      * Should be called once per frame. Runs the sound effect(s)
-     * @param flap the flapping sound effect
+     * @param flapSound the flapping sound effect
      */
     act(flapSound:HTMLAudioElement):void
     {

@@ -59,13 +59,13 @@ export default class TheConstruct extends ASLevel
             // models[models.length - 2] as Monster
         ];
 
-        // this.shockerManager.setShockerModelRange(models.length, models.length + 10);
-        // this.shockerManager.setCurrentShockerCount(10);
-        // let shockerRange = this.shockerManager.shockerModelRange;
-        // for(let i = shockerRange.from; i <= shockerRange.to; i++)
-        // {
-		// 	models.push(new Shocker("yellow", "static"));
-        // }
+        this.shockerManager.setShockerModelRange(models.length, models.length + 10);
+        this.shockerManager.setCurrentShockerCount(10);
+        let shockerRange = this.shockerManager.shockerModelRange;
+        for(let i = shockerRange.from; i <= shockerRange.to; i++)
+        {
+			models.push(new Shocker("yellow", "static"));
+        }
 		
 		// const modelWidth = 100; //Set explicitly here, as models not yet loaded
 		// this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);

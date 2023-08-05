@@ -1,4 +1,3 @@
-import { IDamageFlashImages } from '../../../HUDs/components/DamageFlash/DamageFlash';
 import IModel from '../../Model/IModel';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
@@ -17,11 +16,6 @@ export default class Ghost extends Monster {
      * The current damage dealt by this monster
      */
     damageDealt:number;
-    
-    /**
-     * The image for the damage flash hud component
-     */
-    color:keyof IDamageFlashImages;
     
     /**
      * The speed that this monster should exit at, on the z axis
@@ -51,12 +45,15 @@ export default class Ghost extends Monster {
         this._playerModel = playerModel;
         
         this.damageDealtOrig = 2;
-        this.color = "ghost";
     }
     
     load():void
     {
         super.load();
+        
+        const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/ghost.png";
+        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
+        this.assetsToUnload.push(damageFlashSpritesheet);
         
         const spritesheetPath = "/assets/models/monsters/Ghost/anim/ghost-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);

@@ -1,4 +1,3 @@
-import { IDamageFlashImages } from '../../../../HUDs/components/DamageFlash/DamageFlash';
 import ASModel from '../../../ASModel/ASModel';
 import IModel from '../../../Model/IModel';
 import Tarian from '../../../Tarian/Tarian';
@@ -9,7 +8,7 @@ import Tarian from '../../../Tarian/Tarian';
 export default class LavaBall extends ASModel {
     
     protected playerModel:Tarian;
-    protected color:keyof IDamageFlashImages; // The image used by the DamageFlash
+    protected damageFlashImage:HTMLImageElement; // The image used by the DamageFlash
     
     private _initialYSpeed:number;
     
@@ -23,7 +22,6 @@ export default class LavaBall extends ASModel {
         
         this.playerModel = playerModel;
         this.damageDealt = 2;
-        this.color = "fire";
         this.zSpeed = 1; // a value is required for Tarian to recognise hit
     }
     
@@ -33,6 +31,10 @@ export default class LavaBall extends ASModel {
         
         let ballWidth = 30;
         let ballHeight = 40;
+        
+        const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/fire.png";
+        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
+        this.assetsToUnload.push(damageFlashSpritesheet);
         
         const spritesheetPath = "/assets/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);

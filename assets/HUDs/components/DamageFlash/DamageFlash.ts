@@ -1,4 +1,3 @@
-import ICamera from '../../../../engines/GraphicEn/ICamera';
 import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
 
 /**
@@ -6,11 +5,10 @@ import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
  */
 export default class DamageFlash extends ASHUDComponent
 {
-    protected images:IDamageFlashImages;
     protected opacity:number;
     protected flashSpeed:number;
     protected flashSpeedDivider:number;
-    protected color:keyof IDamageFlashImages;
+    protected image:HTMLImageElement;
     
     /**
      * Constructor
@@ -20,27 +18,10 @@ export default class DamageFlash extends ASHUDComponent
         super();
     }
     
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
-    {
-        super.load(canvasCtx, camera);
-        
-		//The purple option is purposefully the same as the yellow image, as they're both lightning.
-        this.images = {
-            yellow: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png"),
-            purple: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png"),
-            none: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/none.png"),
-            fire: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/fire.png"),
-            ghost: this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/ghost.png"),
-            damage: this.kernel.loadImage("/assets/HUDs/components/LowHealthFlash/images/damage.png")
-        };
-        
-    }
-    
     prepare():void 
     {
         super.prepare();
         
-        this.color = "none";
         this.opacity = 0;
         this.flashSpeed = 0.1; //this will be changed when drawing it to match fps
         this.flashSpeedDivider = 4; //change this to change flash speed
@@ -69,7 +50,7 @@ export default class DamageFlash extends ASHUDComponent
             this.ctx.globalAlpha = this.opacity;
         
             this.ctx.drawImage(
-                this.images[this.color],
+                this.image,
                 this.camera.canvasPositionX,
                 this.camera.canvasPositionY,
                 this.camera.canvasPositionWidth,
@@ -111,26 +92,14 @@ export default class DamageFlash extends ASHUDComponent
     
     /**
      * Starts the image flash going
-     * @param color the image to use as the flash
+     * @param image the image to use as the flash
      */
-    start(color:keyof IDamageFlashImages):void
+    start(image:HTMLImageElement):void
     {
         if(this.opacity === 0)
         {
-            this.color = color;
+            this.image = image;
             this.opacity += this.flashSpeed;
         }
     }
 }
-
-/**
- * The possible images that can be flashed
- */
-export interface IDamageFlashImages {
-    yellow: HTMLImageElement;
-    purple: HTMLImageElement;
-    none: HTMLImageElement;
-    fire: HTMLImageElement;
-    ghost: HTMLImageElement;
-    damage: HTMLImageElement;
-};

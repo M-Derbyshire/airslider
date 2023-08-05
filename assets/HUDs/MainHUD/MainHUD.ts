@@ -1,6 +1,6 @@
 import ASHUD from '../ASHUD/ASHUD';
 import HealthBar from '../components/HealthBar/HealthBar';
-import DamageFlash, { IDamageFlashImages } from '../components/DamageFlash/DamageFlash';
+import DamageFlash from '../components/DamageFlash/DamageFlash';
 import LowHealthFlash from '../components/LowHealthFlash/LowHealthFlash';
 import ICamera from '../../../engines/GraphicEn/ICamera';
 import IPointerEventManager from '../../levels/Level/IPointerEventManager';
@@ -36,9 +36,9 @@ export default class MainHUD extends ASHUD
      * Starts the damage flash
      * @param color the flash image to use
      */
-    startDamageFlash(color:keyof IDamageFlashImages):void
+    startDamageFlash(image:HTMLImageElement):void
     {
-        this._damageFlash.start(color);
+        this._damageFlash.start(image);
     }
     
     /**

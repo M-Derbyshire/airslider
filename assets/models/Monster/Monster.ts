@@ -1,4 +1,3 @@
-import { IDamageFlashImages } from '../../HUDs/components/DamageFlash/DamageFlash';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
 import Tarian from '../Tarian/Tarian';
@@ -9,7 +8,7 @@ import Tarian from '../Tarian/Tarian';
 export default class Monster extends ASModel {
     
     playerModel:Tarian;
-    color:keyof IDamageFlashImages; // Which image should be used by the DamageFlash, in the HUD
+    damageFlashImage:HTMLImageElement; // Which image should be used by the DamageFlash, in the HUD
     damageDealt:number; // How much damage should a collision with this monster do?
     
     // Actions are methods that make the monster perform a certain behaviour.
