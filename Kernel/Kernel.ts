@@ -21,6 +21,8 @@ import IModel from '../assets/models/Model/IModel';
 import IPreparedEngines from './IPreparedEngines';
 import ICamera from '../engines/GraphicEn/ICamera';
 import IFrameManager from '../engines/GraphicEn/IFrameManager';
+import { IErrorHandler } from './ErrorHandler/IErrorHandler';
+import ErrorHandler from './ErrorHandler/ErrorHandler';
 
 /**
  * Controls the entire game (this will be a singleton)
@@ -59,6 +61,8 @@ export default class Kernel implements IKernel {
     
     private _totalLevelActiveMilliseconds:number;
     private _active:boolean;
+    private _hasError:boolean;
+    private _errorHandler:IErrorHandler;
     
     private _rootPath:string;
     private _assetHandler:IAssetHandler;
@@ -107,9 +111,6 @@ export default class Kernel implements IKernel {
         this._fpsLimit = (!isNaN(settings.fpsLimit)) ? settings.fpsLimit : 70;
         this._lastTime = new Date(); //used when calculating fps and enforcing fps limit
         
-        this._totalLevelActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
-        this._active = true;
-        
         const filePath = window.location.pathname;
         this._rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
         
@@ -122,8 +123,12 @@ export default class Kernel implements IKernel {
 		this._gameContext = this.gameCanvas.getContext("2d")!;
         this._correctCanvasStyleAndDevicePixelRatio = settings.correctCanvasStyleAndDevicePixelRatio;
         
-        this._controlInitialiser = new settings.controlsInitialiserClass();
+        this._totalLevelActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
+        this._active = true;
+        this._hasError = false; // Has an error been caught and passed to the error handler?
+        this._errorHandler = new ErrorHandler(this._gameCanvas);
         
+        this._controlInitialiser = new settings.controlsInitialiserClass();
         
         this.displayFps = settings.displayFps;
         this.fpsDisplayColor = settings.fpsDisplayColor;
@@ -400,32 +405,37 @@ export default class Kernel implements IKernel {
     {
         requestAnimationFrame(this.run.bind(this));
         
-        //don't run unless it's time for next frame
-        let dt = new Date();
-        if((dt.getTime() - this._lastTime.getTime()) < (1000 / this._fpsLimit) || (!this.levelHasBeenPrepared && this.assetsStillLoading > 0))
-        {
-            return;
-        }
-        
-        if(!this.levelHasBeenPrepared)
-        {
-            this._prepareCurrentLevelAndModels();
-        }
-        
-        this._fps = this._getNewFps(dt);
-        
-        this._updateTotalTime(dt);
-        this._lastTime = dt;
-        
-        if(this.active)
-        {
-            this.gameEn.run();
-            this.graphicEn.run();
+        try {
+            // Don't run if there's been an error
+            if(this._hasError) return;
+            
+            // Don't run unless it's time for next frame
+            let dt = new Date();
+            if((dt.getTime() - this._lastTime.getTime()) < (1000 / this._fpsLimit) || (!this.levelHasBeenPrepared && this.assetsStillLoading > 0))
+                return;
+            
+            if(!this.levelHasBeenPrepared)
+            {
+                this._prepareCurrentLevelAndModels();
+            }
+            
+            this._fps = this._getNewFps(dt);
+            
+            this._updateTotalTime(dt);
+            this._lastTime = dt;
+            
+            if(this.active)
+            {
+                this.gameEn.run();
+                this.graphicEn.run();
+            }
+        } catch (err:any) {
+            this._handleError(err);
         }
     }
     
     /**
-     * Paues/unpauses the game
+     * Pauses/unpauses the game
      */
     toggleGamePause():void
     {
@@ -437,6 +447,16 @@ export default class Kernel implements IKernel {
         }
         
         this._active = !this._active;
+    }
+    
+    /**
+     * Handles errors
+     * @param err the error to handle (doesn't have to be an instance of Error)
+     */
+    private _handleError(err:any):void
+    {
+        this._hasError = true;
+        this._errorHandler.handleError(err);
     }
     
     /**
@@ -480,7 +500,15 @@ export default class Kernel implements IKernel {
      */
     initiate():void
     {
-        this.load();
-        this.run();
+        try {
+            this.load();
+        } catch (err:any) {
+            this._handleError(err);
+        }
+        
+        if(!this._hasError) {
+            // Run is re-called by the browser for each frame, so it will need to handle any errors thrown by itself
+            this.run();
+        }
     }
 }
