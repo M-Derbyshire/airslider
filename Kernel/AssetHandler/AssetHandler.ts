@@ -8,7 +8,6 @@ export default class AssetHandler implements IAssetHandler
 {
     private _rootPath:string;
     private _assetsStillLoading:number;
-    private _baseUrl:string;
     
     /**
      * The loaded image/audio assets
@@ -28,8 +27,6 @@ export default class AssetHandler implements IAssetHandler
     {
         this._rootPath = rootPath;
         this._assetsStillLoading = 0; //increased when asset starts loading, decrease when done
-        
-        this._baseUrl = window.location.href.replace("/index.html", ""); // Start of development asset path
         
         this.loadedAssets = [];
         this.loadedFontPaths = [];
@@ -111,7 +108,7 @@ export default class AssetHandler implements IAssetHandler
     {
         if(this.loadedFontPaths.includes(path)) return;
         
-        const font = new FontFace(name, `url(${this._baseUrl}/${path})`);
+        const font = new FontFace(name, `url(${this._prepareAssetPath(path)})`);
         font.load().then((newFont) => {
             (document.fonts as FontFaceSet & { add:(f:FontFace)=>void }).add(newFont);
             this._defaultAssetCallback();
