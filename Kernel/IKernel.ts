@@ -184,6 +184,12 @@ export default interface IKernel {
     toggleGamePause():void;
     
     /**
+     * Handles errors
+     * @param err the error to handle (doesn't have to be an instance of Error)
+     */
+    handleError(err:any):void
+    
+    /**
      * Loads the kernel, and starts the game running
      */
     initiate():void;

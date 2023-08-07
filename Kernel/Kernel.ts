@@ -430,7 +430,7 @@ export default class Kernel implements IKernel {
                 this.graphicEn.run();
             }
         } catch (err:any) {
-            this._handleError(err);
+            this.handleError(err);
         }
     }
     
@@ -453,7 +453,7 @@ export default class Kernel implements IKernel {
      * Handles errors
      * @param err the error to handle (doesn't have to be an instance of Error)
      */
-    private _handleError(err:any):void
+    handleError(err:any):void
     {
         this._hasError = true;
         this._errorHandler.handleError(err);
@@ -503,7 +503,7 @@ export default class Kernel implements IKernel {
         try {
             this.load();
         } catch (err:any) {
-            this._handleError(err);
+            this.handleError(err);
         }
         
         if(!this._hasError) {

@@ -1,3 +1,5 @@
+import IKernel from "../IKernel";
+import Kernel from "../Kernel";
 import IAssetHandler from "./IAssetHandler";
 import ILoadedAsset from "./ILoadedAsset";
 
@@ -6,6 +8,7 @@ import ILoadedAsset from "./ILoadedAsset";
  */
 export default class AssetHandler implements IAssetHandler
 {
+    private _kernel:IKernel;
     private _rootPath:string;
     private _assetsStillLoading:number;
     
@@ -25,6 +28,8 @@ export default class AssetHandler implements IAssetHandler
      */
     constructor(rootPath:string)
     {
+        this._kernel = Kernel.getInstance();
+        
         this._rootPath = rootPath;
         this._assetsStillLoading = 0; //increased when asset starts loading, decrease when done
         
@@ -75,6 +80,10 @@ export default class AssetHandler implements IAssetHandler
             loaded: false
         }; 
         
+        newLoadedAsset.asset.onerror = (err:any) => {
+            this._kernel.handleError(err);
+        };
+        
         const afterLoadCallback = () => {
             if(!newLoadedAsset.loaded)
             {
@@ -82,7 +91,6 @@ export default class AssetHandler implements IAssetHandler
                 this._defaultAssetCallback();
             }
         };
-        
 		
         if(obj instanceof Image)
         {
@@ -109,10 +117,14 @@ export default class AssetHandler implements IAssetHandler
         if(this.loadedFontPaths.includes(path)) return;
         
         const font = new FontFace(name, `url(${this._prepareAssetPath(path)})`);
+        
         font.load().then((newFont) => {
             (document.fonts as FontFaceSet & { add:(f:FontFace)=>void }).add(newFont);
             this._defaultAssetCallback();
+        }).catch((err:any) => {
+            this._kernel.handleError(err);
         });
+        
         this._assetsStillLoading++;
         
         this.loadedFontPaths.push(path);
