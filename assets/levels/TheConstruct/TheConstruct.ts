@@ -123,7 +123,6 @@ export default class TheConstruct extends ASLevel
         super.prepare();
         
         this.outsideVisible = true;
-        this.levelClosingSectionNumber = 3;
         
         // this.tunnelManager.createStartingTunnel([
         //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
@@ -137,10 +136,10 @@ export default class TheConstruct extends ASLevel
 		
 		this.patternManager.sendPatterns();
         
-        if(this.helpers.time.getTotalSeconds() <= 37)
-        {
+        // if(this.helpers.time.getTotalSeconds() <= 37)
+        // {
             // this.shockerManager.sendShockers();
-        }
+        // }
         
         // this.tunnelManager.continueTunnel([
         //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
@@ -148,21 +147,18 @@ export default class TheConstruct extends ASLevel
         // ]);
         
 		
-		//Start the monster going
-		if(this.helpers.time.getTotalSeconds() >= 15 && this.levelSection === 1)
-		{
-			this.monsters.forEach(monster => monster.start());
-            this.levelSection = 2;
-		}
+		// Runs the monster sequence
+        this.levelSection(
+            "monster", 
+            15000, 
+            90000, 
+            () => this.monsters.forEach(monster => monster.start()),
+            null,
+            () => this.monsters.forEach(monster => monster.stop())
+        );
         
-        //Stop the monster
-        if(this.helpers.time.getTotalSeconds() >= 90 && this.levelSection === 2)
-        {
-            this.monsters.forEach(monster => monster.stop());
-            
-            if(this.monsters.every(monster => monster.active === false))
-                this.levelSection = this.levelClosingSectionNumber;
-        }
+        // Run the closing sequence
+        this.levelEndSection(95000);
         
         // if(this.helpers.time.getTotalSeconds() >= 90 && this.levelSection === 2)
         // {
@@ -171,8 +167,8 @@ export default class TheConstruct extends ASLevel
 		
 		
 		//Set a pattern of shockers going
-        if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this.levelSection < 1)
-        {
+        // if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this.levelSection < 1)
+        // {
 			// this.levelSection = 1;
 			
 			// const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
@@ -201,6 +197,6 @@ export default class TheConstruct extends ASLevel
 			// this.patternManager.addRepeatingPattern(15, 10, 10000, [
 			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
 			// ]);
-        }
+        // }
     }
 }
