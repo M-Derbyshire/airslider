@@ -1,3 +1,6 @@
+import IKernel from '../../Kernel/IKernel';
+import Kernel from '../../Kernel/Kernel';
+import { KernelStatus } from '../../Kernel/KernelStatus';
 import ISoundEn from './ISoundEn';
 
 /**
@@ -5,8 +8,13 @@ import ISoundEn from './ISoundEn';
  */
 export default class SoundEn implements ISoundEn {
     
+    private _kernel:IKernel;
+    
     private _music:HTMLAudioElement;
     private _musicIsPlaying:boolean;
+    
+    // The sounds we're currently playing (not including music, or sounds that are force-loading)
+    private _currentSounds:Map<string, HTMLAudioElement>;
     
     private _audioContext:AudioContext;
     private _trackMap:Map<string, MediaElementAudioSourceNode>; // A map of tracks from the AudioContext
@@ -16,8 +24,11 @@ export default class SoundEn implements ISoundEn {
      */
     constructor()
     {
+        this._kernel = Kernel.getInstance();
+        
         this._musicIsPlaying = false;
         
+        this._currentSounds = new Map<string, HTMLAudioElement>();
         this._trackMap = new Map<string, MediaElementAudioSourceNode>();
         
         const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
@@ -52,12 +63,27 @@ export default class SoundEn implements ISoundEn {
     get musicIsPlaying() {return this._musicIsPlaying;}
     
     /**
+     * Runs a check to see what playing sounds have now finished, and 
+     * updates the engine's state accordingly
+     */
+    run():void
+    {
+        this._currentSounds.forEach((ref, key, map) => {
+            if(ref.ended && !ref.loop) 
+                map.delete(key);
+        });
+    }
+    
+    /**
      * Triggers the playing of the level's music
      */
     playMusic():void
     {
-        this._music.play();
-        this._musicIsPlaying = true;
+        if(this._music)
+        {
+            this._music.play();
+            this._musicIsPlaying = true;
+        }
     }
     
     /**
@@ -65,8 +91,30 @@ export default class SoundEn implements ISoundEn {
      */
     pauseMusic():void
     {
-        this._music.pause();
-        this._musicIsPlaying = false;
+        if(this._music)
+        {
+            this._music.pause();
+            this._musicIsPlaying = false;
+        }
+    }
+    
+    /**
+     * Pauses all sounds the engine has triggered
+     */
+    pauseAllSounds():void
+    {
+        this._currentSounds.forEach(ref => ref.pause());
+    }
+    
+    /**
+     * Continues playing (after pausing) all sounds the engine has triggered
+     */
+    unpauseAllSounds():void
+    {
+        this._currentSounds.forEach(ref => {
+            if(!ref.ended || ref.loop)
+                ref.play();
+        });
     }
     
     /**
@@ -91,7 +139,13 @@ export default class SoundEn implements ISoundEn {
         ref.currentTime = 0; // Position needs to be reset so sounds will restart if they're triggered mid-way through playing
         ref.muted = false; // Sound may be muted, if it was in the middle of being force-loaded
         ref.loop = loop;
-        ref.play();
+        
+        this._currentSounds.set(ref.src, ref);
+        
+        if(this._kernel.status === KernelStatus.Active)
+        {
+            ref.play();
+        }
     }
     
     /**
@@ -100,6 +154,7 @@ export default class SoundEn implements ISoundEn {
      */
     stopSound(ref:HTMLAudioElement):void
     {
+        this._currentSounds.delete(ref.src);
         ref.currentTime = 0;
         ref.pause();
     }

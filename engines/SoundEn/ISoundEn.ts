@@ -47,9 +47,25 @@ export default interface ISoundEn {
     stopSound(ref:HTMLAudioElement):void;
     
     /**
+     * Pauses all sounds the engine has triggered
+     */
+    pauseAllSounds():void;
+    
+    /**
+     * Continues playing (after pausing) all sounds the engine has triggered
+     */
+    unpauseAllSounds():void;
+    
+    /**
      * Forces a sound to be loaded by playing it while muted
      * @param ref The sound to be forced to load
      */
     forceLoad(ref:HTMLAudioElement):void;
+    
+    /**
+     * Runs a check to see what playing sounds have now finished, and 
+     * updates the engine's state accordingly
+     */
+    run():void;
     
 };

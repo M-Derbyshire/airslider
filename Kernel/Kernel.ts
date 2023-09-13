@@ -23,6 +23,7 @@ import ICamera from '../engines/GraphicEn/ICamera';
 import IFrameManager from '../engines/GraphicEn/IFrameManager';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';
 import ErrorHandler from './ErrorHandler/ErrorHandler';
+import { KernelStatus } from './KernelStatus';
 
 /**
  * Controls the entire game (this will be a singleton)
@@ -60,7 +61,7 @@ export default class Kernel implements IKernel {
     private _lastTime:Date;
     
     private _totalLevelActiveMilliseconds:number;
-    private _active:boolean;
+    private _status:KernelStatus;
     private _hasError:boolean;
     private _errorHandler:IErrorHandler;
     
@@ -124,7 +125,7 @@ export default class Kernel implements IKernel {
         this._correctCanvasStyleAndDevicePixelRatio = settings.correctCanvasStyleAndDevicePixelRatio;
         
         this._totalLevelActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
-        this._active = true;
+        this._status = KernelStatus.Active;
         this._hasError = false; // Has an error been caught and passed to the error handler?
         this._errorHandler = new ErrorHandler(this._gameCanvas);
         
@@ -138,9 +139,9 @@ export default class Kernel implements IKernel {
     //getters and setters ----------------------------------------------------------------------
     
     /**
-     * Is the level currently active (e.g. not paused)?
+     * The current status of the level
      */
-    get active(){return this._active;}
+    get status(){return this._status;}
     
     /**
      * The different settings for the game
@@ -250,6 +251,8 @@ export default class Kernel implements IKernel {
      */
     load():void
     {
+        this._setupAutoPause();
+        
         this._helpers = {
             zCalc: new ZCalc(),
             time: new TimeHelper(),
@@ -261,6 +264,17 @@ export default class Kernel implements IKernel {
         const initialLevelClass = this.settings.initialLevelClass;
         const initialLevel = initialLevelClass.apply(Object.create(initialLevelClass.prototype), this.settings.initialLevelConstructorParameters) as ILevel;
         this._loadLevel(initialLevel);
+    }
+    
+    /**
+     * Sets up any event listeners to pause the game automatically (e.g. when the user switches tabs)
+     */
+    private _setupAutoPause():void
+    {
+        document.addEventListener("visibilitychange", () => {
+            if(document.visibilityState === "hidden" && this.status === KernelStatus.Active)
+                this.toggleGamePause();
+        });
     }
     
     /**
@@ -424,10 +438,16 @@ export default class Kernel implements IKernel {
             this._updateTotalTime(dt);
             this._lastTime = dt;
             
-            if(this.active)
+            if(this._status !== KernelStatus.Paused)
             {
                 this.gameEn.run();
                 this.graphicEn.run();
+                this.soundEn.run();
+            }
+            
+            if(this._status === KernelStatus.PrePaused)
+            {
+                this._status = KernelStatus.Paused;
             }
         } catch (err:any) {
             this.handleError(err);
@@ -439,14 +459,16 @@ export default class Kernel implements IKernel {
      */
     toggleGamePause():void
     {
-        if(this._active)
+        if(this._status === KernelStatus.Active)
         {
             this.soundEn.pauseMusic();
+            this.soundEn.pauseAllSounds();
+            this._status = KernelStatus.PrePaused;
         } else {
             this.soundEn.playMusic();
+            this.soundEn.unpauseAllSounds();
+            this._status = KernelStatus.Active
         }
-        
-        this._active = !this._active;
     }
     
     /**
@@ -487,7 +509,7 @@ export default class Kernel implements IKernel {
     {
         let timePassed = Math.floor(currentDateTime.getMilliseconds()) - Math.floor(this._lastTime.getMilliseconds());
         
-        if(this._active && timePassed >= 1)
+        if(this._status !== KernelStatus.Paused && timePassed >= 1)
         {
             this._totalLevelActiveMilliseconds += timePassed;
         }

@@ -6,6 +6,7 @@ import ISoundEn from "../engines/SoundEn/ISoundEn";
 import ISettings from "../settings/ISettings";
 import IHelpers from "./helpers/IHelpers";
 import IAssetHandler from "./AssetHandler/IAssetHandler";
+import { KernelStatus } from "./KernelStatus";
 
 /**
  * Controls the entire game (this will be a singleton)
@@ -28,9 +29,9 @@ export default interface IKernel {
     unitsWithinCamera:number;
     
     /**
-     * Is the level currently active (e.g. not paused)?
+     * The current status of the game (e.g. is it playing, or in another state)
      */
-    readonly active:boolean;
+    readonly status:KernelStatus;
     
     /**
      * The different settings for the game
