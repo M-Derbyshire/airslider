@@ -7,22 +7,22 @@ import ITextContent from "../../../../engines/GraphicEn/ITextContent";
 export default interface IHUDComponent {
     
     /**
-     * The x coordinate of this component
+     * The x coordinate of this component (in units)
      */
     x:number;
     
     /**
-     * The y coordinate of this component
+     * The y coordinate of this component (in units)
      */
     y:number;
     
     /**
-     * The width of this component
+     * The width of this component (in units)
      */
     width:number;
     
     /**
-     * The height of this component
+     * The height of this component (in units)
      */
     height:number;
     

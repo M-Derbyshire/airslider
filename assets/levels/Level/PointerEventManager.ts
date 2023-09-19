@@ -10,11 +10,6 @@ export default class PointerEventManager implements IPointerEventManager {
 	 */
 	private _subjects:any[];
 	
-	/**
-	 * The canvas element that this game is displayed on
-	 */
-	private _canvas:HTMLCanvasElement;
-	
 	
 	/**
 	 * Constructor
@@ -23,7 +18,6 @@ export default class PointerEventManager implements IPointerEventManager {
 	constructor(canvas:HTMLCanvasElement)
 	{
 		this._subjects = [];
-		this._canvas = canvas;
 		
 		canvas.addEventListener("click", this._onPointCallback.bind(this));
 		canvas.addEventListener("touchStart", this._onPointCallback.bind(this));
