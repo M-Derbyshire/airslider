@@ -207,6 +207,7 @@ export default class Camera implements ICamera {
     drawLetterbox():void
     {
         this._canvasCtx.fillStyle = this._letterBoxColor;
+        this._canvasCtx.beginPath();
         
         if(this._positions.canvas.y > 0)
         {
