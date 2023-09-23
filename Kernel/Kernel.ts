@@ -267,12 +267,19 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Sets up any event listeners to pause the game automatically (e.g. when the user switches tabs)
+     * Sets up any event listeners to pause/unpause the game automatically (e.g. when the user switches tabs)
      */
     private _setupAutoPause():void
     {
         document.addEventListener("visibilitychange", () => {
             if(document.visibilityState === "hidden" && this.status === KernelStatus.Active)
+                this.toggleGamePause();
+        });
+        
+        // Unfortunately, if the window is resized, we need to unpause the game so everything can be 
+        // redrawn, with the new size settings.
+        window.addEventListener("resize", () => {
+            if(this.status === KernelStatus.Paused)
                 this.toggleGamePause();
         });
     }
