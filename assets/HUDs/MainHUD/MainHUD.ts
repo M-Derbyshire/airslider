@@ -1,5 +1,5 @@
 import ASHUD from '../ASHUD/ASHUD';
-import HealthBar from '../components/HealthBar/HealthBar';
+import HealthDisplay from '../components/HealthDisplay/HealthDisplay';
 import DamageFlash from '../components/DamageFlash/DamageFlash';
 import LowHealthFlash from '../components/LowHealthFlash/LowHealthFlash';
 import ICamera from '../../../engines/GraphicEn/ICamera';
@@ -25,7 +25,7 @@ export default class MainHUD extends ASHUD
         
         this.components.push(this._damageFlash);
         this.components.push(this._lowHealthFlash);
-        this.components.push(new HealthBar(100, 50, 800, 60, 0)); //0 will always be the player's index
+        this.components.push(new HealthDisplay(25, 500, 150, 200, 0)); //0 will always be the player's index
         this.components.push(new PauseButton(920, 25, 65, 100));
         
         // move this to parent load()?
