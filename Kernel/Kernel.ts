@@ -25,6 +25,10 @@ import { IErrorHandler } from './ErrorHandler/IErrorHandler';
 import ErrorHandler from './ErrorHandler/ErrorHandler';
 import { KernelStatus } from './KernelStatus';
 import ModelAnimationsManager from '../assets/models/Model/ModelAnimationsManager/ModelAnimationsManager';
+import EventManager from '../assets/levels/Level/EventManager';
+import EventCheckContainer from '../assets/levels/Level/EventCheckContainer';
+import ModelExtraEventManager from '../assets/levels/Level/ModelExtraEventManager';
+import PointerEventManager from '../assets/levels/Level/PointerEventManager';
 
 /**
  * Controls the entire game (this will be a singleton)
@@ -299,7 +303,13 @@ export default class Kernel implements IKernel {
         const preparedEngines = this._initialiseAllEngines(camera, frameManager); // new engines, aimed at this level
         
         //do any extra setup
-        level.load(this.gameCanvas, this.gameContext, camera, frameManager);
+        level.load(
+            this.gameCanvas, 
+            camera, 
+            frameManager, 
+            new EventManager(new EventCheckContainer(), new ModelExtraEventManager()),
+            new PointerEventManager(this.gameCanvas)
+        );
         
         //Get models here
         const loadedModels = level.getModels();

@@ -25,12 +25,13 @@ export default class Level implements ILevel
     
     protected frameManager: IFrameManager;
     protected frameIndex: number;
+    protected camera: ICamera;
     
     protected eventManager: IEventManager;
     
-    private _gameCanvas: HTMLCanvasElement;
-    private _gameContext: CanvasRenderingContext2D;
-    private _camera: ICamera;
+    protected gameCanvas: HTMLCanvasElement;
+    protected gameContext: CanvasRenderingContext2D;
+    
     private _pointerEventManager:IPointerEventManager;
     
     /**
@@ -47,36 +48,35 @@ export default class Level implements ILevel
         this.helpers = this.kernel.helpers;
         
         this.assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
-        
-        this.frameManager; //Set in load method
-        this.frameIndex;
-        
-        /**
-         * The Heads Up Display for the level
-         */
-        this.HUD;
-        
-        this.eventManager = new EventManager(new EventCheckContainer, new ModelExtraEventManager);
-		this._pointerEventManager; //Setup in load method
     }
     
     /**
      * Loads and sets up the level
      * @param gameCanvas The canvas element that the game is displayed on
-     * @param gameContext The 2D canvas context
      * @param camera The game's camera
      * @param frameManager The frame manager for the level
+     * @param eventManager Manages the event monitoring for a level
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
-    load(gameCanvas:HTMLCanvasElement, gameContext:CanvasRenderingContext2D, camera:ICamera, frameManager:IFrameManager):void
+    load(
+        gameCanvas:HTMLCanvasElement, 
+        camera:ICamera, 
+        frameManager:IFrameManager,
+        eventManager:EventManager,
+        pointerEventManager:PointerEventManager
+    ):void
     {
-        this._gameCanvas = gameCanvas;
-        this._gameContext = gameContext;
-        this._camera = camera;
+        this.gameCanvas = gameCanvas;
+        this.gameContext = gameCanvas.getContext("2d");
+        this.camera = camera;
         this.frameManager = frameManager;
         
-        this.setupZCalc(this._gameCanvas);
-        this._pointerEventManager = new PointerEventManager(this._gameCanvas);
-        this._loadHUD(gameContext, camera, this._pointerEventManager);
+        this.setupZCalc(this.gameCanvas);
+        
+        this.eventManager = eventManager;
+        this._pointerEventManager = pointerEventManager;
+        
+        this._loadHUD(this.gameContext, camera, this._pointerEventManager);
     }
     
     /**
@@ -92,7 +92,7 @@ export default class Level implements ILevel
      */
     prepare():void
     {
-        this.setupZCalc(this._gameCanvas);
+        this.setupZCalc(this.gameCanvas);
         this.HUD.prepare();
         
         //Not an array, so have to loop over normally
@@ -101,7 +101,7 @@ export default class Level implements ILevel
 			this._pointerEventManager.addPointerEventSubject(this.kernel.loadedModels[i]);
 		}
         
-        this.setupHUD(this._gameContext, this._camera, this._pointerEventManager);
+        this.setupHUD(this.gameContext, this.camera, this._pointerEventManager);
         
         this.registerLevelEvents();
     }

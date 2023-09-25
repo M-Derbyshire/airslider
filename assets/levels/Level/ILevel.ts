@@ -2,6 +2,8 @@ import ICamera from "../../../engines/GraphicEn/ICamera";
 import IHUD from "../../HUDs/HUD/IHUD";
 import IModel from "../../models/Model/IModel";
 import IFrameManager from "../../../engines/GraphicEn/IFrameManager";
+import PointerEventManager from "./PointerEventManager";
+import EventManager from "./EventManager";
 
 /**
  * A level of the game
@@ -16,11 +18,18 @@ export default interface ILevel {
     /**
      * Loads and sets up the level
      * @param gameCanvas The canvas element that the game is displayed on
-     * @param gameContext The 2D canvas context
      * @param camera The game's camera
      * @param frameManager The frame manager for the level
+     * @param eventManager Manages the event monitoring for a level
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
-    load(gameCanvas:HTMLCanvasElement, gameContext:CanvasRenderingContext2D, camera:ICamera, frameManager:IFrameManager):void;
+    load(
+        gameCanvas:HTMLCanvasElement, 
+        camera:ICamera, 
+        frameManager:IFrameManager, 
+        eventManager:EventManager,
+        pointerEventManager:PointerEventManager
+    ):void;
     
     /**
      * Unloads any assets used by the level

@@ -16,6 +16,8 @@ import ASModel from '../../models/ASModel/ASModel';
 import ICamera from '../../../engines/GraphicEn/ICamera';
 import IFrameManager from '../../../engines/GraphicEn/IFrameManager';
 import Monster from '../../models/Monster/Monster';
+import EventManager from '../Level/EventManager';
+import PointerEventManager from '../Level/PointerEventManager';
 
 /**
  * Testing/development level
@@ -73,11 +75,15 @@ export default class TheConstruct extends ASLevel
         return [...models, ...stdModels];
     }
     
-    load(canvas:HTMLCanvasElement, canvasCtx:CanvasRenderingContext2D, camera:ICamera, frameManager:IFrameManager):void
+    load(
+        canvas:HTMLCanvasElement, 
+        camera:ICamera, 
+        frameManager:IFrameManager,
+        eventManager:EventManager,
+        pointerEventManager:PointerEventManager
+    ):void
     {
-        super.load(canvas, canvasCtx, camera, frameManager);
-        
-        this.frameManager = frameManager;
+        super.load(canvas, camera, frameManager, eventManager, pointerEventManager);
         
         this.tunnelSprite = this.kernel.loadImage("/assets/levels/TheConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
@@ -89,11 +95,11 @@ export default class TheConstruct extends ASLevel
         );
         
         this.tunnelManager.load(camera);
-        this.road.load(canvasCtx, camera);
+        this.road.load(this.gameContext, camera);
         
         //Setup the frame for the level
         const unitsWithinCamera = this.kernel.unitsWithinCamera;
-        let frame = new Frame(canvasCtx, camera, 0, 0, unitsWithinCamera, unitsWithinCamera);
+        let frame = new Frame(this.gameContext, camera, 0, 0, unitsWithinCamera, unitsWithinCamera);
         
         const frameBackgroundIndex = frame.loadBackground("/assets/levels/TheConstruct/images/testBackground.png");
         frame.setBackgroundImage(frameBackgroundIndex);

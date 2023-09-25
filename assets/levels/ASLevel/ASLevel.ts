@@ -21,6 +21,8 @@ import IPointerEventManager from '../Level/IPointerEventManager';
 import IModel from '../../models/Model/IModel';
 import ASModel from '../../models/ASModel/ASModel';
 import IFrameManager from '../../../engines/GraphicEn/IFrameManager';
+import EventManager from '../Level/EventManager';
+import PointerEventManager from '../Level/PointerEventManager';
 
 /**
  * The game's base Level class
@@ -107,19 +109,26 @@ export default class ASLevel extends Level
     /**
      * Loads and sets up the level
      * @param gameCanvas The canvas element that the game is displayed on
-     * @param gameContext The 2D canvas context
      * @param camera The game's camera
      * @param frameManager The frame manager for the level
+     * @param eventManager Manages the event monitoring for a level
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
-	load(gameCanvas:HTMLCanvasElement, gameContext:CanvasRenderingContext2D, camera:ICamera, frameManager:IFrameManager):void
+	load(
+        gameCanvas:HTMLCanvasElement, 
+        camera:ICamera, 
+        frameManager:IFrameManager,
+        eventManager:EventManager,
+        pointerEventManager:PointerEventManager
+    ):void
 	{
-		super.load(gameCanvas, gameContext, camera, frameManager);
+		super.load(gameCanvas, camera, frameManager, eventManager, pointerEventManager);
         
 		this.leftEdge = 0;
         this.rightEdge = this.kernel.unitsWithinCamera;
         
-        this.ground = new LevelGround(gameContext, camera);
-        this._finishFlagsManager = new LevelGround(gameContext, camera, false); 
+        this.ground = new LevelGround(this.gameContext, camera);
+        this._finishFlagsManager = new LevelGround(this.gameContext, camera, false); 
         
         this._finishFlagsManager.load(
             "/assets/levels/ASLevel/images/finish_flag.png",
