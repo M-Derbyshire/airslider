@@ -1,5 +1,6 @@
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
+import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 
 /**
  * A sign on the track (e.g. the start or finish sign)
@@ -43,9 +44,9 @@ export default class Sign extends ASModel
         this._initialActiveStatus = active;
     }
     
-    load():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
         
         this.animationManager.registerAnimations({
             sign: this.animationManager.createAnimation({

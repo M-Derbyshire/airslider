@@ -3,6 +3,7 @@ import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
 import IBoundaryBox from '../Model/IBoundaryBox';
 import IModel from '../Model/IModel';
+import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 
 /**
  * The main character of the game, controlled by the player
@@ -48,9 +49,9 @@ export default class Tarian extends ASModel {
         this._lostZSpeed = 35; //the exiting z speed, when the player has lost the level
     }
     
-    load():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
         
         const spritesheetPath = "/assets/models/Tarian/anim/tarian-spritesheet.png";
         

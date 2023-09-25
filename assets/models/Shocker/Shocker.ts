@@ -1,6 +1,7 @@
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
 import IModel from '../Model/IModel';
+import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Tarian from '../Tarian/Tarian';
 
 /**
@@ -57,9 +58,9 @@ export default class Shocker extends ASModel
 		this._homingZStart = 200; //If in "home" mode, at what Z position do we start homing?
     }
     
-    load():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
         
         const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/yellow.png";
         this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);

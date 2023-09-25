@@ -1,5 +1,6 @@
 import ASModel from '../ASModel/ASModel';
 import IAnimation from '../Model/ModelAnimationsManager/IAnimation';
+import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Tarian from '../Tarian/Tarian';
 
 /**
@@ -30,21 +31,9 @@ export default class TarianExplosion extends ASModel {
         this._resizeSpeedY = 1500;
     }
     
-    prepare():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.prepare();
-        this.display = false;
-        this.state = "std";
-        this.active = true;
-        this.z = 1;
-        
-        this._animFrame.width = 0;
-        this._animFrame.height = 0;
-    }
-    
-    load():void
-    {
-        super.load();
+        super.load(animationManager);
         
         this._alarmSound = this.kernel.loadAudio("/assets/models/TarianExplosion/sounds/alarm.mp3");
         
@@ -62,6 +51,18 @@ export default class TarianExplosion extends ASModel {
         
         // Keeping a reference to this, as we want to change the width/height dynamically
         this._animFrame = this.animationManager.animations.std;
+    }
+    
+    prepare():void
+    {
+        super.prepare();
+        this.display = false;
+        this.state = "std";
+        this.active = true;
+        this.z = 1;
+        
+        this._animFrame.width = 0;
+        this._animFrame.height = 0;
     }
     
     act():void

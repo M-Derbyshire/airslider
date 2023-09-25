@@ -32,29 +32,20 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     /**
      * Constructor
      * @param model The model that this is used by
+     * @param canvasCtx The 2D canvas context
+     * @param camera The game's camera
      */
-    constructor(model:IModel)
+    constructor(model:IModel, canvasCtx:CanvasRenderingContext2D, camera:ICamera)
     {
         this._model = model;
         this._kernel = Kernel.getInstance();
         this._helpers = this._kernel.helpers;
         
-        this._camera;
-        this._canvasCtx;
+        this._camera = camera;
+        this._canvasCtx = canvasCtx;
         
         this.animations;
         this.sheetMap = new Map<string, HTMLImageElement>();
-    }
-    
-    /**
-     * Loads this animation manager
-     * @param canvasCtx The 2D canvas context
-     * @param camera The game's camera
-     */
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
-    {
-        this._camera = camera;
-        this._canvasCtx = canvasCtx;
     }
     
     /**

@@ -24,6 +24,7 @@ import IFrameManager from '../engines/GraphicEn/IFrameManager';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';
 import ErrorHandler from './ErrorHandler/ErrorHandler';
 import { KernelStatus } from './KernelStatus';
+import ModelAnimationsManager from '../assets/models/Model/ModelAnimationsManager/ModelAnimationsManager';
 
 /**
  * Controls the entire game (this will be a singleton)
@@ -330,9 +331,10 @@ export default class Kernel implements IKernel {
     private _loadModels(models:IModel[], engines:IPreparedEngines):void
 	{
         models.forEach((model, idx) => {
+            const animManager = new ModelAnimationsManager(model, this.gameContext, engines.graphicEn.camera);
+            
             model.loadedIndex = idx;
-            model.load();
-            model.loadAnimationsManager(this.gameContext, engines.graphicEn.camera);
+            model.load(animManager);
         });
 	}
     

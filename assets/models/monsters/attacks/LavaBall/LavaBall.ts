@@ -1,5 +1,6 @@
 import ASModel from '../../../ASModel/ASModel';
 import IModel from '../../../Model/IModel';
+import IModelAnimationsManager from '../../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Tarian from '../../../Tarian/Tarian';
 
 /**
@@ -25,9 +26,9 @@ export default class LavaBall extends ASModel {
         this.zSpeed = 1; // a value is required for Tarian to recognise hit
     }
     
-    load():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
         
         let ballWidth = 30;
         let ballHeight = 40;

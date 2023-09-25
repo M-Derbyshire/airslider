@@ -1,4 +1,5 @@
 import IBoundaryBox from '../../Model/IBoundaryBox';
+import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 import LavaBall from '../attacks/LavaBall/LavaBall';
@@ -40,9 +41,9 @@ export default class BabyDragon extends Monster
         return this._nextLavaBallIndex + 1;
     }
     
-    load():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
         
         const wingSoundPath = "/assets/models/monsters/BabyDragon/sounds/flap.mp3";
         this._wingSound = this.kernel.loadAudio(wingSoundPath);

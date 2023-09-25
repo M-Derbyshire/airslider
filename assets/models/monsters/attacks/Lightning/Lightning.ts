@@ -1,5 +1,6 @@
 import ASModel from '../../../ASModel/ASModel';
 import IModel from '../../../Model/IModel';
+import IModelAnimationsManager from '../../../Model/ModelAnimationsManager/IModelAnimationsManager';
 
 /**
  * The lighting used by the ElectricSeahorse
@@ -20,9 +21,9 @@ export default class Lightning extends ASModel {
         this.zSpeed = 1; //value required for Tarian to recognise hit
     }
     
-    load():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
         
         this.damageFlashImage = this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png");
         

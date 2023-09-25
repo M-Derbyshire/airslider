@@ -1,5 +1,6 @@
 import IBoundaryBox from '../../Model/IBoundaryBox';
 import IModel from '../../Model/IModel';
+import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 
@@ -31,9 +32,9 @@ export default class ElectricHornet extends Monster {
         this.damageDealt = 10;
     }
     
-    load():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
         
         const buzzSoundPath = "/assets/models/monsters/ElectricHornet/sounds/buzz.mp3";
         this._buzzSound = this.kernel.loadAudio(buzzSoundPath);

@@ -1,6 +1,7 @@
 import ICamera from "../../../engines/GraphicEn/ICamera";
 import ITextContent from "../../../engines/GraphicEn/ITextContent";
 import IBoundaryBox from "./IBoundaryBox";
+import IModelAnimationsManager from "./ModelAnimationsManager/IModelAnimationsManager";
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)
@@ -79,8 +80,9 @@ export default interface IModel {
     
     /**
      * Loads and sets up the model 
+     * @param animationManager The animation manager for the model
      */
-    load():void;
+    load(animationManager:IModelAnimationsManager):void;
     
     /**
      * Prepares the model, before the gameplay starts
@@ -91,13 +93,6 @@ export default interface IModel {
      * Unloads any assets used by the model
      */
     unload():void;
-    
-    /**
-     * Loads the model's animation manager
-     * @param canvasCtx The 2D canvas context
-     * @param camera The game's camera
-     */
-    loadAnimationsManager(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void;
     
     /**
      * Draws the model's sprite

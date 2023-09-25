@@ -19,13 +19,6 @@ export default interface IModelAnimationsManager {
     sheetMap:Map<string, HTMLImageElement>;
     
     /**
-     * Loads this animation manager
-     * @param canvasCtx The 2D canvas context
-     * @param camera The game's camera
-     */
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void;
-    
-    /**
      * Creates and returns a new animation (which will then need to be registered with the registerAnimations method)
      * @param animationDetails The details needed to create this animation
      * @returns The newly created animation

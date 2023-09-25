@@ -1,5 +1,6 @@
 import Model from '../Model/Model';
 import ASLevel from '../../levels/ASLevel/ASLevel';
+import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 
 export default class ASModel extends Model {
 	
@@ -56,9 +57,9 @@ export default class ASModel extends Model {
         return (vol >= 0) ? vol : 0;
     }
 	
-	load():void
+	load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
     }
     
     prepare():void

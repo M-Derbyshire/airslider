@@ -1,5 +1,6 @@
 import IBoundaryBox from '../../Model/IBoundaryBox';
 import IModel from '../../Model/IModel';
+import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 import PidgeonSoundController from './PidgeonSoundController';
@@ -59,9 +60,9 @@ export default class NeonPidgeon extends Monster {
         this.damageDealt = 10;
     }
     
-    load():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
         
         const fullModelWidth = 337;
         this._edgeOverflow = fullModelWidth / 2;

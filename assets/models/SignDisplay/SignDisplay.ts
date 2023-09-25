@@ -1,4 +1,5 @@
 import ASModel from '../ASModel/ASModel';
+import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Sign from '../Sign/Sign';
 
 /**
@@ -29,9 +30,9 @@ export default class SignDisplay extends ASModel
         this._lightChangeStartWaitMS = 3000; // how long before the light sequence starts (milliseconds)
     }
     
-    load():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
         
         this._countdownBeep = this.kernel.loadAudio("/assets/models/SignDisplay/sounds/countdown_beep.mp3");
         this._startBeep = this.kernel.loadAudio("/assets/models/SignDisplay/sounds/countdown_go.mp3");

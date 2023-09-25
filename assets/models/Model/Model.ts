@@ -45,7 +45,6 @@ export default class Model implements IModel {
         
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
-        this.animationManager = new ModelAnimationsManager(this);
         
         this.assetsToUnload = [];
     }
@@ -140,8 +139,12 @@ export default class Model implements IModel {
     
     /**
      * Loads and sets up the model 
+     * @param animationManager The animation manager for the model
      */
-    load():void {}
+    load(animationManager:IModelAnimationsManager):void 
+    {
+        this.animationManager = animationManager;
+    }
     
     /**
      * Prepares the model, before the gameplay starts
@@ -169,16 +172,6 @@ export default class Model implements IModel {
     unload():void
     {
         this.assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
-    }
-    
-    /**
-     * Loads the model's animation manager
-     * @param canvasCtx The 2D canvas context
-     * @param camera The game's camera
-     */
-    loadAnimationsManager(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
-    {
-        this.animationManager.load(canvasCtx, camera);
     }
     
     /**

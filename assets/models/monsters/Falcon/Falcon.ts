@@ -1,4 +1,5 @@
 import IModel from '../../Model/IModel';
+import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 
@@ -57,9 +58,9 @@ export default class Falcon extends Monster {
         this.damageDealtOrig = 12;
     }
     
-    load():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
         
         const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/none.png";
         this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);

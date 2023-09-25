@@ -1,4 +1,5 @@
 import IBoundaryBox from '../../Model/IBoundaryBox';
+import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 import Lightning from '../attacks/Lightning/Lightning';
@@ -31,9 +32,9 @@ export default class ElectricSeahorse extends Monster {
         this._rightLightningModel = rightLightningModel;
     }
     
-    load():void
+    load(animationManager:IModelAnimationsManager):void
     {
-        super.load();
+        super.load(animationManager);
         
         const wingSoundPath = "/assets/models/monsters/ElectricSeahorse/sounds/flap.mp3";
         this._wingSound = this.kernel.loadAudio(wingSoundPath);
