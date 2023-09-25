@@ -22,7 +22,7 @@ export default class SoundEn implements ISoundEn {
     /**
      * Constructor
      */
-    constructor()
+    constructor(audioContext:AudioContext)
     {
         this._kernel = Kernel.getInstance();
         
@@ -31,8 +31,7 @@ export default class SoundEn implements ISoundEn {
         this._currentSounds = new Map<string, HTMLAudioElement>();
         this._trackMap = new Map<string, MediaElementAudioSourceNode>();
         
-        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-        this._audioContext = new AudioContext();
+        this._audioContext = audioContext;
         
         if (this._audioContext.state === "suspended") this._audioContext.resume();
     }

@@ -358,7 +358,9 @@ export default class Kernel implements IKernel {
 	{
 		const gameEn = new GameEn();
         const graphicEn = new GraphicEn(this.gameCanvas, this.gameContext, camera, frameManager);
-        const soundEn = new SoundEn();
+        
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        const soundEn = new SoundEn(new AudioContext());
         
         return { gameEn, graphicEn, soundEn };
 	}
