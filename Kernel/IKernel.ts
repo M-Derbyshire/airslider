@@ -180,7 +180,7 @@ export default interface IKernel {
     run():void;
     
     /**
-     * Paues/unpauses the game
+     * Paues/unpauses the game (if the current level is pauseable)
      */
     toggleGamePause():void;
     

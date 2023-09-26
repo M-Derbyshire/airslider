@@ -476,19 +476,22 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Pauses/unpauses the game
+     * Pauses/unpauses the game (if the current level is pauseable)
      */
     toggleGamePause():void
     {
-        if(this._status === KernelStatus.Active)
+        if(this.level.isPauseable)
         {
-            this.soundEn.pauseMusic();
-            this.soundEn.pauseAllSounds();
-            this._status = KernelStatus.PrePaused;
-        } else {
-            this.soundEn.playMusic();
-            this.soundEn.unpauseAllSounds();
-            this._status = KernelStatus.Active
+            if(this._status === KernelStatus.Active)
+            {
+                this.soundEn.pauseMusic();
+                this.soundEn.pauseAllSounds();
+                this._status = KernelStatus.PrePaused;
+            } else {
+                this.soundEn.playMusic();
+                this.soundEn.unpauseAllSounds();
+                this._status = KernelStatus.Active
+            }
         }
     }
     

@@ -40,6 +40,11 @@ export default class Level implements ILevel
     HUD:IHUD;
     
     /**
+     * Can this level be paused?
+     */
+    isPauseable:boolean;
+    
+    /**
      * Constructor
      */
     constructor()
@@ -48,6 +53,8 @@ export default class Level implements ILevel
         this.helpers = this.kernel.helpers;
         
         this.assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
+        
+        this.isPauseable = true;
     }
     
     /**

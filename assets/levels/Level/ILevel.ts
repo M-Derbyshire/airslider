@@ -16,6 +16,11 @@ export default interface ILevel {
     readonly HUD:IHUD;
     
     /**
+     * Can this level be paused?
+     */
+    isPauseable:boolean;
+    
+    /**
      * Loads and sets up the level
      * @param gameCanvas The canvas element that the game is displayed on
      * @param camera The game's camera
