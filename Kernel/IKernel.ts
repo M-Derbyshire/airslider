@@ -114,11 +114,6 @@ export default interface IKernel {
     readonly soundEn:ISoundEn;
     
     /**
-     * The ID of the HTML canvas element
-     */
-    readonly gameCanvasElementID:string;
-    
-    /**
      * The canvas element that the game should be drawn on
      */
     readonly gameCanvas:HTMLCanvasElement;

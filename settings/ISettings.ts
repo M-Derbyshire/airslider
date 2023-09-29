@@ -7,9 +7,9 @@ import ILevel from "../assets/levels/Level/ILevel";
 export default interface ISettings {
     
     /**
-     * The ID of the HTML canvas element
+     * The canvas element that the game should be drawn on
      */
-    gameCanvasElementID:string;
+    gameCanvas:HTMLCanvasElement;
     
     /**
      * Should the canvas's styling width/height be corrected, based on the Device Pixel Ratio?

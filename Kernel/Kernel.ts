@@ -55,7 +55,6 @@ export default class Kernel implements IKernel {
     
     private _settings:ISettings;
     private _isOnMobile:boolean;
-    private _gameCanvasElementID:string;
     private _gameCanvas:HTMLCanvasElement;
     private _gameContext:CanvasRenderingContext2D;
     private _correctCanvasStyleAndDevicePixelRatio:boolean;
@@ -124,8 +123,7 @@ export default class Kernel implements IKernel {
         
         this._levelQueue = [];
         
-		this._gameCanvasElementID = settings.gameCanvasElementID;
-		this._gameCanvas = document.getElementById(this.gameCanvasElementID) as HTMLCanvasElement;
+		this._gameCanvas = settings.gameCanvas;
 		this._gameContext = this.gameCanvas.getContext("2d")!;
         this._correctCanvasStyleAndDevicePixelRatio = settings.correctCanvasStyleAndDevicePixelRatio;
         
@@ -227,11 +225,6 @@ export default class Kernel implements IKernel {
      * The engine that controls the sound/music of the game
      */
     get soundEn(){return this._levelQueue[0].preparedEngines.soundEn;}
-	
-    /**
-     * The ID of the HTML canvas element
-     */
-	get gameCanvasElementID(){return this._gameCanvasElementID;}
     
     /**
      * The canvas element that the game should be drawn on
