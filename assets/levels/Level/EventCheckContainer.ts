@@ -35,12 +35,12 @@ export default class EventCheckContainer
         {
             const boxA = boxesA[aIter];
             
+            //Not using forEach, as we want to return after the first collision found
             for(let bIter = 0; bIter < boxesB.length; bIter++)
             {
                 const boxB = boxesB[bIter];
                 
-                if (modelB.active && 
-                ((boxA.z >= (boxB.z - modelB.zSpeed)) && (boxA.z <= boxB.z)) &&
+                if (((boxA.z >= (boxB.z - modelB.zSpeed)) && (boxA.z <= boxB.z)) &&
                 (boxA.x + boxA.width >= boxB.x) &&
                 (boxA.x <= boxB.x + boxB.width) &&
                 (boxA.y + boxA.height >= boxB.y) &&
@@ -48,9 +48,10 @@ export default class EventCheckContainer
                 {
                     (modelA[modelAActionMethodName as keyof typeof modelA] as Function)(modelB);
                     (modelB[modelBActionMethodName as keyof typeof modelB] as Function)(modelA);
+                    return;
                 }
-            }
-        }
+            };
+        };
     }
     
     hitPlayerOrGroundEventCheck(modelA:IModel, modelAActionMethodName:string, modelB:IModel, modelBActionMethodName:string):void
