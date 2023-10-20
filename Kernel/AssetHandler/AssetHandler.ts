@@ -154,6 +154,17 @@ export default class AssetHandler implements IAssetHandler
     }
     
     /**
+     * Resets the usage counts of all assets to 0 (to be used after all the assets that need 
+     * unloading have been unloaded, to ensure the remaining assets have the right usage count 
+     * once the next level has loaded -- meaning they can be unloaded correctly at a later 
+     * time)
+     */
+    resetAllUsageCounts():void
+    {
+        this.loadedAssets.forEach(asset => asset.usageCount = 0);
+    }
+    
+    /**
      * Makes any required modifications to the asset path, before it is used
      * @param path the original asset path
      * @returns the modified asset path
