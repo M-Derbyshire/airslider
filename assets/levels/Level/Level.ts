@@ -32,7 +32,7 @@ export default class Level implements ILevel
     protected gameCanvas: HTMLCanvasElement;
     protected gameContext: CanvasRenderingContext2D;
     
-    private _pointerEventManager:IPointerEventManager;
+    protected pointerEventManager:IPointerEventManager;
     
     /**
      * The Heads Up Display for the level
@@ -81,9 +81,9 @@ export default class Level implements ILevel
         this.setupZCalc(this.gameCanvas);
         
         this.eventManager = eventManager;
-        this._pointerEventManager = pointerEventManager;
+        this.pointerEventManager = pointerEventManager;
         
-        this._loadHUD(this.gameContext, camera, this._pointerEventManager);
+        this._loadHUD(this.gameContext, camera, this.pointerEventManager);
     }
     
     /**
@@ -105,10 +105,10 @@ export default class Level implements ILevel
         //Not an array, so have to loop over normally
 		for(let i = 0; i < this.kernel.loadedModels.length; i++)
 		{
-			this._pointerEventManager.addPointerEventSubject(this.kernel.loadedModels[i]);
+			this.pointerEventManager.addPointerEventSubject(this.kernel.loadedModels[i]);
 		}
         
-        this.setupHUD(this.gameContext, this.camera, this._pointerEventManager);
+        this.setupHUD();
         
         this.registerLevelEvents();
     }
@@ -149,11 +149,8 @@ export default class Level implements ILevel
     
     /**
      * Run any setup required by the level's HUD
-     * @param gameContext The 2D canvas context
-     * @param camera The game's camera
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
-	protected setupHUD(gameContext:CanvasRenderingContext2D, camera:ICamera, pointerEventManager:IPointerEventManager):void {}
+	protected setupHUD():void {}
 	
     /**
      * Set the settings of the zCalc

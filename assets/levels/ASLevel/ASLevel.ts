@@ -165,11 +165,8 @@ export default class ASLevel extends Level
     
     /**
      * Run any setup required by the level's HUD
-     * @param gameContext The 2D canvas context
-     * @param camera The game's camera
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
-	setupHUD(gameContext:CanvasRenderingContext2D, camera:ICamera, pointerEventManager:IPointerEventManager):void
+	setupHUD():void
 	{
 		this.HUD.models.push(this.kernel.loadedModels[0]);
 	}
