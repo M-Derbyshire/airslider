@@ -1,3 +1,4 @@
+import Kernel from "../../../Kernel/Kernel";
 import IPointerEventManager from "./IPointerEventManager";
 
 /**
@@ -15,10 +16,11 @@ export default class PointerEventManager implements IPointerEventManager {
 	 * Constructor
 	 * @param canvas The canvas element that the game is displayed on
 	 */
-	constructor(canvas:HTMLCanvasElement)
+	constructor()
 	{
 		this._subjects = [];
 		
+		const canvas = Kernel.getInstance().gameCanvas;
 		canvas.addEventListener("click", this._onPointCallback.bind(this));
 		canvas.addEventListener("touchStart", this._onPointCallback.bind(this));
 	}

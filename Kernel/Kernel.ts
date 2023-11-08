@@ -301,7 +301,7 @@ export default class Kernel implements IKernel {
             camera, 
             frameManager, 
             new EventManager(new EventCheckContainer(), new ModelExtraEventManager()),
-            new PointerEventManager(this.gameCanvas)
+            new PointerEventManager()
         );
         
         //Get models here
