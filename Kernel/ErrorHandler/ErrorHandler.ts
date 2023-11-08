@@ -1,3 +1,4 @@
+import Kernel from "../Kernel";
 import { IErrorHandler } from "./IErrorHandler";
 
 /**
@@ -35,9 +36,10 @@ class ErrorHandler implements IErrorHandler {
      * @param canvas The game's canvas
      * @returns An ErrorHandler
      */
-    constructor(canvas:HTMLCanvasElement) {
-        this._canvas = canvas;
-        this._canvasCtx = canvas.getContext("2d")!;
+    constructor() {
+        const kernel = Kernel.getInstance();
+        this._canvas = kernel.gameCanvas;
+        this._canvasCtx = kernel.gameContext;
         
         this._backgroundColor = "#330000";
         this._fontColor = "#fbb";

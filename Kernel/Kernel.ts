@@ -130,7 +130,7 @@ export default class Kernel implements IKernel {
         this._totalLevelActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
         this._status = KernelStatus.Active;
         this._hasError = false; // Has an error been caught and passed to the error handler?
-        this._errorHandler = new ErrorHandler(this._gameCanvas);
+        this._errorHandler = new ErrorHandler();
         
         this._controlInitialiser = new settings.controlsInitialiserClass();
         
