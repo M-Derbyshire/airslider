@@ -27,8 +27,6 @@ export default class GraphicEn implements IGraphicEn {
     
     /**
      * Constructor
-     * @param gameCanvas The canvas element that the game should be drawn on
-     * @param gameContext The 2D canvas context
      * @param camera The game's camera
      * @param frameManager The level's frame manager
      */

@@ -14,7 +14,6 @@ export default class PointerEventManager implements IPointerEventManager {
 	
 	/**
 	 * Constructor
-	 * @param canvas The canvas element that the game is displayed on
 	 */
 	constructor()
 	{

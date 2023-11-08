@@ -29,8 +29,6 @@ export default class Camera implements ICamera {
     
     /**
      * Constructor
-     * @param canvas The canvas element that the game is displayed on
-     * @param canvasCtx The 2D canvas context
      * @param aspectRatioHorizontal The horizontal aspect ratio value (e.g. the "16" in "16:9")
      * @param aspectRatioVertical The vertical aspect ratio value (e.g. the "9" in "16:9")
      */

@@ -33,7 +33,6 @@ class ErrorHandler implements IErrorHandler {
     
     /**
      * Constructor
-     * @param canvas The game's canvas
      * @returns An ErrorHandler
      */
     constructor() {
