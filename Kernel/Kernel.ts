@@ -365,7 +365,7 @@ export default class Kernel implements IKernel {
 	private _initialiseAllEngines(camera:ICamera, frameManager:IFrameManager):IPreparedEngines
 	{
 		const gameEn = new GameEn();
-        const graphicEn = new GraphicEn(this.gameCanvas, this.gameContext, camera, frameManager);
+        const graphicEn = new GraphicEn(camera, frameManager);
         
         const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
         const soundEn = new SoundEn(new AudioContext());

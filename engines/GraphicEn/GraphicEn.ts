@@ -14,6 +14,7 @@ export default class GraphicEn implements IGraphicEn {
     private _helpers:IHelpers;
     
     private _gameCan:HTMLCanvasElement;
+    private _gameCtx:CanvasRenderingContext2D;
     private _frameManager:IFrameManager;
     
     private _lastFrameCanvasWidth:number;
@@ -25,24 +26,19 @@ export default class GraphicEn implements IGraphicEn {
     camera:ICamera;
     
     /**
-     * The 2D canvas context
-     */
-    gameCtx:CanvasRenderingContext2D;
-    
-    /**
      * Constructor
      * @param gameCanvas The canvas element that the game should be drawn on
      * @param gameContext The 2D canvas context
      * @param camera The game's camera
      * @param frameManager The level's frame manager
      */
-    constructor(gameCanvas:HTMLCanvasElement, gameContext:CanvasRenderingContext2D, camera:ICamera, frameManager:IFrameManager)
+    constructor(camera:ICamera, frameManager:IFrameManager)
     {
         this._kernel = Kernel.getInstance();
         this._helpers = this._kernel.helpers;
 		
-        this._gameCan = gameCanvas;
-        this.gameCtx = gameContext;
+        this._gameCan = this._kernel.gameCanvas;
+        this._gameCtx = this._kernel.gameContext;
         this.camera = camera;
         this._frameManager = frameManager;
         
@@ -67,7 +63,7 @@ export default class GraphicEn implements IGraphicEn {
         if(this._canvasSizeHasChanged()) this._setCanvasCorrectWidthHeight();
         
         //clear everything on the gameCan
-        this.gameCtx.clearRect(0, 0, this._gameCan.width, this._gameCan.height);
+        this._gameCtx.clearRect(0, 0, this._gameCan.width, this._gameCan.height);
         
         
         //Draw the parts of the screen that are behind the models
@@ -121,10 +117,10 @@ export default class GraphicEn implements IGraphicEn {
     private _fpsMeter():void
     {
         let fontSize = 30
-        this.gameCtx.font = fontSize + "px Arial";
-        this.gameCtx.fillStyle = this._kernel.fpsDisplayColor;
+        this._gameCtx.font = fontSize + "px Arial";
+        this._gameCtx.fillStyle = this._kernel.fpsDisplayColor;
         const fpsDisplay = Math.round(this._kernel.fps * 100) / 100; // 2 decimal places
-        this.gameCtx.fillText("FPS: " + fpsDisplay, 10, (10 + fontSize));
+        this._gameCtx.fillText("FPS: " + fpsDisplay, 10, (10 + fontSize));
     }
     
     /**

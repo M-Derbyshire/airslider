@@ -152,7 +152,7 @@ export default class LevelTunnel
 	{
 		if(tunnelPart.image) //(null is a clear piece)
 		{
-			this.kernel.graphicEn.gameCtx.drawImage(
+			this.kernel.gameContext.drawImage(
 				tunnelPart.image, 
 				this.helpers.zCalc.x(this._camera.canvasPositionX, tunnelPart.z, true), 
 				this.helpers.zCalc.y(this._camera.canvasPositionY, tunnelPart.z, true), 
