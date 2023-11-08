@@ -14,9 +14,9 @@ export default class LowHealthFlash extends DamageFlash
         super();
     }
     
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void 
+    load(camera:ICamera):void 
     {
-        super.load(canvasCtx, camera);
+        super.load(camera);
         
         this.image = this.kernel.loadImage("/assets/HUDs/components/LowHealthFlash/images/damage.png");
     }

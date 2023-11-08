@@ -84,12 +84,11 @@ export default class HUDComponent implements IHUDComponent
     
     /**
      * Loads the component
-     * @param canvasCtx the 2D context from the HTML canvas element
      * @param camera the game's camera
      */
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
+    load(camera:ICamera):void
     {
-        this.ctx = canvasCtx;
+        this.ctx = this.kernel.gameContext;
         this.camera = camera;
     }
     

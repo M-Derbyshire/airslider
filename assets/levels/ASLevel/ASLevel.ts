@@ -108,27 +108,25 @@ export default class ASLevel extends Level
 	
     /**
      * Loads and sets up the level
-     * @param gameCanvas The canvas element that the game is displayed on
      * @param camera The game's camera
      * @param frameManager The frame manager for the level
      * @param eventManager Manages the event monitoring for a level
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
 	load(
-        gameCanvas:HTMLCanvasElement, 
         camera:ICamera, 
         frameManager:IFrameManager,
         eventManager:EventManager,
         pointerEventManager:PointerEventManager
     ):void
 	{
-		super.load(gameCanvas, camera, frameManager, eventManager, pointerEventManager);
+		super.load(camera, frameManager, eventManager, pointerEventManager);
         
 		this.leftEdge = 0;
         this.rightEdge = this.kernel.unitsWithinCamera;
         
-        this.ground = new LevelGround(this.gameContext, camera);
-        this._finishFlagsManager = new LevelGround(this.gameContext, camera, false); 
+        this.ground = new LevelGround(camera);
+        this._finishFlagsManager = new LevelGround(camera, false); 
         
         this._finishFlagsManager.load(
             "/assets/levels/ASLevel/images/finish_flag.png",

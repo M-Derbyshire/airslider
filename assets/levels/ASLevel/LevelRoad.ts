@@ -25,13 +25,12 @@ export default class LevelRoad
     
     /**
      * Loads the LevelRoad
-     * @param canvasCtx The 2D canvas context
      * @param camera The game's camera
      */
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
+    load(camera:ICamera):void
     {
         this._camera = camera;
-        this._canvasCtx = canvasCtx;
+        this._canvasCtx = this.kernel.gameContext;
     }
     
     /**

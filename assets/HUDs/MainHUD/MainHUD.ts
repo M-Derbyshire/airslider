@@ -16,9 +16,9 @@ export default class MainHUD extends ASHUD
         super();
     }
     
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera, pointerEventManager:IPointerEventManager):void
+    load(camera:ICamera, pointerEventManager:IPointerEventManager):void
     {
-        super.load(canvasCtx, camera, pointerEventManager);
+        super.load(camera, pointerEventManager);
         
         this._damageFlash = new DamageFlash();
         this._lowHealthFlash = new LowHealthFlash();
@@ -29,7 +29,7 @@ export default class MainHUD extends ASHUD
         this.components.push(new PauseButton(920, 25, 65, 100));
         
         // move this to parent load()?
-        this.loadComponents(canvasCtx, camera);
+        this.loadComponents();
     }
     
     get damageFlash() { return this._damageFlash; }

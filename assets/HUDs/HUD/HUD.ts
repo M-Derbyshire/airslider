@@ -43,11 +43,10 @@ export default class HUD implements IHUD
     
     /**
      * Loads the HUD
-     * @param canvasCtx the 2D context from the HTML canvas element
      * @param camera the game's camera
      * @param pointerEventManager the level's PointerEventManager
      */
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera, pointerEventManager:IPointerEventManager):void
+    load(camera:ICamera, pointerEventManager:IPointerEventManager):void
     {
         this.camera = camera;
 		this.pointerEventManager = pointerEventManager;
@@ -55,13 +54,11 @@ export default class HUD implements IHUD
     
     /**
      * Loads the HUD's components 
-     * @param canvasCtx the 2D context from the HTML canvas element
-     * @param camera the game's camera
      */
-    loadComponents(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
+    loadComponents():void
     {
         this.components.forEach(component => {
-            component.load(canvasCtx, camera);
+            component.load(this.camera);
 			
 			if(this.pointerEventManager.addPointerEventSubject)
 				this.pointerEventManager.addPointerEventSubject(component);

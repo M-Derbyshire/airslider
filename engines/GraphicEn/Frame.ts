@@ -46,20 +46,19 @@ export default class Frame implements IFrame {
     
     /**
      * Constructor
-     * @param canvasCtx The 2D canvas context
      * @param camera The game's camera
      * @param x the x position (in units) of the frame in the level
      * @param y the y position (in units) of the frame in the level
      * @param width the width (in units) of the frame
      * @param height the height (in units) of the frame
      */
-    constructor(canvasCtx:CanvasRenderingContext2D, camera:ICamera, x:number, y:number, width:number, height:number)
+    constructor(camera:ICamera, x:number, y:number, width:number, height:number)
     {
         this._kernel = Kernel.getInstance();
         this._unitHelpers = this._kernel.helpers.unit;
         
         this._camera = camera;
-        this._canvasCtx = canvasCtx;
+        this._canvasCtx = this._kernel.gameContext;
         
         this._loadedLightMasks = [];
         this._loadedBackgrounds = [];

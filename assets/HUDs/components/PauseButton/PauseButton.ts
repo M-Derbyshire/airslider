@@ -31,9 +31,9 @@ export default class PauseButton extends ASHUDComponent {
         this.height = height;
     }
     
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void 
+    load(camera:ICamera):void 
     {
-        super.load(canvasCtx, camera);
+        super.load(camera);
         this._imageSheet = this.kernel.loadImage("/assets/HUDs/components/PauseButton/images/button_sheet.png");
     }
     

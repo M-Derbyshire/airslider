@@ -22,14 +22,12 @@ export default interface ILevel {
     
     /**
      * Loads and sets up the level
-     * @param gameCanvas The canvas element that the game is displayed on
      * @param camera The game's camera
      * @param frameManager The frame manager for the level
      * @param eventManager Manages the event monitoring for a level
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
     load(
-        gameCanvas:HTMLCanvasElement, 
         camera:ICamera, 
         frameManager:IFrameManager, 
         eventManager:EventManager,

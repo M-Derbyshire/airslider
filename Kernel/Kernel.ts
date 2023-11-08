@@ -297,7 +297,6 @@ export default class Kernel implements IKernel {
         
         //do any extra setup
         level.load(
-            this.gameCanvas, 
             camera, 
             frameManager, 
             new EventManager(new EventCheckContainer(), new ModelExtraEventManager()),

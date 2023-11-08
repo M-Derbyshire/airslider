@@ -54,9 +54,9 @@ export default class HealthDisplay extends ASHUDComponent
         this._cornerRadiusModifier = 5;
     }
     
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void
+    load(camera:ICamera):void
     {
-        super.load(canvasCtx, camera);
+        super.load(camera);
         this._borderImage = this.kernel.loadImage("/assets/HUDs/components/HealthDisplay/images/lightning-border.png");
         this._spannerImage = this.kernel.loadImage("/assets/HUDs/components/HealthDisplay/images/spanner.png");
     }

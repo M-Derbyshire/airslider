@@ -76,14 +76,13 @@ export default class TheConstruct extends ASLevel
     }
     
     load(
-        canvas:HTMLCanvasElement, 
         camera:ICamera, 
         frameManager:IFrameManager,
         eventManager:EventManager,
         pointerEventManager:PointerEventManager
     ):void
     {
-        super.load(canvas, camera, frameManager, eventManager, pointerEventManager);
+        super.load(camera, frameManager, eventManager, pointerEventManager);
         
         this.tunnelSprite = this.kernel.loadImage("/assets/levels/TheConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
@@ -95,11 +94,11 @@ export default class TheConstruct extends ASLevel
         );
         
         this.tunnelManager.load(camera);
-        this.road.load(this.gameContext, camera);
+        this.road.load(camera);
         
         //Setup the frame for the level
         const unitsWithinCamera = this.kernel.unitsWithinCamera;
-        let frame = new Frame(this.gameContext, camera, 0, 0, unitsWithinCamera, unitsWithinCamera);
+        let frame = new Frame(camera, 0, 0, unitsWithinCamera, unitsWithinCamera);
         
         const frameBackgroundIndex = frame.loadBackground("/assets/levels/TheConstruct/images/testBackground.png");
         frame.setBackgroundImage(frameBackgroundIndex);

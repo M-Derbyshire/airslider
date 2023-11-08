@@ -24,17 +24,16 @@ export default class LevelGround
 	
 	/**
 	 * Constructor
-	 * @param canvasCtx The 2D canvas context
 	 * @param camera The game's camera
 	 * @param groundPopulatedInitially true if the ground should already be there. If false, player is moving towards the ground
 	 */
-    constructor(canvasCtx:CanvasRenderingContext2D, camera:ICamera, groundPopulatedInitially:boolean = true)
+    constructor(camera:ICamera, groundPopulatedInitially:boolean = true)
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
 
         this._camera = camera;
-        this._canvasCtx = canvasCtx;
+        this._canvasCtx = this.kernel.gameContext;
 		this._groundPopulatedInitially = groundPopulatedInitially;
         
         this.ground; //The shared data for every piece of ground drawn (see _getPopulatedGroundObject())

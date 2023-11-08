@@ -38,10 +38,9 @@ export default interface IHUDComponent {
     
     /**
      * Loads the component
-     * @param canvasCtx the 2D context from the HTML canvas element
      * @param camera the game's camera
      */
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera):void; 
+    load(camera:ICamera):void; 
     
     /**
      * Unloads any assets that need to be unloaded by the component

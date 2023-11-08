@@ -14,11 +14,15 @@ export default interface IHUD {
     
     /**
      * Loads the HUD
-     * @param canvasCtx the 2D context from the HTML canvas element
      * @param camera the game's camera
      * @param pointerEventManager the level's PointerEventManager
      */
-    load(canvasCtx:CanvasRenderingContext2D, camera:ICamera, pointerEventManager:IPointerEventManager):void;
+    load(camera:ICamera, pointerEventManager:IPointerEventManager):void;
+    
+    /**
+     * Loads the HUD's components 
+     */
+    loadComponents():void
     
     /**
      * Unloads any assets that need to be unloaded by the HUD (does the same for any HUD components)
