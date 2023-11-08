@@ -34,13 +34,13 @@ export default class Camera implements ICamera {
      * @param aspectRatioHorizontal The horizontal aspect ratio value (e.g. the "16" in "16:9")
      * @param aspectRatioVertical The vertical aspect ratio value (e.g. the "9" in "16:9")
      */
-    constructor(canvas:HTMLCanvasElement, canvasCtx:CanvasRenderingContext2D, aspectRatioHorizontal:number = 17, aspectRatioVertical:number = 9)
+    constructor(aspectRatioHorizontal:number = 17, aspectRatioVertical:number = 9)
     {
         this._kernel = Kernel.getInstance();
         this._helpers = this._kernel.helpers;
         
-        this._canvas = canvas;
-        this._canvasCtx = canvasCtx;
+        this._canvas = this._kernel.gameCanvas;
+        this._canvasCtx = this._kernel.gameContext;
         this._aspectRatioHorizontal = aspectRatioHorizontal;
         this._aspectRatioVertical = aspectRatioVertical;
         

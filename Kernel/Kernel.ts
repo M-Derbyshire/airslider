@@ -290,7 +290,7 @@ export default class Kernel implements IKernel {
     {
 		const aspectRatioHorizontal = (!isNaN(this.settings.aspectRatioHorizontal)) ? this.settings.aspectRatioHorizontal : 17;
 		const aspectRatioVertical = (!isNaN(this.settings.aspectRatioVertical)) ? this.settings.aspectRatioVertical : 9;
-		const camera = new Camera(this.gameCanvas, this.gameContext, aspectRatioHorizontal, aspectRatioVertical);
+		const camera = new Camera(aspectRatioHorizontal, aspectRatioVertical);
 		const frameManager = new FrameManager(camera);
 		
         const preparedEngines = this._initialiseAllEngines(camera, frameManager); // new engines, aimed at this level
