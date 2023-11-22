@@ -8,7 +8,7 @@ import ASHUDComponent from "../ASHUDComponent/ASHUDComponent"
 export default class PauseButton extends ASHUDComponent {
     
     /**
-     * The image that contains the different buttons
+     * The spritesheet image that contains the different buttons
      */
     private _imageSheet:HTMLImageElement;
     
@@ -45,21 +45,21 @@ export default class PauseButton extends ASHUDComponent {
          * The source image should contain multiple button images, stacked vertically.
          * We use these values to select the right section of the source image.
          */
-        const sourceHeightPx = 190;
-        const sourceWidthPx = 190;
+        const buttonSourceDiameter = 190;
         const pauseButtonSourceYPx = 0;
-        const playButtonSourceYPx = sourceHeightPx;
+        const playButtonSourceYPx = buttonSourceDiameter;
         
         const sourceYPx = (this.kernel.status === KernelStatus.Active) ? pauseButtonSourceYPx : playButtonSourceYPx;
         
+        // The positions/sizes to actually draw the sprite with
         const { drawX, drawY, drawWidth, drawHeight } = this._getDrawPositionsAndDimensions();
         
         this.ctx.drawImage(
             this._imageSheet,
             0,
             sourceYPx,
-            sourceWidthPx,
-            sourceHeightPx,
+            buttonSourceDiameter,
+            buttonSourceDiameter,
             drawX,
             drawY,
             drawWidth,
@@ -67,6 +67,10 @@ export default class PauseButton extends ASHUDComponent {
         );
     }
     
+    /**
+     * Determines the actual pixel values for x/y/width/height, to be used when drawing the image
+     * @returns An object that contains the x/y/width/height to draw the sprite on canvas
+     */
     private _getDrawPositionsAndDimensions():{ drawX:number, drawY:number, drawWidth:number, drawHeight:number }
     {
         const cameraX = this.camera.canvasPositionX;
