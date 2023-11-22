@@ -5,9 +5,6 @@ import HUDComponent from '../HUDComponent/HUDComponent';
  */
 export default class ASHUDComponent extends HUDComponent {
 	
-	/**
-	 * Constructor
-	 */
 	constructor()
 	{
 		super();
