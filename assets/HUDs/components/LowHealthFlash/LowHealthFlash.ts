@@ -6,9 +6,6 @@ import DamageFlash from "../DamageFlash/DamageFlash";
  */
 export default class LowHealthFlash extends DamageFlash 
 {
-    /**
-     * Constructor
-     */
     constructor() 
     {
         super();
@@ -28,9 +25,6 @@ export default class LowHealthFlash extends DamageFlash
         this.active = false;
     }
     
-    // The idea here is to utilise the DamageFlash functionality, but keep 
-    // it going until stop is called.
-    
     /**
      * Starts the flashing
      */
@@ -45,6 +39,11 @@ export default class LowHealthFlash extends DamageFlash
         this.active = false;
     }
     
+    /**
+     * Draw the flash, and keep it looping.
+     * The idea here is to utilise the DamageFlash functionality, but to keep 
+     * it going continuously, until stop() is called.
+     */
     draw() {
         super.draw();
         

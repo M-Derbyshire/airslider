@@ -6,13 +6,10 @@ import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
 export default class DamageFlash extends ASHUDComponent
 {
     protected opacity:number;
+    protected shouldFadeOut:boolean; // Should we be fading out the image, rather than fading in?
     protected flashSpeed:number;
-    protected flashSpeedDivider:number;
     protected image:HTMLImageElement;
     
-    /**
-     * Constructor
-     */
     constructor()
     {
         super();
@@ -23,14 +20,13 @@ export default class DamageFlash extends ASHUDComponent
         super.prepare();
         
         this.opacity = 0;
-        this.flashSpeed = 0.1; //this will be changed when drawing it to match fps
-        this.flashSpeedDivider = 4; //change this to change flash speed
+        this.flashSpeed = 4; //change this to change flash speed
+        this.shouldFadeOut = false;
     }
     
     draw():void
     {
-        this.flashSpeed = this._getFPSConsistentSpeed(this.flashSpeed);
-        
+        const flashSpeed = this._getFPSConsistentSpeed();
 		
         if(this.opacity >= 1)
         {
@@ -40,7 +36,7 @@ export default class DamageFlash extends ASHUDComponent
 		
         if(this.opacity > 0)
         {
-            this.opacity += this.flashSpeed;
+            this.opacity += (this.shouldFadeOut) ? -flashSpeed : flashSpeed;
             
             if(this.opacity <= 0)
             {
@@ -60,35 +56,6 @@ export default class DamageFlash extends ASHUDComponent
             this.ctx.globalAlpha = 1;
         }
     }
-	
-    /**
-     * Generates a speed for the flash that is consistent, regardless of a changing FPS
-     * @param lastFrameSpeed the speed used on the last frame
-     * @returns a consistent speed for the flash
-     */
-	private _getFPSConsistentSpeed(lastFrameSpeed:number):number
-	{
-		const newSpeed = (this.flashSpeedDivider / this.kernel.fps);
-		return (lastFrameSpeed >= 0) ? newSpeed : -newSpeed;
-	}
-	
-    /**
-     * Starts the fading out of the image
-     */
-	private _switchToFadeOut():void
-	{
-		this.opacity = 1;
-        this.flashSpeed = -this.flashSpeed;
-	}
-	
-    /**
-     * Stops the image flash, and flips its speed
-     */
-	private _stopFlash():void
-	{
-		this.opacity = 0;
-        this.flashSpeed = -this.flashSpeed;
-	}
     
     /**
      * Starts the image flash going
@@ -99,7 +66,34 @@ export default class DamageFlash extends ASHUDComponent
         if(this.opacity === 0)
         {
             this.image = image;
-            this.opacity += this.flashSpeed;
+            this.opacity = 0.01; // Just needs to be anything over 0, to tell the component to start
         }
     }
+	
+    /**
+     * Generates a speed for the flash that is consistent, regardless of a changing FPS
+     * @returns a consistent speed for the flash
+     */
+	private _getFPSConsistentSpeed():number
+	{
+		return this.flashSpeed / this.kernel.fps;
+	}
+	
+    /**
+     * Starts the fading out of the image
+     */
+	private _switchToFadeOut():void
+	{
+		this.opacity = 1;
+        this.shouldFadeOut = true;
+	}
+	
+    /**
+     * Stops the image flash
+     */
+	private _stopFlash():void
+	{
+		this.opacity = 0;
+        this.shouldFadeOut = false;
+	}
 }
