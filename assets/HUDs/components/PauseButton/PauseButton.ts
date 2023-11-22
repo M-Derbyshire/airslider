@@ -52,7 +52,7 @@ export default class PauseButton extends ASHUDComponent {
         const sourceYPx = (this.kernel.status === KernelStatus.Active) ? pauseButtonSourceYPx : playButtonSourceYPx;
         
         // The positions/sizes to actually draw the sprite with
-        const { drawX, drawY, drawWidth, drawHeight } = this._getDrawPositionsAndDimensions();
+        const { drawX, drawY, drawWidth, drawHeight } = this.getScreenDrawCoordinates(this.x, this.y, this.width, this.height);
         
         this.ctx.drawImage(
             this._imageSheet,
@@ -68,23 +68,6 @@ export default class PauseButton extends ASHUDComponent {
     }
     
     /**
-     * Determines the actual pixel values for x/y/width/height, to be used when drawing the image
-     * @returns An object that contains the x/y/width/height to draw the sprite on canvas
-     */
-    private _getDrawPositionsAndDimensions():{ drawX:number, drawY:number, drawWidth:number, drawHeight:number }
-    {
-        const cameraX = this.camera.canvasPositionX;
-        const cameraY = this.camera.canvasPositionY;
-        
-        return {
-            drawX: cameraX + this.helpers.unit.xUnit(this.x),
-            drawY: cameraY + this.helpers.unit.yUnit(this.y),
-            drawWidth: this.helpers.unit.xUnit(this.width),
-            drawHeight: this.helpers.unit.yUnit(this.height)
-        };
-    }
-    
-    /**
      * Is the mouse pointer overlapping this component?
      * @param pointX the x position (within the canvas's space) of the mouse pointer 
      * @param pointY the y position (within the canvas's space) of the mouse pointer
@@ -92,7 +75,7 @@ export default class PauseButton extends ASHUDComponent {
      */
     isPointerOverlapping(pointX:number, pointY:number):boolean
     {
-        const { drawX, drawY, drawWidth, drawHeight } = this._getDrawPositionsAndDimensions();
+        const { drawX, drawY, drawWidth, drawHeight } = this.getScreenDrawCoordinates(this.x, this.y, this.width, this.height);
         
         return (
             pointX >= drawX &&

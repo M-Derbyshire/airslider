@@ -6,7 +6,7 @@ import ICamera from '../../../../engines/GraphicEn/ICamera';
 import ITextContent from '../../../../engines/GraphicEn/ITextContent';
 
 /**
- * A component of the Heads Up Display
+ * A component to be displayed by the Heads Up Display
  */
 export default class HUDComponent implements IHUDComponent
 {
@@ -14,48 +14,46 @@ export default class HUDComponent implements IHUDComponent
     protected helpers: IHelpers;
     protected ctx: CanvasRenderingContext2D;
     protected camera: ICamera;
-    protected assetsToUnload: string[];
-    
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    active: boolean;
-    text: ITextContent;
+    protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
     
     /**
-     * Constructor
+     * The x coordinate of this component (in units)
      */
+    x: number;
+    
+    /**
+     * The y coordinate of this component (in units)
+     */
+    y: number;
+    
+    /**
+     * The width of this component (in units)
+     */
+    width: number;
+    
+    /**
+     * The height of this component (in units)
+     */
+    height: number;
+    
+    /**
+     * Is this component active?
+     */
+    active: boolean;
+    
+    /**
+     * The text content to be displayed with the component
+     */
+    text: ITextContent;
+    
+    
     constructor()
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
-         
-        this.ctx; //The canvas context
-        this.camera;
+        this.ctx = this.kernel.gameContext;
         
-        this.assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
-		
-        
-        /**
-         * The x coordinate of this component
-         */
-		this.x;
-        
-        /**
-         * The y coordinate of this component
-         */
-        this.y;
-        
-        /**
-         * The width of this component
-         */
-        this.width;
-        
-        /**
-         * The height of this component
-         */
-        this.height;
+        this.assetsToUnload = [];
     }
     
     /**
@@ -63,22 +61,16 @@ export default class HUDComponent implements IHUDComponent
      */
     prepare():void 
     {
-        /**
-         * Details for displaying an entity's text content
-         */
         this.text = {
             content: "",
-            x: 0, // relative to level
-            y: 0, // relative to level
+            x: 0, // In units
+            y: 0, // In units
             size: 30, // in pixels
             font: "Arial",
             color: "red",
             style: "bolder", // See the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
         };
         
-        /**
-         * Is this component active?
-         */
         this.active = true;
     }
     
@@ -88,7 +80,6 @@ export default class HUDComponent implements IHUDComponent
      */
     load(camera:ICamera):void
     {
-        this.ctx = this.kernel.gameContext;
         this.camera = camera;
     }
     
@@ -105,17 +96,13 @@ export default class HUDComponent implements IHUDComponent
      */
     drawText():void
     {
-        const drawX = this.helpers.unit.xUnit(this.text.x);
-        const drawY = this.helpers.unit.yUnit(this.text.y);
+        const { drawX, drawY } = this.getScreenDrawCoordinates(this.text.x, this.text.y, 0, 0);
         const drawSize = this.helpers.unit.yUnit(this.text.size);
-        
-        const cameraX = this.camera.canvasPositionX;
-        const cameraY = this.camera.canvasPositionY;
         
         this.ctx.font = `${this.text.style} ${drawSize}px ${this.text.font}`;
         this.ctx.fillStyle = this.text.color;
         
-        this.ctx.fillText(this.text.content, drawX + cameraX, drawY + cameraY);
+        this.ctx.fillText(this.text.content, drawX, drawY);
     }
     
     /**
@@ -135,8 +122,32 @@ export default class HUDComponent implements IHUDComponent
 		const yUnit = this.helpers.unit.yUnit.bind(this.helpers.unit);
 		
 		return (
-			pointX > xUnit(this.x) && pointX < (xUnit(this.x) + xUnit(this.width)) && 
-			pointY > yUnit(this.y) && pointY < (yUnit(this.y) + yUnit(this.height))
+			pointX > xUnit(this.x) && 
+            pointX < (xUnit(this.x) + xUnit(this.width)) && 
+			pointY > yUnit(this.y) && 
+            pointY < (yUnit(this.y) + yUnit(this.height))
 		);
 	}
+    
+    /**
+     * Calculates the draw positons/dimensions in pixels
+     * @param x The x position in units
+     * @param y The y position in units
+     * @param width The width in units
+     * @param height The height in units
+     * @returns The pixel values for the x/y/width/height
+     */
+    getScreenDrawCoordinates(x:number, y:number, width:number, height:number)
+        :{ drawX:number, drawY:number, drawWidth:number, drawHeight:number }
+    {
+        const cameraX = this.camera.canvasPositionX;
+        const cameraY = this.camera.canvasPositionY;
+        
+        return {
+            drawX: cameraX + this.helpers.unit.xUnit(x),
+            drawY: cameraY + this.helpers.unit.yUnit(y),
+            drawWidth: this.helpers.unit.xUnit(width),
+            drawHeight: this.helpers.unit.yUnit(height)
+        };
+    }
 }

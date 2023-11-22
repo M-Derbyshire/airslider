@@ -2,7 +2,7 @@ import ICamera from "../../../../engines/GraphicEn/ICamera";
 import ITextContent from "../../../../engines/GraphicEn/ITextContent";
 
 /**
- * A component of the Heads Up Display
+ * A component to be displayed by the Heads Up Display
  */
 export default interface IHUDComponent {
     
@@ -69,4 +69,15 @@ export default interface IHUDComponent {
      * @returns true if it is overlapping, false if not
      */
     isPointerOverlapping(pointX:number, pointY:number):boolean;
+    
+    /**
+     * Calculates the draw positons/dimensions in pixels
+     * @param x The x position in units
+     * @param y The y position in units
+     * @param width The width in units
+     * @param height The height in units
+     * @returns The pixel values for the x/y/width/height
+     */
+    getScreenDrawCoordinates(x:number, y:number, width:number, height:number)
+        :{ drawX:number, drawY:number, drawWidth:number, drawHeight:number };
 };
