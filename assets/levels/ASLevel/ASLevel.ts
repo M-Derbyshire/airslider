@@ -17,7 +17,6 @@ import Ghost from '../../models/Monsters/Ghost/Ghost';
 import ElectricHornet from '../../models/Monsters/ElectricHornet/ElectricHornet';
 import Monster from '../../models/Monster/Monster';
 import ICamera from '../../../engines/GraphicEn/ICamera';
-import IPointerEventManager from '../Level/IPointerEventManager';
 import IModel from '../../models/Model/IModel';
 import ASModel from '../../models/ASModel/ASModel';
 import IFrameManager from '../../../engines/GraphicEn/IFrameManager';
