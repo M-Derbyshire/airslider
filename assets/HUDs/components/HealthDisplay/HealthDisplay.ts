@@ -28,7 +28,7 @@ export default class HealthDisplay extends ASHUDComponent
     private _cornerRadiusModifier:number;
     
     /**
-     * The model index of the player
+     * The index of the player model in the models array
      */
     private _targetIndex:number;
     
@@ -38,7 +38,7 @@ export default class HealthDisplay extends ASHUDComponent
      * @param y the y position (in units) of the health display
      * @param width the width (in units) of the health display
      * @param height the height (in units) of the health display
-     * @param targetModelIndex the index of the player model
+     * @param targetModelIndex The index of the player model in the models array
      */
     constructor(x:number, y:number, width:number, height:number, targetModelIndex:number)
     {
@@ -57,8 +57,10 @@ export default class HealthDisplay extends ASHUDComponent
     load(camera:ICamera):void
     {
         super.load(camera);
-        this._borderImage = this.kernel.loadImage("/assets/HUDs/components/HealthDisplay/images/lightning-border.png");
-        this._spannerImage = this.kernel.loadImage("/assets/HUDs/components/HealthDisplay/images/spanner.png");
+        
+        const imagesDirPath = "/assets/HUDs/components/HealthDisplay/images";
+        this._borderImage = this.kernel.loadImage(`${imagesDirPath}/lightning-border.png`);
+        this._spannerImage = this.kernel.loadImage(`${imagesDirPath}/spanner.png`);
     }
     
     prepare():void {
@@ -109,7 +111,7 @@ export default class HealthDisplay extends ASHUDComponent
      * Draws the background behind the spanner image
      * @param cameraX the current x position of the camera on the canvas
      * @param cameraY the current y position of the camera on the canvas
-     * @param radiusModifierPixels affects the radius of the background's corners
+     * @param radiusModifierPixels The pixel value for the radius of the background's corners
      */
     private _drawSpannerBackground(cameraX:number, cameraY:number, radiusModifierPixels:number)
     {
@@ -130,16 +132,17 @@ export default class HealthDisplay extends ASHUDComponent
      * Draws the background behind the health text
      * @param cameraX the current x position of the camera on the canvas
      * @param cameraY the current y position of the camera on the canvas
-     * @param radiusModifierPixels affects the radius of the background's corners
+     * @param radiusModifierPixels The pixel value for the radius of the background's corners
      */
     private _drawTextBackground(cameraX:number, cameraY:number, radiusModifierPixels:number)
     {
         const width = this.width * 0.66;
         const height = this.height * 0.5;
         
-        const xPos = this.x + this.width * 0.33;
+        const xPos = this.x + (this.width * 0.33);
         const yPos = this.y + (this.height * 0.25);
         
+        // We only want a radius on the right side, as the left is connected to the spanner background
         const radiusModifiers = [
             0,
             radiusModifierPixels,
