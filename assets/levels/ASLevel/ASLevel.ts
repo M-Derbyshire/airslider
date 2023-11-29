@@ -159,14 +159,6 @@ export default class ASLevel extends Level
 		
 		this._setupPatternManager();
     }
-    
-    /**
-     * Run any setup required by the level's HUD
-     */
-	setupHUD():void
-	{
-		this.HUD.models.push(this.kernel.loadedModels[0]);
-	}
 	
 	/**
      * Sets up the model patter manager

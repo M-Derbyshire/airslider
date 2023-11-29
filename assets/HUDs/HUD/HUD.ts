@@ -15,14 +15,9 @@ export default class HUD implements IHUD
     protected kernel: IKernel;
     protected helpers: IHelpers;
     protected camera: ICamera;
-    protected components: IHUDComponent[];
     protected pointerEventManager: IPointerEventManager;
-    protected assetsToUnload: string[];
-    
-    /**
-     * Models that can be referenced by the HUD components
-     */
-    models: IModel[];
+    protected components: IHUDComponent[]; //HUD components used by this HUD
+    protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
     
     /**
      * Constructor
@@ -32,18 +27,13 @@ export default class HUD implements IHUD
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
         
-        this.camera; //Set in load()
-        
-        this.components = []; //HUD components used by this HUD
-        
-        this.assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
-        
-        this.models = []; 
+        this.components = [];
+        this.assetsToUnload = [];
     }
     
     /**
      * Loads the HUD
-     * @param camera the game's camera
+     * @param camera the level's camera
      * @param pointerEventManager the level's PointerEventManager
      */
     load(camera:ICamera, pointerEventManager:IPointerEventManager):void
@@ -59,14 +49,12 @@ export default class HUD implements IHUD
     {
         this.components.forEach(component => {
             component.load(this.camera);
-			
-			if(this.pointerEventManager.addPointerEventSubject)
-				this.pointerEventManager.addPointerEventSubject(component);
+            this.pointerEventManager.addPointerEventSubject(component);
         });
     }
     
     /**
-     * Unloads any assets that need to be unloaded by the HUD (does the same for any HUD components)
+     * Unloads any assets that need to be unloaded by the HUD (triggers the same on any HUD components)
      */
     unload():void
     {
@@ -75,7 +63,7 @@ export default class HUD implements IHUD
     }
     
     /**
-     * Prepares the HUD before the level starts (does the same for any HUD components)
+     * Prepares the HUD before the level starts (triggers the same on any HUD components)
      */
     prepare():void
     {
@@ -83,7 +71,7 @@ export default class HUD implements IHUD
     }
     
     /**
-     * Draws the HUD (does the same for any HUD components)
+     * Draws the HUD (triggers the same on any HUD components)
      */
     draw():void
     {
@@ -91,17 +79,8 @@ export default class HUD implements IHUD
             if(component.active)
             {
                 component.draw();
-                
-                if(component.text.content)
-                    component.drawText();
+                if(component.text.content) component.drawText();
             } 
         });
-        
-        this.extraDraw();
     }
-    
-    /**
-     * Does any extra drawing required for the HUD
-     */
-    protected extraDraw():void {}
 }
