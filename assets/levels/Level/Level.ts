@@ -2,8 +2,6 @@ import Kernel from '../../../Kernel/Kernel';
 import IKernel from '../../../Kernel/IKernel';
 import EventManager from './EventManager';
 import PointerEventManager from './PointerEventManager';
-import EventCheckContainer from './EventCheckContainer';
-import ModelExtraEventManager from './ModelExtraEventManager';
 import IEventManager from './IEventManager';
 import IHUD from '../../HUDs/HUD/IHUD';
 import IHelpers from '../../../Kernel/helpers/IHelpers';
@@ -106,8 +104,6 @@ export default class Level implements ILevel
 			this.pointerEventManager.addPointerEventSubject(this.kernel.loadedModels[i]);
 		}
         
-        this.setupHUD();
-        
         this.registerLevelEvents();
     }
     
@@ -144,11 +140,6 @@ export default class Level implements ILevel
      * Draws anything that needs to be in the front (after the models) of the level
      */
     drawFront():void {}
-    
-    /**
-     * Run any setup required by the level's HUD
-     */
-	protected setupHUD():void {}
 	
     /**
      * Set the settings of the zCalc
@@ -169,5 +160,6 @@ export default class Level implements ILevel
     private _loadHUD(camera:ICamera, pointerEventManager:IPointerEventManager):void
     {
         this.HUD.load(camera, pointerEventManager);
+        this.HUD.loadComponents();
     }
 }

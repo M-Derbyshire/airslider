@@ -11,11 +11,6 @@ export default class MainHUD extends ASHUD
     private _damageFlash:DamageFlash;
     private _lowHealthFlash:LowHealthFlash;
     
-    constructor()
-    {
-        super();
-    }
-    
     load(camera:ICamera, pointerEventManager:IPointerEventManager):void
     {
         super.load(camera, pointerEventManager);
@@ -23,33 +18,21 @@ export default class MainHUD extends ASHUD
         this._damageFlash = new DamageFlash();
         this._lowHealthFlash = new LowHealthFlash();
         
+        const playerModelIndex = 0; //0 will always be the player's index
+        
         this.components.push(this._damageFlash);
         this.components.push(this._lowHealthFlash);
-        this.components.push(new HealthDisplay(25, 500, 150, 200, 0)); //0 will always be the player's index
+        this.components.push(new HealthDisplay(25, 500, 150, 200, playerModelIndex));
         this.components.push(new PauseButton(920, 25, 65, 100));
-        
-        // move this to parent load()?
-        this.loadComponents();
     }
-    
-    get damageFlash() { return this._damageFlash; }
     
     /**
      * Starts the damage flash
-     * @param color the flash image to use
+     * @param image the flash image to use
      */
     startDamageFlash(image:HTMLImageElement):void
     {
         this._damageFlash.start(image);
-    }
-    
-    /**
-     * Is the low health flash currently flashing?
-     * @returns true if the flash is active, false if not
-     */
-    isLowHealthFlashActive():boolean
-    {
-        return this._lowHealthFlash.active;
     }
     
     /**
@@ -66,5 +49,14 @@ export default class MainHUD extends ASHUD
     stopLowHealthFlash():void
     {
         this._lowHealthFlash.stopFlashRepeat();
+    }
+    
+    /**
+     * Is the low health flash currently flashing?
+     * @returns true if the flash is active, false if not
+     */
+    isLowHealthFlashActive():boolean
+    {
+        return this._lowHealthFlash.active;
     }
 }
