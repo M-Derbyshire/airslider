@@ -146,10 +146,14 @@ export default class TheConstruct extends ASLevel
             // this.shockerManager.sendShockers();
         // }
         
-        // this.tunnelManager.continueTunnel([
-        //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
-        //     this.tunnelManager.newTunnelPart(null, this.tunnelSpriteLength)
-        // ]);
+        // if(this.helpers.time.getTotalSeconds() < 30)
+        // {
+        //     this.tunnelManager.continueTunnel([
+        //         this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),
+        //         this.tunnelManager.newTunnelPart(null, this.tunnelSpriteLength)
+        //     ]);
+        // }
+        
         
 		
 		// Runs the monster sequence

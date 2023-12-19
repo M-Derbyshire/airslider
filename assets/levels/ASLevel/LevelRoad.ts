@@ -14,9 +14,6 @@ export default class LevelRoad
     private _camera:ICamera;
     private _canvasCtx:CanvasRenderingContext2D;
     
-    /**
-     * Constructor
-     */
     constructor()
     {
         this.kernel = Kernel.getInstance();
