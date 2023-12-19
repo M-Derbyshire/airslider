@@ -25,7 +25,7 @@ export default class LevelRoad
     
     /**
      * Loads the LevelRoad
-     * @param camera The game's camera
+     * @param camera The level's camera
      */
     load(camera:ICamera):void
     {
@@ -41,10 +41,17 @@ export default class LevelRoad
     {
         this._canvasCtx.lineWidth = 1;
         this._canvasCtx.fillStyle = color;
+        
+        const leftEdge = this._camera.canvasPositionX;
+        const rightEdge = this._camera.canvasPositionX + this._camera.canvasPositionWidth;
+        const bottomEdge = this._camera.canvasPositionY + this._camera.canvasPositionHeight;
+        const vanishPointX = this.helpers.zCalc.vPointX;
+        const vanishPointY = this.helpers.zCalc.vPointY;
+        
         this._canvasCtx.beginPath();
-        this._canvasCtx.moveTo(this._camera.canvasPositionX, this._camera.canvasPositionY + this._camera.canvasPositionHeight);
-        this._canvasCtx.lineTo(this.helpers.zCalc.vPointX, this.helpers.zCalc.vPointY);
-        this._canvasCtx.lineTo(this._camera.canvasPositionX + this._camera.canvasPositionWidth, this._camera.canvasPositionY + this._camera.canvasPositionHeight);
+        this._canvasCtx.moveTo(leftEdge, bottomEdge);
+        this._canvasCtx.lineTo(vanishPointX, vanishPointY);
+        this._canvasCtx.lineTo(rightEdge, bottomEdge);
         this._canvasCtx.fill();
     }
 }
