@@ -69,8 +69,7 @@ export default class TheConstruct extends ASLevel
 			models.push(new Shocker("yellow", "static"));
         }
 		
-		const modelWidth = 100; //Set explicitly here, as models not yet loaded
-		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
+		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to);
         
         return [...models, ...stdModels];
     }
@@ -176,19 +175,19 @@ export default class TheConstruct extends ASLevel
             () => {
                 const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
                 
-                this.patternManager.addRepeatingPattern(100, 10, [
-                    { fromPosition: levelCenter-150, toPosition: levelCenter-100 },
-                    { fromPosition: levelCenter-100, toPosition: levelCenter-100 },
-                    { fromPosition: levelCenter-50, toPosition: levelCenter-50 },
-                    { fromPosition: levelCenter-100, toPosition: levelCenter-100 },
-                    { fromPosition: levelCenter-150, toPosition: levelCenter-100 },
+                this.patternManager.addRepeatingPattern(200, 10, [
+                    { fromPosition: levelCenter-500, toPosition: levelCenter-150 },
+                    { fromPosition: levelCenter-500, toPosition: levelCenter-100 },
+                    { fromPosition: levelCenter-500, toPosition: levelCenter-50 },
+                    { fromPosition: levelCenter-500, toPosition: levelCenter-100 },
+                    { fromPosition: levelCenter-500, toPosition: levelCenter-150 },
                 ]);
-                this.patternManager.addRepeatingPattern(100, 10, [
+                this.patternManager.addRepeatingPattern(200, 10, [
                     { fromPosition: levelCenter+200, toPosition: levelCenter+200 }
                 ]);
-                this.patternManager.addRepeatingPattern(500, 10, [
-                    { fromPosition: levelCenter-200, toPosition: levelCenter+200 }
-                ]);
+                // this.patternManager.addRepeatingPattern(500, 10, [
+                //     { fromPosition: levelCenter-200, toPosition: levelCenter-200 }
+                // ]);
             },
             () => this.patternManager.sendPatterns(),
             () => this.patternManager.clearPatterns()
