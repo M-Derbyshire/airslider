@@ -22,6 +22,7 @@ import ASModel from '../../models/ASModel/ASModel';
 import IFrameManager from '../../../engines/GraphicEn/IFrameManager';
 import EventManager from '../Level/EventManager';
 import PointerEventManager from '../Level/PointerEventManager';
+import TarianExplosion from '../../models/TarianExplosion/TarianExplosion';
 
 /**
  * The game's base Level class
@@ -94,11 +95,15 @@ export default class ASLevel extends Level
      */
     getModels():IModel[]
     {
+        this.player = new Tarian();
+        
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
         this._startSignDisplay = new SignDisplay(this._startSign);
         this._finishSign = new Sign("FINISH", this.helpers.zCalc.vPointDepth, this._signStartingZPosition, false);
         
         return [
+            this.player, // Needs to be index 0
+            new TarianExplosion(this.player),
             this._startSign,
             this._startSignDisplay,
             this._finishSign
@@ -188,7 +193,6 @@ export default class ASLevel extends Level
 	private _setupShockerManager(leftEdge:number, rightEdge:number):void
 	{
 		this.shockerManager.setAreaEdges(leftEdge, rightEdge);
-		this.shockerManager.setPlayerModelIndex(0);
 	}
 	
 	

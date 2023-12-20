@@ -9,7 +9,6 @@ import ElectricSeahorse from '../../models/Monsters/ElectricSeahorse/ElectricSea
 import Lightning from '../../models/Monsters/attacks/Lightning/Lightning';
 import Frame from '../../../engines/GraphicEn/Frame';
 import ASLevel from '../ASLevel/ASLevel';
-import TarianExplosion from '../../models/TarianExplosion/TarianExplosion';
 import ElectricHornet from '../../models/Monsters/ElectricHornet/ElectricHornet';
 import IModel from '../../models/Model/IModel';
 import ASModel from '../../models/ASModel/ASModel';
@@ -34,14 +33,7 @@ export default class TheConstruct extends ASLevel
     
     getModels():IModel[]
     {
-        const stdModels = super.getModels();
-        
-        let models:ASModel[] = [];
-        
-		this.player = new Tarian();
-        
-        models.push(this.player); //add main character (has to be 0)
-        models.push(new TarianExplosion(this.player));
+        let models = super.getModels() as ASModel[];
         
         // const lowerPidgeon = new NeonPidgeon(this.player);
         // models.push(lowerPidgeon);
@@ -61,8 +53,11 @@ export default class TheConstruct extends ASLevel
             // models[models.length - 2] as Monster
         ];
 
+        this.shockerManager.setPlayerModel(this.player);
         this.shockerManager.setShockerModelRange(models.length, models.length + 100);
-        this.shockerManager.setCurrentShockerCount(100);
+        // this.shockerManager.setCurrentShockerCount(100);
+        this.shockerManager.setCurrentShockerCount(10);
+        
         let shockerRange = this.shockerManager.shockerModelRange;
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
         {
@@ -71,7 +66,7 @@ export default class TheConstruct extends ASLevel
 		
 		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to);
         
-        return [...models, ...stdModels];
+        return models;
     }
     
     load(
@@ -141,11 +136,6 @@ export default class TheConstruct extends ASLevel
     {
         super.act();
         
-        // if(this.helpers.time.getTotalSeconds() <= 37)
-        // {
-            // this.shockerManager.sendShockers();
-        // }
-        
         // if(this.helpers.time.getTotalSeconds() < 30)
         // {
         //     this.tunnelManager.continueTunnel([
@@ -154,7 +144,15 @@ export default class TheConstruct extends ASLevel
         //     ]);
         // }
         
-        
+        // Send some shockers
+        this.levelSection(
+            "shockers",
+            15000,
+            25000,
+            null,
+            () => this.shockerManager.sendShockers(),
+            null
+        );
 		
 		// Runs the monster sequence
         // this.levelSection(
@@ -168,30 +166,30 @@ export default class TheConstruct extends ASLevel
 		
 		
 		//Set a pattern of shockers going
-        this.levelSection(
-            "shockerPattern",
-            15000,
-            25000,
-            () => {
-                const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
+        // this.levelSection(
+        //     "shockerPattern",
+        //     15000,
+        //     25000,
+        //     () => {
+        //         const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
                 
-                this.patternManager.addRepeatingPattern(200, 10, [
-                    { fromPosition: levelCenter-500, toPosition: levelCenter-150 },
-                    { fromPosition: levelCenter-500, toPosition: levelCenter-100 },
-                    { fromPosition: levelCenter-500, toPosition: levelCenter-50 },
-                    { fromPosition: levelCenter-500, toPosition: levelCenter-100 },
-                    { fromPosition: levelCenter-500, toPosition: levelCenter-150 },
-                ]);
-                this.patternManager.addRepeatingPattern(200, 10, [
-                    { fromPosition: levelCenter+200, toPosition: levelCenter+200 }
-                ]);
-                // this.patternManager.addRepeatingPattern(500, 10, [
-                //     { fromPosition: levelCenter-200, toPosition: levelCenter-200 }
-                // ]);
-            },
-            () => this.patternManager.sendPatterns(),
-            () => this.patternManager.clearPatterns()
-        );
+        //         this.patternManager.addRepeatingPattern(200, 10, [
+        //             { fromPosition: levelCenter-500, toPosition: levelCenter-150 },
+        //             { fromPosition: levelCenter-500, toPosition: levelCenter-100 },
+        //             { fromPosition: levelCenter-500, toPosition: levelCenter-50 },
+        //             { fromPosition: levelCenter-500, toPosition: levelCenter-100 },
+        //             { fromPosition: levelCenter-500, toPosition: levelCenter-150 },
+        //         ]);
+        //         this.patternManager.addRepeatingPattern(200, 10, [
+        //             { fromPosition: levelCenter+200, toPosition: levelCenter+200 }
+        //         ]);
+        //         // this.patternManager.addRepeatingPattern(500, 10, [
+        //         //     { fromPosition: levelCenter-200, toPosition: levelCenter-200 }
+        //         // ]);
+        //     },
+        //     () => this.patternManager.sendPatterns(),
+        //     () => this.patternManager.clearPatterns()
+        // );
         
         // Run the closing sequence
         this.levelEndSection(95000);

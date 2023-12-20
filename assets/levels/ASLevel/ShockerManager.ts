@@ -11,23 +11,43 @@ export default class ShockerManager
 	protected kernel:IKernel;
 	protected helpers:IHelpers;
 	
-	protected playerModelIndex:number;
+	// The model of the player character
+	protected playerModel:IModel;
 	
 	// The edges of the area (in units) that the shockers can move within
 	private _leftEdge:number;
 	private _rightEdge:number;
 	
-	// The span of indexes in the loadedModels array that contain
-	// the level's shockers.
+	// The span of indexes in the loadedModels array that contain the level's shockers.
 	private _fromIndex:number;
 	private _toIndex:number;
 	
 	//The ShockerManager will only use this amount of the available shockers
 	private _shockerCount:number;
 	
+	
 	/**
-	 * Constructor
+	 * The left edge (in units) of the area that the shockers can move within
 	 */
+    get leftEdge() { return this._leftEdge; }
+	
+	/**
+	 * The right edge (in units) of the area that the shockers can move within
+	 */
+    get rightEdge() { return this._rightEdge; }
+	
+	/**
+	 * The amound of shockers that the manager will currently make use of
+	 */
+	get currentShockerCount() { return this._shockerCount }
+	
+	/**
+	 * The range of indexes (in the loadedModels array) for the shockers
+	 */
+	get shockerModelRange():{from:number, to:number} { return { from: this._fromIndex, to: this._toIndex }; }
+	
+	
+	
     constructor()
     {
         this.kernel = Kernel.getInstance();
@@ -54,27 +74,7 @@ export default class ShockerManager
     }
     
 	/**
-	 * The left edge (in units) of the area that the shockers can move within
-	 */
-    get leftEdge() { return this._leftEdge; }
-	
-	/**
-	 * The right edge (in units) of the area that the shockers can move within
-	 */
-    get rightEdge() { return this._rightEdge; }
-	
-	/**
-	 * The amound of shockers that the manager will currently make use of
-	 */
-	get currentShockerCount() { return this._shockerCount }
-	
-	/**
-	 * 
-	 */
-	get shockerModelRange():{from:number, to:number} { return { from: this._fromIndex, to: this._toIndex }; }
-    
-	/**
-	 * Set the range of indexes in the kernel's loadedModels array that contain the level's shockers
+	 * Set the range of indexes in the kernel's loadedModels array that contains the level's shockers
 	 * @param fromModelIndex the first model index
 	 * @param toModelIndex the last model index
 	 */
@@ -95,16 +95,16 @@ export default class ShockerManager
     }
     
 	/**
-	 * Set the index of the player model in the kernel's loadedModels array
-	 * @param index the index of the player model in the kernel's loadedModels array
+	 * Store a reference to the player model
+	 * @param model the player model
 	 */
-	setPlayerModelIndex(index:number):void
+	setPlayerModel(model:IModel):void
 	{
-		this.playerModelIndex = index;
+		this.playerModel = model;
 	}
     
     /**
-	 * Sends another shocker, if one is needed, at a random(ish) position
+	 * Sends another shocker (if one is needed) at a random(ish) position
 	 */
     sendShockers():void
     {
@@ -115,7 +115,6 @@ export default class ShockerManager
             if(this._isTimeToSendNextShocker(i))
             {
 				currentShocker.x = this._getShockerXPosition(i);
-				
                 currentShocker.z = this.helpers.zCalc.vPointDepth;
                 currentShocker.active = true;
             }
@@ -164,21 +163,18 @@ export default class ShockerManager
 		if((currentShockerIndex + 1) % 3 == 0) //the third of every 3 shockers
 		{
 			// put somewhere on left side of level
-			return this._getRandomXPosInFirstHalfOfArea(currentShocker.width) + this._leftEdge;
+			return this._getRandomXPosInFirstHalfOfArea(currentShocker.width);
 		
 		} else if((currentShockerIndex + 2) % 3 == 0) //the second of every 3 shockers
 		{
 			// now on the right side
 			const halfOfAreaWidth = ((this._rightEdge - this._leftEdge) / 2);
-			
 			return this._getRandomXPosInFirstHalfOfArea(currentShocker.width) + halfOfAreaWidth;
 		
 		} else //the first of every 3 shockers
 		{
-			// put where player is (on the x-coordinate)
-			const player = this.kernel.loadedModels[this.playerModelIndex];
-			
-			return this._getShockerXPositionCenteredOnPlayer(currentShocker, player);
+			// put where player is
+			return this._getShockerXPositionCenteredOnPlayer(currentShocker.width, this.playerModel);
 		}
 	}
 	
@@ -192,22 +188,28 @@ export default class ShockerManager
 		return (Math.random() * (((this._rightEdge - currentShockerWidth) - this._leftEdge) / 2));
 	}
 	
-	private _getShockerXPositionCenteredOnPlayer(currentShocker:IModel, player:IModel)
+	/**
+	 * Gets the x position for a shocker, centered on the player
+	 * @param currentShockerWidth the width of the shocker in question
+	 * @param player the model of the player
+	 * @returns the correct x position for a shocker, centered on the player's x position
+	 */
+	private _getShockerXPositionCenteredOnPlayer(currentShockerWidth:number, player:IModel)
 	{
 		const playerCenter = (player.x + (player.width / 2));
-		const shockerCenter = (currentShocker.width / 2)
+		const shockerCenter = (currentShockerWidth / 2)
 		
 		let shockerXPos = playerCenter - shockerCenter;
 		
 		if(shockerXPos < this._leftEdge)
 		{
-			shockerXPos = this._leftEdge;
+			return this._leftEdge;
 		} 
-		else if (shockerXPos + currentShocker.width > this._rightEdge)
+		else if (shockerXPos + currentShockerWidth > this._rightEdge)
 		{
-			shockerXPos = this._rightEdge - currentShocker.width;
+			return this._rightEdge - currentShockerWidth;
 		}
 		
-		return shockerXPos
+		return shockerXPos;
 	}
 }
