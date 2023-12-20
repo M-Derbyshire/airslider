@@ -61,16 +61,16 @@ export default class TheConstruct extends ASLevel
             // models[models.length - 2] as Monster
         ];
 
-        this.shockerManager.setShockerModelRange(models.length, models.length + 10);
-        this.shockerManager.setCurrentShockerCount(10);
+        this.shockerManager.setShockerModelRange(models.length, models.length + 100);
+        this.shockerManager.setCurrentShockerCount(100);
         let shockerRange = this.shockerManager.shockerModelRange;
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
         {
 			models.push(new Shocker("yellow", "static"));
         }
 		
-		// const modelWidth = 100; //Set explicitly here, as models not yet loaded
-		// this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
+		const modelWidth = 100; //Set explicitly here, as models not yet loaded
+		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to, modelWidth);
         
         return [...models, ...stdModels];
     }
@@ -129,6 +129,9 @@ export default class TheConstruct extends ASLevel
         
         this.outsideVisible = true;
         
+        this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
+        this.patternManager.clearPatterns();
+        
         // this.tunnelManager.createStartingTunnel([
         //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
         // ]);
@@ -138,8 +141,6 @@ export default class TheConstruct extends ASLevel
     act():void
     {
         super.act();
-		
-		this.patternManager.sendPatterns();
         
         // if(this.helpers.time.getTotalSeconds() <= 37)
         // {
@@ -157,55 +158,43 @@ export default class TheConstruct extends ASLevel
         
 		
 		// Runs the monster sequence
+        // this.levelSection(
+        //     "monster", 
+        //     15000, 
+        //     90000, 
+        //     () => this.monsters.forEach(monster => monster.start()),
+        //     null,
+        //     () => this.monsters.forEach(monster => monster.stop())
+        // );
+		
+		
+		//Set a pattern of shockers going
         this.levelSection(
-            "monster", 
-            15000, 
-            90000, 
-            () => this.monsters.forEach(monster => monster.start()),
-            null,
-            () => this.monsters.forEach(monster => monster.stop())
+            "shockerPattern",
+            15000,
+            25000,
+            () => {
+                const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
+                
+                this.patternManager.addRepeatingPattern(100, 10, [
+                    { fromPosition: levelCenter-150, toPosition: levelCenter-100 },
+                    { fromPosition: levelCenter-100, toPosition: levelCenter-100 },
+                    { fromPosition: levelCenter-50, toPosition: levelCenter-50 },
+                    { fromPosition: levelCenter-100, toPosition: levelCenter-100 },
+                    { fromPosition: levelCenter-150, toPosition: levelCenter-100 },
+                ]);
+                this.patternManager.addRepeatingPattern(100, 10, [
+                    { fromPosition: levelCenter+200, toPosition: levelCenter+200 }
+                ]);
+                this.patternManager.addRepeatingPattern(500, 10, [
+                    { fromPosition: levelCenter-200, toPosition: levelCenter+200 }
+                ]);
+            },
+            () => this.patternManager.sendPatterns(),
+            () => this.patternManager.clearPatterns()
         );
         
         // Run the closing sequence
         this.levelEndSection(95000);
-        
-        // if(this.helpers.time.getTotalSeconds() >= 90 && this.levelSection === 2)
-        // {
-        //     this.levelSection = this.levelClosingSectionNumber;
-        // }
-		
-		
-		//Set a pattern of shockers going
-        // if(this.levelSpeed > 0 && this.helpers.time.getTotalSeconds() >= 0 && this.levelSection < 1)
-        // {
-			// this.levelSection = 1;
-			
-			// const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
-			
-			// this.patternManager.addRepeatingPattern(20, 10, 10000, [
-			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter-100 },
-			// 	{ fromPosition: levelCenter-50, toPosition: levelCenter-50 },
-			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
-			// 	{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
-			// 	{ fromPosition: levelCenter+100, toPosition: levelCenter+100 },
-			// 	{ fromPosition: levelCenter+50, toPosition: levelCenter+50 },
-			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
-			// 	{ fromPosition: levelCenter-50, toPosition: levelCenter-50 }
-			// ]);
-			// this.patternManager.addRepeatingPattern(50, 10, 10000, [
-			// 	{ fromPosition: levelCenter+200, toPosition: levelCenter+200 }
-			// ]);
-			// this.patternManager.addRepeatingPattern(15, 10, 10000, [
-			// 	{ fromPosition: levelCenter-300, toPosition: levelCenter+300 },
-			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 },
-			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
-			// 	{ fromPosition: levelCenter, toPosition: levelCenter },
-			// 	{ fromPosition: levelCenter-100, toPosition: levelCenter+100 },
-			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
-			// ]);
-			// this.patternManager.addRepeatingPattern(15, 10, 10000, [
-			// 	{ fromPosition: levelCenter-200, toPosition: levelCenter+200 }
-			// ]);
-        // }
     }
 }

@@ -11,7 +11,6 @@ import IHelpers from '../../../Kernel/helpers/IHelpers';
 export default class ModelXPositionPatternManager
 {
 	private _kernel:IKernel;
-	private _helpers:IHelpers;
 	
 	/**
 	 * Where on the z axis should the pattern of models begin?
@@ -46,7 +45,6 @@ export default class ModelXPositionPatternManager
 	constructor()
 	{
 		this._kernel = Kernel.getInstance();
-		this._helpers = this._kernel.helpers;
 		
 		this._modelIndexRange = {
 			from: -1,
@@ -58,10 +56,6 @@ export default class ModelXPositionPatternManager
 		this._nextIndexInModelRange = -1;
 	}
 	
-	/*
-		fromModelIndex, toModelIndex - defines the range of models that can be used
-		modelAnimationWidth - the width of the models that are being used
-	*/
 	/**
 	 * Sets the default settings for this manager
 	 * @param fromModelIndex the first index, in the range of model indexes, that can be used by this
@@ -89,9 +83,8 @@ export default class ModelXPositionPatternManager
 		this._startingZPos = zPos;
 	}
 	
-	
 	/**
-	 * Adds a pattern to the queue of patterns, to be repeated for the given milliseconds.
+	 * Adds a pattern to the queue of patterns.
 	 * -----------------------------------------------------------------------
 	 * The "pattern" property is an array of objects. 
 	 * Each "pattern" object will have 2 properties: "fromPosition" and "toPosition" 
@@ -103,20 +96,17 @@ export default class ModelXPositionPatternManager
 	 * a single model will be placed at that position.
 	 * -----------------------------------------------------------------------
 	 * The activePatterns array, as a whole, represents the multiple patterns (being sent down 
-	 * the z-axis). 
+	 * the z-axis repeatably). All the activePatterns are started at the same time 
 		-----------------------------------------------------------------------
 	 * @param zAxisGap the distance between each model in the pattern, on the z-axis.
 	 * @param patternMinXGap the minimum gap between models placed along the x-axis
-	 * @param repeatForMS how many milliseconds should this pattern continue repeating for?
 	 * @param pattern a part of the pattern
 	 */
-	addRepeatingPattern(zAxisGap:number, patternMinXGap:number, repeatForMS:number, pattern:IPartialPattern[]):void
+	addRepeatingPattern(zAxisGap:number, patternMinXGap:number, pattern:IPartialPattern[]):void
 	{
-		const dateTime = new Date();
 		this._activePatterns.push({
 			zGap: zAxisGap,
 			patternMinXGap: patternMinXGap,
-			activeUntil: dateTime.getTime() + repeatForMS,
 			positions: pattern,
 			nextPosition: 0,
 			lastModelIndexUsed: -1
@@ -128,11 +118,16 @@ export default class ModelXPositionPatternManager
 	 */
 	sendPatterns():void
 	{
-		if(this._nextIndexInModelRange < 0) return;
-		
-		this._activePatterns.forEach(this._sendGivenPattern.bind(this));
-		
-		this._removeInactivePatterns();
+		if(this._nextIndexInModelRange >= 0)
+			this._activePatterns.forEach(this._sendGivenPattern.bind(this));
+	}
+	
+	/**
+	 * Clears the previously set patterns
+	 */
+	clearPatterns():void
+	{
+		this._activePatterns = [];
 	}
 	
 	/**
@@ -147,8 +142,6 @@ export default class ModelXPositionPatternManager
 		{
 			const currentXAxisLineInPattern = pattern.positions[pattern.nextPosition];
 			
-			this._setPatternNextPositionIndex(pattern);
-			
 			const currentXAxisModelPositions = this._getPatternXAxisModelPositions(
 				currentXAxisLineInPattern.fromPosition, 
 				currentXAxisLineInPattern.toPosition,
@@ -156,6 +149,8 @@ export default class ModelXPositionPatternManager
 			);
 			
 			currentXAxisModelPositions.forEach((xPos) => this._setModelsToXPositions(xPos, pattern));
+			
+			this._setPatternNextPositionIndex(pattern);
 		}
 	}
 	
@@ -245,15 +240,6 @@ export default class ModelXPositionPatternManager
 		
 		return currentIndex;
 	}
-	
-	/**
-	 * Removes any patterns that have reached their maximum active time
-	 */
-	private _removeInactivePatterns():void
-	{
-		const dateTime = new Date();
-		this._activePatterns = this._activePatterns.filter(pattern => dateTime.getTime() < pattern.activeUntil);
-	}
 }
 
 
@@ -263,7 +249,6 @@ export default class ModelXPositionPatternManager
  * Represents a whole pattern of models, being sent down the z axis
  */
 export interface IActivePattern {
-	
 	/**
 	 * Sets the distance between each model in the pattern, on the z-axis.
 	 */
@@ -273,11 +258,6 @@ export interface IActivePattern {
 	 * The minimum gap between models, along the x-axis
 	 */
 	patternMinXGap:number;
-	
-	/**
-	 * At what time (in milliseconds) should this pattern stop repeating?
-	 */
-	activeUntil:number;
 	
 	/**
 	 * An array of patterns, that make up this pattern
@@ -293,7 +273,6 @@ export interface IActivePattern {
 	 * The index of the last model that was used while creating this pattern
 	 */
 	lastModelIndexUsed:number;
-	
 };
 
 
