@@ -33,52 +33,52 @@ export default class ASLevel extends Level
     leftEdge:number;
     rightEdge:number;
     
-    protected road: LevelRoad;
+    // Environment management
     protected roadColor: string;
-    protected ground: LevelGround;
+    protected roadManager: LevelRoad;
+    protected groundManager: LevelGround;
     protected tunnelManager: LevelTunnel;
-    
-    protected shockerManager: ShockerManager;
-    protected patternManager: ModelXPositionPatternManager;
-    
-    protected monsters:Monster[];
-    protected player:Tarian;
-    
     protected outsideVisible:boolean;
     protected tunnelLightMaskIndex:number;
     protected outsideLightMaskIndex: number;
-    
-    levelMoving:boolean; // Is the player moving forwards?
-    levelSpeed:number; // The level speed (after being calculated by the zCalc)
-    levelSpeedRaw:number; // The level speed (before being calculated by the zCalc)
-    maxLevelSpeedRaw:number; // The maximum speed (before being calculated by the zCalc)
-    protected levelSpeedAccl:number; // How quickly does the speed accelerate at the start?
-    
     protected tunnelSprite: HTMLImageElement;
     protected tunnelSpriteLength: number;
     
-    private _currentSections: string[]; // The IDs of the level sections that are currently active
+    // Shocker management
+    protected shockerManager: ShockerManager;
+    protected patternManager: ModelXPositionPatternManager;
+    
+    // Models we want to keep references to
+    protected monsters:Monster[];
+    protected player:Tarian;
+    
+    // Level speed management
+    levelMoving:boolean; // Is the player moving forwards?
+    levelSpeedRaw:number; // The level speed (before being calculated by the zCalc)
+    maxLevelSpeedRaw:number; // The maximum speed (before being calculated by the zCalc)
+    levelSpeed:number; // The level speed (after being calculated by the zCalc)
+    protected levelSpeedAccl:number; // How quickly does the speed accelerate at the start?
+    
+    // Level section management 
+    private _activeSections: string[]; // The IDs of the level sections that are currently active
     private _openingSectionId = "opening"; // The ID of the level's opening section
     private _closingSectionId = "closing"; // The ID of the level's closing section
     
-    // Models/info for opening and closing of level
-    private _startSign:Sign;
-    private _startSignDisplay:SignDisplay;
-    private _finishSign:Sign;
-    private _finishFlagsActive:boolean;
-    private _signStartingZPosition:number;
-    private _finishFlagsManager:LevelGround;
+    // Models/info for the opening and closing of the level
+    private _startSign:Sign; // The sign at the start of the level
+    private _startSignDisplay:SignDisplay; // The light display on the starting sign
+    private _finishSign:Sign; // The finish sign
+    private _finishFlagsActive:boolean; // Should the flags at the end of the level be active?
+    private _signStartingZPosition:number; // Where on the z axis does the startSign start, and the finishSign end?
+    private _finishFlagsManager:LevelGround; // Manages the flags at the end of the level
     
-    /**
-     * Constructor
-     */
 	constructor()
 	{
 		super();
         
         this.HUD = new MainHUD();
 		
-		this.road = new LevelRoad();
+		this.roadManager = new LevelRoad();
         this.roadColor = "#999999";
         
         this.shockerManager = new ShockerManager();
@@ -90,8 +90,8 @@ export default class ASLevel extends Level
 	}
     
     /**
-     * Creates and returns the models for the start/finish sequences
-     * @returns the models for the start/finish sequences
+     * Creates and returns the player model, and the models for the start/finish sequences
+     * @returns the newly created models
      */
     getModels():IModel[]
     {
@@ -102,7 +102,7 @@ export default class ASLevel extends Level
         this._finishSign = new Sign("FINISH", this.helpers.zCalc.vPointDepth, this._signStartingZPosition, false);
         
         return [
-            this.player, // Needs to be index 0
+            this.player,
             new TarianExplosion(this.player),
             this._startSign,
             this._startSignDisplay,
@@ -126,10 +126,7 @@ export default class ASLevel extends Level
 	{
 		super.load(camera, frameManager, eventManager, pointerEventManager);
         
-		this.leftEdge = 0;
-        this.rightEdge = this.kernel.unitsWithinCamera;
-        
-        this.ground = new LevelGround(camera);
+        this.groundManager = new LevelGround(camera);
         this._finishFlagsManager = new LevelGround(camera, false); 
         
         this._finishFlagsManager.load(
@@ -147,56 +144,69 @@ export default class ASLevel extends Level
     {
         super.prepare();
         
-        this.ground.setupGround();
+        this.leftEdge = 0;
+        this.rightEdge = this.kernel.unitsWithinCamera;
+        
+        this.groundManager.setupGround();
         this._finishFlagsManager.setupGround();
         
-        this._currentSections = [this._openingSectionId];
-		
-		this.outsideVisible = false;
-        
-        this.levelMoving = false;
-        
+        this._activeSections = [this._openingSectionId];
         this._finishFlagsActive = false;
+        this.levelMoving = false;
+        this._setupLevelSpeed();
         
         this._setupShockerManager(this.leftEdge, this.rightEdge);
-		
-		this._setupLevelSpeed();
-		
 		this._setupPatternManager();
+        
+        this.outsideVisible = false;
     }
-	
-	/**
-     * Sets up the model patter manager
-     */
-	private _setupPatternManager():void
-	{
-		this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
-	}
-	
+    
     /**
-     * Sets up the initial level speed
+     * Runs the level's actions.
      */
-	private _setupLevelSpeed():void
-	{
-		//levelSpeedRaw can be used if you need to check for a change in level speed, or to change it
-		this.maxLevelSpeedRaw = 1000;
-        this.levelSpeedRaw = 0;
-        this.levelSpeedAccl = 600;
+    act():void
+    {
+        super.act();
+        
+        // Keeps level speed consistent, via the fps
         this._updateLevelSpeed();
-	}
-	
+        
+        // If we move outside/inside a tunnel, change the light mask
+        this._setLightMask();
+        
+        // Run the opening section, if required
+        this._levelOpening();
+    }
+    
     /**
-     * Sets up the shocker manager
-     * @param leftEdge the left edge (in units) of the level
-     * @param rightEdge the right edge (in units) of the level
+     * Draws anything that needs to be in the back (before the models) of the level
      */
-	private _setupShockerManager(leftEdge:number, rightEdge:number):void
-	{
-		this.shockerManager.setAreaEdges(leftEdge, rightEdge);
-	}
-	
-	
-	/**
+    drawBack():void
+    {
+        if(this.outsideVisible)
+            this.groundManager.draw(this.levelSpeed);
+        
+        if(this._finishFlagsActive)
+            this._finishFlagsManager.draw(this.levelSpeed);
+        
+        this.tunnelManager.draw(this.levelSpeed);
+        this.roadManager.draw(this.roadColor);
+    }
+    
+    /**
+     * Stops the level (and triggers the stop on all models)
+     * This may be triggered by the level's closing sequence, or by another entity in the game
+     */
+	levelStop():void
+    {
+        this.levelMoving = false;
+        this.kernel.loadedModels.forEach(model => (model as ASModel).levelStopped());
+    }
+    
+    
+    
+    
+    /**
      * Registers all model events for the level
      */
 	protected registerLevelEvents():void
@@ -263,60 +273,106 @@ export default class ASLevel extends Level
 	}
     
     /**
-     * Runs the level's actions. This is ran on every frame.
-     */
-    act():void
-    {
-        super.act();
-        this._updateLevelSpeed(); //keeps level speed consistent via fps
-        
-        //if outside/inside changes, change light mask
-        this._setLightMask();
-        
-        // Opening section
-        this._levelOpening();
-    }
-    
-    /**
      * Runs a section of the level (if it's time to do so). The initialiseCallback is ran once, then the actCallback 
-     * is called every frame. Finally, once the time is greater than msEnd, the endCallback is ran
+     * is called every frame. Finally, once the time is greater than msEnd, the endCallback is ran, and the actCallback 
+     * is no longer called.
      * @param id A unique ID for the level section
      * @param msStart The time (in milliseconds) when this section should become active
      * @param msEnd The time (in milliseconds) when this section should stop being active
-     * @param initialiseCallback A callback to call once when this section begins
-     * @param actCallback A callback to call on every frame while this section is active
-     * @param endCallback A callback to call once when this section is no longer active
+     * @param initialiseCallback A callback to call when this section begins (may be null)
+     * @param actCallback A callback to call on every frame while this section is active (may be null)
+     * @param endCallback A callback to call when this section is no longer active (may be null)
      */
-    protected levelSection(id:string, msStart:number, msEnd:number, initialiseCallback?:()=>void, actCallback?:()=>void, endCallback?:()=>void) {
+    protected levelSection(
+        id:string, 
+        msStart:number, 
+        msEnd:number, 
+        initialiseCallback?:()=>void, 
+        actCallback?:()=>void, 
+        endCallback?:()=>void
+    ) {
         if(this.levelMoving) {
             const currentMS = this.helpers.time.getTotalMilliseconds();
         
-            if(currentMS >= msStart && currentMS <= msEnd) {
-                if(!this._currentSections.includes(id)) {
+            if(currentMS >= msStart && currentMS <= msEnd) 
+            {
+                if(!this._activeSections.includes(id)) 
+                {
                     if(initialiseCallback)
                         initialiseCallback();
                     
-                    this._currentSections.push(id);
+                    this._activeSections.push(id);
                 }
                 
-                if(this._currentSections.includes(id) && actCallback)
+                if(actCallback)
                     actCallback();
             }
             
-            if(currentMS > msEnd && this._currentSections.includes(id)) {
+            if(currentMS > msEnd && this._activeSections.includes(id)) {
                 if(endCallback)
                     endCallback();
                 
                 // Remove this section from currentSections
-                this._currentSections = this._currentSections.filter((cs:string) => cs !== id);
+                this._activeSections = this._activeSections.filter((cs:string) => cs !== id);
             }
         }
     }
-	
-    
     
     /**
-     * This increases the raw level speed to its max (or stops it, if level is not moving), and calculates the real z-speed
+     * Runs the closing sequence, if it is time to do so
+     * @param msStart the time (in milliseconds) that the end sequence should start from
+     */
+    protected levelEndSection(msStart:number)
+    {
+        if(this.helpers.time.getTotalMilliseconds() >= msStart) {
+            if(!this._activeSections.includes(this._closingSectionId)) {
+                this._activeSections.push(this._closingSectionId);
+                
+                // Start the finish flags
+                this._finishFlagsActive = true;
+            }
+            
+            this._levelClosing(msStart);
+        }
+    }
+    
+    
+    
+    
+    
+	
+	/**
+     * Sets up the model pattern manager
+     */
+	private _setupPatternManager():void
+	{
+		this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
+	}
+	
+    /**
+     * Sets up the shocker manager
+     * @param leftEdge the left edge (in units) of the level
+     * @param rightEdge the right edge (in units) of the level
+     */
+	private _setupShockerManager(leftEdge:number, rightEdge:number):void
+	{
+		this.shockerManager.setAreaEdges(leftEdge, rightEdge);
+	}
+    
+    /**
+     * Sets up the initial level speed
+     */
+	private _setupLevelSpeed():void
+	{
+		this.maxLevelSpeedRaw = 1000;
+        this.levelSpeedRaw = 0; // this can be used if you need to check for a change in level speed, or to change it
+        this.levelSpeedAccl = 600;
+        this._updateLevelSpeed();
+	}
+    
+    /**
+     * This calculates the real z-speed (based on the FPS). If we're at the start of the level, it also increases 
+     * the raw level speed until it hits the max. If the level is no longer moving, this sets the speed to 0
      */
 	private _updateLevelSpeed():void
     {
@@ -338,70 +394,37 @@ export default class ASLevel extends Level
     }
     
     /**
-     * Sets the light mask, dependant on the whether or not the player's going through a tunnel
+     * Sets the light mask, based on the whether or not the player's going through a tunnel
      */
     private _setLightMask():void
     {
-        if(
-            this.tunnelManager.tunnel.length > 1 && 
-            this.tunnelManager.tunnel[this.tunnelManager.tunnel.length - 1].z <= 0 &&
-            this.tunnelManager.tunnel[this.tunnelManager.tunnel.length - 2].image
-        )
-        {
-            this.frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
-                this.tunnelLightMaskIndex
-            );
-        } else {
-            this.frameManager.getFrameByIndex(this.frameIndex).setLightMaskImage(
-                this.outsideLightMaskIndex
-            );
-        }
-    }
-    
-    
-	
+        const tunnelLength = this.tunnelManager.tunnel.length;
+        const frame = this.frameManager.getFrameByIndex(this.frameIndex);
+        
+        const isInside = (
+            tunnelLength > 1 && 
+            this.tunnelManager.tunnel[tunnelLength - 1].z <= 0 &&
+            this.tunnelManager.tunnel[tunnelLength - 2].image
+        );
+        
+        frame.setLightMaskImage(isInside ? this.tunnelLightMaskIndex : this.outsideLightMaskIndex);
+    }    
     
     
     
     
     /**
-     * Draws anything that needs to be in the back (before the models) of the level
-     */
-    drawBack():void
-    {
-        if(this.outsideVisible)
-        {
-            this.ground.draw(this.levelSpeed);
-        }
-        
-        // Not doing this in the above if statement, because draw() needs to be called to add more flags
-        if(this._finishFlagsActive)
-            this._finishFlagsManager.draw(this.levelSpeed);
-        
-        this.tunnelManager.draw(this.levelSpeed);
-        this.road.draw(this.roadColor);
-    }
-    
-    
-    
-    
-    
-    
-    
-    // Opening and closing sequences for the levels
-    
-    /**
-     * Runs the level opening sequence
+     * Runs the level opening sequence (if it's active)
      */
     private _levelOpening()
     {
-        // SignDisplay will start its countdown automatically
-        if(this._currentSections.includes(this._openingSectionId) && this._startSignDisplay.state === "finished")
+        // SignDisplay will start its countdown automatically, so just wait until it's finished
+        if(this._activeSections.includes(this._openingSectionId) && this._startSignDisplay.state === "finished")
         {
             this._levelMovementStart();
             
-            // Remove opening from _currentSections
-            this._currentSections = this._currentSections.filter((cs:string) => cs !== this._openingSectionId);
+            // Remove opening from _activeSections
+            this._activeSections = this._activeSections.filter((cs:string) => cs !== this._openingSectionId);
         }
     }
     
@@ -411,50 +434,30 @@ export default class ASLevel extends Level
     private _levelMovementStart():void
     {
         this.levelMoving = true;
-        (this.kernel.loadedModels[this.kernel.settings.playerModelIndex] as ASModel).canBeControlled = true;
+        this.player.canBeControlled = true;
     }
     
-    
-    
-    
-    
-    
     /**
-     * Runs the closing sequence, if it is time to do so
-     * @param msStart the time (in milliseconds) that the end sequence should start
+     * Runs the level closing sequence
+     * @param closingStartMS the time (in milliseconds) when the closing sequence should start
      */
-    protected levelEndSection(msStart:number)
+    private _levelClosing(closingStartMS:number)
     {
-        if(this.helpers.time.getTotalMilliseconds() >= msStart) {
-            
-            // initialise the closing sequence
-            if(!this._currentSections.includes(this._closingSectionId)) {
-                this._currentSections.push(this._closingSectionId);
-                
-                // Start the finish flags
-                this._finishFlagsActive = true;
+        const currentMs = this.helpers.time.getTotalMilliseconds();
+        
+        if(!this._finishSign.active)
+        {
+            // End the finish flags, before starting the sign's entrance
+            if(currentMs >= (closingStartMS + 3500))
+            {
+                this._finishFlagsManager.removeGround();
             }
             
-            this._levelClosing(msStart);
-        }
-    }
-    
-    /**
-     * Continous action method for the level closing sequence
-     * @param closingBeganMS the time (in milliseconds) when the closing sequence began
-     */
-    private _levelClosing(closingBeganMS:number)
-    {
-        // End the finish flags, before starting the sign's entrance
-        if(!this._finishSign.active && this.helpers.time.getTotalMilliseconds() >= (closingBeganMS + 3500))
-        {
-            this._finishFlagsManager.removeGround();
-        }
-        
-        // Trigger the finish sign's entrance
-        if(!this._finishSign.active && this.helpers.time.getTotalMilliseconds() >= (closingBeganMS + 4000))
-        {
-            this._finishSign.active = true;
+            // Trigger the finish sign's entrance
+            if(currentMs >= (closingStartMS + 4000))
+            {
+                this._finishSign.active = true;
+            }
         }
         
         // If the sign is in position, stop the level
@@ -464,17 +467,8 @@ export default class ASLevel extends Level
             this.levelMoving = false;
         }
         
+        // Once the player has vanished into the distance, finish the level
         if(this.player.z > this.helpers.zCalc.vPointDepth)
             this.levelStop();
-    }
-    
-    /**
-     * Stops the level (and triggers the stop on all models)
-     * This can be triggered by the level's closing sequence, or by another entity in the game
-     */
-	levelStop():void
-    {
-        this.levelMoving = false;
-        this.kernel.loadedModels.forEach(model => (model as ASModel).levelStopped());
     }
 }
