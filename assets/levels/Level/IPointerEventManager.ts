@@ -10,4 +10,8 @@ export default interface IPointerEventManager {
      */
     addPointerEventSubject(subject:any):void;
     
+    /**
+     * Removes all the event handlers that were created when this was constructed
+     */
+    removeEventHandlers():void;
 };

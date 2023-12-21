@@ -11,6 +11,12 @@ export default class PointerEventManager implements IPointerEventManager {
 	 */
 	private _subjects:any[];
 	
+	/**
+	 * The callback (bound to this) to run when an event occurs. 
+	 * This is needed when removing the events.
+	 */
+	private _eventCallback:(e:MouseEvent)=>void;
+	
 	
 	/**
 	 * Constructor
@@ -18,10 +24,12 @@ export default class PointerEventManager implements IPointerEventManager {
 	constructor()
 	{
 		this._subjects = [];
+		this._eventCallback = this._onPointCallback.bind(this);
 		
 		const canvas = Kernel.getInstance().gameCanvas;
-		canvas.addEventListener("click", this._onPointCallback.bind(this));
-		canvas.addEventListener("touchStart", this._onPointCallback.bind(this));
+		
+		canvas.addEventListener("click", this._eventCallback);
+		canvas.addEventListener("touchStart", this._eventCallback);
 	}
 	
 	/**
@@ -37,6 +45,15 @@ export default class PointerEventManager implements IPointerEventManager {
 	}
 	
 	/**
+	 * Removes all click and touch event listeners from the canvas
+	 */
+	removeEventHandlers():void {
+		const canvas = Kernel.getInstance().gameCanvas;
+		canvas.removeEventListener("click", this._eventCallback);
+		canvas.removeEventListener("touchStart", this._eventCallback);
+	}
+	
+	/**
 	 * A callback function, to be triggered by event listeners.
 	 * This triggers the onClick method of any clicked objects.
 	 * @param e the canvas element that is displaying the game
@@ -44,6 +61,7 @@ export default class PointerEventManager implements IPointerEventManager {
 	private _onPointCallback(e:MouseEvent):void
 	{
 		e.preventDefault();
+		console.log("here")
 		const canvas = e.target! as HTMLCanvasElement;
 		const canvasRect = canvas.getBoundingClientRect();
 		

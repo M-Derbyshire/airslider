@@ -60,6 +60,7 @@ export default class HUD implements IHUD
     {
         this.assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
         this.components.forEach(component => component.unload());
+        this.pointerEventManager.removeEventHandlers();
     }
     
     /**

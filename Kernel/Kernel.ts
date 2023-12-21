@@ -26,8 +26,6 @@ import ErrorHandler from './ErrorHandler/ErrorHandler';
 import { KernelStatus } from './KernelStatus';
 import ModelAnimationsManager from '../assets/models/Model/ModelAnimationsManager/ModelAnimationsManager';
 import EventManager from '../assets/levels/Level/EventManager';
-import EventCheckContainer from '../assets/levels/Level/EventCheckContainer';
-import ModelExtraEventManager from '../assets/levels/Level/ModelExtraEventManager';
 import PointerEventManager from '../assets/levels/Level/PointerEventManager';
 
 /**
@@ -299,7 +297,7 @@ export default class Kernel implements IKernel {
         level.load(
             camera, 
             frameManager, 
-            new EventManager(new EventCheckContainer(), new ModelExtraEventManager()),
+            new EventManager(),
             new PointerEventManager()
         );
         

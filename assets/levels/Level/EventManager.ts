@@ -1,11 +1,7 @@
 import Kernel from '../../../Kernel/Kernel';
-import IEventManager from './IEventManager';
-import EventCheckContainer from './EventCheckContainer';
-import IModelExtraEventManager from './IModelExtraEventManager';
-import IEventDetails from './IEventDetails';
+import IEventManager, { IEvent, IEventDetails } from './IEventManager';
 import IModel from '../../models/Model/IModel';
 import IKernel from '../../../Kernel/IKernel';
-import IEvent from './IEvent';
 
 /**
  * Manages the event monitoring for a level
@@ -13,22 +9,11 @@ import IEvent from './IEvent';
 export default class EventManager implements IEventManager
 {
     private _kernel:IKernel;
-    private _eventCheckContainer:EventCheckContainer;
-    private _modelExtraEventManager:IModelExtraEventManager;
     private _events:IEvent[];
     
-    /**
-     * Constructor
-     * @param eventCheckContainer An instance of the EventCheckContainer (which contains custom methods that will check for events)
-     * @param modelExtraEventManager Manages any extra events associated with the level's models
-     */
-    constructor(eventCheckContainer:EventCheckContainer, modelExtraEventManager:IModelExtraEventManager)
+    constructor()
     {
         this._kernel = Kernel.getInstance();
-        
-        this._eventCheckContainer = eventCheckContainer;
-        this._modelExtraEventManager = modelExtraEventManager;
-        
         this._events = [];
     }
     
@@ -52,7 +37,7 @@ export default class EventManager implements IEventManager
         }
         
         this._events.push({ 
-            eventCheckMethodName: event.eventCheckMethodName, 
+            eventCheck: event.eventCheck, 
             class1Models, 
             class1EventActionName: event.class1EventActionName, 
             class2Models, 
@@ -84,13 +69,7 @@ export default class EventManager implements IEventManager
                 
                 event.class2Models.forEach((model2) => {
                     if(model1.active && model2.active)
-                        (this._eventCheckContainer[event.eventCheckMethodName as keyof EventCheckContainer] as Function)(
-                            model1, 
-                            event.class1EventActionName, 
-                            model2,
-                            event.class2EventActionName
-                        );
-                    
+                        event.eventCheck(model1, event.class1EventActionName, model2, event.class2EventActionName);
                 });
                 
             });
@@ -104,6 +83,6 @@ export default class EventManager implements IEventManager
      */
     private _checkForExtraModelEvents():void
     {
-        this._modelExtraEventManager.checkForEvents();
+        this._kernel.loadedModels.forEach(model => model.checkForExtraEvents());
     }
-}
+};

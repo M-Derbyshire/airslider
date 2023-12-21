@@ -56,7 +56,7 @@ export default class TheConstruct extends ASLevel
         this.shockerManager.setPlayerModel(this.player);
         this.shockerManager.setShockerModelRange(models.length, models.length + 100);
         // this.shockerManager.setCurrentShockerCount(100);
-        this.shockerManager.setCurrentShockerCount(10);
+        this.shockerManager.setCurrentShockerCount(5);
         
         let shockerRange = this.shockerManager.shockerModelRange;
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
@@ -145,14 +145,14 @@ export default class TheConstruct extends ASLevel
         // }
         
         // Send some shockers
-        // this.levelSection(
-        //     "shockers",
-        //     15000,
-        //     25000,
-        //     null,
-        //     () => this.shockerManager.sendShockers(),
-        //     null
-        // );
+        this.levelSection(
+            "shockers",
+            15000,
+            25000,
+            null,
+            () => this.shockerManager.sendShockers(),
+            null
+        );
 		
 		// Runs the monster sequence
         // this.levelSection(
