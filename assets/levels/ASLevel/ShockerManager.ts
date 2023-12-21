@@ -108,7 +108,16 @@ export default class ShockerManager
 	 */
     sendShockers():void
     {
-        for(let i = this._fromIndex; i <= this._toIndex; i++)
+		if(this._shockerCount === 0) return;
+		
+		const totalShockerCount = (this._toIndex - this._fromIndex);
+		
+		const lastAvailableShockerIndex = (totalShockerCount <= this._shockerCount) 
+			? this._toIndex 
+			: (this._fromIndex + this._shockerCount) - 1;
+		
+		
+        for(let i = this._fromIndex; i <= lastAvailableShockerIndex; i++)
         {
 			const currentShocker = this.kernel.loadedModels[i];
 			
@@ -133,19 +142,15 @@ export default class ShockerManager
 		if(!currentShocker.active)
 		{
 			if (currentModelIndex === this._fromIndex) 
-			{
 				return true;
-			}
-			else
-			{
-				const previousShocker = this.kernel.loadedModels[currentModelIndex - 1];
-				const vanishingPointDepth = this.helpers.zCalc.vPointDepth;
-				
-				const previousShockerHasMovedFarEnough = 
-					(previousShocker.z + (vanishingPointDepth / this._shockerCount) < vanishingPointDepth);
-				
-				return (previousShocker.active && previousShockerHasMovedFarEnough);
-			}
+			
+			const previousShocker = this.kernel.loadedModels[currentModelIndex - 1];
+			const vanishingPointDepth = this.helpers.zCalc.vPointDepth;
+			
+			const previousShockerHasMovedFarEnough = 
+				(previousShocker.z + (vanishingPointDepth / this._shockerCount) < vanishingPointDepth);
+			
+			return (previousShocker.active && previousShockerHasMovedFarEnough);
 		}
 		
 		return false;

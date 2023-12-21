@@ -56,7 +56,7 @@ export default class TheConstruct extends ASLevel
         this.shockerManager.setPlayerModel(this.player);
         this.shockerManager.setShockerModelRange(models.length, models.length + 100);
         // this.shockerManager.setCurrentShockerCount(100);
-        this.shockerManager.setCurrentShockerCount(5);
+        this.shockerManager.setCurrentShockerCount(10);
         
         let shockerRange = this.shockerManager.shockerModelRange;
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
