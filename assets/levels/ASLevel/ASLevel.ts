@@ -98,6 +98,8 @@ export default class ASLevel extends Level
      */
     getModels():IModel[]
     {
+        const stdModels = super.getModels();
+        
         this.player = new Tarian();
         
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
@@ -105,6 +107,7 @@ export default class ASLevel extends Level
         this._finishSign = new Sign("FINISH", this.helpers.zCalc.vPointDepth, this._signStartingZPosition, false);
         
         return [
+            ...stdModels,
             this.player,
             new TarianExplosion(this.player),
             this._startSign,
