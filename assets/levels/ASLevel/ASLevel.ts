@@ -250,11 +250,11 @@ export default class ASLevel extends Level
                 class2EventActionName: "" //Doesn't have one, and doesn't try to call one
             },
             { 
-                eventCheck: zCollisionEventCheck,
-                class1: Tarian,
-                class1EventActionName: "zCollisionEventAction",
-                class2: LavaBall,
-                class2EventActionName: "hitPlayerEventAction"
+                eventCheck: hitPlayerOrGroundEventCheck,
+                class1: LavaBall,
+                class1EventActionName: "hitPlayerOrGroundEventAction",
+                class2: Tarian,
+                class2EventActionName: "zCollisionEventAction"
             },
             { 
                 eventCheck: hitPlayerOrGroundEventCheck,

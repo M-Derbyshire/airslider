@@ -94,14 +94,7 @@ export default class LavaBall extends ASModel {
             this.moveDown(this.ySpeed);
             this.moveRight(this.xSpeed); //may be negative, to move left
         }
-        
-        if(this.y + this.height >= this.kernel.unitsWithinCamera && this.state === "drop")
-        {
-            this.setYPositionFromBottom(this.height);
-            this.state = "break";
-        }
-        
-        if(this.state === "none")
+        else if(this.state === "none")
         {
             this.active = false;
         }
@@ -131,7 +124,7 @@ export default class LavaBall extends ASModel {
         }
     }
     
-    hitPlayerEventAction(otherModel:IModel):void
+    hitPlayerOrGroundEventAction(otherModel:IModel):void
     {
         if(this.state == "drop")
         {
