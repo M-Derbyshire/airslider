@@ -8,9 +8,9 @@ export default interface IEventManager {
      * Registers a new event check. All models that are instances of the 2 given classes will be collected. When the 
      * event check is ran, each model of the first class will be checked against each model of the second class, to see 
      * if the event has occurred between them.
-     * @param e The details of an event to be registered
+     * @param event The details of an event to be registered
      */
-    registerEvent(e:IEventDetails):void;
+    registerEvent(event:IEventDetails):void;
     
     /**
      * Registers multiple event checks. See registerEvent method for more details

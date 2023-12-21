@@ -4,7 +4,7 @@ import IModel from '../../models/Model/IModel';
 import IKernel from '../../../Kernel/IKernel';
 
 /**
- * Manages the event monitoring for a level
+ * Manages the event monitoring for a level (doesn't include touch/mouse events)
  */
 export default class EventManager implements IEventManager
 {
@@ -28,13 +28,10 @@ export default class EventManager implements IEventManager
         const class1Models:IModel[] = [];
         const class2Models:IModel[] = [];
         
-        //LoadedModels is a collection, so can't use foreach
-        for(let i = 0; i < this._kernel.loadedModels.length; i++)
-        {
-            const model = this._kernel.loadedModels[i];
+        this._kernel.loadedModels.forEach(model => {
             if(model.constructor.name === event.class1.name) class1Models.push(model);
             if(model.constructor.name === event.class2.name) class2Models.push(model);
-        }
+        });
         
         this._events.push({ 
             eventCheck: event.eventCheck, 
@@ -51,9 +48,7 @@ export default class EventManager implements IEventManager
      */
     registerEventsArray(events:IEventDetails[]):void
     {
-        events.forEach(e => {
-            this.registerEvent(e);
-        });
+        events.forEach(e => this.registerEvent(e));
     }
     
     /**
@@ -73,6 +68,7 @@ export default class EventManager implements IEventManager
                 });
                 
             });
+            
         });
         
         this._checkForExtraModelEvents();
