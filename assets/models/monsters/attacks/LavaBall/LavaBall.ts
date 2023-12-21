@@ -23,7 +23,6 @@ export default class LavaBall extends ASModel {
         
         this.playerModel = playerModel;
         this.damageDealt = 2;
-        this.zSpeed = 1; // a value is required for Tarian to recognise hit
     }
     
     load(animationManager:IModelAnimationsManager):void
