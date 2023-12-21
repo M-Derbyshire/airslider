@@ -9,7 +9,6 @@ import EventManager from "./EventManager";
  * A level of the game
  */
 export default interface ILevel {
-    
     /**
      * The Heads Up Display for the level
      */
@@ -22,9 +21,9 @@ export default interface ILevel {
     
     /**
      * Loads and sets up the level
-     * @param camera The game's camera
+     * @param camera The level's camera
      * @param frameManager The frame manager for the level
-     * @param eventManager Manages the event monitoring for a level
+     * @param eventManager Manages the event monitoring for a level (not including mouse clicks or screen touches)
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
     load(
@@ -50,8 +49,8 @@ export default interface ILevel {
     checkForEvents():void;
     
     /**
-     * Creates and returns any models that will be in the level
-     * @returns the models that will be in the level
+     * Creates and returns any models that will be used in the level
+     * @returns the models that will be used in the level
      */
     getModels():IModel[];
     
@@ -61,13 +60,12 @@ export default interface ILevel {
     act():void;
     
     /**
-     * Draws anything that needs to be in the back (before the models) of the level
+     * Draws anything that needs to be in the back (behind the models) of the level
      */
     drawBack():void;
     
     /**
-     * Draws anything that needs to be in the front (after the models) of the level
+     * Draws anything that needs to be in the front (over the models) of the level
      */
     drawFront():void;
-    
 };

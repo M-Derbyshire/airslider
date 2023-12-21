@@ -47,7 +47,7 @@ export default class PointerEventManager implements IPointerEventManager {
 	/**
 	 * Removes all click and touch event listeners from the canvas
 	 */
-	removeEventHandlers():void {
+	removeCanvasEventHandlers():void {
 		const canvas = Kernel.getInstance().gameCanvas;
 		canvas.removeEventListener("click", this._eventCallback);
 		canvas.removeEventListener("touchStart", this._eventCallback);

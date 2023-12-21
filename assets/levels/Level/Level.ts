@@ -88,7 +88,7 @@ export default class Level implements ILevel
     unload():void
     {
         this.assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
-        this.pointerEventManager.removeEventHandlers();
+        this.pointerEventManager.removeCanvasEventHandlers();
     }
     
     /**

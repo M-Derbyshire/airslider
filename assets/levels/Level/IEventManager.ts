@@ -1,7 +1,7 @@
 import IModel from "../../models/Model/IModel";
 
 /**
- * Manages the event monitoring for a level
+ * Manages the event monitoring for a level (doesn't include touch/mouse events)
  */
 export default interface IEventManager {
     /**
@@ -27,14 +27,46 @@ export default interface IEventManager {
 
 
 
-
 /**
  * Represents a function that tests for the occurence of an event between 2 models, and then may call the required 
  * response methods on those models.
+ * 
+ * The "ActionMethodName" parameters are names of methods on each class. Those methods can be called if the event occurs.
  */
 export type eventCheck = (modelA:IModel, modelAActionMethodName:string, modelB:IModel, modelBActionMethodName:string)=>void;
 
 
+
+
+/**
+ * The details that are needed to register an event with an IEventManager
+ */
+export interface IEventDetails {
+    /**
+     * The function that checks for this event (and then may call the action methods on the models involved)
+     */
+    eventCheck:eventCheck;
+    
+    /**
+     * The first model class that is involved in this type of event
+     */
+    class1:new(...args:any[])=>IModel;
+    
+    /**
+     * The name of the method (on the first model type) that should be triggered when this event occurs
+     */
+    class1EventActionName:string;
+    
+    /**
+     * The second model class that is involved in this type of event
+     */
+    class2:new(...args:any[])=>IModel;
+    
+    /**
+     * The name of the method (on the second model type) that should be triggered when this event occurs
+     */
+    class2EventActionName:string;
+};
 
 
 
@@ -74,40 +106,3 @@ export interface IEvent {
      */
     class2EventActionName:string;   
 };
-
-
-
-
-
-
-/**
- * The details that relate to an event that can occur between 2 types of model
- */
-export interface IEventDetails {
-    
-    /**
-     * The function that checks for this event (and then may call the action methods on the models involved)
-     */
-    eventCheck:eventCheck;
-    
-    /**
-     * The first model class that is involved in this type of event
-     */
-    class1:new(...args:any[])=>IModel;
-    
-    /**
-     * The name of the method (on the first model type) that should be triggered when this event occurs
-     */
-    class1EventActionName:string;
-    
-    /**
-     * The second model class that is involved in this type of event
-     */
-    class2:new(...args:any[])=>IModel;
-    
-    /**
-     * The name of the method (on the second model type) that should be triggered when this event occurs
-     */
-    class2EventActionName:string;
-    
-}
