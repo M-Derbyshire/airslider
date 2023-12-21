@@ -19,18 +19,16 @@ export default class Level implements ILevel
     protected kernel: IKernel;
     protected helpers: IHelpers;
     
-    protected assetsToUnload: string[];
+    protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
     
-    protected frameManager: IFrameManager;
-    protected frameIndex: number;
-    protected camera: ICamera;
+    protected frameManager: IFrameManager; // The frame manager for the level
+    protected camera: ICamera; // The level's camera
     
-    protected eventManager: IEventManager;
+    protected eventManager: IEventManager; // Manages the event monitoring for a level (not including mouse clicks or screen touches)
+    protected pointerEventManager:IPointerEventManager; // Manages any events relating to mouse clicks or screen touches
     
-    protected gameCanvas: HTMLCanvasElement;
-    protected gameContext: CanvasRenderingContext2D;
-    
-    protected pointerEventManager:IPointerEventManager;
+    protected gameCanvas: HTMLCanvasElement; // The canvas element that the game should be drawn on
+    protected gameContext: CanvasRenderingContext2D; // The 2D context from the HTML canvas element
     
     /**
      * The Heads Up Display for the level
@@ -42,16 +40,12 @@ export default class Level implements ILevel
      */
     isPauseable:boolean;
     
-    /**
-     * Constructor
-     */
     constructor()
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
         
-        this.assetsToUnload = []; // file paths of assets that need to be released when this is unloaded
-        
+        this.assetsToUnload = [];
         this.isPauseable = true;
     }
     
@@ -71,15 +65,14 @@ export default class Level implements ILevel
     {
         this.gameCanvas = this.kernel.gameCanvas;
         this.gameContext = this.kernel.gameContext;
+        
         this.camera = camera;
         this.frameManager = frameManager;
-        
-        this.setupZCalc();
         
         this.eventManager = eventManager;
         this.pointerEventManager = pointerEventManager;
         
-        this._loadHUD(camera, this.pointerEventManager);
+        this._loadHUD();
     }
     
     /**
@@ -97,15 +90,11 @@ export default class Level implements ILevel
     prepare():void
     {
         this.setupZCalc();
+        
         this.HUD.prepare();
         
-        //Not an array, so have to loop over normally
-		for(let i = 0; i < this.kernel.loadedModels.length; i++)
-		{
-			this.pointerEventManager.addPointerEventSubject(this.kernel.loadedModels[i]);
-		}
-        
         this.registerLevelEvents();
+        this.kernel.loadedModels.forEach(model => this.pointerEventManager.addPointerEventSubject(model));
     }
     
     /**
@@ -120,7 +109,10 @@ export default class Level implements ILevel
      * Creates and returns any models that will be used in the level
      * @returns the models that will be used in the level
      */
-    getModels():IModel[] { return []; }
+    getModels():IModel[] 
+    { 
+        return []; 
+    }
     
     /**
      * Runs the level's actions. This is ran on every frame.
@@ -138,29 +130,27 @@ export default class Level implements ILevel
     drawFront():void {}
 	
     /**
-     * Registers any events that will need to be monitored for during gameplay
+     * Registers any events that will need to be monitored during gameplay
      */
     protected registerLevelEvents():void {}
     
     /**
-     * Set the settings of the zCalc
+     * Set the default settings of the zCalc
      */
 	protected setupZCalc():void
 	{
 		this.helpers.zCalc.setVanishPoint(
-            () => { return this.gameCanvas.width / 2; }, 
-            () => { return this.gameCanvas.height / 2; }
+            () => (this.gameCanvas.width / 2), 
+            () => (this.gameCanvas.height / 2)
         );
 	}
     
     /**
      * Loads the level's HUD
-     * @param camera The level's camera
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
-    private _loadHUD(camera:ICamera, pointerEventManager:IPointerEventManager):void
+    private _loadHUD():void
     {
-        this.HUD.load(camera, pointerEventManager);
+        this.HUD.load(this.camera, this.pointerEventManager);
         this.HUD.loadComponents();
     }
 }

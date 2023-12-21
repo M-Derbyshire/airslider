@@ -32,6 +32,8 @@ import neonPidgeonOverlappingEventCheck from './events/neonPidgeonOverlappingEve
  */
 export default class ASLevel extends Level 
 {
+    protected frameIndex: number; // The index of the level's current frame
+    
     //The edges of the playable area
     leftEdge:number;
     rightEdge:number;
