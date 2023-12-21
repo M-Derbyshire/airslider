@@ -5,45 +5,38 @@ import IPointerEventManager from "./IPointerEventManager";
  * Manages any events relating to mouse clicks or screen touches
  */
 export default class PointerEventManager implements IPointerEventManager {
-	
 	/**
 	 * The registered entities that are able to handle click events
 	 */
 	private _subjects:any[];
 	
 	/**
-	 * The callback to run when an event occurs. 
-	 * This is needed when removing the events.
+	 * The callback to run when an event occurs.
 	 */
 	private _eventCallback:(e:MouseEvent)=>void;
 	
-	
-	/**
-	 * Constructor
-	 */
 	constructor()
 	{
 		this._subjects = [];
-		
-		const canvas = Kernel.getInstance().gameCanvas;
 		
 		this._eventCallback = (e:MouseEvent) => {
 			this._onPointCallback(e);
 		};
 		
+		const canvas = Kernel.getInstance().gameCanvas;
 		canvas.addEventListener("click", this._eventCallback);
 		canvas.addEventListener("touchStart", this._eventCallback);
 	}
 	
 	/**
      * Adds an object to the list of objects that should react to being clicked
-     * (the subject object must have both an "onClick" and "isPointerOverlapping" method).
+     * (the subject object must have both an "onClick" and an "isPointerOverlapping" method).
 	 * This will not re-add a subject that it already holds a reference to.
      * @param subject an object that should react to being clicked
      */
 	addPointerEventSubject(subject:any):void
 	{
-		if(subject.onClick && subject.isPointerOverlapping && !this._subjects.includes(subject))
+		if(subject && typeof subject === 'object' && subject.onClick && subject.isPointerOverlapping && !this._subjects.includes(subject))
 			this._subjects.push(subject);
 	}
 	
@@ -58,13 +51,13 @@ export default class PointerEventManager implements IPointerEventManager {
 	
 	/**
 	 * A callback function, to be triggered by event listeners.
-	 * This triggers the onClick method of any clicked objects.
-	 * @param e the canvas element that is displaying the game
+	 * This triggers the onClick method of any clicked objects (if they have an isPointerOverlapping method).
+	 * @param e the mouse event (on the canvas that is displaying the game)
 	 */
 	private _onPointCallback(e:MouseEvent):void
 	{
 		e.preventDefault();
-		console.log("here")
+		
 		const canvas = e.target! as HTMLCanvasElement;
 		const canvasRect = canvas.getBoundingClientRect();
 		
@@ -75,13 +68,9 @@ export default class PointerEventManager implements IPointerEventManager {
 		const clickX = (e.clientX - canvasRect.left) * canvasScaleX;
 		const clickY = (e.clientY - canvasRect.top) * canvasScaleY;
 		
-		//subject is a collection, so can't use foreach
-		for(let i = 0; i < this._subjects.length; i++)
-		{
-			const subject = this._subjects[i];
-			
+		this._subjects.forEach(subject => {
 			if(subject.isPointerOverlapping(clickX, clickY))
 				subject.onClick();
-		}
+		});
 	}
-}
+};

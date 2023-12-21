@@ -4,7 +4,8 @@
 export default interface IPointerEventManager {
     /**
      * Adds an object to the list of objects that should react to being clicked
-     * (the subject object must have both an "onClick" and an "isPointerOverlapping" method)
+     * (the subject object must have both an "onClick" and an "isPointerOverlapping" method).
+	 * This will not re-add a subject that it already holds a reference to.
      * @param subject an object that should react to being clicked
      */
     addPointerEventSubject(subject:any):void;
