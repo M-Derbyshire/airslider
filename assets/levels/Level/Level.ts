@@ -57,9 +57,9 @@ export default class Level implements ILevel
     
     /**
      * Loads and sets up the level
-     * @param camera The game's camera
+     * @param camera The level's camera
      * @param frameManager The frame manager for the level
-     * @param eventManager Manages the event monitoring for a level
+     * @param eventManager Manages the event monitoring for a level (not including mouse clicks or screen touches)
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
     load(
@@ -109,11 +109,6 @@ export default class Level implements ILevel
     }
     
     /**
-     * Registers any events that will need to be monitored for during gameplay
-     */
-    protected registerLevelEvents():void {}
-    
-    /**
      * Runs the registered event checks
      */
     checkForEvents():void
@@ -122,8 +117,8 @@ export default class Level implements ILevel
     }
     
     /**
-     * Creates and returns any models that will be in the level
-     * @returns the models that will be in the level
+     * Creates and returns any models that will be used in the level
+     * @returns the models that will be used in the level
      */
     getModels():IModel[] { return []; }
     
@@ -133,15 +128,20 @@ export default class Level implements ILevel
     act():void {}
     
     /**
-     * Draws anything that needs to be in the back (before the models) of the level
+     * Draws anything that needs to be in the back (behind the models) of the level
      */
     drawBack():void {}
     
     /**
-     * Draws anything that needs to be in the front (after the models) of the level
+     * Draws anything that needs to be in the front (over the models) of the level
      */
     drawFront():void {}
 	
+    /**
+     * Registers any events that will need to be monitored for during gameplay
+     */
+    protected registerLevelEvents():void {}
+    
     /**
      * Set the settings of the zCalc
      */
@@ -155,7 +155,7 @@ export default class Level implements ILevel
     
     /**
      * Loads the level's HUD
-     * @param camera The game's camera
+     * @param camera The level's camera
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
     private _loadHUD(camera:ICamera, pointerEventManager:IPointerEventManager):void
