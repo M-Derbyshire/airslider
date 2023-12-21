@@ -12,7 +12,7 @@ export default class PointerEventManager implements IPointerEventManager {
 	private _subjects:any[];
 	
 	/**
-	 * The callback (bound to this) to run when an event occurs. 
+	 * The callback to run when an event occurs. 
 	 * This is needed when removing the events.
 	 */
 	private _eventCallback:(e:MouseEvent)=>void;
@@ -24,9 +24,12 @@ export default class PointerEventManager implements IPointerEventManager {
 	constructor()
 	{
 		this._subjects = [];
-		this._eventCallback = this._onPointCallback.bind(this);
 		
 		const canvas = Kernel.getInstance().gameCanvas;
+		
+		this._eventCallback = (e:MouseEvent) => {
+			this._onPointCallback(e);
+		};
 		
 		canvas.addEventListener("click", this._eventCallback);
 		canvas.addEventListener("touchStart", this._eventCallback);
@@ -45,9 +48,9 @@ export default class PointerEventManager implements IPointerEventManager {
 	}
 	
 	/**
-	 * Removes all click and touch event listeners from the canvas
+	 * Removes the event listeners from the canvas
 	 */
-	removeCanvasEventHandlers():void {
+	removeEventHandlers():void {
 		const canvas = Kernel.getInstance().gameCanvas;
 		canvas.removeEventListener("click", this._eventCallback);
 		canvas.removeEventListener("touchStart", this._eventCallback);

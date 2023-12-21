@@ -10,7 +10,7 @@ export default interface IPointerEventManager {
     addPointerEventSubject(subject:any):void;
     
     /**
-     * Removes all click and touch event listeners from the canvas
+     * Removes the event listeners from the canvas
      */
-    removeCanvasEventHandlers():void;
+    removeEventHandlers():void;
 };
