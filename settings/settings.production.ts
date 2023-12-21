@@ -3,7 +3,7 @@ import TheConstruct from '../assets/levels/TheConstruct/TheConstruct';
 import ISettings from './ISettings';
 
 export default {
-	gameCanvas: document.getElementById("gameCan") as HTMLCanvasElement,
+	gameCanvas: document.getElementById("gameCanvas") as HTMLCanvasElement,
 	correctCanvasStyleAndDevicePixelRatio: true,
 	isOnMobile: false,
 	initialFPS: 60,
