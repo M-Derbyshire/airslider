@@ -106,7 +106,9 @@ export default class ASLevel extends Level
         
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
         this._startSignDisplay = new SignDisplay(this._startSign);
-        this._finishSign = new Sign("FINISH", this.helpers.zCalc.vPointDepth, this._signStartingZPosition, false);
+        
+        // The zCalc will not have the vanishing point defined yet, so we'll set the starting z-position in the prepare() method
+        this._finishSign = new Sign("FINISH", 0, this._signStartingZPosition, false);
         
         return [
             ...stdModels,
@@ -159,9 +161,11 @@ export default class ASLevel extends Level
         this._finishFlagsManager.setupGround();
         
         this._activeSections = [this._openingSectionId];
-        this._finishFlagsActive = false;
         this.levelMoving = false;
         this._setupLevelSpeed();
+        
+        this._finishFlagsActive = false;
+        this._finishSign.setStartingZPosition(this.helpers.zCalc.vPointDepth);
         
         this._setupShockerManager(this.leftEdge, this.rightEdge);
 		this._setupPatternManager();
@@ -457,15 +461,11 @@ export default class ASLevel extends Level
         {
             // End the finish flags, before starting the sign's entrance
             if(currentMs >= (closingStartMS + 3500))
-            {
                 this._finishFlagsManager.removeGround();
-            }
             
             // Trigger the finish sign's entrance
             if(currentMs >= (closingStartMS + 4000))
-            {
                 this._finishSign.active = true;
-            }
         }
         
         // If the sign is in position, stop the level

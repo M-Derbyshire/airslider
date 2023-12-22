@@ -98,6 +98,15 @@ export default class Sign extends ASModel
     }
     
     /**
+     * Used to change the starting z position of the sign
+     * @param pos The new starting z position
+     */
+    setStartingZPosition(pos:number):void
+    {
+        this._startPosition = pos;
+    }
+    
+    /**
      * Checks to see if the sign is in its target position, and sets hasReachedTargetPosition to true
      */
     private _checkForTargetPosition():void
