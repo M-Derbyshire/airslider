@@ -8,10 +8,8 @@ import Tarian from '../../../Tarian/Tarian';
  */
 export default class LavaBall extends ASModel {
     
-    protected playerModel:Tarian;
-    protected damageFlashImage:HTMLImageElement; // The image used by the DamageFlash
-    
-    private _initialYSpeed:number;
+    protected playerModel:Tarian; // The player's model
+    protected damageFlashImage:HTMLImageElement; // The image used by the DamageFlash HUD Component
     
     /**
      * Constructor
@@ -29,12 +27,8 @@ export default class LavaBall extends ASModel {
     {
         super.load(animationManager);
         
-        let ballWidth = 30;
-        let ballHeight = 40;
-        
-        const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/fire.png";
-        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
-        this.assetsToUnload.push(damageFlashSpritesheet);
+        const ballWidth = 30;
+        const ballHeight = 40;
         
         const spritesheetPath = "/assets/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
@@ -73,8 +67,9 @@ export default class LavaBall extends ASModel {
             }),
         });
         
-        this.state = "drop";
-        
+        const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/fire.png";
+        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
+        this.assetsToUnload.push(damageFlashSpritesheet);
     }
     
     prepare():void
@@ -82,16 +77,16 @@ export default class LavaBall extends ASModel {
         super.prepare();
         
         this.active = false;
-        this._initialYSpeed = 1000;
-        this.ySpeed = this._initialYSpeed;
+        this.state = "drop";
+        this.ySpeed = 0;
     }
     
     act():void
     {
-        if(this.state == "drop")
+        if(this.state === "drop")
         {
             this.moveDown(this.ySpeed);
-            this.moveRight(this.xSpeed); //may be negative, to move left
+            this.moveRight(this.xSpeed); // this may be a negative number, to move left
         }
         else if(this.state === "none")
         {
@@ -100,34 +95,31 @@ export default class LavaBall extends ASModel {
     }
     
     /**
-     * The dragon can use this to aim the lava ball at the player, before it drops it
+     * A monster can aim the lava ball at the player using this, before it is dropped
      */
     aimAtPlayer():void
     {
-        const speedMultiplier = 2.25;
-        const xSpeedLimit = 250; // A limit on the x speed
+        const speedMultiplier = 2.25; // Change this to affect the speed of the ball
+        const xSpeedLimit = 250; // A limit on the x speed (regardless of direction)
         
-        // We need to calculate the x/y speed needed to get to the player (can be negative values)
-        const distanceToPlayerTop = this.playerModel.y - (this.y + this.height);
+        // We need to determine the distance between the ball and the player
         const playerXCenter = (this.playerModel.width / 2) + this.playerModel.x;
         const thisXCenter = (this.width / 2) + this.x;
-        const distanceToPlayerXCentre = playerXCenter - thisXCenter;
+        const distanceToPlayerXCenter = playerXCenter - thisXCenter; // This can be a negative value, if it needs to move left
+        const distanceToPlayerY = this.playerModel.y - (this.y + this.height);
         
-        this.ySpeed = distanceToPlayerTop * speedMultiplier;
-        this.xSpeed = distanceToPlayerXCentre * speedMultiplier;
+        // Now we can calculate the x/y speed needed to get to the player
+        this.xSpeed = distanceToPlayerXCenter * speedMultiplier;
+        this.ySpeed = distanceToPlayerY * speedMultiplier;
         
-        // We want to limit the x speed (in either direction)
+        // We want to limit the x speed (regardless of the direction)
         if(Math.abs(this.xSpeed) > xSpeedLimit)
-        {
             this.xSpeed = (this.xSpeed > 0) ? xSpeedLimit : -xSpeedLimit;
-        }
     }
     
     hitPlayerOrGroundEventAction(otherModel:IModel):void
     {
-        if(this.state == "drop")
-        {
+        if(this.state === "drop")
             this.state = "break";
-        }
     }
 }
