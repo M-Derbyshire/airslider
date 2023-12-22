@@ -12,7 +12,11 @@ const zCollisionEventCheck = (modelA:IModel, modelAActionMethodName:string, mode
     const boxesA = modelA.getBoundaryBoxes();
     const boxesB = modelB.getBoundaryBoxes();
     
-    //Not using forEach, as we want to return after the first collision we find
+    // The zSpeed of modelB is used as a "depth" for the model. However, if it 
+    // isn't set, we want a default value.
+    const modelBZDepth = (modelB.zSpeed) ? modelB.zSpeed : 0;
+    
+    // Not using forEach, as we want to return after the first collision we find
     for(let aIter = 0; aIter < boxesA.length; aIter++)
     {
         const boxA = boxesA[aIter];
@@ -22,7 +26,7 @@ const zCollisionEventCheck = (modelA:IModel, modelAActionMethodName:string, mode
             const boxB = boxesB[bIter];
             
             if (
-                (boxA.z >= (boxB.z - modelB.zSpeed)) && (boxA.z <= boxB.z) && // Z collision
+                (boxA.z >= (boxB.z - modelBZDepth)) && (boxA.z <= boxB.z) && // Z collision
                 (boxA.x + boxA.width >= boxB.x) && (boxA.x <= boxB.x + boxB.width) && // X collision
                 (boxA.y + boxA.height >= boxB.y) && (boxA.y <= boxB.y + boxB.height) // Y collision
             )
