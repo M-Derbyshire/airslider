@@ -35,12 +35,12 @@ export default class TheConstruct extends ASLevel
     {
         let models = super.getModels() as ASModel[];
         
-        // const lowerPidgeon = new NeonPidgeon(this.player);
-        // models.push(lowerPidgeon);
-        // models.push(new NeonPidgeon(this.player, lowerPidgeon));
+        const lowerPidgeon = new NeonPidgeon(this.player);
+        models.push(lowerPidgeon);
+        models.push(new NeonPidgeon(this.player, lowerPidgeon));
         
         // models.push(new Falcon(models[0]));
-        models.push(new Ghost(this.player));
+        // models.push(new Ghost(this.player));
 		// models.push(new LavaBall(this.player));
         // models.push(new LavaBall(this.player));
 		// models.push(new BabyDragon(this.player, models[models.length - 1] as LavaBall, models[models.length - 2] as LavaBall));
@@ -50,7 +50,7 @@ export default class TheConstruct extends ASLevel
         // models.push(new ElectricHornet(this.player));
 		this.monsters = [
             models[models.length - 1] as Monster,
-            // models[models.length - 2] as Monster
+            models[models.length - 2] as Monster
         ];
 
         this.shockerManager.setPlayerModel(this.player);
