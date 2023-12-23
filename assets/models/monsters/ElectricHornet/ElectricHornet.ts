@@ -9,15 +9,14 @@ import Tarian from '../../Tarian/Tarian';
  */
 export default class ElectricHornet extends Monster {
     
-    private _buzzSound:HTMLAudioElement;
+    private _buzzSound:HTMLAudioElement; // The buzzing sound effect
     
-    private _dropWaitOffset:number;
-    private _dropWaitRange:number;
-    private _initialDropWait:number;
+    private _dropWaitOffset:number; // The minimum amount of milliseconds between dropping for attacks
+    private _dropWaitRange:number; // The maximum amount of milliseconds to wait (after the drop wait offset) before attacking
+    private _initialDropWait:number; // The amount of milliseconds before the first attack
+    private _nextDropTime:number|null; // The next time (in milliseconds) to attack. Should be set to null initially
     
-    private _startXSpeed:number;
-    
-    private _nextDropTime:number;
+    private _startXSpeed:number; // The initial x speed (not including the entering sequence)
     
     /**
      * Constructor
@@ -28,7 +27,6 @@ export default class ElectricHornet extends Monster {
         super();
         
         this.playerModel = playerModel;
-        
         this.damageDealt = 10;
     }
     
@@ -39,8 +37,6 @@ export default class ElectricHornet extends Monster {
         const buzzSoundPath = "/assets/models/monsters/ElectricHornet/sounds/buzz.mp3";
         this._buzzSound = this.kernel.loadAudio(buzzSoundPath);
         this.assetsToUnload.push(buzzSoundPath);
-        
-        this.damageFlashImage = this.kernel.loadImage("/assets/HUDs/components/DamageFlash/images/yellow.png");
         
         const spritesheetPath = "/assets/models/monsters/ElectricHornet/anim/electricHornet_spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
@@ -57,6 +53,10 @@ export default class ElectricHornet extends Monster {
 				],
             })
         });
+        
+        const damageFlashImagePath = "/assets/HUDs/components/DamageFlash/images/yellow.png";
+        this.damageFlashImage = this.kernel.loadImage(damageFlashImagePath);
+        this.assetsToUnload.push(damageFlashImagePath);
     }
     
     prepare():void
@@ -69,39 +69,38 @@ export default class ElectricHornet extends Monster {
             this._rise
         ];
         
-        this.enterXSpeed = 90;
-        this.exitXSpeed = 240;
         this.offScreenUnits = 500;
         this.startY = 100;
         this.startX = this.levelRightEdge + this.offScreenUnits;
         this.startZ = this.playerModel.z;
+        this.y = this.startY;
+        this.x = this.startX;
+        this.z = this.startZ;
+        
+        this.enterXSpeed = 90;
+        this.exitXSpeed = 240;
+        this._startXSpeed = -400;
+        this.xSpeed = this._startXSpeed;
         this.ySpeed = 1250;
         
         // How long till the hornet will drop?
         this._dropWaitOffset = 2000; // 2 seconds
         this._dropWaitRange = 2000;
         this._initialDropWait = 4000;
+        this._nextDropTime = null;
         
-        this._nextDropTime = -1;
-        this.y = this.startY;
-        this.x = this.startX;
-        this.z = this.startZ;
-        this._startXSpeed = -400;
-        this.xSpeed = this._startXSpeed;
         this.state = "flapping";
     }
     
     act(): void {
         super.act();
-        
         this._buzzSound.volume = this.getVolumeForDistance();
     }
     
-    // Collision boxes --------------------------------------------------------
+    // Hit boxes for collision --------------------------------------------------------
     getBoundaryBoxes():IBoundaryBox[]
     {
         if(this.currentAction !== 0)
-        {
             return [
                 {
                     x: this.x + (this.width / 2.7),
@@ -111,16 +110,14 @@ export default class ElectricHornet extends Monster {
                     height: this.height / 3.8
                 }
             ];
-        }
         
         return [];
     }
     
-    //entering and exiting and reseting-----------------------------------------
+    // Entering, exiting and resetting-----------------------------------------
     
     start(): void {
         super.start();
-        
         this.kernel.soundEn.playSound(this._buzzSound, true);
     }
     
@@ -137,20 +134,20 @@ export default class ElectricHornet extends Monster {
     
     exit():void
     {
-        if(this.y != this.startY)
+        if(this.y != this.startY) // if not at the correct y position, don't leave yet
         {
-            //if not at correct height, don't leave yet
             this._rise();
         } else {        
             this.moveLeft(this.exitXSpeed);
             
             if((this.x + this.width) < (this.levelLeftEdge - this.offScreenUnits))
-            {
                 this._handleMonsterExitingScreen();
-            }
         }
     }
     
+    /**
+     * Should be called once the monster has left the screen on exiting
+     */
     private _handleMonsterExitingScreen():void
 	{
 		this.exiting = false;
@@ -158,23 +155,24 @@ export default class ElectricHornet extends Monster {
         this.kernel.soundEn.stopSound(this._buzzSound);
 	}
     
-    //movement-----------------------------------------------------
+    // Monster actions -----------------------------------------------------
     
+    /**
+     * Regular flying back and forth
+     */
     private _fly():void
     {
-        // Handle collision with level edges
-        // (if the model is over an edge, and still moving in that direction)
+        // Handle collision with level edges (if the model is over an edge, and still moving in that direction)
         if((this.x <= this.levelLeftEdge && this.xSpeed < 0) || 
             ((this.x + this.width) >= this.levelRightEdge && this.xSpeed > 0))
         {
             this.xSpeed = -this.xSpeed;
         }
         
-        // Now move
-        this.moveRight(this.xSpeed); // Can be a negative number
+        this.moveRight(this.xSpeed); // Can be a negative number, to move left
         
-        // Now determine if monster should start to attack
-        if(this._nextDropTime === -1)
+        // Determine if the monster should start to attack
+        if(this._nextDropTime === null)
         {
             this._nextDropTime = this._getNextDropTime();
         } 
@@ -184,19 +182,49 @@ export default class ElectricHornet extends Monster {
         }
     }
     
+    /**
+     * Creates a randomised time for the next attack (bearing in mind the dropWaitOffset and dropWaitRange) in milliseconds
+     * @returns The new time (in milliseconds) for the next attack
+     */
     private _getNextDropTime():number
 	{
-		return this.helpers.time.getTotalMilliseconds() + 
-									this._dropWaitOffset + 
-									Math.floor(Math.random() * this._dropWaitRange);
+        const currentTime = this.helpers.time.getTotalMilliseconds();
+		return currentTime + this._dropWaitOffset + Math.floor(Math.random() * this._dropWaitRange);
 	}
     
+    /**
+     * Sets the x/y speeds to aim at the player, and moves to the next action (to the drop attack)
+     */
+    private _triggerDrop()
+    {
+        this._nextDropTime = null;
+        
+        // We need to calculate the x/y speed needed to get to the player (xSpeed can be a negative value, to move left)
+        const distanceToPlayerTop = this.playerModel.y - (this.y + this.height);
+        const playerXCenter = (this.playerModel.width / 2) + this.playerModel.x;
+        const thisXCenter = (this.width / 2) + this.x;
+        const distanceToPlayerXCenter = playerXCenter - thisXCenter;
+        
+        const speedMultiplier = 2.75;
+        
+        this.xSpeed = distanceToPlayerXCenter * speedMultiplier;
+        this.ySpeed = distanceToPlayerTop * speedMultiplier;
+        
+        this.nextAction();
+    }
+    
+    /**
+     * Drops down to attack
+     */
     private _drop():void
     {
         this.moveDown(this.ySpeed);
         this.moveRight(this.xSpeed);
     }
     
+    /**
+     * Rise back up, after an attack
+     */
     private _rise():void
     {
         this.moveUp(this.ySpeed);
@@ -209,39 +237,20 @@ export default class ElectricHornet extends Monster {
         }
     }
     
-    private _triggerDrop()
-    {
-        this._nextDropTime = -1;
-        
-        // We need to calculate the x/y speed needed to get to the player (can be negative values)
-        const distanceToPlayerTop = this.playerModel.y - (this.y + this.height);
-        const playerXCenter = (this.playerModel.width / 2) + this.playerModel.x;
-        const thisXCenter = (this.width / 2) + this.x;
-        const distanceToPlayerXCentre = playerXCenter - thisXCenter;
-        
-        const speedMultiplier = 2.75;
-        
-        this.xSpeed = distanceToPlayerXCentre * speedMultiplier;
-        this.ySpeed = distanceToPlayerTop * speedMultiplier;
-        
-        this.nextAction();
-    }
     
-    
-    // events------------------------------------------------------
+    // Events------------------------------------------------------
 
     zCollisionEventAction(otherModel:IModel):void
     {
+        // If we're dropping, start rising back up
         if(this.currentAction === 1)
             this.nextAction();
     }
     
     extraEvents():void
     {
-        // Check for missing the player on swoop
+        // Check for missing the player on an attack
         if(this.currentAction === 1 && (this.y + this.height) > (this.playerModel.y + 100))
-        {
             this.nextAction();
-        }
     }
 }
