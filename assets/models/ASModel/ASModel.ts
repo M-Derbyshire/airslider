@@ -41,7 +41,7 @@ export default class ASModel extends Model {
     }
     
     /**
-     * Calculates a volume value, based on how far 
+     * Calculates a volume value, based on how far away the model is on the Z axis
      * @returns The volume value for any sound effects, based on the model's z position
      */
     protected getVolumeForDistance():number

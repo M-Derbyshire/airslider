@@ -9,12 +9,15 @@ import LavaBall from '../attacks/LavaBall/LavaBall';
  */
 export default class BabyDragon extends Monster 
 {
-    private _playerModel:Tarian;
-    private _lavaBalls:LavaBall[];
-    private _nextLavaBallIndex:number;
-    private _nextDirectionToggleTime:number; // determines when the monster should next toggle its direction
-    private _initialXSpeed:number;
-    private _wingSound:HTMLAudioElement;
+    private _playerModel:Tarian; // The player's model
+    private _lavaBalls:LavaBall[]; // The lava ball models that the dragon will drop onto the player
+    private _nextLavaBallIndex:number; // The "next" lava ball refers to the next one to drop (not the next one to select)
+    private _nextDirectionToggleTime:number; // Determines when the monster should next toggle its direction
+    private _initialXSpeed:number; // The initial speed of the monster (on the X axis), after the entrance movement
+    private _wingSound:HTMLAudioElement; // The sound effect for the flapping of the wings
+    
+    // This model's animation runs at a lower framerate to the game. This stores the index of the last frame that was 
+    // used. See the act() method for an explanation of how this relates to the sound effect.
     private _lastAnimFrame:number;
     
     /**
@@ -32,13 +35,12 @@ export default class BabyDragon extends Monster
     }
     
     /**
-     * The alternate lava ball to the one we're dropping next
+     * The index for the alternate lava ball to the one we're dropping next
      */
-    private get _prevLavaBallIndex() {
-        if(this._nextLavaBallIndex === this._lavaBalls.length - 1)
-                return 0;
-        
-        return this._nextLavaBallIndex + 1;
+    private get _altLavaBallIndex() {
+        return (this._nextLavaBallIndex === this._lavaBalls.length - 1) 
+            ? 0 
+            : this._nextLavaBallIndex + 1;
     }
     
     load(animationManager:IModelAnimationsManager):void
@@ -92,7 +94,6 @@ export default class BabyDragon extends Monster
         });
         
         this.state = "left";
-        
     }
     
     prepare():void
@@ -103,34 +104,26 @@ export default class BabyDragon extends Monster
             this._move
         ];
         
-        this.offScreenUnits = 500;
         this.startY = 10,
+        this.offScreenUnits = 500;
         this.startX = this.levelRightEdge + this.offScreenUnits;
-        
         this.startZ = this._playerModel.z;
-        this.enterXSpeed = 90;
-        this._initialXSpeed = -720;
-        
-        this._lastAnimFrame = 0;
-        
-        this._lavaBalls.forEach(lb => lb.z = this.startZ);
-        
-        this.xSpeed = this._initialXSpeed;
         
         this.x = this.startX;
         this.y = this.startY;
         this.z = this.startZ;
-        this.state = "left";
-        this._wingSound.volume = 1;
         
-        //The "next" lava ball refers to the next one to drop (not the next one to select)
-        //Also see the getter for _prevLavaBallIndex
+        this.state = "left";
+        
+        this.enterXSpeed = 90;
+        this._initialXSpeed = -720;
+        this.xSpeed = this._initialXSpeed;
+        
+        this._lavaBalls.forEach(lb => lb.z = this.startZ);
         this._nextLavaBallIndex = 0;
-    }
-    
-    getBoundaryBoxes():IBoundaryBox[]
-    {
-        return [];
+        
+        this._lastAnimFrame = 0;
+        this._wingSound.volume = 1;
     }
     
     act(): void {
@@ -139,35 +132,33 @@ export default class BabyDragon extends Monster
         this._wingSound.volume = this.getVolumeForDistance();
         const flappingAnimation = this.animationManager.animations[this.state];
         
+        // We want to run the sound effect on every wing flap.
         // The animation runs at a lower FPS to the rest of the game. We were having a buzzing sound because 
-        // the current animation frame equaled 1 for quite a few game frames, so was being repeatedly restarted.
-        // Therefore, we only want to run the sound when the animation frame has actually changed.
+        // the animation's currentFrameIndex equaled 1 for quite a few game frames, so the sound was being 
+        // repeatedly restarted. Therefore, we only want to run the sound when the animation frame has actually changed.
         const animationChangedFrame = this._lastAnimFrame !== flappingAnimation.currentFrameIndex;
         
-        // The sound may restart too soon when changing between left/right animations.
-        // Therefore, we run the sound on the last frame, not the first.
+        // The wing sound may restart too soon when changing between left/right animations.
+        // Therefore, we run the sound on the last frame of the animation, not the first.
         if(animationChangedFrame && flappingAnimation.currentFrameIndex === flappingAnimation.frameCoordinates.length - 1)
             this.kernel.soundEn.playSound(this._wingSound);
         
         this._lastAnimFrame = flappingAnimation.currentFrameIndex;
     }
     
-    //entering and exiting and reseting-----------------------------------------
+    //entering, exiting and resetting-----------------------------------------
     
     start(): void {
         super.start();
-        
         this.kernel.soundEn.forceLoad(this._wingSound);
     }
     
     enter():void
     {
         if(this.levelRightEdge < (this.x + this.width))
-        {
             this.moveLeft(this.enterXSpeed);
-        } else {
+        else
             this.entering = false;
-        }
     }
     
     exit():void
@@ -182,11 +173,14 @@ export default class BabyDragon extends Monster
         }
     }
     
-    //movement-----------------------------------------------------
+    // Movement-----------------------------------------------------
     
+    /**
+     * The movement action. Moves the dragon back and forth, and drops lava balls
+     */
     private _move():void
     {
-        this.moveRight(this.xSpeed);
+        this.moveRight(this.xSpeed); // May be a negative number, to move left
         
 		this._handleOverlappingOfLevelEdges();
         
@@ -196,6 +190,10 @@ export default class BabyDragon extends Monster
             this._toggleDirection();
     }
 	
+    /**
+     * Checks to see if the dragon is overlapping the level edges, and triggers the 
+     * change of direction
+     */
 	private _handleOverlappingOfLevelEdges():void
 	{
 		const hasOverlappedLeftEdge = (this.x + (this.width / 2) <= this.levelLeftEdge);
@@ -203,9 +201,9 @@ export default class BabyDragon extends Monster
 		
         if(hasOverlappedLeftEdge || hasOverlappedRightEdge)
         {
-            this.xSpeed = -this.xSpeed;
-            this.state = (this.state == "left") ? "right" : "left";
+            this._toggleDirection();
             
+            // Change the position, so we're no longer overlapping the edge
             this.x = (this.xSpeed > 0) ? 
                 ((this.levelLeftEdge - (this.width / 2)) + 1) :
                 ((this.levelRightEdge - (this.width / 2)) - 1);
@@ -214,17 +212,19 @@ export default class BabyDragon extends Monster
         }
 	}
     
+    /**
+     * Determines if it's time for the dragon to change direction (and generates the next time to change)
+     * @returns true if the dragon should change direction, false if not
+     */
     private _shouldChangeDirection():boolean
     {
         const runningTime = this.kernel.totalLevelActiveMilliseconds;
         
-        // Initial
+        // The initial time to change direction
         if(!this._nextDirectionToggleTime)
-        {
             this._nextDirectionToggleTime = runningTime + 5000;
-        }
         
-        // We only want to change direction if monster is a certain distance from the edge of the level
+        // We only want to change direction if the dragon is a certain distance from the edge of the level
         const areaSize = this.width / 8;
         const leftArea = this.levelLeftEdge + areaSize;
         const rightArea = this.levelRightEdge - areaSize;
@@ -233,61 +233,68 @@ export default class BabyDragon extends Monster
         const monsterIsWithinLeftArea = (this.x <= leftArea); 
         const monsterIsWithinRightArea = (monsterRightEdge >= rightArea);
         
-        // Is it time to toggle, and is the monster close to the center
-        if(runningTime >= this._nextDirectionToggleTime)
-        {
+        if(
+            runningTime >= this._nextDirectionToggleTime && // Is it time to toggle?
             // We only want to start moving right if in the left area (or vice-versa)
-            if((monsterIsWithinLeftArea && this.state === "left") || 
-                (monsterIsWithinRightArea && this.state === "right"))
-            {
-                const newTimePeriod = (Math.random() * 4000) + 2000; //between 2 and 4 seconds
-                this._nextDirectionToggleTime = runningTime + newTimePeriod;
-                return true;
-            }
+            ((monsterIsWithinLeftArea && this.state === "left") || (monsterIsWithinRightArea && this.state === "right"))
+        )
+        {
+            const newTimePeriod = (Math.random() * 4000) + 2000; //between 2 and 4 seconds
+            this._nextDirectionToggleTime = runningTime + newTimePeriod;
+            return true;
         }
         
         return false;
     }
     
+    /**
+     * Toggles the x direction of the dragon
+     */
     private _toggleDirection():void
     {
         this.xSpeed = -this.xSpeed;
         this.state = (this.state === "left") ? "right" : "left";
     }
 	
+    /**
+     * Checks if it's time to drop a lava ball, then triggers it
+     */
 	private _dropBallIfTime():void
 	{
-        const prevLavaBall = this._lavaBalls[this._prevLavaBallIndex];
+        const nextLavaBall = this._lavaBalls[this._nextLavaBallIndex];
+        const altLavaBall = this._lavaBalls[this._altLavaBallIndex];
         
-        if ((!prevLavaBall.active && !this._lavaBalls[this._nextLavaBallIndex].active && this.fireWeapon) //This will trigger the first drop
-            //After the first drop, the below triggers an further drops
-            || (this.fireWeapon 
-            && this._lavaBalls[this._nextLavaBallIndex].state !== "drop" //When we test this with .active, there's a bug where occasionally it stops dropping both balls
-            && (prevLavaBall.y > this.kernel.unitsWithinCamera / 1.5)))
+        if ((!altLavaBall.active && !nextLavaBall.active && this.fireWeapon) || //This will trigger the first drop
+            //After the first drop, the below triggers any further drops
+            (this.fireWeapon &&
+            nextLavaBall.state !== "drop" && //When we check for this with .active, there's a bug where it can stop dropping balls
+            (altLavaBall.y > this.kernel.unitsWithinCamera / 1.5)))
         {
             this._dropBall();
-            this._nextLavaBallIndex = this._prevLavaBallIndex;
+            this._nextLavaBallIndex = this._altLavaBallIndex;
         }
 	}
     
-    //attacks-----------------------------------------------------
+    // Attacks-----------------------------------------------------
+    
+    /**
+     * Drops a lava ball, aimed at the player
+     */
     private _dropBall():void
     {
-        let l = this._lavaBalls[this._nextLavaBallIndex];
+        const ball = this._lavaBalls[this._nextLavaBallIndex];
         
-        //center it
+        //center the ball
         let xOffset = -65;
         
         if(this.state == "right")
-        {
             xOffset = -xOffset - 25;
-        }
         
-        l.x = this.x + (this.width / 2) + xOffset;
-        l.y = this.y + this.height + -20;
+        ball.x = this.x + (this.width / 2) + xOffset;
+        ball.y = this.y + this.height - 20;
         
-        l.state = "drop";
-        l.aimAtPlayer();
-        l.active = true;
+        ball.state = "drop";
+        ball.aimAtPlayer();
+        ball.active = true;
     }
 }
