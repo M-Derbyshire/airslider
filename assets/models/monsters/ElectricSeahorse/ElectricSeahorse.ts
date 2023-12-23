@@ -1,4 +1,3 @@
-import IBoundaryBox from '../../Model/IBoundaryBox';
 import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
@@ -9,13 +8,12 @@ import Lightning from '../attacks/Lightning/Lightning';
  */
 export default class ElectricSeahorse extends Monster {
 
-    private _playerModel:Tarian;
-    private _leftLightningModel:Lightning;
-    private _rightLightningModel:Lightning;
-    private _wingSound:HTMLAudioElement;
-    private _lastAnimFrame:number;
-    
-    private _nextDirectionChangeMilliSeconds:number; // Used when deciding when to change movement direction
+    private _playerModel:Tarian; // The model of the player
+    private _leftLightningModel:Lightning; // The lightning model for the left side of the monster
+    private _rightLightningModel:Lightning; // The lightning model for the right side of the monster
+    private _wingSound:HTMLAudioElement; // The sound effect for the flapping wings
+    private _lastAnimFrame:number; // The index of the current frame in the animation (see the act() method for explanation)
+    private _nextDirectionChangeMilliSeconds:number; // When (in milliseconds) should the monster next change direction?
     
     /**
      * Constructor
@@ -69,41 +67,33 @@ export default class ElectricSeahorse extends Monster {
             this.move
         ];
         
-        this.offScreenUnits = 500;
-        this.startY = 10,
-        this.startX = this.levelRightEdge + this.offScreenUnits;
-        
         this.startZ = this._playerModel.z;
-        this.enterXSpeed = 90;
-        
-        this._leftLightningModel.z = this.startZ;
-        this._rightLightningModel.z = this.startZ;
+        this.startY = 10;
+        this.offScreenUnits = 500;
+        this.startX = this.levelRightEdge + this.offScreenUnits;
+        this.x = this.startX;
+        this.y = this.startY;
+        this.z = this.startZ;
         
         const lightningYPos = this.startY + (this.height / 1.5);
         this._leftLightningModel.y = lightningYPos;
         this._rightLightningModel.y = lightningYPos;
+        this._leftLightningModel.z = this.startZ;
+        this._rightLightningModel.z = this.startZ;
+        this._setLightningActiveStatus(false);
         
-        this._lastAnimFrame = 0;
+        this.enterXSpeed = 90;
+        this.xSpeed = 500;
         
         this._nextDirectionChangeMilliSeconds = 0;
-        this.xSpeed = 500;
-        this.x = this.startX;
-        this.y = this.startY;
-        this.z = this.startZ;
-        this.state = "move";
-        this._setLightningActiveStatus(false);
+        this._lastAnimFrame = 0;
+        this.state = "move";   
     }
     
-    getBoundaryBoxes():IBoundaryBox[]
-    {
-        return [];
-    }
-    
-    //entering and exiting and reseting-----------------------------------------
+    // Entering, exiting and reseting-----------------------------------------
     
     start(): void {
         super.start();
-        
         this.kernel.soundEn.forceLoad(this._wingSound);
     }
     
@@ -136,8 +126,6 @@ export default class ElectricSeahorse extends Monster {
         }
     }
     
-    //movement-----------------------------------------------------
-    
     act():void
     {
         super.act();
@@ -152,9 +140,7 @@ export default class ElectricSeahorse extends Monster {
         const animationChangedFrame = this._lastAnimFrame !== flappingAnimation.currentFrameIndex;
         
         if(this.state === "move" && animationChangedFrame && flappingAnimation.currentFrameIndex === 1)
-        {
             this.kernel.soundEn.playSound(this._wingSound);
-        }
         
         this._lastAnimFrame = flappingAnimation.currentFrameIndex;
         
@@ -164,11 +150,11 @@ export default class ElectricSeahorse extends Monster {
     }
     
     /**
-     * Moves the monster left/right
+     * Action that moves the monster left/right
      */
     move():void
     {
-        this.moveLeft(this.xSpeed); //Can be negative, and so move right
+        this.moveLeft(this.xSpeed); //Can be a negative number, to move right
         this._correctLightningXPos();
         
 		this._handleOverlappingOfLevelEdges();
@@ -182,24 +168,35 @@ export default class ElectricSeahorse extends Monster {
     }
     
     /**
-     * Has the monster moved outside of its boundary
+     * Sets the active status of the lighting models
+     * @param isActive the new active status
+     */
+    private _setLightningActiveStatus(isActive:boolean):void
+    {
+        this._leftLightningModel.active = isActive;
+        this._rightLightningModel.active = isActive;
+    }
+    
+    /**
+     * Has the monster moved outside of its boundary?
      */
     private _handleOverlappingOfLevelEdges():void
 	{
-        //Defining our own left/right edges we want to stay within
-        //If we take into account the z position, these aren't actually off the screen
-        const ourLeftEdgeBoundary = this.levelLeftEdge - (this.width / 5); 
-        const ourRightEdgeBoundary = this.levelRightEdge + (this.width / 5);
+        // Defining the left/right edges that we want the monster to stay within.
+        // If we take into account the z position, these aren't actually off the screen.
+        const boundaryBuffer = (this.width / 5);
+        const leftEdgeBoundary = this.levelLeftEdge - boundaryBuffer; 
+        const rightEdgeBoundary = this.levelRightEdge + boundaryBuffer;
         
-		const hasOverlappedLeftEdge = (this.x <= ourLeftEdgeBoundary);
-		const hasOverlappedRightEdge = (this.x + this.width >= ourRightEdgeBoundary);
+		const hasOverlappedLeftEdge = (this.x <= leftEdgeBoundary);
+		const hasOverlappedRightEdge = (this.x + this.width >= rightEdgeBoundary);
 		
         if(hasOverlappedLeftEdge || hasOverlappedRightEdge)
         {
             this.xSpeed = -this.xSpeed;
             this.x = (this.xSpeed < 0) 
-                ? (ourLeftEdgeBoundary + 1) 
-                : (ourRightEdgeBoundary - this.width - 1);
+                ? (leftEdgeBoundary + 1) 
+                : (rightEdgeBoundary - this.width - 1);
         }
 	}
     
@@ -217,19 +214,9 @@ export default class ElectricSeahorse extends Monster {
     }
     
     /**
-     * Sets the active status of the lighting
-     * @param isActive the new active status
+     * Sets the correct x positions for the lightning models
      */
-    _setLightningActiveStatus(isActive:boolean):void
-    {
-        this._leftLightningModel.active = isActive;
-        this._rightLightningModel.active = isActive;
-    }
-    
-    /**
-     * Sets the correct x positions of the lightning
-     */
-    _correctLightningXPos():void
+    private _correctLightningXPos():void
     {
         this._leftLightningModel.x = this.x + 30;
         this._rightLightningModel.x = this.x + (495 - this._rightLightningModel.width);

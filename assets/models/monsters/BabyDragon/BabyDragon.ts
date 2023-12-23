@@ -1,4 +1,3 @@
-import IBoundaryBox from '../../Model/IBoundaryBox';
 import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
