@@ -65,7 +65,7 @@ export default class Sign extends ASModel
     {
         super.prepare();
         
-        if(!this._startPosition)
+        if(this._startPosition === null)
             this._startPosition = this.helpers.zCalc.vPointDepth;
         
         this.x = -100;
