@@ -9,7 +9,7 @@ import Tarian from '../../Tarian/Tarian';
 export default class Ghost extends Monster {
     
     /**
-     * The total dmamage value this monster can have
+     * The maximum damage value this monster can have (damageDealt is the damage currently dealt by the monster)
      */
     damageDealtOrig:number;
     
@@ -19,32 +19,27 @@ export default class Ghost extends Monster {
     damageDealt:number;
     
     /**
-     * The speed that this monster should exit at, on the z axis
+     * The speed that this monster should exit the level, on the z axis
      */
     exitZSpeed:number;
     
     private _playerModel:Tarian; // The player's model
-    private _minXSpeed:number;
+    private _minXSpeed:number; 
     private _maxXSpeed:number;
-    private _directionMultiplier:number;
+    private _directionMultiplier:number; // The x speed is multiplied by this; Negate it to change direction
     
-    //outLimit is how far back the monster will go, before moving forward
-    //inLimit is the point it will start it's sweeping again
-    private _outLimit:number;
-    private _inLimit:number;
-    
-    
+    private _outLimit:number; // How far back will the monster go, before moving forward
+    private _inLimit:number; // The point when the monster will start its sweeping again, after moving back from an attack
     
     /**
      * Constructor
-     * @param playerModel 
+     * @param playerModel The player's model
      */
     constructor(playerModel:Tarian)
     {
         super();
         
         this._playerModel = playerModel;
-        
         this.damageDealtOrig = 2;
     }
     
@@ -84,41 +79,41 @@ export default class Ghost extends Monster {
             this.moveUp
         ];
         
-        this.exitZSpeed = 50;
         this.state = "normal";
         
+        this.startZ = this.helpers.zCalc.vPointDepth;
         this.setYPositionFromBottom(this.height);
         this.startY = this.y;
         this.centerXPosition();
-        this.startX = this.x
-        this.startZ = this.helpers.zCalc.vPointDepth;
+        this.startX = this.x;
+        this.y = this.startY;
+        this.x = this.startX;
+        this.z = this.startZ;
+        
+        this.zSpeed = 120;
+        this.exitZSpeed = 50;
         this._minXSpeed = 1000;
         this._maxXSpeed = 2000;
-        this.zSpeed = 12; // this will be multiplied by 10, as 120 was affecting Tarian's zCollision event
+        this.xSpeed = this._minXSpeed;
+        this._directionMultiplier = 1;
         
         //outLimit is how far back the monster will go, before moving forward
         //inLimit is the point it will start it's sweeping again
         this._outLimit = 1;
         this._inLimit = (this._playerModel.z + 100);
         
-        this.xSpeed = this._minXSpeed;
-        this.y = this.startY;
-        this.x = this.startX;
-        this.z = this.startZ;
-        this._directionMultiplier = 1; //Multiply speed by this; Negate to change direction
         this.damageDealt = this.damageDealtOrig;
     }
     
-    //entering and exiting and reseting-----------------------------------------
+    //Entering, Exiting and reseting-----------------------------------------
     
     enter():void
     {
-        this.entering = false; //go straight to the sweeping
+        this.entering = false; // Go straight to the sweeping
     }
     
     exit():void
     {
-        //move
         this.moveIn(this.exitZSpeed);
         
         if(this.z >= this.startZ)
@@ -128,16 +123,7 @@ export default class Ghost extends Monster {
         }
     }
     
-    //movement-----------------------------------------------------
-    
-    /**
-     * Generates a new speed for the monster
-     * @returns the new speed
-     */
-    private _getNewSpeed():number
-    {
-        return this._minXSpeed + (Math.random() * (this._maxXSpeed - this._minXSpeed));
-    }
+    // Actions for movement-----------------------------------------------------
     
     /**
      * Sweeping movement
@@ -146,14 +132,22 @@ export default class Ghost extends Monster {
     {
         this._handleMonsterOverlappingLevelEdges();
 		
-        this.moveRight(this.xSpeed * this._directionMultiplier);
-        
-        this.moveOut(this.zSpeed * 10);
+        this.moveRight(this.xSpeed * this._directionMultiplier); // If the directionMultiplier is negative, it moves left
+        this.moveOut(this.zSpeed);
         
         if(this.z <= this._outLimit)
-        {
             this._handleMonsterReachingOutLimit();
-        }
+    }
+    
+    /**
+     * Moves the monster away from the camera
+     */
+    moveUp():void
+    {
+        this.moveIn(this.zSpeed);
+        
+        if(this.z >= this._inLimit)
+            this._handleMonsterReachingInLimit();
     }
 	
     /**
@@ -173,7 +167,7 @@ export default class Ghost extends Monster {
 	}
 	
     /**
-     * Keeps the monster from coming to far out on the z axis
+     * Keeps the monster from coming too far towards the camera
      */
 	private _handleMonsterReachingOutLimit():void
 	{
@@ -182,22 +176,9 @@ export default class Ghost extends Monster {
 	}
 	
     /**
-     * Moves the monster away from the camera
+     * Keeps the monster from going too far away from the camera (not including enter/exit)
      */
-    moveUp():void
-    {
-        this.moveIn(this.zSpeed * 10);
-        
-        if(this.z >= this._inLimit)
-        {
-            this._handleMonsterReachingInLimit();
-        }
-    }
-	
-    /**
-     * Keeps the monster from going to far in on the z axis
-     */
-	_handleMonsterReachingInLimit():void
+	private _handleMonsterReachingInLimit():void
 	{
 		this.xSpeed = this._getNewSpeed();
 		this.z = this._inLimit;
@@ -205,8 +186,17 @@ export default class Ghost extends Monster {
 		this.nextAction();
 	}
     
+    /**
+     * Generates a new speed for the monster
+     * @returns the new speed
+     */
+    private _getNewSpeed():number
+    {
+        return this._minXSpeed + (Math.random() * (this._maxXSpeed - this._minXSpeed));
+    }
     
-    //events------------------------------------------------------------
+    
+    // Events ------------------------------------------------------------
     
     /**
      * What to do when the player collides with this monster
@@ -214,10 +204,10 @@ export default class Ghost extends Monster {
      */
     zCollisionEventAction(otherModel:IModel):void
     {
-        if(this.currentAction == 0 && !this.exiting) //the index number of the current action method in the array in Monster class
+        if(this.currentAction === 0 && !this.exiting)
         {
-            this.z = otherModel.z + this.zSpeed + 1;
-            this.damageDealt = 0; //in case it's still colliding (will be reset when it gets to the inLimit)
+            this.z = otherModel.z;
+            this.damageDealt = 0; // We only want to do damage once on the collision (this is reset when it gets to the inLimit)
             this.nextAction();
         }
     }
