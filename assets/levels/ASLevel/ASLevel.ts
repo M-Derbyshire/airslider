@@ -106,9 +106,7 @@ export default class ASLevel extends Level
         
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
         this._startSignDisplay = new SignDisplay(this._startSign);
-        
-        // The zCalc will not have the vanishing point defined yet, so we'll set the starting z-position in the prepare() method
-        this._finishSign = new Sign("FINISH", 0, this._signStartingZPosition, false);
+        this._finishSign = new Sign("FINISH", null, this._signStartingZPosition, false);
         
         return [
             ...stdModels,
@@ -165,7 +163,6 @@ export default class ASLevel extends Level
         this._setupLevelSpeed();
         
         this._finishFlagsActive = false;
-        this._finishSign.setStartingZPosition(this.helpers.zCalc.vPointDepth);
         
         this._setupShockerManager(this.leftEdge, this.rightEdge);
 		this._setupPatternManager();

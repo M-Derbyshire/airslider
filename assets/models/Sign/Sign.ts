@@ -28,11 +28,11 @@ export default class Sign extends ASModel
     /**
      * Constructor
      * @param displayText Text to display on the sign
-     * @param startPosition The starting z position of the sign
+     * @param startPosition The starting z position of the sign (if this is null, it will be set to the vanishing point depth)
      * @param targetPosition The z position that the sign should stop moving at
      * @param active Is the sign active initially?
      */
-    constructor(displayText:string, startPosition:number, targetPosition:number, active:boolean)
+    constructor(displayText:string, startPosition:number|null, targetPosition:number, active:boolean)
     {
         super();
         
@@ -64,6 +64,10 @@ export default class Sign extends ASModel
     prepare():void
     {
         super.prepare();
+        
+        if(!this._startPosition)
+            this._startPosition = this.helpers.zCalc.vPointDepth;
+        
         this.x = -100;
         this.y = 0;
         this.z = this._startPosition;
@@ -95,15 +99,6 @@ export default class Sign extends ASModel
         
         if(this.z < 0)
             this.active = false;
-    }
-    
-    /**
-     * Used to change the starting z position of the sign
-     * @param pos The new starting z position
-     */
-    setStartingZPosition(pos:number):void
-    {
-        this._startPosition = pos;
     }
     
     /**
