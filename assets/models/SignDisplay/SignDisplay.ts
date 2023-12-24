@@ -7,14 +7,15 @@ import Sign from '../Sign/Sign';
  */
 export default class SignDisplay extends ASModel 
 {
-    private _sign:Sign;
-    private _lastLightChangeMS:number;
-    private _lightChangeWaitMS:number;
-    private _finalLightChangeWaitMS:number;
-    private _lightChangeStartWaitMS:number;
+    private _sign:Sign; // The Sign that this is attached to
     
-    private _countdownBeep:HTMLAudioElement;
-    private _startBeep:HTMLAudioElement;
+    private _lightChangeStartWaitMS:number; // How long before the light sequence starts (in milliseconds)
+    private _lightChangeWaitMS:number; // How many millseconds should the sign wait between each light change?
+    private _lastLightChangeMS:number; // The milliseconds since the lights last changed
+    private _finalLightChangeWaitMS:number; // The milliseconds the end of the light sequence will last, before state changes to "finished"
+    
+    private _countdownBeep:HTMLAudioElement; // The beep sound effect, whenever the lights change
+    private _startBeep:HTMLAudioElement; // The "go" beep sound, to be played on the last light change
     
     /**
      * Constructor
@@ -26,14 +27,15 @@ export default class SignDisplay extends ASModel
         
         this._sign = sign;
         
-        this._finalLightChangeWaitMS = 500; // how long does the end of the light sequence last, before state changes to "finished"
-        this._lightChangeStartWaitMS = 3000; // how long before the light sequence starts (milliseconds)
+        this._finalLightChangeWaitMS = 500; 
+        this._lightChangeStartWaitMS = 3000;
     }
     
     load(animationManager:IModelAnimationsManager):void
     {
         super.load(animationManager);
         
+        // Not adding these to assetsToUnload, as every level needs this
         this._countdownBeep = this.kernel.loadAudio("/assets/models/SignDisplay/sounds/countdown_beep.mp3");
         this._startBeep = this.kernel.loadAudio("/assets/models/SignDisplay/sounds/countdown_go.mp3");
         
@@ -105,15 +107,18 @@ export default class SignDisplay extends ASModel
     prepare():void
     {
         super.prepare();
+        
         this.x = 325;
         this.y = 115;
+        
         this.state = "off";
         this.active = true;
+        
         this.kernel.soundEn.forceLoad(this._countdownBeep);
         this.kernel.soundEn.forceLoad(this._startBeep);
         
-        this._lastLightChangeMS = 0; // the millisecond count when the light sequence last changed
-        this._lightChangeWaitMS = 1500; // how long does the light sequence wait before changing (milliseconds)
+        this._lastLightChangeMS = 0;
+        this._lightChangeWaitMS = 1500;
     }
     
     act():void
@@ -136,17 +141,19 @@ export default class SignDisplay extends ASModel
     }
     
     /**
-     * Should the lights change to the next part of the sequence? (off, one, two, three, go, off)
+     * Should the lights change to the next part of the sequence?
      * @returns true if the lights should change, false if not
      */
     private _lightsShouldChangeToNext():boolean
     {
-        let changeWaitMS = this._lightChangeWaitMS;
+        let changeWaitMS:number;
         
-        if(this._lastLightChangeMS === 0)
+        if(this._lastLightChangeMS < this._lightChangeStartWaitMS)
             changeWaitMS = this._lightChangeStartWaitMS;
         else if(this.state === "go")
             changeWaitMS = this._finalLightChangeWaitMS;
+        else
+            changeWaitMS = this._lightChangeWaitMS;
         
         return (
             this.state !== "finish" && 
@@ -155,7 +162,7 @@ export default class SignDisplay extends ASModel
     }
     
     /**
-     * Changes the lights to the next phase of the sequence (off, one, two, three, go, finished)
+     * Changes the lights to the next phase of the sequence
      */
     private _changeToNextLightState():void
     {
