@@ -35,9 +35,9 @@ export default class TheConstruct extends ASLevel
     {
         let models = super.getModels() as ASModel[];
         
-        const lowerPidgeon = new NeonPidgeon(this.player);
-        models.push(lowerPidgeon);
-        models.push(new NeonPidgeon(this.player, lowerPidgeon));
+        // const lowerPidgeon = new NeonPidgeon(this.player);
+        // models.push(lowerPidgeon);
+        // models.push(new NeonPidgeon(this.player, lowerPidgeon));
         
         // models.push(new Falcon(models[0]));
         // models.push(new Ghost(this.player));
@@ -47,15 +47,15 @@ export default class TheConstruct extends ASLevel
         // models.push(new Lightning());
         // models.push(new Lightning());
         // models.push(new ElectricSeahorse(this.player, models[models.length - 2] as Lightning, models[models.length - 1] as Lightning));
-        // models.push(new ElectricHornet(this.player));
+        models.push(new ElectricHornet(this.player));
 		this.monsters = [
             models[models.length - 1] as Monster,
-            models[models.length - 2] as Monster
+            // models[models.length - 2] as Monster
         ];
 
         this.shockerManager.setPlayerModel(this.player);
         this.shockerManager.setShockerModelRange(models.length, models.length + 100);
-        this.shockerManager.setCurrentShockerCount(10);
+        this.shockerManager.setCurrentShockerCount(5);
         
         let shockerRange = this.shockerManager.shockerModelRange;
         for(let i = shockerRange.from; i <= shockerRange.to; i++)
@@ -144,24 +144,24 @@ export default class TheConstruct extends ASLevel
         // }
         
         // Send some shockers
-        // this.levelSection(
-        //     "shockers",
-        //     15000,
-        //     25000,
-        //     null,
-        //     () => this.shockerManager.sendShockers(),
-        //     null
-        // );
+        this.levelSection(
+            "shockers",
+            15000,
+            25000,
+            null,
+            () => this.shockerManager.sendShockers(),
+            null
+        );
 		
 		// Runs the monster sequence
-        this.levelSection(
-            "monster", 
-            15000, 
-            90000, 
-            () => this.monsters.forEach(monster => monster.start()),
-            null,
-            () => this.monsters.forEach(monster => monster.stop())
-        );
+        // this.levelSection(
+        //     "monster", 
+        //     15000, 
+        //     90000, 
+        //     () => this.monsters.forEach(monster => monster.start()),
+        //     null,
+        //     () => this.monsters.forEach(monster => monster.stop())
+        // );
 		
 		
 		//Set a pattern of shockers going
