@@ -8,13 +8,13 @@ import Tarian from '../Tarian/Tarian';
  */
 export default class TarianExplosion extends ASModel {
     
-    private _player:Tarian;
-    private _maxHeight:number;
-    private _maxWidth:number;
-    private _resizeSpeedX:number;
-    private _resizeSpeedY:number;
-    private _animFrame:IAnimation;
-    private _alarmSound:HTMLAudioElement;
+    private _player:Tarian; // The player model
+    private _maxHeight:number; // The limit on how tall the explosion can get
+    private _maxWidth:number; // The limit on how wide the explosion can get
+    private _resizeSpeedX:number; // The speed that the width increases
+    private _resizeSpeedY:number; // The speed that the height increases
+    private _animFrame:IAnimation; // The single frame of the one animation the model uses
+    private _alarmSound:HTMLAudioElement; // The alarm sound effect that the explosion plays
     
     /**
      * Constructor
@@ -35,10 +35,11 @@ export default class TarianExplosion extends ASModel {
     {
         super.load(animationManager);
         
+        // Not adding this to assetsToUnload, as every level needs this
         this._alarmSound = this.kernel.loadAudio("/assets/models/TarianExplosion/sounds/alarm.mp3");
         
         this.animationManager.registerAnimations({
-            std: this.animationManager.createAnimation({
+            standard: this.animationManager.createAnimation({
                 sheetPath: "/assets/models/TarianExplosion/anim/TarianExplosion.png", 
                 fps: 24,
                 drawWidth: 0,
@@ -49,17 +50,16 @@ export default class TarianExplosion extends ASModel {
             })
         });
         
-        // Keeping a reference to this, as we want to change the width/height dynamically
-        this._animFrame = this.animationManager.animations.std;
+        // Keeping a reference to this, as we want to change the draw width/height dynamically
+        this._animFrame = this.animationManager.animations.standard;
     }
     
     prepare():void
     {
         super.prepare();
-        this.display = false;
-        this.state = "std";
+        
+        this.state = "standard";
         this.active = true;
-        this.z = 1;
         
         this._animFrame.width = 0;
         this._animFrame.height = 0;
@@ -68,10 +68,8 @@ export default class TarianExplosion extends ASModel {
     act():void
     {
         if(this._player.lost)
-        {
-            if(!this.display && this._player.active)
-                this.display = true;
-            
+        {   
+            this._runSound();
             this._resize();
             this._centreOnPlayer();
             this._setYPosition();
@@ -79,9 +77,16 @@ export default class TarianExplosion extends ASModel {
         } 
         
         if(!this._player.active)
-        {
             this.active = false;
-        }
+    }
+    
+    /**
+     * Runs the sound effect (if it's the right time to do so)
+     */
+    private _runSound():void
+    {
+        if(this._animFrame.width === 0)
+            this.kernel.soundEn.playSound(this._alarmSound);
     }
     
     /**
@@ -89,11 +94,6 @@ export default class TarianExplosion extends ASModel {
      */
     private _resize():void
     {
-        if(this._animFrame.width === 0)
-        {
-            this.kernel.soundEn.playSound(this._alarmSound);
-        }
-        
         this._animFrame.width += this.kernel.helpers.unit.xSpeed(this._resizeSpeedX);
         this._animFrame.height += this.kernel.helpers.unit.ySpeed(this._resizeSpeedY);
         
@@ -109,7 +109,10 @@ export default class TarianExplosion extends ASModel {
      */
     private _centreOnPlayer():void
     {
-        this.x = this._player.x + (this._player.width / 2) - (this.width / 2);
+        const playerCenter = (this._player.width / 2);
+        const explosionCenter = (this.width / 2);
+        
+        this.x = this._player.x + playerCenter - explosionCenter;
     }
 
     /**
@@ -122,7 +125,7 @@ export default class TarianExplosion extends ASModel {
     }
 
     /**
-     * Sets the z position, based on the player's
+     * Sets the z position, based on the player's z position
      */
     private _setZPosition():void
     {
