@@ -144,14 +144,14 @@ export default class TheConstruct extends ASLevel
         // }
         
         // Send some shockers
-        this.levelSection(
-            "shockers",
-            15000,
-            25000,
-            null,
-            () => this.shockerManager.sendShockers(),
-            null
-        );
+        // this.levelSection(
+        //     "shockers",
+        //     15000,
+        //     25000,
+        //     null,
+        //     () => this.shockerManager.sendShockers(),
+        //     null
+        // );
 		
 		// Runs the monster sequence
         // this.levelSection(
@@ -191,6 +191,7 @@ export default class TheConstruct extends ASLevel
         // );
         
         // Run the closing sequence
-        this.levelEndSection(95000);
+        // this.levelEndSection(95000);
+        this.levelEndSection(15000);
     }
 }

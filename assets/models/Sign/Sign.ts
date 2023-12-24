@@ -12,7 +12,14 @@ export default class Sign extends ASModel
      */
     hasReachedTargetPosition:boolean;
     
-    private _startPosition:number;
+    /**
+     * The starting z position of the sign
+     */
+    private _startPosition:number|null;
+    
+    /**
+     * The z position that the sign should stop moving at
+     */
     private _targetPosition:number;
     
     /**
@@ -28,9 +35,9 @@ export default class Sign extends ASModel
     /**
      * Constructor
      * @param displayText Text to display on the sign
-     * @param startPosition The starting z position of the sign (if this is null, it will be set to the vanishing point depth)
+     * @param startPosition The starting z position of the sign (if this is null, it should be set to the vanishing point depth in prepare())
      * @param targetPosition The z position that the sign should stop moving at
-     * @param active Is the sign active initially?
+     * @param active Should the sign be active initially?
      */
     constructor(displayText:string, startPosition:number|null, targetPosition:number, active:boolean)
     {
@@ -48,6 +55,7 @@ export default class Sign extends ASModel
     {
         super.load(animationManager);
         
+        // Not adding spritesheet to assetsToUnload, as this is used by all levels
         this.animationManager.registerAnimations({
             sign: this.animationManager.createAnimation({
                 sheetPath: "/assets/models/Sign/anim/sign_spritesheet.png",
@@ -71,10 +79,12 @@ export default class Sign extends ASModel
         this.x = -100;
         this.y = 0;
         this.z = this._startPosition;
-        this.zSpeed = 0;
-        this.state = "sign";
-        this.hasReachedTargetPosition = false;
+        
         this.active = this._initialActiveStatus;
+        this.hasReachedTargetPosition = false;
+        this.zSpeed = 0;
+        
+        this.state = "sign";
         
         this.text = {
             content: this._textToDisplay,
@@ -92,7 +102,7 @@ export default class Sign extends ASModel
         if (!this.hasReachedTargetPosition) 
         {
             this._setZSpeedBasedOnLevelSpeed();
-            this.z -= this.zSpeed; // Level has already calculated this, so not using this.moveOut()
+            this.z -= this.zSpeed; // the level has already calculated this, so not using this.moveOut()
         }
         
         this._checkForTargetPosition();
@@ -118,9 +128,9 @@ export default class Sign extends ASModel
      */
     private _setZSpeedBasedOnLevelSpeed():void
 	{
-		if((this.kernel.level as ASLevel).levelMoving)
-        {
-            this.zSpeed = (this.kernel.level as ASLevel).levelSpeed;
-        }
+        const level = this.kernel.level as ASLevel;
+        
+		if(level.levelMoving)
+            this.zSpeed = level.levelSpeed;
 	}
 }
