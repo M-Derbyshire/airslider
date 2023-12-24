@@ -4,11 +4,11 @@ import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnima
 
 export default class ASModel extends Model {
 	
-    protected levelLeftEdge:number;
-    protected levelRightEdge:number;
+    protected levelLeftEdge:number; // The left edge of the level
+    protected levelRightEdge:number; // The right edge of the level
     
-    damageDealt:number;
-    canBeControlled:boolean;
+    damageDealt:number; // If this model can do damage to the player, this is how much health is lost
+    canBeControlled:boolean; // Can this model be controlled?
     
 	constructor()
 	{
@@ -19,7 +19,7 @@ export default class ASModel extends Model {
 	}
 	
     /**
-     * Should handle the level being stopped
+     * Should handle the level being stopped (e.g. when the player loses, or the level is complete)
      */
     levelStopped() {}
     
@@ -32,7 +32,7 @@ export default class ASModel extends Model {
     }
     
     /**
-     * Sets the y position of the model, from the bottom
+     * Sets the y position of the model, up from the bottom of the screen
      * @param pos the amount of units from the bottom to set the model position
      */
     protected setYPositionFromBottom(pos:number):void
@@ -54,19 +54,17 @@ export default class ASModel extends Model {
         
         // Then we can calculate the correct volume for the current z position (getting quieter the further away it goes)
         const vol = singleUnitValue * (soundInaudiblePoint - this.z);
+        
         return (vol >= 0) ? vol : 0;
-    }
-	
-	load(animationManager:IModelAnimationsManager):void
-    {
-        super.load(animationManager);
     }
     
     prepare():void
     {
         super.prepare();
         
-        this.levelLeftEdge = (this.kernel.level as ASLevel).leftEdge;
-        this.levelRightEdge = (this.kernel.level as ASLevel).rightEdge;
+        const level = this.kernel.level as ASLevel;
+        
+        this.levelLeftEdge = level.leftEdge;
+        this.levelRightEdge = level.rightEdge;
     }
 }
