@@ -8,18 +8,9 @@ import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnima
 /**
  * The main character of the game, controlled by the player
  */
-export default class Tarian extends ASModel {
-    
-    private _lastSpeedChange:number;
-    private _lostAtTimeMS:number;
-    private _lostZSpeed:number;
-    
-    // x movement accelatration, deacceleration and top speed
-    private _accl:number;
-    private _deaccl:number;
-    
+export default class Tarian extends ASModel {    
     /**
-     * The top x speed of the player
+     * The maximum x speed of the model
      */
     topSpeed:number;
     
@@ -29,33 +20,43 @@ export default class Tarian extends ASModel {
     health:number;
     
     /**
-     * Is the player currently exploding?
+     * Is the player's hoverboard currently breaking?
      */
-    exploding:boolean;
+    get breaking():boolean
+    {
+        return this.state === "breaking";
+    }
     
     /**
-     * Is the player in the "lost" state?
+     * Is the player in the lost state?
      */
-    lost:boolean;
+    get lost():boolean
+    {
+        return this.state === "lost";
+    }
     
+    private _lastSpeedChange:number; // How many milliseconds since the x speed last changed
     
-    /**
-     * Constructor
-     */
+    private _lostAtTimeMS:number|null; // The time (in milliseconds) when the model entered the "lost" state
+    private _lostZSpeed:number; // The exiting z speed, when the player has lost the level
+    
+    private _accl:number; // The x speed accelaration
+    private _deaccl:number; // The x speed de-accelaration
+    
     constructor()
     {
         super();
         
-        this._lostZSpeed = 35; //the exiting z speed, when the player has lost the level
+        this._lostZSpeed = 35; 
     }
     
     load(animationManager:IModelAnimationsManager):void
     {
         super.load(animationManager);
         
+        // Not adding this to assetsToUnload, as this is used on every level
         const spritesheetPath = "/assets/models/Tarian/anim/tarian-spritesheet.png";
         
-        //I've used exact values for the fps, so it will be consistent when changing game fps
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
                 sheetPath: spritesheetPath, 
@@ -95,7 +96,7 @@ export default class Tarian extends ASModel {
 					{ x: 0, y: 4286, width: 118, height: 97 },
 				]
             }),
-            exploding: this.animationManager.createAnimation({
+            breaking: this.animationManager.createAnimation({
                 sheetPath: spritesheetPath, 
                 fps: 24,
                 drawWidth: 120,
@@ -155,13 +156,11 @@ export default class Tarian extends ASModel {
         this.zSpeed = 0;
         
         this.health = 100;
-        this.exploding = false;
-        this.lost = false;
-        this._lostAtTimeMS = 0;
         
-        this.canBeControlled = false; //should the directional controls be operational?
+        this.canBeControlled = false; // Should the directional controls be operational?
         this.state = "forward";
         this.active = true;
+        this._lostAtTimeMS = null;
         
         this.centerXPosition();
         this.setYPositionFromBottom(this.height);
@@ -254,7 +253,7 @@ export default class Tarian extends ASModel {
         
         this._handleLowHealthFlash();
         
-		this._handleExplodingAndLoss();
+		this._handleLostState();
     }
     
     /**
@@ -265,40 +264,25 @@ export default class Tarian extends ASModel {
         const hud = this.kernel.level.HUD as MainHUD;
         
         if(this.health <= 10 && this.health > 0 && !hud.isLowHealthFlashActive())
-        {
             hud.startLowHealthFlash();
-        }
         
         if(this.health <= 0 && hud.isLowHealthFlashActive())
-        {
             hud.stopLowHealthFlash();
-        }
     }
 	
     /**
-     * Handles the exploding and loss of the player
+     * Handles the "lost" state of the model
      */
-	private _handleExplodingAndLoss():void
+	private _handleLostState():void
 	{
-		if(this.exploding && this.state != "exploding")
+        if(this.lost)
         {
-            if(this.state == "lost")
-            {
-                this.exploding = false;
-                this.lost = true;
+            if(!this._lostAtTimeMS)
                 this._lostAtTimeMS = this.helpers.time.getTotalMilliseconds();
-            } else {
-                this.state = "exploding";
-            }
+            
+            this._handleOnScreenAfterLoss();
+            this._handleLeavingScreenAfterLoss();
         }
-        
-        if(this.lost && this.state != "lost")
-        {
-            this.state = "lost";
-        }
-		
-		this._handleOnScreenAfterLoss();
-		this._handleLeavingScreenAfterLoss();
 	}
 	
     /**
@@ -306,12 +290,12 @@ export default class Tarian extends ASModel {
      */
 	private _handleOnScreenAfterLoss():void
 	{
-        if(this.lost && this.z >= -5)
+        if(
+            this.z >= -5 && 
+            (this._lostAtTimeMS + 3000) < this.helpers.time.getTotalMilliseconds()
+        )
         {
-            this.canBeControlled = false;
-            
-            if((this._lostAtTimeMS + 3000) < this.helpers.time.getTotalMilliseconds())
-                this.zSpeed = -this._lostZSpeed;
+            this.zSpeed = -this._lostZSpeed;
         }
 	}
 	
@@ -332,17 +316,16 @@ export default class Tarian extends ASModel {
      */
     private _movePlayer():void
     {
-        this._setSpeedBasedOnAcceleration();
+        this._setXSpeedBasedOnAcceleration();
         
         this.moveRight(this.xSpeed);
-        
         this.moveIn(this.zSpeed);
     }
 	
     /**
      * Determines and sets the player's speed, based on the acceleration/de-acceleration
      */
-	private _setSpeedBasedOnAcceleration():void
+	private _setXSpeedBasedOnAcceleration():void
 	{
 		if(this.helpers.time.getTotalMilliseconds() - this._lastSpeedChange >= 100) //1 tenth of a second
         {
@@ -356,29 +339,26 @@ export default class Tarian extends ASModel {
      */
 	private _changeSpeed():void
 	{
-		let directionMultiplier = 0;
-		let speedChange = this._accl;
+		let speedChange = this._accl; // The value to add to the xSpeed
+        let directionMultiplier = 0; // Positive/negative value determines left/right speed change (0 is no change)
 		
-		if(this.state == "right")
+		if(this.state === "right")
 		{
 			directionMultiplier = 1;
 		} 
-		else if (this.state == "left")
+		else if (this.state === "left")
 		{
 			directionMultiplier = -1;
 		} 
-		else if (this.state !== "left" && this.state !== "right") //if stopping
+		else // if stopping
 		{
+            speedChange = this._deaccl;
+            
 			if(this.xSpeed > 0)
-			{
 				directionMultiplier = -1;
-			} 
 			else if (this.xSpeed < 0)
-			{
 				directionMultiplier = 1;
-			}
-			
-			speedChange = this._deaccl;
+            // Else, value remains 0 (for no change)
 		}
 		
 		speedChange *= directionMultiplier;
@@ -388,7 +368,7 @@ export default class Tarian extends ASModel {
 	}
 	
     /**
-     * Handles the player's movement being above the top speed or ready to stop
+     * Handles the player's movement being above the top speed, or being ready to stop
      * @param speedChange how much is the player's speed changing by?
      * @param directionMultiplier speed can be multiplied by this, to set the correct direction
      */
@@ -410,31 +390,32 @@ export default class Tarian extends ASModel {
      */
 	private _isAboveTopSpeedEitherDirection():boolean
 	{
-		return (this.xSpeed > this.topSpeed || this.xSpeed < -this.topSpeed);
+		return (Math.abs(this.xSpeed) > this.topSpeed);
 	}
 	
     /**
-     * Is the player about to stop moving (on the x axis, based on de-acceleration)
+     * Is the player about to stop moving (on the x axis, based on de-acceleration)?
      * @param speedChange The current amount the x speed is changing by
      * @returns true if the x movement should now stop, false if not
      */
 	private _isReadyToStopMovement(speedChange:number):boolean
 	{
-		return ((this.state !== "left" && this.state !== "right") && 
-					(this.xSpeed > -speedChange && this.xSpeed < speedChange));
+		return (
+            (this.state !== "left" && this.state !== "right") && 
+			(this.xSpeed > -speedChange && this.xSpeed < speedChange)
+        );
 	}
 	
-	
+    
+    // Events -----------------------------------------------------------------
 	
     extraEvents():void
     {
-        //check for leaving the game area
+        // Check for leaving the game area
         if(this.x < this.levelLeftEdge)
         {
             if(this.state == "left")
-            {
                 this.state = "forward";
-            }
             
             this.x = this.levelLeftEdge;
             this.xSpeed = 0;
@@ -442,9 +423,7 @@ export default class Tarian extends ASModel {
         if(this.x + this.width > this.levelRightEdge)
         {
             if(this.state == "right")
-            {
                 this.state = "forward";
-            }
             
             this.x = this.levelRightEdge - this.width;
             this.xSpeed = 0;
@@ -459,14 +438,14 @@ export default class Tarian extends ASModel {
     {
         const other = otherModel as ASModel & { damageFlashImage:HTMLImageElement };
         
-        if(other.damageDealt > 0 && this.state != "exploding" && this.state != "lost")
+        if(other.damageDealt > 0 && this.state !== "breaking" && this.state !== "lost")
         {
             this.health -= other.damageDealt;
             if(this.health <= 0)
             {
                 this.health = 0;
-                this.exploding = true;
-                this.display = true;
+                this.state = "breaking";
+                this.canBeControlled = false;
             }
             
             if(other.damageFlashImage)

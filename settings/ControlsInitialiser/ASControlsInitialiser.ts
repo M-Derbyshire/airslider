@@ -46,9 +46,9 @@ export default class ASControlsInitialiser extends ControlsInitialiser
             };
             
             const keyUpListener = (e:KeyboardEvent) => {
-                const playerModel = this.kernel.loadedModels[this._playerModelIndex];
+                const playerModel = this.kernel.loadedModels[this._playerModelIndex] as ASModel;
                 
-                if(this._currentMove == e.key)
+                if(playerModel.canBeControlled && this._currentMove == e.key)
                 {
                     playerModel.state = "forward";
                     this._currentMove = "";
