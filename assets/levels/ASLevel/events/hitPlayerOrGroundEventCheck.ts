@@ -18,8 +18,8 @@ const hitPlayerOrGroundEventCheck = (modelA:IModel, modelAActionMethodName:strin
         return;
     }
     
-    const boxesA = modelA.getBoundaryBoxes();
-    const boxesB = modelB.getBoundaryBoxes();
+    const boxesA = modelA.getHitBoxes();
+    const boxesB = modelB.getHitBoxes();
     
     //Not using forEach, as we want to return after the first collision we find
     for(let aIter = 0; aIter < boxesA.length; aIter++)

@@ -1,7 +1,7 @@
 import MainHUD from '../../HUDs/MainHUD/MainHUD';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
-import IBoundaryBox from '../Model/IBoundaryBox';
+import IHitBox from '../Model/IHitBox';
 import IModel from '../Model/IModel';
 import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 
@@ -166,7 +166,7 @@ export default class Tarian extends ASModel {
         this.setYPositionFromBottom(this.height);
     }
     
-    getBoundaryBoxes():IBoundaryBox[]
+    getHitBoxes():IHitBox[]
     {
         if(this.state === "forward")
         {
@@ -242,7 +242,7 @@ export default class Tarian extends ASModel {
             ];
         }
         
-        return super.getBoundaryBoxes();
+        return super.getHitBoxes();
     }
 	
 	

@@ -1,4 +1,4 @@
-import IBoundaryBox from '../../Model/IBoundaryBox';
+import IHitBox from '../../Model/IHitBox';
 import IModel from '../../Model/IModel';
 import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
@@ -187,7 +187,7 @@ export default class NeonPidgeon extends Monster {
     
     // Hit boxes --------------------------------------------------------
     
-    getBoundaryBoxes():IBoundaryBox[]
+    getHitBoxes():IHitBox[]
     {
         if(this.state === "falling")
         {

@@ -9,8 +9,8 @@ import IModel from "../../../models/Model/IModel";
 */
 const zCollisionEventCheck = (modelA:IModel, modelAActionMethodName:string, modelB:IModel, modelBActionMethodName:string):void =>
 {
-    const boxesA = modelA.getBoundaryBoxes();
-    const boxesB = modelB.getBoundaryBoxes();
+    const boxesA = modelA.getHitBoxes();
+    const boxesB = modelB.getHitBoxes();
     
     // The zSpeed of modelB is used as a "depth" for the model. However, if it 
     // isn't set (or it's a very large value, which can be unrealistic), we want a default value instead.

@@ -3,7 +3,7 @@
  * a part of the model, and can be used in events (such as collision detection). 
  * Multiple boxes could be used to cover the actual shape of the model's sprite.
  */
-export default interface IBoundaryBox {
+export default interface IHitBox {
     /**
      * The x position (in units) of the box
      */

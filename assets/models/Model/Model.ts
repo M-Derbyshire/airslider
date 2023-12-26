@@ -1,12 +1,10 @@
 import Kernel from '../../../Kernel/Kernel';
-import ModelAnimationsManager from './ModelAnimationsManager/ModelAnimationsManager';
 import IModel from './IModel';
 import IKernel from '../../../Kernel/IKernel';
 import IHelpers from '../../../Kernel/helpers/IHelpers';
 import IModelAnimationsManager from './ModelAnimationsManager/IModelAnimationsManager';
 import ITextContent from '../../../engines/GraphicEn/ITextContent';
-import ICamera from '../../../engines/GraphicEn/ICamera';
-import IBoundaryBox from './IBoundaryBox';
+import IHitBox from './IHitBox';
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)
@@ -17,7 +15,7 @@ export default class Model implements IModel {
     protected helpers: IHelpers;
     protected animationManager: IModelAnimationsManager;
     protected assetsToUnload:string[]; // file paths of assets that need to be released when this is unloaded
-    protected drawBoundaryBoxes:boolean; // If we set this to true, we'll draw the boxes from this.getBoundaryBoxes()
+    protected drawHitBoxes:boolean; // If we set this to true, we'll draw the boxes from this.getHitBoxes()
     
     private _state:string;
     private _active:boolean;
@@ -151,7 +149,7 @@ export default class Model implements IModel {
      */
     prepare():void
     {
-        this.drawBoundaryBoxes = false;
+        this.drawHitBoxes = false;
         
         this.text = {
             content: "",
@@ -184,7 +182,7 @@ export default class Model implements IModel {
         if(this.text.content)
             this.animationManager.drawText();
         
-        if(this.drawBoundaryBoxes)
+        if(this.drawHitBoxes)
             this.animationManager.drawHitBoxes();
     }
     
@@ -218,10 +216,10 @@ export default class Model implements IModel {
 	}
     
     /**
-     * Creates and returns the current array of boundary boxes for the model.
+     * Creates and returns the current array of hit boxes for the model.
      * @returns An array of box's that can be used for events (e.g. boxes covering a character, for use by collision events)
      */
-    getBoundaryBoxes():IBoundaryBox[]
+    getHitBoxes():IHitBox[]
     {
         return [
             {

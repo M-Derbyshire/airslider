@@ -1,5 +1,5 @@
 import ITextContent from "../../../engines/GraphicEn/ITextContent";
-import IBoundaryBox from "./IBoundaryBox";
+import IHitBox from "./IHitBox";
 import IModelAnimationsManager from "./ModelAnimationsManager/IModelAnimationsManager";
 
 /**
@@ -114,7 +114,7 @@ export default interface IModel {
      * Creates and returns the current array of hit boxes for the model.
      * @returns An array of box's that can be used for events (e.g. boxes covering a character, for use by collision events)
      */
-    getBoundaryBoxes():IBoundaryBox[];
+    getHitBoxes():IHitBox[];
     
     /**
      * Moves the model to the left
