@@ -34,14 +34,9 @@ export default interface IKernel {
     readonly status:KernelStatus;
     
     /**
-     * The different settings for the game
+     * The settings for the game
      */
     readonly settings:ISettings;
-    
-    /**
-     * Is this a mobile app (such as through Cordova)?
-     */
-    readonly isOnMobile:boolean;
     
     /**
      * The current Frames Per Second of the game
@@ -126,7 +121,7 @@ export default interface IKernel {
     /**
      * Should the canvas's styling width/height be corrected, based on the Device Pixel Ratio?
      */
-    readonly correctCanvasStyleAndDevicePixelRatio:boolean;
+    readonly correctCanvasStyleToDevicePixelRatio:boolean;
     
     
     /**

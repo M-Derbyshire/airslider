@@ -2,29 +2,18 @@ import IControlsInitialiser from "./ControlsInitialiser/IControlsInitialiser";
 import ILevel from "../assets/levels/Level/ILevel";
 
 /**
- * The different settings for the game
+ * The settings for the game
  */
 export default interface ISettings {
-    
     /**
      * The canvas element that the game should be drawn on
      */
     gameCanvas:HTMLCanvasElement;
     
     /**
-     * Should the canvas's styling width/height be corrected, based on the Device Pixel Ratio?
+     * Should the canvas's css width/height be corrected, based on the Device Pixel Ratio?
      */
-	correctCanvasStyleAndDevicePixelRatio:boolean;
-    
-    /**
-     * Is this a mobile app (such as through Cordova)?
-     */
-	isOnMobile:boolean;
-    
-    /**
-     * The initial FPS for the game (the FPS will change, based on the actual FPS in the browser)
-     */
-	initialFPS:number;
+	correctCanvasStyleToDevicePixelRatio:boolean;
     
     /**
      * The maximum FPS that the game should be allowed to run at
@@ -42,17 +31,17 @@ export default interface ISettings {
 	fpsDisplayColor:string;
     
     /**
-     * How many drawSpace x/y units are there within the camera's size?
+     * How many drawSpace units are there within the camera's size (this value is used for both x and y)?
      */
 	unitsWithinCamera:number;
     
     /**
-     * The horizontal size of the camera (e.g. the "16" in "16:9")
+     * The horizontal size of the camera's aspect ratio (e.g. the "16" in "16:9")
      */
 	aspectRatioHorizontal:number;
     
     /**
-     * The vertical size of the camera (e.g. the "9" in "16:9")
+     * The vertical size of the camera's aspect ratio (e.g. the "9" in "16:9")
      */
 	aspectRatioVertical:number;
     
@@ -72,8 +61,7 @@ export default interface ISettings {
 	initialLevelClass:new()=>ILevel;
     
     /**
-     * Any parameters required by the constructor of the initial level
+     * Any parameters required to initialise the initial level
      */
-	initialLevelConstructorParameters:any[];
-    
+	initialLevelConstructorParameters:any[];  
 };

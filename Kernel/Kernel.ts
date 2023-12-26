@@ -52,10 +52,9 @@ export default class Kernel implements IKernel {
     
     
     private _settings:ISettings;
-    private _isOnMobile:boolean;
     private _gameCanvas:HTMLCanvasElement;
     private _gameContext:CanvasRenderingContext2D;
-    private _correctCanvasStyleAndDevicePixelRatio:boolean;
+    private _correctCanvasStyleToDevicePixelRatio:boolean;
     
     private _fps:number;
     private _highestFpsReached:number;
@@ -107,9 +106,7 @@ export default class Kernel implements IKernel {
         const settings = (process.env.GAME_ENV === "development") ? devSettings : prodSettings;
         this._settings = settings;
         
-        this._isOnMobile = !!settings.isOnMobile; //is this a mobile app (such as through Cordova)?
-        
-        this._fps = (!isNaN(settings.initialFPS)) ? settings.initialFPS : 60;
+        this._fps = 60;
         this._highestFpsReached = 0;
         this._fpsLimit = (!isNaN(settings.fpsLimit)) ? settings.fpsLimit : 70;
         this._lastTime = new Date(); //used when calculating fps and enforcing fps limit
@@ -123,7 +120,7 @@ export default class Kernel implements IKernel {
         
 		this._gameCanvas = settings.gameCanvas;
 		this._gameContext = this.gameCanvas.getContext("2d")!;
-        this._correctCanvasStyleAndDevicePixelRatio = settings.correctCanvasStyleAndDevicePixelRatio;
+        this._correctCanvasStyleToDevicePixelRatio = settings.correctCanvasStyleToDevicePixelRatio;
         
         this._totalLevelActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
         this._status = KernelStatus.Active;
@@ -148,11 +145,6 @@ export default class Kernel implements IKernel {
      * The different settings for the game
      */
     get settings(){return this._settings;}
-    
-    /**
-     * Is this a mobile app (such as through Cordova)?
-     */
-    get isOnMobile(){return this._isOnMobile;}
     
     /**
      * The current Frames Per Second of the game
@@ -237,7 +229,7 @@ export default class Kernel implements IKernel {
     /**
      * Should the canvas's styling width/height be corrected, based on the Device Pixel Ratio?
      */
-    get correctCanvasStyleAndDevicePixelRatio(){return this._correctCanvasStyleAndDevicePixelRatio;}
+    get correctCanvasStyleToDevicePixelRatio(){return this._correctCanvasStyleToDevicePixelRatio;}
     
     
     // loading/unloading methods --------------------------------------------------------------------------

@@ -4,9 +4,7 @@ import ISettings from './ISettings';
 
 export default {
 	gameCanvas: document.getElementById("gameCanvas") as HTMLCanvasElement,
-	correctCanvasStyleAndDevicePixelRatio: true,
-	isOnMobile: false,
-	initialFPS: 60,
+	correctCanvasStyleToDevicePixelRatio: true,
 	fpsLimit: 70,
 	displayFps: true,
 	fpsDisplayColor: "blue",

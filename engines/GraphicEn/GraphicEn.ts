@@ -149,7 +149,7 @@ export default class GraphicEn implements IGraphicEn {
      */
     private _setCanvasCorrectWidthHeight():void
     {
-        if(this._kernel.correctCanvasStyleAndDevicePixelRatio)
+        if(this._kernel.correctCanvasStyleToDevicePixelRatio)
         {
             //Need to change the styling for the canvas, based on the DPI,
             //to avoid it being stretched and blurry.
