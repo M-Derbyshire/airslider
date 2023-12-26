@@ -48,7 +48,7 @@ export default class LavaBall extends ASModel {
                 fps: 24,
                 drawWidth: ballWidth,
                 drawHeight: ballHeight,
-                nextAnim: "none",
+                nextAnimation: "none",
 				frameCoordinates: [
 					{ x: 0, y: 0, width: 59, height: 59 },
 					{ x: 0, y: 60, width: 59, height: 59 },

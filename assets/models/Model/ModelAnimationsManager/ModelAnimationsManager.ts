@@ -53,7 +53,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      * @param animationDetails The details needed to create this animation
      * @returns The newly created animation
      */
-    createAnimation({sheetPath, fps, drawWidth, drawHeight, frameCoordinates, xOffset = 0, yOffset = 0, nextAnim = ""}:IAnimationDetails):IAnimation
+    createAnimation({sheetPath, fps, drawWidth, drawHeight, frameCoordinates, xOffset = 0, yOffset = 0, nextAnimation = ""}:IAnimationDetails):IAnimation
     {
         if(!this.sheetMap.has(sheetPath))
             this.sheetMap.set(sheetPath, this._kernel.loadImage(sheetPath));
@@ -69,7 +69,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
             width: drawWidth,
             xOffset, //change position for consistency
             yOffset,
-            nextAnim, //used to follow through from one anim into another (this is the name of the next state)
+            nextAnimation, //used to follow through from one anim into another (this is the name of the next state)
         };
         
         return anim;
@@ -223,9 +223,9 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
 			this.animations[this._model.state].currentFrameIndex = 0;
 			
 			//If this animation isn't looped, but has another animation to switch to, change the state
-			if(this.animations[this._model.state].nextAnim != "")
+			if(this.animations[this._model.state].nextAnimation != "")
 			{
-				this._model.state = this.animations[this._model.state].nextAnim;
+				this._model.state = this.animations[this._model.state].nextAnimation;
 			}
 		}
 		

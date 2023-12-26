@@ -43,6 +43,6 @@ export default interface IAnimationDetails {
     /**
      * If the model should switch to a different animation once this one has finished, this is the name of the model state that uses that animation
      */
-    nextAnim?:string;
+    nextAnimation?:string;
     
 };

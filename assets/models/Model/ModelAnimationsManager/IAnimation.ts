@@ -1,17 +1,16 @@
 import IFrameCoordinates from "./IFrameCoordinates";
 
 /**
- * Represents a model animation
+ * Represents a model's animation
  */
 export default interface IAnimation {
-    
     /**
      * The spritesheet for this animation
      */
     spritesheet:HTMLImageElement;
     
     /**
-     * The coordinates of a frame on a spritesheet
+     * The coordinates of the frames on the spritesheet
      */
     frameCoordinates:IFrameCoordinates[];
         
@@ -31,7 +30,7 @@ export default interface IAnimation {
     nextCount:number;
     
     /**
-     * The index of the current frame this animation is on
+     * The index of the current frame for the current animation
      */
     currentFrameIndex:number;
     
@@ -58,6 +57,5 @@ export default interface IAnimation {
     /**
      * If the model should switch to a different animation once this one has finished, this is the name of the model state that uses that animation
      */
-    nextAnim:string;
-    
+    nextAnimation:string;
 };
