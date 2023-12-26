@@ -12,15 +12,14 @@ import IModelAnimationsManager, { AnimationsObject } from './IModelAnimationsMan
  * Manages a model's animations
  */
 export default class ModelAnimationsManager implements IModelAnimationsManager {
-    
-    private _model:IModel;
-    private _kernel:IKernel;
-    private _helpers:IHelpers;
-    private _camera:ICamera;
-    private _canvasCtx:CanvasRenderingContext2D;
+    private _model:IModel; // A reference to the model
+    private _kernel:IKernel; // A reference to the kernel
+    private _helpers:IHelpers; // A reference to the helper objects, from the kernel
+    private _camera:ICamera; // The level's camera
+    private _canvasCtx:CanvasRenderingContext2D; // The 2D context from the canvas element
     
     /**
-     * The animations created for the model
+     * The animations created for the model (each animation will be a property -- the property name is the model state for that animation)
      */
     animations:AnimationsObject;
     
@@ -33,18 +32,17 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      * Constructor
      * @param model The model that this is used by
      * @param canvasCtx The 2D canvas context
-     * @param camera The game's camera
+     * @param camera The level's camera
      */
     constructor(model:IModel, canvasCtx:CanvasRenderingContext2D, camera:ICamera)
     {
-        this._model = model;
         this._kernel = Kernel.getInstance();
         this._helpers = this._kernel.helpers;
         
+        this._model = model;
         this._camera = camera;
         this._canvasCtx = canvasCtx;
         
-        this.animations;
         this.sheetMap = new Map<string, HTMLImageElement>();
     }
     
@@ -53,7 +51,16 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      * @param animationDetails The details needed to create this animation
      * @returns The newly created animation
      */
-    createAnimation({sheetPath, fps, drawWidth, drawHeight, frameCoordinates, xOffset = 0, yOffset = 0, nextAnimation = ""}:IAnimationDetails):IAnimation
+    createAnimation({
+        sheetPath, 
+        fps, 
+        drawWidth, 
+        drawHeight, 
+        frameCoordinates, 
+        xOffset = 0, 
+        yOffset = 0, 
+        nextAnimation = ""
+    }:IAnimationDetails):IAnimation
     {
         if(!this.sheetMap.has(sheetPath))
             this.sheetMap.set(sheetPath, this._kernel.loadImage(sheetPath));
@@ -62,14 +69,14 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
 			spritesheet: this.sheetMap.get(sheetPath)!,
 			frameCoordinates,
             fps,
-            waitCount: 0, //increased when waiting to move to next frame
-            nextCount: 0, //when waitCount equals this, move to the next frame (done so anim and game can have different fps. This is set on every new game-loop frame)
+            waitCount: 0, // increased when waiting to move to the next frame
+            nextCount: 0, // when waitCount equals this, move to the next frame (done so animation and game can have different fps. This is set on every new game-loop frame)
             currentFrameIndex: 0,
             height: drawHeight,
             width: drawWidth,
-            xOffset, //change position for consistency
+            xOffset,
             yOffset,
-            nextAnimation, //used to follow through from one anim into another (this is the name of the next state)
+            nextAnimation, //used to follow through from one animation into another (this is the name of the next state)
         };
         
         return anim;
@@ -81,8 +88,6 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     registerAnimations(animations:AnimationsObject):void
     {
-        //animations will be an object of animations (the property names are the state names),
-        //created with the createAnimation() method.
         this.animations = animations;
     }
     
@@ -91,12 +96,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     drawNextFrame():void
     {
-		//Need to call this here, as if this is an animation that changes state at the end,
-		//the below settings (preZCalc* variables) may have the wrong width/height for the 
-		//new animation.
 		const nextFrameCoordinates = this._getNextFrameCoordinates();
-		
-        //Draw the image, taking into account the z-axis when setting the size/positions
 		const drawPositions = this.getDrawPositionsAndDimensions(this._model);
 		
         this._canvasCtx.drawImage(
@@ -124,7 +124,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     {
         const text = this._model.text;
             
-        const origPositions = {
+        const originalPositions = {
             x: this._model.x + text.x,
             y: this._model.y + text.y,
             z: this._model.z,
@@ -132,18 +132,18 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
             height: text.size
         }
         
-        const calcPositions = this.getDrawPositionsAndDimensions(origPositions);
+        const calculatedPositions = this.getDrawPositionsAndDimensions(originalPositions);
         
-        this._canvasCtx.font = `${text.style} ${calcPositions.height}px ${text.font}`;
+        this._canvasCtx.font = `${text.style} ${calculatedPositions.height}px ${text.font}`;
         this._canvasCtx.fillStyle = text.color;
         
-        this._canvasCtx.fillText(text.content, calcPositions.x, calcPositions.y);
+        this._canvasCtx.fillText(text.content, calculatedPositions.x, calculatedPositions.y);
     }
     
     /**
-     * Draws the model's boundary boxes
+     * Draws the model's hit boxes
      */
-    drawBoundaryBoxes():void
+    drawHitBoxes():void
     {
         const boxes = this._model.getBoundaryBoxes();
         
@@ -159,28 +159,26 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     }
     
     /**
-     * Calculates the positions/dimensions to draw the model (or boundary box)
+     * Calculates the positions/dimensions to draw the model (or hit box)
      * @param originalValues the model's current coordinates, along with the model's z position
      * @returns The correct positions/dimensions to draw the sprite at
      */
 	getDrawPositionsAndDimensions(originalValues:IFrameCoordinates & { z:number }):IFrameCoordinates
 	{
-		const preZCalcX = this._helpers.unit.xUnit(this._camera.unitCameraPositionCalc.x(originalValues.x)) + this._camera.canvasPositionX;
-		const preZCalcY = this._helpers.unit.yUnit(this._camera.unitCameraPositionCalc.y(originalValues.y)) + this._camera.canvasPositionY;
-		const preZCalcWidth = this._helpers.unit.xUnit(originalValues.width);
-		const preZCalcHeight = this._helpers.unit.yUnit(originalValues.height);
+        const { unit, zCalc } = this._helpers;
+        const { unitCameraPositionCalc } = this._camera;
         
-        const zCalcX = this._helpers.zCalc.x(preZCalcX, originalValues.z);
-        const zCalcY = this._helpers.zCalc.y(preZCalcY, originalValues.z);
-        const zCalcWidth = this._helpers.zCalc.width(preZCalcWidth, originalValues.z);
-        const zCalcHeight = this._helpers.zCalc.height(preZCalcHeight, originalValues.z);
+		const preZCalcX = unit.xUnit(unitCameraPositionCalc.x(originalValues.x)) + this._camera.canvasPositionX;
+		const preZCalcY = unit.yUnit(unitCameraPositionCalc.y(originalValues.y)) + this._camera.canvasPositionY;
+		const preZCalcWidth = unit.xUnit(originalValues.width);
+		const preZCalcHeight = unit.yUnit(originalValues.height);
         
-		return {
-			x: zCalcX, 
-            y: zCalcY, 
-            width: zCalcWidth, 
-            height: zCalcHeight
-		};
+        const x = zCalc.x(preZCalcX, originalValues.z);
+        const y = zCalc.y(preZCalcY, originalValues.z);
+        const width = zCalc.width(preZCalcWidth, originalValues.z);
+        const height = zCalc.height(preZCalcHeight, originalValues.z);
+        
+		return { x, y, width, height };
 	}
 	
     /**
@@ -189,47 +187,43 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     private _getNextFrameCoordinates():IFrameCoordinates
     {
-		let currentFrameIndex = this.animations[this._model.state].currentFrameIndex;
+        const animation = this.animations[this._model.state];
+		let currentFrameIndex = animation.currentFrameIndex;
 		
-        //First we need to set how many game-loop frames to wait for before we move on to the next frame
-        //of this sprite's animation. This is to ensure that the sprite's animation remains consistent
+        //First, we need to determine how many game-loop frames we need to wait before we move on to the next 
+        //frame of this sprite's animation. This is to ensure that the sprite's animation remains consistent
         //if the game's fps changes (It also means that the sprite can have a different fps to the game-loop).
-        this.animations[this._model.state].nextCount = Math.floor(this._kernel.fps / this.animations[this._model.state].fps);
+        animation.nextCount = Math.floor(this._kernel.fps / animation.fps);
         
-        //change the frame to the next one, if it is time to
-        if(this.animations[this._model.state].waitCount >= this.animations[this._model.state].nextCount)
+        // Change the frame to the next one, if it is time to
+        if(animation.waitCount >= animation.nextCount)
         {
-            if(this.animations[this._model.state].fps > this._kernel.fps)
-            {
+            if(animation.fps > this._kernel.fps)
                 //If the sprite has more frames per second than the current game fps,
                 //skip the necessary amount of frames to make up for that.
-                currentFrameIndex += Math.floor(this.animations[this._model.state].fps / this._kernel.fps);
-            } else {
+                currentFrameIndex += Math.floor(animation.fps / this._kernel.fps);
+            else
                 //If the sprite has less or equal frames per second to the game-loop's fps,
                 //we can just move to the next frame now.
                 currentFrameIndex++;
-            }
             
-            this.animations[this._model.state].waitCount = 0;
+            animation.waitCount = 0;
         }
         
-        this.animations[this._model.state].waitCount++;
-		this.animations[this._model.state].currentFrameIndex = currentFrameIndex;
+        animation.waitCount++;
+		animation.currentFrameIndex = currentFrameIndex;
 		
 		//Is this the last frame in this sprite animation?
-		if(currentFrameIndex > this.animations[this._model.state].frameCoordinates.length - 1)
+		if(currentFrameIndex > animation.frameCoordinates.length - 1)
 		{
 			//Reset the current animation
-			this.animations[this._model.state].currentFrameIndex = 0;
+			animation.currentFrameIndex = 0;
 			
 			//If this animation isn't looped, but has another animation to switch to, change the state
-			if(this.animations[this._model.state].nextAnimation != "")
-			{
-				this._model.state = this.animations[this._model.state].nextAnimation;
-			}
+			if(animation.nextAnimation != "")
+				this._model.state = animation.nextAnimation;
 		}
 		
-        return this.animations[this._model.state]
-			.frameCoordinates[this.animations[this._model.state].currentFrameIndex];
+        return animation.frameCoordinates[animation.currentFrameIndex];
     }
 }

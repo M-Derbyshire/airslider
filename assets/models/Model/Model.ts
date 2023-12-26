@@ -185,7 +185,7 @@ export default class Model implements IModel {
             this.animationManager.drawText();
         
         if(this.drawBoundaryBoxes)
-            this.animationManager.drawBoundaryBoxes();
+            this.animationManager.drawHitBoxes();
     }
     
     /**

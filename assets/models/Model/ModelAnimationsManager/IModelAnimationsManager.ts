@@ -41,12 +41,12 @@ export default interface IModelAnimationsManager {
     drawText():void;
     
     /**
-     * Draws the model's boundary boxes
+     * Draws the model's hit boxes
      */
-    drawBoundaryBoxes():void;
+    drawHitBoxes():void;
     
     /**
-     * Calculates the positions/dimensions to draw the model (or boundary box)
+     * Calculates the positions/dimensions to draw the model (or hit box)
      * @param originalValues the model's current coordinates, along with the model's z position
      * @returns The correct positions/dimensions to draw the sprite at
      */
@@ -59,7 +59,7 @@ export default interface IModelAnimationsManager {
 };
 
 /**
- * The type for the animations object
+ * The type for the animations object (each animation will be a property -- the property name is the model state for that animation)
  */
 export type AnimationsObject = {
     [key:string]: IAnimation;
