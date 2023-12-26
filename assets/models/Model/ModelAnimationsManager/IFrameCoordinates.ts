@@ -2,7 +2,6 @@
  * The coordinates of a frame on a spritesheet
  */
 export default interface IFrameCoordinates {
-    
     /**
      * The x position
      */
@@ -21,6 +20,5 @@ export default interface IFrameCoordinates {
     /**
      * The height dimension
      */
-    height:number;
-    
+    height:number;  
 };

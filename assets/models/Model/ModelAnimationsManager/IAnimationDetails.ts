@@ -4,7 +4,6 @@ import IFrameCoordinates from './IFrameCoordinates';
  * The details required to create a new animation for a model
  */
 export default interface IAnimationDetails {
-    
     /**
      * The file path to the spritesheet
      */
@@ -44,5 +43,4 @@ export default interface IAnimationDetails {
      * If the model should switch to a different animation once this one has finished, this is the name of the model state that uses that animation
      */
     nextAnimation?:string;
-    
 };

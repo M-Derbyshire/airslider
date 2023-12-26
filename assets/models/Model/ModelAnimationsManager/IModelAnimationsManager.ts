@@ -7,7 +7,6 @@ import IFrameCoordinates from "./IFrameCoordinates";
  * Manages a model's animations
  */
 export default interface IModelAnimationsManager {
-    
     /**
      * The animations created for the model
      */
@@ -58,7 +57,6 @@ export default interface IModelAnimationsManager {
      */
     resetCurrentFrameNumber():void;
 };
-
 
 /**
  * The type for the animations object
