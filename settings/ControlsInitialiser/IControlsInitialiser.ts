@@ -5,9 +5,9 @@ import IRegisteredEventListener from "./IRegisteredEventListener";
  * Children of this class should contain methods that add event listeners to this.registeredEventListeners
  */
 export default interface IControlsInitialiser {
-    
     /**
      * Any event-listener functions should be added to this, so they can be registered/unregistered
+     * (these will be registered with the browser via window.addEventListener)
      */
     registeredEventListeners:IRegisteredEventListener[];
     
@@ -17,7 +17,7 @@ export default interface IControlsInitialiser {
     initialisingFunctions:{():void;}[];
     
     /**
-	 * Calls all control-initialising functions, and sets up the event listeners
+	 * Calls all control-initialising functions (this.initialisingFunctions), and sets up the event listeners
 	 */
 	initialiseControls():void;
     
@@ -25,5 +25,4 @@ export default interface IControlsInitialiser {
 	 * Removes any registered event listeners
 	 */
 	unregisterEventListeners():void;
-    
 };

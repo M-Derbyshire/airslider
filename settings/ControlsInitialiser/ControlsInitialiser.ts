@@ -21,9 +21,6 @@ export default class ControlsInitialiser implements IControlsInitialiser
 	 */
 	initialisingFunctions:{():void;}[];
 	
-	/**
-	 * Constructor
-	 */
     constructor()
     {
         this.kernel = Kernel.getInstance();
@@ -33,7 +30,7 @@ export default class ControlsInitialiser implements IControlsInitialiser
     }
 	
 	/**
-	 * Calls all control-initialising functions, and sets up the event listeners
+	 * Calls all control-initialising functions (this.initialisingFunctions), and sets up the event listeners
 	 */
 	initialiseControls():void
 	{
