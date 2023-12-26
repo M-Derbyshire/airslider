@@ -6,12 +6,8 @@ import IGameEn from './IGameEn';
  * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
  */
 export default class GameEn implements IGameEn {
-    
     private _kernel:IKernel;
     
-    /**
-     * Constructor
-     */
     constructor()
     {
         this._kernel = Kernel.getInstance();
@@ -22,16 +18,35 @@ export default class GameEn implements IGameEn {
      */
     run():void
     {
+        this._runLevelActions();
+        this._runModelActions();
+        this._runEventChecks();
+    }
+    
+    /**
+     * Runs the level's actions
+     */
+    private _runLevelActions():void
+    {
         this._kernel.level.act();
-        
-        for (let i = 0; i < this._kernel.loadedModels.length; i++)
-        {
-            if(this._kernel.loadedModels[i].active)
-            {
-                this._kernel.loadedModels[i].act();
-            }
-        }
-        
+    }
+    
+    /**
+     * Runs the actions of all the level's models
+     */
+    private _runModelActions():void
+    {
+        this._kernel.loadedModels.forEach(model => {
+            if(model.active)
+                model.act();
+        });
+    }
+    
+    /**
+     * Triggers the level's event checks
+     */
+    private _runEventChecks():void
+    {
         this._kernel.level.checkForEvents();
     }
 }
