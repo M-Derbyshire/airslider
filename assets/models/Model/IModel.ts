@@ -1,4 +1,3 @@
-import ICamera from "../../../engines/GraphicEn/ICamera";
 import ITextContent from "../../../engines/GraphicEn/ITextContent";
 import IBoundaryBox from "./IBoundaryBox";
 import IModelAnimationsManager from "./ModelAnimationsManager/IModelAnimationsManager";
@@ -7,7 +6,6 @@ import IModelAnimationsManager from "./ModelAnimationsManager/IModelAnimationsMa
  * An object in the game (such as a character, monster, power-up, etc)
  */
 export default interface IModel {
-    
     /**
      * Is the model currently active?
      */
@@ -100,12 +98,12 @@ export default interface IModel {
     draw():void;
     
     /**
-     * Runs any extra events specific to this model. These event checks should be called in the extraEvents method
+     * Runs any extra events specific to this model. The checks for these events should be ran by the extraEvents() method
      */
     checkForExtraEvents():void;
     
     /**
-    * Is the mouse pointer overlapping this model?
+    * Determines if the mouse pointer is overlapping this model.
     * @param pointX the x position (within the canvas's space) of the mouse pointer 
     * @param pointY the y position (within the canvas's space) of the mouse pointer
     * @returns true if it is overlapping, false if not
@@ -113,7 +111,7 @@ export default interface IModel {
     isPointerOverlapping(pointX:number, pointY:number):boolean;
     
     /**
-     * Creates and returns the current array of boundary boxes for the model.
+     * Creates and returns the current array of hit boxes for the model.
      * @returns An array of box's that can be used for events (e.g. boxes covering a character, for use by collision events)
      */
     getBoundaryBoxes():IBoundaryBox[];
@@ -153,5 +151,4 @@ export default interface IModel {
      * @param speed the speed of the movement
      */
     moveOut(speed:number):void;
-    
 };
