@@ -4,6 +4,8 @@ import IGraphicEngine from './IGraphicEngine';
 import ICamera from './ICamera';
 import IFrameManager from './IFrameManager';
 import IHelpers from '../../Kernel/helpers/IHelpers';
+import IDrawPositions from './IDrawPositions';
+import IDrawDimensions from './IDrawDimensions';
 
 /**
  * The engine that controls the drawing to the screen
@@ -79,6 +81,26 @@ export default class GraphicEngine implements IGraphicEngine {
         
         if(this._kernel.displayFps)
             this._fpsMeter();
+    }
+    
+    /**
+     * Calculates the draw positons/dimensions in pixels for a static entity (such as a HUD Component)
+     * @param unitValues The position/dimension values (in units)
+     * @returns The pixel values for the x/y/width/height
+     */
+    getStaticDrawPositionsAndDimensions(unitValues:IDrawPositions&IDrawDimensions):IDrawPositions&IDrawDimensions
+    {
+        const { x, y, width, height } = unitValues;
+        
+        const cameraX = this.camera.canvasPositionX;
+        const cameraY = this.camera.canvasPositionY;
+        
+        return {
+            x: cameraX + this._helpers.unit.xUnit(x),
+            y: cameraY + this._helpers.unit.yUnit(y),
+            width: this._helpers.unit.xUnit(width),
+            height: this._helpers.unit.yUnit(height)
+        };
     }
     
     /**

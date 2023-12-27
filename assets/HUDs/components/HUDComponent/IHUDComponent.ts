@@ -1,4 +1,6 @@
 import ICamera from "../../../../engines/GraphicEngine/ICamera";
+import IDrawDimensions from "../../../../engines/GraphicEngine/IDrawDimensions";
+import IDrawPositions from "../../../../engines/GraphicEngine/IDrawPositions";
 import ITextContent from "../../../../engines/GraphicEngine/ITextContent";
 
 /**
@@ -69,15 +71,4 @@ export default interface IHUDComponent {
      * @returns true if it is overlapping, false if not
      */
     isPointerOverlapping(pointX:number, pointY:number):boolean;
-    
-    /**
-     * Calculates the draw positons/dimensions in pixels
-     * @param x The x position in units
-     * @param y The y position in units
-     * @param width The width in units
-     * @param height The height in units
-     * @returns The pixel values for the x/y/width/height
-     */
-    getScreenDrawCoordinates(x:number, y:number, width:number, height:number)
-        :{ drawX:number, drawY:number, drawWidth:number, drawHeight:number };
 };

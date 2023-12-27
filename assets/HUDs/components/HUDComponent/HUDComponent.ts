@@ -4,6 +4,8 @@ import IHUDComponent from './IHUDComponent';
 import IHelpers from '../../../../Kernel/helpers/IHelpers';
 import ICamera from '../../../../engines/GraphicEngine/ICamera';
 import ITextContent from '../../../../engines/GraphicEngine/ITextContent';
+import IDrawPositions from '../../../../engines/GraphicEngine/IDrawPositions';
+import IDrawDimensions from '../../../../engines/GraphicEngine/IDrawDimensions';
 
 /**
  * A component to be displayed by the Heads Up Display
@@ -96,13 +98,19 @@ export default class HUDComponent implements IHUDComponent
      */
     drawText():void
     {
-        const { drawX, drawY } = this.getScreenDrawCoordinates(this.text.x, this.text.y, 0, 0);
+        const { x, y } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({ 
+            x: this.text.x, 
+            y: this.text.y, 
+            width: 0, 
+            height: 0 
+        });
+        
         const drawSize = this.helpers.unit.yUnit(this.text.size);
         
         this.ctx.font = `${this.text.style} ${drawSize}px ${this.text.font}`;
         this.ctx.fillStyle = this.text.color;
         
-        this.ctx.fillText(this.text.content, drawX, drawY);
+        this.ctx.fillText(this.text.content, x, y);
     }
     
     /**
@@ -128,26 +136,4 @@ export default class HUDComponent implements IHUDComponent
             pointY < (yUnit(this.y) + yUnit(this.height))
 		);
 	}
-    
-    /**
-     * Calculates the draw positons/dimensions in pixels
-     * @param x The x position in units
-     * @param y The y position in units
-     * @param width The width in units
-     * @param height The height in units
-     * @returns The pixel values for the x/y/width/height
-     */
-    getScreenDrawCoordinates(x:number, y:number, width:number, height:number)
-        :{ drawX:number, drawY:number, drawWidth:number, drawHeight:number }
-    {
-        const cameraX = this.camera.canvasPositionX;
-        const cameraY = this.camera.canvasPositionY;
-        
-        return {
-            drawX: cameraX + this.helpers.unit.xUnit(x),
-            drawY: cameraY + this.helpers.unit.yUnit(y),
-            drawWidth: this.helpers.unit.xUnit(width),
-            drawHeight: this.helpers.unit.yUnit(height)
-        };
-    }
 }

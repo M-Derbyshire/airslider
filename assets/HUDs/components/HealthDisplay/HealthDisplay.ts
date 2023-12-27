@@ -111,12 +111,17 @@ export default class HealthDisplay extends ASHUDComponent
      */
     private _drawSpannerBackground(radiusModifierPixels:number)
     {
-        const width = this.width * 0.33;
+        const unitWidth = this.width * 0.33;
         
-        const { drawX, drawY, drawWidth, drawHeight } = this.getScreenDrawCoordinates(this.x, this.y, width, this.height);
+        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+            x: this.x, 
+            y: this.y, 
+            width: unitWidth, 
+            height: this.height
+        });
         
         this.ctx.beginPath();
-        this.ctx.roundRect(drawX, drawY, drawWidth, drawHeight, radiusModifierPixels);
+        this.ctx.roundRect(x, y, width, height, radiusModifierPixels);
         this.ctx.fill();
     }
     
@@ -126,13 +131,18 @@ export default class HealthDisplay extends ASHUDComponent
      */
     private _drawTextBackground(radiusModifierPixels:number)
     {
-        const width = this.width * 0.66;
-        const height = this.height * 0.5;
+        const unitWidth = this.width * 0.66;
+        const unitHeight = this.height * 0.5;
         
         const xPos = this.x + (this.width * 0.33);
         const yPos = this.y + (this.height * 0.25);
         
-        const { drawX, drawY, drawWidth, drawHeight } = this.getScreenDrawCoordinates(xPos, yPos, width, height);
+        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+            x: xPos, 
+            y: yPos, 
+            width: unitWidth, 
+            height: unitHeight
+        });
         
         // We only want a radius on the right side, as the left is connected to the spanner background
         const radiusModifiers = [
@@ -143,7 +153,7 @@ export default class HealthDisplay extends ASHUDComponent
         ];
         
         this.ctx.beginPath();
-        this.ctx.roundRect(drawX, drawY, drawWidth, drawHeight, radiusModifiers);
+        this.ctx.roundRect(x, y, width, height, radiusModifiers);
         this.ctx.fill();
     }
     
@@ -157,12 +167,17 @@ export default class HealthDisplay extends ASHUDComponent
         
         const xPos = this.x + xPaddingUnits;
         const yPos = this.y + yPaddingUnits
-        const width = (this.width * 0.33) - (xPaddingUnits * 2);
-        const height = this.height - (yPaddingUnits * 2)
+        const unitWidth = (this.width * 0.33) - (xPaddingUnits * 2);
+        const unitHeight = this.height - (yPaddingUnits * 2)
         
-        const { drawX, drawY, drawWidth, drawHeight } = this.getScreenDrawCoordinates(xPos, yPos, width, height);
+        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+            x: xPos, 
+            y: yPos, 
+            width: unitWidth, 
+            height: unitHeight
+        });
         
-        this.ctx.drawImage(this._spannerImage, drawX, drawY, drawWidth, drawHeight);
+        this.ctx.drawImage(this._spannerImage, x, y, width, height);
     }
     
     /**
@@ -174,12 +189,17 @@ export default class HealthDisplay extends ASHUDComponent
         
         const xPos = this.x - paddingUnits;
         const yPos = this.y - paddingUnits;
-        const width = this.width + (paddingUnits * 2);
-        const height = this.height + (paddingUnits * 2);
+        const unitWidth = this.width + (paddingUnits * 2);
+        const unitHeight = this.height + (paddingUnits * 2);
         
-        const { drawX, drawY, drawWidth, drawHeight } = this.getScreenDrawCoordinates(xPos, yPos, width, height);
+        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+            x: xPos, 
+            y: yPos, 
+            width: unitWidth, 
+            height: unitHeight
+        });
         
-        this.ctx.drawImage(this._borderImage, drawX, drawY, drawWidth, drawHeight);
+        this.ctx.drawImage(this._borderImage, x, y, width, height);
     }
     
     /**

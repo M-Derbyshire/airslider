@@ -52,7 +52,12 @@ export default class PauseButton extends ASHUDComponent {
         const sourceYPx = (this.kernel.status === KernelStatus.Active) ? pauseButtonSourceYPx : playButtonSourceYPx;
         
         // The positions/sizes to actually draw the sprite with
-        const { drawX, drawY, drawWidth, drawHeight } = this.getScreenDrawCoordinates(this.x, this.y, this.width, this.height);
+        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+            x: this.x, 
+            y: this.y, 
+            width: this.width, 
+            height: this.height
+        });
         
         this.ctx.drawImage(
             this._imageSheet,
@@ -60,10 +65,10 @@ export default class PauseButton extends ASHUDComponent {
             sourceYPx,
             buttonSourceDiameter,
             buttonSourceDiameter,
-            drawX,
-            drawY,
-            drawWidth,
-            drawHeight
+            x,
+            y,
+            width,
+            height
         );
     }
     
@@ -75,13 +80,18 @@ export default class PauseButton extends ASHUDComponent {
      */
     isPointerOverlapping(pointX:number, pointY:number):boolean
     {
-        const { drawX, drawY, drawWidth, drawHeight } = this.getScreenDrawCoordinates(this.x, this.y, this.width, this.height);
+        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+            x: this.x, 
+            y: this.y, 
+            width: this.width, 
+            height: this.height
+        });
         
         return (
-            pointX >= drawX &&
-            pointY >= drawY &&
-            pointX <= (drawX + drawWidth) &&
-            pointY <= (drawY + drawHeight)
+            pointX >= x &&
+            pointY >= y &&
+            pointX <= (x + width) &&
+            pointY <= (y + height)
         );
     }
     
