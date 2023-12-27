@@ -34,7 +34,7 @@ export default interface IFrame {
      * Loads a light mask image, and returns the index to that image in the Frame's 
      * internal state
      * @param path the path of the light mask's image file
-     * @param luminosity a number that represents the light mask's luminosity (0 is the darkest, 1 is the lightest)
+     * @param luminosity a number that represents the light mask's luminosity (1 is the lightest, 0 is the darkest)
      * @returns the index number of the image in the Frame's internal array
      */
     loadLightMask(path:string, luminosity:number):number;
