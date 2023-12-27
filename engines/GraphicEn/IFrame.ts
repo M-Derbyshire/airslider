@@ -53,15 +53,11 @@ export default interface IFrame {
     
     /**
      * Draws the foreground-related elements of the frame (such as the light mask)
-     * @param xUnitPos The x position (in units) to draw the frame at
-     * @param yUnitPos The y position (in units) to draw the frame at
      */
-    drawFront(xUnitPos:number, yUnitPos:number):void;
+    drawFront():void;
     
     /**
      * Draws the background-related elements of the frame (such as the background image)
-     * @param xUnitPos The x position (in units) to draw the frame at
-     * @param yUnitPos The y position (in units) to draw the frame at
      */
-    drawBack(xUnitPos:number, yUnitPos:number):void;
+    drawBack():void;
 };

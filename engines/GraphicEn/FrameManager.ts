@@ -7,14 +7,14 @@ import IFrame from './IFrame';
  */
 export default class FrameManager implements IFrameManager {
     
-    private _camera:ICamera;
+    private _camera:ICamera; // The level's camera
     
     private _frames:IFrame[]; // All of the frames that are managed by this manager
-    private _framesToBeDrawn:IFrame[]; // All of the frames that should currently be drawn (e.g. all of the frames currently on screen)
+    private _framesToBeDrawn:IFrame[]; // All of the frames that should currently be drawn (all of the frames currently on screen)
     
     /**
      * Constructor
-     * @param camera The game's camera
+     * @param camera The level's camera
      */
     constructor(camera:ICamera)
     {
@@ -22,7 +22,6 @@ export default class FrameManager implements IFrameManager {
         this._frames = [];
         this._framesToBeDrawn = [];
     }
-    
     
     /**
      * Adds a frame to the level
@@ -35,8 +34,8 @@ export default class FrameManager implements IFrameManager {
     }
     
     /**
-     * Gets a frame from the manager's internal array
-     * @param index The index of the frame, in the manager's internal array
+     * Gets a frame from the manager's internal state
+     * @param index The index of the frame, in the manager's internal state
      * @returns The requested frame
      */
     getFrameByIndex(index:number):IFrame
@@ -50,9 +49,12 @@ export default class FrameManager implements IFrameManager {
      */
     determineFramesToDraw():void
     {
-        this._framesToBeDrawn = this._frames.filter((frame) => {
-            return (this._camera.isOnCamera(frame.x, frame.y, frame.width, frame.height));
-        });
+        this._framesToBeDrawn = this._frames.filter((frame) => this._camera.isOnCamera(
+            frame.x, 
+            frame.y, 
+            frame.width, 
+            frame.height
+        ));
     }
     
     /**
@@ -60,12 +62,7 @@ export default class FrameManager implements IFrameManager {
      */
     drawFramesBack():void
     {
-        this._framesToBeDrawn.forEach((frame) => {
-            frame.drawBack(
-                this._camera.unitCameraPositionCalc.x(frame.x),
-                this._camera.unitCameraPositionCalc.y(frame.y)
-            );
-        });
+        this._framesToBeDrawn.forEach((frame) => frame.drawBack());
     }
     
     /**
@@ -73,11 +70,6 @@ export default class FrameManager implements IFrameManager {
      */
     drawFramesFront():void
     {
-        this._framesToBeDrawn.forEach((frame) => {
-            frame.drawFront(
-                this._camera.unitCameraPositionCalc.x(frame.x),
-                this._camera.unitCameraPositionCalc.y(frame.y)
-            );
-        });
+        this._framesToBeDrawn.forEach((frame) => frame.drawFront());
     }
 }

@@ -117,20 +117,24 @@ export default class Frame implements IFrame {
     
     /**
      * Draws the foreground-related elements of the frame (such as the light mask)
-     * @param xUnitPosition The x position (in units) to draw the frame at
-     * @param yUnitPosition The y position (in units) to draw the frame at
      */
-    drawFront(xUnitPosition:number, yUnitPosition:number):void
+    drawFront():void
     {
         if(this._lightMaskIndex !== null)
         {
+            const xUnitValue = this._camera.unitCameraPositionCalc.x(this.x);
+            const yUnitValue = this._camera.unitCameraPositionCalc.y(this.y);
+            
+            const xDrawValue = this._unitHelpers.xUnit(xUnitValue) + this._camera.canvasPositionX;
+            const yDrawValue = this._unitHelpers.yUnit(yUnitValue) + this._camera.canvasPositionY;
+            
             const lightMaskInfo = this._loadedLightMasks[this._lightMaskIndex];
 			
             this._canvasCtx.globalAlpha = lightMaskInfo.luminosity;
             this._canvasCtx.drawImage(
                 lightMaskInfo.image,
-                this._unitHelpers.xUnit(xUnitPosition) + this._camera.canvasPositionX,
-                this._unitHelpers.yUnit(yUnitPosition) + this._camera.canvasPositionY,
+                xDrawValue,
+                yDrawValue,
                 this._unitHelpers.xUnit(this.width),
                 this._unitHelpers.yUnit(this.height)
             );
@@ -140,17 +144,21 @@ export default class Frame implements IFrame {
     
     /**
      * Draws the background-related elements of the frame (such as the background image)
-     * @param xUnitPosition The x position (in units) to draw the frame at
-     * @param yUnitPosition The y position (in units) to draw the frame at
      */
-    drawBack(xUnitPosition:number, yUnitPosition:number):void
+    drawBack():void
     {
         if(this._backgroundIndex !== null)
         {
+            const xUnitValue = this._camera.unitCameraPositionCalc.x(this.x);
+            const yUnitValue = this._camera.unitCameraPositionCalc.y(this.y);
+            
+            const xDrawValue = this._unitHelpers.xUnit(xUnitValue) + this._camera.canvasPositionX;
+            const yDrawValue = this._unitHelpers.yUnit(yUnitValue) + this._camera.canvasPositionY;
+            
             this._canvasCtx.drawImage(
                 this._loadedBackgrounds[this._backgroundIndex],
-                this._unitHelpers.xUnit(xUnitPosition) + this._camera.canvasPositionX,
-                this._unitHelpers.yUnit(yUnitPosition) + this._camera.canvasPositionY,
+                xDrawValue,
+                yDrawValue,
                 this._unitHelpers.xUnit(this.width),
                 this._unitHelpers.yUnit(this.height)
             );

@@ -12,8 +12,8 @@ export default interface IFrameManager {
     addFrame(frame:IFrame):number;
     
     /**
-     * Gets a frame from the manager's internal array
-     * @param index The index of the frame, in the manager's internal array
+     * Gets a frame from the manager's internal state
+     * @param index The index of the frame, in the manager's internal state
      * @returns The requested frame
      */
     getFrameByIndex(index:number):IFrame;
