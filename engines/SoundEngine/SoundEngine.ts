@@ -10,56 +10,65 @@ export default class SoundEngine implements ISoundEngine {
     
     private _kernel:IKernel;
     
-    private _music:HTMLAudioElement;
-    private _musicIsPlaying:boolean;
+    private _music:HTMLAudioElement; // The level's music
     
     // The sounds we're currently playing (not including music, or sounds that are force-loading)
     private _currentSounds:Map<string, HTMLAudioElement>;
     
-    private _audioContext:AudioContext;
+    private _audioContext:AudioContext; // Manages the audio processing
     private _trackMap:Map<string, MediaElementAudioSourceNode>; // A map of tracks from the AudioContext
     
     /**
      * Constructor
+     * @param audioContext Manages the audio processing
      */
     constructor(audioContext:AudioContext)
     {
         this._kernel = Kernel.getInstance();
-        
-        this._musicIsPlaying = false;
         
         this._currentSounds = new Map<string, HTMLAudioElement>();
         this._trackMap = new Map<string, MediaElementAudioSourceNode>();
         
         this._audioContext = audioContext;
         
-        if (this._audioContext.state === "suspended") this._audioContext.resume();
+        if (this._audioContext.state === "suspended") 
+            this._audioContext.resume();
     }
     
     /**
      * The level's music
      */
-    get music() { return this._music; }
-    set music(ref:HTMLAudioElement)
+    get music()
     {
-        this._setupContextTrack(ref);
-        this._music = ref;
+        return this._music;
+    }
+    set music(newValue:HTMLAudioElement)
+    {
+        this._setupAudioContextTrack(newValue);
+        this._music = newValue;
     }
     
     /**
-     * Should the music be played on repeat? (music must be set before this can be set, and will need to be set whenever changing the music)
+     * Should the music be played on repeat? (The music must be set before this can be set, and 
+     * this will need to be set again whenever changing the music)
      */
-    get musicRepeat() { return (this._music) ? this._music.loop : false }
-    set musicRepeat(repeat)
+    get musicRepeat()
+    {
+        return (this._music) ? this._music.loop : false 
+    }
+    set musicRepeat(newValue:boolean)
     {
         if(this._music)
-            this._music.loop = repeat;
+            this._music.loop = newValue;
     }
     
     /**
      * Is the level's music currently playing?
      */
-    get musicIsPlaying() {return this._musicIsPlaying;}
+    get musicIsPlaying()
+    {
+        return !this._music.paused && !this._music.muted;
+    }
     
     /**
      * Runs a check to see what playing sounds have now finished, and 
@@ -67,8 +76,8 @@ export default class SoundEngine implements ISoundEngine {
      */
     run():void
     {
-        this._currentSounds.forEach((ref, key, map) => {
-            if(ref.ended && !ref.loop) 
+        this._currentSounds.forEach((sound, key, map) => {
+            if(sound.ended && !sound.loop) 
                 map.delete(key);
         });
     }
@@ -79,10 +88,7 @@ export default class SoundEngine implements ISoundEngine {
     playMusic():void
     {
         if(this._music)
-        {
             this._music.play();
-            this._musicIsPlaying = true;
-        }
     }
     
     /**
@@ -91,29 +97,7 @@ export default class SoundEngine implements ISoundEngine {
     pauseMusic():void
     {
         if(this._music)
-        {
             this._music.pause();
-            this._musicIsPlaying = false;
-        }
-    }
-    
-    /**
-     * Pauses all sounds the engine has triggered
-     */
-    pauseAllSounds():void
-    {
-        this._currentSounds.forEach(ref => ref.pause());
-    }
-    
-    /**
-     * Continues playing (after pausing) all sounds the engine has triggered
-     */
-    unpauseAllSounds():void
-    {
-        this._currentSounds.forEach(ref => {
-            if(!ref.ended || ref.loop)
-                ref.play();
-        });
     }
     
     /**
@@ -121,70 +105,94 @@ export default class SoundEngine implements ISoundEngine {
      */
     stopMusic():void
     {
-        this._music.pause();
-        this._music.currentTime = 0;
-        this._musicIsPlaying = false;
-    }
-    
-    /**
-     * Plays the given sound
-     * @param ref The sound effect to be played
-     * @param loop Should this sound effect be played on repeat
-     */
-    playSound(ref:HTMLAudioElement, loop:boolean = false):void
-    {
-        this._setupContextTrack(ref);
-        
-        ref.currentTime = 0; // Position needs to be reset so sounds will restart if they're triggered mid-way through playing
-        ref.muted = false; // Sound may be muted, if it was in the middle of being force-loaded
-        ref.loop = loop;
-        
-        this._currentSounds.set(ref.src, ref);
-        
-        if(this._kernel.status === KernelStatus.Active)
+        if(this._music)
         {
-            ref.play();
+            this._music.pause();
+            this._music.currentTime = 0;
         }
     }
     
     /**
-     * Stops the playing of the given sound
-     * @param ref The sound effect to be stopped
+     * Plays the given sound
+     * @param sound The sound effect to be played
+     * @param loop Should this sound effect be played on repeat?
      */
-    stopSound(ref:HTMLAudioElement):void
+    playSound(sound:HTMLAudioElement, loop:boolean = false):void
     {
-        this._currentSounds.delete(ref.src);
-        ref.currentTime = 0;
-        ref.pause();
+        this._setupAudioContextTrack(sound);
+        
+        sound.currentTime = 0; // Position needs to be reset so sounds will restart if they're triggered mid-way through playing
+        sound.muted = false; // Sound may be muted, if it was in the middle of being force-loaded
+        sound.loop = loop;
+        
+        this._currentSounds.set(sound.src, sound);
+        
+        if(this._kernel.status === KernelStatus.Active)
+            sound.play();
+    }
+    
+    /**
+     * Stops the playing of the given sound
+     * @param sound The sound effect to be stopped
+     */
+    stopSound(sound:HTMLAudioElement):void
+    {
+        this._currentSounds.delete(sound.src);
+        sound.currentTime = 0;
+        sound.pause();
+    }
+    
+    /**
+     * Pauses all sounds that the engine has triggered
+     */
+    pauseAllSounds():void
+    {
+        this._currentSounds.forEach(sound => sound.pause());
+    }
+    
+    /**
+     * Continues playing (after pausing) all sounds the engine has triggered
+     */
+    unpauseAllSounds():void
+    {
+        this._currentSounds.forEach(sound => {
+            if(!sound.ended || sound.loop)
+                sound.play();
+        });
     }
     
     /**
      * Forces a sound to be loaded by playing it while muted
-     * @param ref The sound to be forced to load
+     * @param sound The sound to be forced to load
      */
-    forceLoad(ref:HTMLAudioElement):void
+    forceLoad(sound:HTMLAudioElement):void
     {
-        this._setupContextTrack(ref);
+        this._setupAudioContextTrack(sound);
+        
+        const eventListenerType = "ended";
         
         const unmute = () => {
-            ref.muted = false;
-            ref.removeEventListener("ended", unmute);
+            sound.muted = false;
+            sound.removeEventListener(eventListenerType, unmute);
         };
         
-        ref.loop = false;
-        ref.muted = true;
-        ref.addEventListener("ended", unmute);
-        ref.play();
+        sound.loop = false;
+        sound.muted = true;
+        sound.addEventListener(eventListenerType, unmute);
+        sound.play();
     }
     
-    
-    private _setupContextTrack(ref:HTMLAudioElement)
+    /**
+     * Sets up an audio source in the AudioContext (if it has not been done already for the given audio)
+     * @param audio the audio source
+     */
+    private _setupAudioContextTrack(audio:HTMLAudioElement)
     {
-        if(!this._trackMap.has(ref.src))
+        if(!this._trackMap.has(audio.src))
         {
-            const track = this._audioContext.createMediaElementSource(ref);
+            const track = this._audioContext.createMediaElementSource(audio);
             track.connect(this._audioContext.destination);
-            this._trackMap.set(ref.src, track);
+            this._trackMap.set(audio.src, track);
         }
     }
 }

@@ -2,14 +2,14 @@
  * The engine that controls the sound/music of the game
  */
 export default interface ISoundEngine {
-    
     /**
      * The level's music
      */
     music:HTMLAudioElement;
     
     /**
-     * Should the music be played on repeat? (music must be set before this can be set, and will need to be set whenever changing the music)
+     * Should the music be played on repeat? (The music must be set before this can be set, and 
+     * this will need to be set again whenever changing the music)
      */
     musicRepeat:boolean;
     
@@ -17,6 +17,12 @@ export default interface ISoundEngine {
      * Is the level's music currently playing?
      */
     readonly musicIsPlaying:boolean;
+    
+    /**
+     * Runs a check to see what playing sounds have now finished, and 
+     * updates the engine's state accordingly
+     */
+    run():void;
     
     /**
      * Triggers the playing of the level's music
@@ -35,16 +41,16 @@ export default interface ISoundEngine {
     
     /**
      * Plays the given sound
-     * @param ref The sound effect to be played
-     * @param loop Should this sound effect be played on repeat
+     * @param sound The sound effect to be played
+     * @param loop Should this sound effect be played on repeat?
      */
-    playSound(ref:HTMLAudioElement, loop?:boolean):void;
+    playSound(sound:HTMLAudioElement, loop?:boolean):void;
     
     /**
      * Stops the playing of the given sound
-     * @param ref The sound effect to be stopped
+     * @param sound The sound effect to be stopped
      */
-    stopSound(ref:HTMLAudioElement):void;
+    stopSound(sound:HTMLAudioElement):void;
     
     /**
      * Pauses all sounds the engine has triggered
@@ -58,14 +64,7 @@ export default interface ISoundEngine {
     
     /**
      * Forces a sound to be loaded by playing it while muted
-     * @param ref The sound to be forced to load
+     * @param sound The sound to be forced to load
      */
-    forceLoad(ref:HTMLAudioElement):void;
-    
-    /**
-     * Runs a check to see what playing sounds have now finished, and 
-     * updates the engine's state accordingly
-     */
-    run():void;
-    
+    forceLoad(sound:HTMLAudioElement):void;
 };
