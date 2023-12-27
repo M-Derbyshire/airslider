@@ -1,7 +1,7 @@
 import IKernel from '../../../Kernel/IKernel';
 import Kernel from '../../../Kernel/Kernel';
 import IHelpers from '../../../Kernel/helpers/IHelpers';
-import ICamera from '../../../engines/GraphicEn/ICamera';
+import ICamera from '../../../engines/GraphicEngine/ICamera';
 
 /**
  * Manages the level's tunnels

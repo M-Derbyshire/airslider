@@ -1,7 +1,7 @@
 /**
  * The engine that controls the sound/music of the game
  */
-export default interface ISoundEn {
+export default interface ISoundEngine {
     
     /**
      * The level's music

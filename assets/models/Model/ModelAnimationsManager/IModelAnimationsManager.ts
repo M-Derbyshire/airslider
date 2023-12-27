@@ -1,4 +1,4 @@
-import ICamera from "../../../../engines/GraphicEn/ICamera";
+import ICamera from "../../../../engines/GraphicEngine/ICamera";
 import IAnimation from "./IAnimation";
 import IAnimationDetails from "./IAnimationDetails";
 import IFrameCoordinates from "./IFrameCoordinates";

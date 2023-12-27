@@ -1,8 +1,8 @@
 import ILevel from "../assets/levels/Level/ILevel";
 import IModel from "../assets/models/Model/IModel";
-import IGameEn from "../engines/GameEn/IGameEn";
-import IGraphicEn from "../engines/GraphicEn/IGraphicEn";
-import ISoundEn from "../engines/SoundEn/ISoundEn";
+import IGameEngine from "../engines/GameEngine/IGameEngine";
+import IGraphicEngine from "../engines/GraphicEngine/IGraphicEngine";
+import ISoundEngine from "../engines/SoundEngine/ISoundEngine";
 import ISettings from "../settings/ISettings";
 import IHelpers from "./helpers/IHelpers";
 import IAssetHandler from "./AssetHandler/IAssetHandler";
@@ -96,17 +96,17 @@ export default interface IKernel {
     /**
      * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
      */
-    readonly gameEn:IGameEn;
+    readonly gameEngine:IGameEngine;
     
     /**
      * The engine that controls the drawing to the screen
      */
-    readonly graphicEn:IGraphicEn;
+    readonly graphicEngine:IGraphicEngine;
     
     /**
      * The engine that controls the sound/music of the game
      */
-    readonly soundEn:ISoundEn;
+    readonly soundEngine:ISoundEngine;
     
     /**
      * The canvas element that the game should be drawn on

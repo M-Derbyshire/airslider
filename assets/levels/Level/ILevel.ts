@@ -1,7 +1,7 @@
-import ICamera from "../../../engines/GraphicEn/ICamera";
+import ICamera from "../../../engines/GraphicEngine/ICamera";
 import IHUD from "../../HUDs/HUD/IHUD";
 import IModel from "../../models/Model/IModel";
-import IFrameManager from "../../../engines/GraphicEn/IFrameManager";
+import IFrameManager from "../../../engines/GraphicEngine/IFrameManager";
 import PointerEventManager from "./PointerEventManager";
 import EventManager from "./EventManager";
 

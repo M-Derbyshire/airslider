@@ -2,7 +2,7 @@ import Kernel from '../../../../Kernel/Kernel';
 import IKernel from '../../../../Kernel/IKernel';
 import IModel from '../IModel';
 import IHelpers from '../../../../Kernel/helpers/IHelpers';
-import ICamera from '../../../../engines/GraphicEn/ICamera';
+import ICamera from '../../../../engines/GraphicEngine/ICamera';
 import IAnimation from './IAnimation';
 import IAnimationDetails from './IAnimationDetails';
 import IFrameCoordinates from './IFrameCoordinates';

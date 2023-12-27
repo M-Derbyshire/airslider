@@ -1,4 +1,4 @@
-import ICamera from '../../../../engines/GraphicEn/ICamera';
+import ICamera from '../../../../engines/GraphicEngine/ICamera';
 import Tarian from '../../../models/Tarian/Tarian';
 import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
 

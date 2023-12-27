@@ -114,8 +114,8 @@ export default class SignDisplay extends ASModel
         this.state = "off";
         this.active = true;
         
-        this.kernel.soundEn.forceLoad(this._countdownBeep);
-        this.kernel.soundEn.forceLoad(this._startBeep);
+        this.kernel.soundEngine.forceLoad(this._countdownBeep);
+        this.kernel.soundEngine.forceLoad(this._startBeep);
         
         this._lastLightChangeMS = 0;
         this._lightChangeWaitMS = 1500;
@@ -172,19 +172,19 @@ export default class SignDisplay extends ASModel
         {
             case "off":
                 this.state = "one";
-                this.kernel.soundEn.playSound(this._countdownBeep);
+                this.kernel.soundEngine.playSound(this._countdownBeep);
                 break;
             case "one":
                 this.state = "two";
-                this.kernel.soundEn.playSound(this._countdownBeep);
+                this.kernel.soundEngine.playSound(this._countdownBeep);
                 break;
             case "two":
                 this.state = "three";
-                this.kernel.soundEn.playSound(this._countdownBeep);
+                this.kernel.soundEngine.playSound(this._countdownBeep);
                 break;
             case "three":
                 this.state = "go";
-                this.kernel.soundEn.playSound(this._startBeep);
+                this.kernel.soundEngine.playSound(this._startBeep);
                 break;
             case "go":
                 this.state = "finished";

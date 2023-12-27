@@ -1,12 +1,12 @@
 import AssetHandler from './AssetHandler/AssetHandler';
-import GameEn from '../engines/GameEn/GameEn';
-import GraphicEn from '../engines/GraphicEn/GraphicEn';
-import SoundEn from '../engines/SoundEn/SoundEn';
+import GameEngine from '../engines/GameEngine/GameEngine';
+import GraphicEngine from '../engines/GraphicEngine/GraphicEngine';
+import SoundEngine from '../engines/SoundEngine/SoundEngine';
 import TimeHelper from './helpers/TimeHelper';
 import UnitHelper from './helpers/UnitHelper';
 import ZCalc from './helpers/ZCalc';
-import Camera from '../engines/GraphicEn/Camera';
-import FrameManager from '../engines/GraphicEn/FrameManager';
+import Camera from '../engines/GraphicEngine/Camera';
+import FrameManager from '../engines/GraphicEngine/FrameManager';
 import devSettings from '../settings/settings.development';
 import prodSettings from '../settings/settings.production';
 import fonts from '../assets/fonts/fonts';
@@ -19,8 +19,8 @@ import ILoadedLevel from './ILoadedLevel';
 import ILevel from '../assets/levels/Level/ILevel';
 import IModel from '../assets/models/Model/IModel';
 import IPreparedEngines from './IPreparedEngines';
-import ICamera from '../engines/GraphicEn/ICamera';
-import IFrameManager from '../engines/GraphicEn/IFrameManager';
+import ICamera from '../engines/GraphicEngine/ICamera';
+import IFrameManager from '../engines/GraphicEngine/IFrameManager';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';
 import ErrorHandler from './ErrorHandler/ErrorHandler';
 import { KernelStatus } from './KernelStatus';
@@ -204,17 +204,17 @@ export default class Kernel implements IKernel {
     /**
      * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
      */
-    get gameEn(){return this._levelQueue[0].preparedEngines.gameEn;}
+    get gameEngine(){return this._levelQueue[0].preparedEngines.gameEngine;}
     
     /**
      * The engine that controls the drawing to the screen
      */
-    get graphicEn(){return this._levelQueue[0].preparedEngines.graphicEn;}
+    get graphicEngine(){return this._levelQueue[0].preparedEngines.graphicEngine;}
     
     /**
      * The engine that controls the sound/music of the game
      */
-    get soundEn(){return this._levelQueue[0].preparedEngines.soundEn;}
+    get soundEngine(){return this._levelQueue[0].preparedEngines.soundEngine;}
     
     /**
      * The canvas element that the game should be drawn on
@@ -326,7 +326,7 @@ export default class Kernel implements IKernel {
     private _loadModels(models:IModel[], engines:IPreparedEngines):void
 	{
         models.forEach((model, idx) => {
-            const animManager = new ModelAnimationsManager(model, this.gameContext, engines.graphicEn.camera);
+            const animManager = new ModelAnimationsManager(model, this.gameContext, engines.graphicEngine.camera);
             
             model.loadedIndex = idx;
             model.load(animManager);
@@ -353,13 +353,13 @@ export default class Kernel implements IKernel {
      */
 	private _initialiseAllEngines(camera:ICamera, frameManager:IFrameManager):IPreparedEngines
 	{
-		const gameEn = new GameEn();
-        const graphicEn = new GraphicEn(camera, frameManager);
+		const gameEngine = new GameEngine();
+        const graphicEngine = new GraphicEngine(camera, frameManager);
         
         const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-        const soundEn = new SoundEn(new AudioContext());
+        const soundEngine = new SoundEngine(new AudioContext());
         
-        return { gameEn, graphicEn, soundEn };
+        return { gameEngine, graphicEngine, soundEngine };
 	}
     
     /**
@@ -446,9 +446,9 @@ export default class Kernel implements IKernel {
             
             if(this._status !== KernelStatus.Paused)
             {
-                this.gameEn.run();
-                this.graphicEn.run();
-                this.soundEn.run();
+                this.gameEngine.run();
+                this.graphicEngine.run();
+                this.soundEngine.run();
             }
             
             if(this._status === KernelStatus.PrePaused)
@@ -469,12 +469,12 @@ export default class Kernel implements IKernel {
         {
             if(this._status === KernelStatus.Active)
             {
-                this.soundEn.pauseMusic();
-                this.soundEn.pauseAllSounds();
+                this.soundEngine.pauseMusic();
+                this.soundEngine.pauseAllSounds();
                 this._status = KernelStatus.PrePaused;
             } else {
-                this.soundEn.playMusic();
-                this.soundEn.unpauseAllSounds();
+                this.soundEngine.playMusic();
+                this.soundEngine.unpauseAllSounds();
                 this._status = KernelStatus.Active
             }
         }

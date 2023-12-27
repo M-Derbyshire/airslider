@@ -118,7 +118,7 @@ export default class ElectricHornet extends Monster {
     
     start(): void {
         super.start();
-        this.kernel.soundEn.playSound(this._buzzSound, true);
+        this.kernel.soundEngine.playSound(this._buzzSound, true);
     }
     
     enter():void
@@ -152,7 +152,7 @@ export default class ElectricHornet extends Monster {
 	{
 		this.exiting = false;
     	this.active = false;
-        this.kernel.soundEn.stopSound(this._buzzSound);
+        this.kernel.soundEngine.stopSound(this._buzzSound);
 	}
     
     // Monster actions -----------------------------------------------------

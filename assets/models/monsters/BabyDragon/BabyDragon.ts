@@ -140,7 +140,7 @@ export default class BabyDragon extends Monster
         // The wing sound may restart too soon when changing between left/right animations.
         // Therefore, we run the sound on the last frame of the animation, not the first.
         if(animationChangedFrame && flappingAnimation.currentFrameIndex === flappingAnimation.frameCoordinates.length - 1)
-            this.kernel.soundEn.playSound(this._wingSound);
+            this.kernel.soundEngine.playSound(this._wingSound);
         
         this._lastAnimFrame = flappingAnimation.currentFrameIndex;
     }
@@ -149,7 +149,7 @@ export default class BabyDragon extends Monster
     
     start(): void {
         super.start();
-        this.kernel.soundEn.forceLoad(this._wingSound);
+        this.kernel.soundEngine.forceLoad(this._wingSound);
     }
     
     enter():void

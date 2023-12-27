@@ -1,5 +1,5 @@
 import { KernelStatus } from "../../../../Kernel/KernelStatus";
-import ICamera from "../../../../engines/GraphicEn/ICamera";
+import ICamera from "../../../../engines/GraphicEngine/ICamera";
 import ASHUDComponent from "../ASHUDComponent/ASHUDComponent"
 
 /**

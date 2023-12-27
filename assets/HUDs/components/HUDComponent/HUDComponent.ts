@@ -2,8 +2,8 @@ import Kernel from '../../../../Kernel/Kernel';
 import IKernel from '../../../../Kernel/IKernel';
 import IHUDComponent from './IHUDComponent';
 import IHelpers from '../../../../Kernel/helpers/IHelpers';
-import ICamera from '../../../../engines/GraphicEn/ICamera';
-import ITextContent from '../../../../engines/GraphicEn/ITextContent';
+import ICamera from '../../../../engines/GraphicEngine/ICamera';
+import ITextContent from '../../../../engines/GraphicEngine/ITextContent';
 
 /**
  * A component to be displayed by the Heads Up Display

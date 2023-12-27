@@ -3,7 +3,7 @@ import IModel from './IModel';
 import IKernel from '../../../Kernel/IKernel';
 import IHelpers from '../../../Kernel/helpers/IHelpers';
 import IModelAnimationsManager from './ModelAnimationsManager/IModelAnimationsManager';
-import ITextContent from '../../../engines/GraphicEn/ITextContent';
+import ITextContent from '../../../engines/GraphicEngine/ITextContent';
 import IHitBox from './IHitBox';
 
 /**

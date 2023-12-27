@@ -1,4 +1,4 @@
-import ICamera from "../../../../engines/GraphicEn/ICamera";
+import ICamera from "../../../../engines/GraphicEngine/ICamera";
 import DamageFlash from "../DamageFlash/DamageFlash";
 
 /**

@@ -1,4 +1,4 @@
-import ICamera from "../../../engines/GraphicEn/ICamera";
+import ICamera from "../../../engines/GraphicEngine/ICamera";
 import IPointerEventManager from "../../levels/Level/IPointerEventManager";
 import IModel from "../../models/Model/IModel";
 

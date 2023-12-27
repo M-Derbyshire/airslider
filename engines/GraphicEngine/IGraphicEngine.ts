@@ -3,7 +3,7 @@ import ICamera from "./ICamera";
 /**
  * The engine that controls the drawing to the screen
  */
-export default interface IGraphicEn {
+export default interface IGraphicEngine {
     /**
      * The camera for the level
      */

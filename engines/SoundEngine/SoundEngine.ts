@@ -1,12 +1,12 @@
 import IKernel from '../../Kernel/IKernel';
 import Kernel from '../../Kernel/Kernel';
 import { KernelStatus } from '../../Kernel/KernelStatus';
-import ISoundEn from './ISoundEn';
+import ISoundEngine from './ISoundEngine';
 
 /**
  * The engine that controls the sound/music of the game
  */
-export default class SoundEn implements ISoundEn {
+export default class SoundEngine implements ISoundEngine {
     
     private _kernel:IKernel;
     

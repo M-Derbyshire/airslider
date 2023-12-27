@@ -1,6 +1,6 @@
-import IGameEn from "../engines/GameEn/IGameEn";
-import IGraphicEn from "../engines/GraphicEn/IGraphicEn";
-import ISoundEn from "../engines/SoundEn/ISoundEn";
+import IGameEngine from "../engines/GameEngine/IGameEngine";
+import IGraphicEngine from "../engines/GraphicEngine/IGraphicEngine";
+import ISoundEngine from "../engines/SoundEngine/ISoundEngine";
 
 /**
  * The engines that will be used to run a level
@@ -10,16 +10,16 @@ export default interface IPreparedEngines {
     /**
      * The game engine
      */
-    gameEn:IGameEn;
+    gameEngine:IGameEngine;
     
     /**
      * The graphic engine
      */
-    graphicEn:IGraphicEn;
+    graphicEngine:IGraphicEngine;
     
     /**
      * The sound engine
      */
-    soundEn:ISoundEn;
+    soundEngine:ISoundEngine;
     
 };

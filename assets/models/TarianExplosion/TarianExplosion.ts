@@ -86,7 +86,7 @@ export default class TarianExplosion extends ASModel {
     private _runSound():void
     {
         if(this._animFrame.width === 0)
-            this.kernel.soundEn.playSound(this._alarmSound);
+            this.kernel.soundEngine.playSound(this._alarmSound);
     }
     
     /**

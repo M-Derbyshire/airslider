@@ -59,7 +59,7 @@ export default class PidgeonSoundController {
             // The frame index will always be 0 when off screen, as the animation won't be progressed (since the model won't be drawn),
             // so instead we play the sound every time it's on the second frame
             if(animationChangedFrame && flappingAnimFrame === 1) 
-                this._kernel.soundEn.playSound(flapSound);
+                this._kernel.soundEngine.playSound(flapSound);
                 
             this._lastFlappingAnimFrame = flappingAnimFrame;
         }

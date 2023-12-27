@@ -1,6 +1,6 @@
 import Kernel from '../../Kernel/Kernel';
 import IKernel from '../../Kernel/IKernel';
-import IGraphicEn from './IGraphicEn';
+import IGraphicEngine from './IGraphicEngine';
 import ICamera from './ICamera';
 import IFrameManager from './IFrameManager';
 import IHelpers from '../../Kernel/helpers/IHelpers';
@@ -8,7 +8,7 @@ import IHelpers from '../../Kernel/helpers/IHelpers';
 /**
  * The engine that controls the drawing to the screen
  */
-export default class GraphicEn implements IGraphicEn {
+export default class GraphicEngine implements IGraphicEngine {
     
     private _kernel:IKernel;
     private _helpers:IHelpers;

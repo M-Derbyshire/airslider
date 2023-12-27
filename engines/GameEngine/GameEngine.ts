@@ -1,11 +1,11 @@
 import Kernel from '../../Kernel/Kernel';
 import IKernel from '../../Kernel/IKernel';
-import IGameEn from './IGameEn';
+import IGameEngine from './IGameEngine';
 
 /**
  * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
  */
-export default class GameEn implements IGameEn {
+export default class GameEngine implements IGameEngine {
     private _kernel:IKernel;
     
     constructor()

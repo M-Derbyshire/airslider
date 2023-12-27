@@ -94,7 +94,7 @@ export default class ElectricSeahorse extends Monster {
     
     start(): void {
         super.start();
-        this.kernel.soundEn.forceLoad(this._wingSound);
+        this.kernel.soundEngine.forceLoad(this._wingSound);
     }
     
     enter():void
@@ -140,7 +140,7 @@ export default class ElectricSeahorse extends Monster {
         const animationChangedFrame = this._lastAnimFrame !== flappingAnimation.currentFrameIndex;
         
         if(this.state === "move" && animationChangedFrame && flappingAnimation.currentFrameIndex === 1)
-            this.kernel.soundEn.playSound(this._wingSound);
+            this.kernel.soundEngine.playSound(this._wingSound);
         
         this._lastAnimFrame = flappingAnimation.currentFrameIndex;
         

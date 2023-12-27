@@ -5,9 +5,9 @@ import PointerEventManager from './PointerEventManager';
 import IEventManager from './IEventManager';
 import IHUD from '../../HUDs/HUD/IHUD';
 import IHelpers from '../../../Kernel/helpers/IHelpers';
-import ICamera from '../../../engines/GraphicEn/ICamera';
+import ICamera from '../../../engines/GraphicEngine/ICamera';
 import IPointerEventManager from './IPointerEventManager';
-import IFrameManager from '../../../engines/GraphicEn/IFrameManager';
+import IFrameManager from '../../../engines/GraphicEngine/IFrameManager';
 import IModel from '../../models/Model/IModel';
 import ILevel from './ILevel';
 

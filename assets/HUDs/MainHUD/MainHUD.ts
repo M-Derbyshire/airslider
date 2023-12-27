@@ -2,7 +2,7 @@ import ASHUD from '../ASHUD/ASHUD';
 import HealthDisplay from '../components/HealthDisplay/HealthDisplay';
 import DamageFlash from '../components/DamageFlash/DamageFlash';
 import LowHealthFlash from '../components/LowHealthFlash/LowHealthFlash';
-import ICamera from '../../../engines/GraphicEn/ICamera';
+import ICamera from '../../../engines/GraphicEngine/ICamera';
 import IPointerEventManager from '../../levels/Level/IPointerEventManager';
 import PauseButton from '../components/PauseButton/PauseButton';
 
