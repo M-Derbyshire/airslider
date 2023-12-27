@@ -13,12 +13,12 @@ export default class GraphicEn implements IGraphicEn {
     private _kernel:IKernel;
     private _helpers:IHelpers;
     
-    private _gameCan:HTMLCanvasElement;
-    private _gameCtx:CanvasRenderingContext2D;
-    private _frameManager:IFrameManager;
+    private _gameCanvas:HTMLCanvasElement; // The canvas that we're drawing on
+    private _gameCtx:CanvasRenderingContext2D; // The 2D context for the canvas
+    private _frameManager:IFrameManager; // Manages the level's frames
     
-    private _lastFrameCanvasWidth:number;
-    private _lastFrameCanvasHeight:number;
+    private _lastFrameCanvasWidth:number; // The pixel width of the canvas element, during the last draw
+    private _lastFrameCanvasHeight:number; // The pixel height of the canvas element, during the last draw
     
     /**
      * The camera for the level
@@ -27,7 +27,7 @@ export default class GraphicEn implements IGraphicEn {
     
     /**
      * Constructor
-     * @param camera The game's camera
+     * @param camera The level's camera
      * @param frameManager The level's frame manager
      */
     constructor(camera:ICamera, frameManager:IFrameManager)
@@ -35,46 +35,43 @@ export default class GraphicEn implements IGraphicEn {
         this._kernel = Kernel.getInstance();
         this._helpers = this._kernel.helpers;
 		
-        this._gameCan = this._kernel.gameCanvas;
+        this._gameCanvas = this._kernel.gameCanvas;
         this._gameCtx = this._kernel.gameContext;
         this.camera = camera;
         this._frameManager = frameManager;
         
-        // The current width/height of the canvas element
         this._lastFrameCanvasWidth = 0;
         this._lastFrameCanvasHeight = 0;
         
-        this._setCanvasCorrectWidthHeight(); //Needs to be ran first, so other objects can use these dimensions on startup
+        // This needs to be ran here, so other entities can use these dimensions on startup
+        this._setCanvasCorrectWidthHeight();
     }
-    
-    
-    //----------------------------------------------------------
     
     /**
      * Triggers the clearing and re-drawing of the screen
      */
     run():void
     {
-        //Need to do this, rather than use an event listener, as the onResize listener
-        //doesn't react to a change of size if the size is set in percentages (so, if
-        //100% size, that value doesn't actually change, even if the window size does).
-        if(this._canvasSizeHasChanged()) this._setCanvasCorrectWidthHeight();
+        // Need to do this, rather than using an event listener, as the onResize listener
+        // doesn't react to a change of canvas size if the size is set in percentages.
+        if(this._canvasSizeHasChanged()) 
+            this._setCanvasCorrectWidthHeight();
         
-        //clear everything on the gameCan
-        this._gameCtx.clearRect(0, 0, this._gameCan.width, this._gameCan.height);
+        // Clear everything on the game canvas
+        this._gameCtx.clearRect(0, 0, this._gameCanvas.width, this._gameCanvas.height);
         
-        
-        //Draw the parts of the screen that are behind the models
-        this.camera.drawBack();
+        // Prepare to draw
         this._frameManager.determineFramesToDraw();
+        
+        // Draw the elements that are behind the models
+        this.camera.drawBack();
         this._frameManager.drawFramesBack();
         this._kernel.level.drawBack();
         
-        
+        // Now the models
         this._drawModels();
         
-        
-        //Draw everything that needs to be drawn on top of the models
+        //Finally, draw everything that needs to be drawn on top of the models
         this._kernel.level.drawFront();
         this._frameManager.drawFramesFront();
         this._kernel.level.HUD.draw();
@@ -89,23 +86,14 @@ export default class GraphicEn implements IGraphicEn {
      */
     private _drawModels():void
     {
-		//We need to make sure the models are drawn ordered by z-index.
-		//Array.sort() will affect the original array, so we create a new array first.
-		const zSortedModels = [...this._kernel.loadedModels];
-		zSortedModels.sort((a, b) => b.z - a.z);
+		// We need to make sure that the models are drawn ordered by the Z position.
+		const zSortedModels = [...this._kernel.loadedModels].sort((a, b) => b.z - a.z);
         
-		zSortedModels.forEach(modelToDraw => {
-			
-			if(this.camera.isOnCamera(
-                        modelToDraw.x, 
-                        modelToDraw.y, 
-                        modelToDraw.width, 
-                        modelToDraw.height, 
-                        modelToDraw.z) && modelToDraw.active && modelToDraw.display)
-            {
-                modelToDraw.draw();
-            }
-			
+		zSortedModels.forEach(model => {
+            const isOnCamera = this.camera.isOnCamera(model.x, model.y, model.width, model.height, model.z);
+            
+			if(isOnCamera && model.active && model.display)
+                model.draw();
 		});
     }
     
@@ -114,11 +102,13 @@ export default class GraphicEn implements IGraphicEn {
      */
     private _fpsMeter():void
     {
-        let fontSize = 30
+        const fps = Math.round(this._kernel.fps * 100) / 100; // 2 decimal places
+        
+        const fontSize = 30;
         this._gameCtx.font = fontSize + "px Arial";
         this._gameCtx.fillStyle = this._kernel.fpsDisplayColor;
-        const fpsDisplay = Math.round(this._kernel.fps * 100) / 100; // 2 decimal places
-        this._gameCtx.fillText("FPS: " + fpsDisplay, 10, (10 + fontSize));
+        
+        this._gameCtx.fillText(`FPS: ${fps}`, 10, (10 + fontSize));
     }
     
     /**
@@ -128,13 +118,14 @@ export default class GraphicEn implements IGraphicEn {
     private _canvasSizeHasChanged():boolean
     {
         //slice() is used here to remove the "px"
-        const currentWidth = Number(window.getComputedStyle(this._gameCan).width.slice(0, -2));
-        const currentHeight = Number(window.getComputedStyle(this._gameCan).height.slice(0, -2));
+        const computedStyles = window.getComputedStyle(this._gameCanvas);
+        const currentWidth = Number(computedStyles.width.slice(0, -2));
+        const currentHeight = Number(computedStyles.height.slice(0, -2));
         
         if(currentWidth !== this._lastFrameCanvasWidth || currentHeight !== this._lastFrameCanvasHeight)
         {
             this._lastFrameCanvasWidth = currentWidth;
-            this._lastFrameCanvasHeight = currentHeight
+            this._lastFrameCanvasHeight = currentHeight;
             
             return true;
         }
@@ -145,24 +136,30 @@ export default class GraphicEn implements IGraphicEn {
     /**
      * Corrects the canvas element's styling width/height, based on the Device Pixel Ratio.
      * Will then call reset methods on any elements that need to be aware of the canvas element 
-     * changing size
+     * changing size.
+     * 
+     * This should also be called on loading, to allow a number of elements to have the new 
+     * width/height values.
      */
     private _setCanvasCorrectWidthHeight():void
     {
         if(this._kernel.correctCanvasStyleToDevicePixelRatio)
         {
-            //Need to change the styling for the canvas, based on the DPI,
-            //to avoid it being stretched and blurry.
+            const devicePixelRatio = (window.devicePixelRatio || 1);
             
-            //getComputedStyle is used incase the canvas size is in %. Slice takes off the "px".
-            //.width and .height are not the same as .style.width and .style.height, and if they
-            //are less than the style values, the image can be blurry (we also need to take into
-            //account the devicePixelRatio)
-            this._gameCan.width = Number(window.getComputedStyle(this._gameCan).width.slice(0, -2)) * (window.devicePixelRatio || 1);
-            this._gameCan.height = Number(window.getComputedStyle(this._gameCan).height.slice(0, -2)) * (window.devicePixelRatio || 1);
+            // Need to change the styling for the canvas, based on the DPI,
+            // to avoid it being stretched and blurry.
+            
+            // getComputedStyle is used incase the canvas size is in %. Slice takes off the "px".
+            // .width and .height are not the same as .style.width and .style.height, and if they
+            // are less than the style values, the image can be blurry (we also need to take into
+            // account the devicePixelRatio)
+            const computedStyles = window.getComputedStyle(this._gameCanvas);
+            this._gameCanvas.width = Number(computedStyles.width.slice(0, -2)) * devicePixelRatio;
+            this._gameCanvas.height = Number(computedStyles.height.slice(0, -2)) * devicePixelRatio;
         }
         
-        //It should be noted that this should be ran on loading as well (it is the first setting of the below)
+        // It should be noted that these should be ran on loading as well (as it is the first setting of the below)
         this.camera.setCameraSize();
         this._helpers.zCalc.resetVanishPointPosition();
         this._helpers.unit.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
