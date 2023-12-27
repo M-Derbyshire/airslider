@@ -2,7 +2,6 @@
  * Details for displaying an entity's text content
  */
 export default interface ITextContent {
-    
     /**
      * The text to display
      */
@@ -35,7 +34,7 @@ export default interface ITextContent {
     
     /**
      * See the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
+     * (CanvasRenderingContext2D.font).
      */
     style:string;
-    
 };

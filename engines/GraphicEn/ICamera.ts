@@ -32,24 +32,24 @@ export default interface ICamera {
     
     
     /**
-     * The drawSpace positions set where the camera exists within the level's available space.
-     * These values are in units, not actual canvas drawing positions.
+     * The draw-space positions are where the camera exists within the level's available space.
+     * These values are in units.
      */
     
     /**
-     * The x position of the camera in the level's draw space
+     * The x position of the camera in the level's draw space (in units)
      */
     readonly drawSpacePositionX:number;
     
     /**
-     * The y position of the camera in the level's draw space
+     * The y position of the camera in the level's draw space (in units)
      */
     readonly drawSpacePositionY:number;
     
     
     
     /**
-     * Used by frames/models to determine where to actually draw on canvas (based on camera position)
+     * These functions are used to determine where to actually draw something on the canvas (based on camera position)
      */
     unitCameraPositionCalc:{
         /**
@@ -83,7 +83,7 @@ export default interface ICamera {
     
     /**
      * Based on the given details, is an object currently on camera?
-     * (The drawspace is the total space within the level. These coordinates are given in units)
+     * (The draw-space is the total space within the level. These coordinates are given in units)
      * @param drawSpaceX The x position (in units) of the object
      * @param drawSpaceY The y position (in units) of the object
      * @param widthUnits The width (in units) of the object

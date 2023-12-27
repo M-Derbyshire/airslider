@@ -4,7 +4,6 @@ import IFrame from "./IFrame";
  * Manages the frames of a level
  */
 export default interface IFrameManager {
-    
     /**
      * Adds a frame to the level
      * @param frame The frame to add
@@ -34,5 +33,4 @@ export default interface IFrameManager {
      * Draws the foreground-related elements of all of the frames that need to be drawn
      */
     drawFramesFront():void;
-    
 };
