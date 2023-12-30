@@ -4,8 +4,6 @@ import IHUDComponent from './IHUDComponent';
 import IHelpers from '../../../../Kernel/helpers/IHelpers';
 import ICamera from '../../../../engines/GraphicEngine/ICamera';
 import ITextContent from '../../../../engines/GraphicEngine/ITextContent';
-import IDrawPositions from '../../../../engines/GraphicEngine/IDrawPositions';
-import IDrawDimensions from '../../../../engines/GraphicEngine/IDrawDimensions';
 
 /**
  * A component to be displayed by the Heads Up Display

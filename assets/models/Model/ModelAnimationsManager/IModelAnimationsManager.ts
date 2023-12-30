@@ -1,7 +1,7 @@
-import ICamera from "../../../../engines/GraphicEngine/ICamera";
+import IDrawDimensions from "../../../../engines/GraphicEngine/IDrawDimensions";
+import IDrawPositions from "../../../../engines/GraphicEngine/IDrawPositions";
 import IAnimation from "./IAnimation";
 import IAnimationDetails from "./IAnimationDetails";
-import IFrameCoordinates from "./IFrameCoordinates";
 
 /**
  * Manages a model's animations
@@ -50,7 +50,7 @@ export default interface IModelAnimationsManager {
      * @param originalValues the model's current coordinates, along with the model's z position
      * @returns The correct positions/dimensions to draw the sprite at
      */
-	getDrawPositionsAndDimensions(originalValues:IFrameCoordinates & { z:number }):IFrameCoordinates
+	getDrawPositionsAndDimensions(originalValues:IDrawPositions&IDrawDimensions&{ z:number }):IDrawPositions&IDrawDimensions
     
     /**
      * Resets the currently active animation back to the first frame

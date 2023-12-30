@@ -22,4 +22,22 @@ export default interface IGraphicEngine {
      * @returns The pixel values for the x/y/width/height
      */
     getStaticDrawPositionsAndDimensions(unitValues:IDrawPositions&IDrawDimensions):IDrawPositions&IDrawDimensions;
+    
+    /**
+     * Calculates the draw positons/dimensions in pixels for an entity that isn't z-scaled
+     * @param unitValues The position/dimension values (in units)
+     * @returns The pixel values for the x/y/width/height
+     */
+    getUnscaledDrawPositionsAndDimensions(unitValues:IDrawPositions&IDrawDimensions):IDrawPositions&IDrawDimensions;
+    
+    /**
+     * Calculates the draw positons/dimensions in pixels for an entity that is scaled on the z-axis
+     * @param unitValues The position/dimension values (in units), plus the z position
+     * @param showNegative Should the element still be drawn if the z position is negative?
+     * @returns The pixel values for the scaled x/y/width/height
+     */
+    getScaledDrawPositionsAndDimensions(
+        unitValues:IDrawPositions&IDrawDimensions&{ z:number }, 
+        showNegative?:boolean
+    ):IDrawPositions&IDrawDimensions;
 };

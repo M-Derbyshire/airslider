@@ -134,14 +134,14 @@ export default class ASLevel extends Level
 	{
 		super.load(camera, frameManager, eventManager, pointerEventManager);
         
-        this.groundManager = new LevelGround(camera);
-        this._finishFlagsManager = new LevelGround(camera, false); 
+        this.groundManager = new LevelGround();
+        this._finishFlagsManager = new LevelGround(false); 
         
         this._finishFlagsManager.load(
             "/assets/levels/ASLevel/images/finish_flag.png",
             312,
             50,
-            500
+            312
         );
 	}
     

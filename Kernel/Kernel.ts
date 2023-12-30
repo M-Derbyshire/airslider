@@ -297,7 +297,7 @@ export default class Kernel implements IKernel {
         const loadedModels = level.getModels();
         
         //Now we can load the models
-        this._loadModels(loadedModels, preparedEngines);
+        this._loadModels(loadedModels);
         
         //hasBeenPrepared should be set to true if the level (and it's models) have had the prepare() method called
         this._levelQueue.push({ level, hasBeenPrepared: false, loadedModels, preparedEngines });
@@ -323,10 +323,10 @@ export default class Kernel implements IKernel {
      * @param models the models to be loaded
      * @param engines the engines used by the level that provided these models
      */
-    private _loadModels(models:IModel[], engines:IPreparedEngines):void
+    private _loadModels(models:IModel[]):void
 	{
         models.forEach((model, idx) => {
-            const animManager = new ModelAnimationsManager(model, this.gameContext, engines.graphicEngine.camera);
+            const animManager = new ModelAnimationsManager(model);
             
             model.loadedIndex = idx;
             model.load(animManager);

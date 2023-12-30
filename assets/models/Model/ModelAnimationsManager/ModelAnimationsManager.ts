@@ -1,12 +1,11 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IKernel from '../../../../Kernel/IKernel';
 import IModel from '../IModel';
-import IHelpers from '../../../../Kernel/helpers/IHelpers';
-import ICamera from '../../../../engines/GraphicEngine/ICamera';
 import IAnimation from './IAnimation';
 import IAnimationDetails from './IAnimationDetails';
-import IFrameCoordinates from './IFrameCoordinates';
 import IModelAnimationsManager, { AnimationsObject } from './IModelAnimationsManager';
+import IDrawDimensions from '../../../../engines/GraphicEngine/IDrawDimensions';
+import IDrawPositions from '../../../../engines/GraphicEngine/IDrawPositions';
 
 /**
  * Manages a model's animations
@@ -14,8 +13,6 @@ import IModelAnimationsManager, { AnimationsObject } from './IModelAnimationsMan
 export default class ModelAnimationsManager implements IModelAnimationsManager {
     private _model:IModel; // A reference to the model
     private _kernel:IKernel; // A reference to the kernel
-    private _helpers:IHelpers; // A reference to the helper objects, from the kernel
-    private _camera:ICamera; // The level's camera
     private _canvasCtx:CanvasRenderingContext2D; // The 2D context from the canvas element
     
     /**
@@ -31,17 +28,13 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     /**
      * Constructor
      * @param model The model that this is used by
-     * @param canvasCtx The 2D canvas context
-     * @param camera The level's camera
      */
-    constructor(model:IModel, canvasCtx:CanvasRenderingContext2D, camera:ICamera)
+    constructor(model:IModel)
     {
         this._kernel = Kernel.getInstance();
-        this._helpers = this._kernel.helpers;
+        this._canvasCtx = this._kernel.gameContext;
         
         this._model = model;
-        this._camera = camera;
-        this._canvasCtx = canvasCtx;
         
         this.sheetMap = new Map<string, HTMLImageElement>();
     }
@@ -163,29 +156,16 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      * @param originalValues the model's current coordinates, along with the model's z position
      * @returns The correct positions/dimensions to draw the sprite at
      */
-	getDrawPositionsAndDimensions(originalValues:IFrameCoordinates & { z:number }):IFrameCoordinates
+	getDrawPositionsAndDimensions(originalValues:IDrawPositions&IDrawDimensions&{ z:number }):IDrawPositions&IDrawDimensions
 	{
-        const { unit, zCalc } = this._helpers;
-        const { unitCameraPositionCalc } = this._camera;
-        
-		const preZCalcX = unit.xUnit(unitCameraPositionCalc.x(originalValues.x)) + this._camera.canvasPositionX;
-		const preZCalcY = unit.yUnit(unitCameraPositionCalc.y(originalValues.y)) + this._camera.canvasPositionY;
-		const preZCalcWidth = unit.xUnit(originalValues.width);
-		const preZCalcHeight = unit.yUnit(originalValues.height);
-        
-        const x = zCalc.x(preZCalcX, originalValues.z);
-        const y = zCalc.y(preZCalcY, originalValues.z);
-        const width = zCalc.width(preZCalcWidth, originalValues.z);
-        const height = zCalc.height(preZCalcHeight, originalValues.z);
-        
-		return { x, y, width, height };
+        return this._kernel.graphicEngine.getScaledDrawPositionsAndDimensions(originalValues);
 	}
 	
     /**
      * Gets the coordinates of the next frame on the spritesheet
      * @returns The coordinates of the next frame on the spritesheet
      */
-    private _getNextFrameCoordinates():IFrameCoordinates
+    private _getNextFrameCoordinates():IDrawPositions&IDrawDimensions
     {
         const animation = this.animations[this._model.state];
 		let currentFrameIndex = animation.currentFrameIndex;

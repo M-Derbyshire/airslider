@@ -11,8 +11,6 @@ export default class LevelTunnel
     protected kernel:IKernel;
     protected helpers:IHelpers;
     
-    private _camera:ICamera;
-    
     tunnel:ITunnelPart[]; // The sections of the tunnel
     
     constructor()
@@ -21,15 +19,6 @@ export default class LevelTunnel
         this.helpers = this.kernel.helpers;
         
         this.tunnel = [];
-    }
-    
-    /**
-     * Loads the tunnel manager
-     * @param camera the level's camera
-     */
-    load(camera:ICamera)
-    {
-        this._camera = camera;
     }
     
     /**
@@ -143,13 +132,17 @@ export default class LevelTunnel
 	{
 		if(tunnelPart.image) //(null is a clear piece)
 		{
-			this.kernel.gameContext.drawImage(
-				tunnelPart.image, 
-				this.helpers.zCalc.x(this._camera.canvasPositionX, tunnelPart.z, true), 
-				this.helpers.zCalc.y(this._camera.canvasPositionY, tunnelPart.z, true), 
-				this.helpers.zCalc.width(this._camera.canvasPositionWidth, tunnelPart.z, true), 
-				this.helpers.zCalc.height(this._camera.canvasPositionHeight, tunnelPart.z, true)
-			);
+            const unitsWithinCamera = this.kernel.unitsWithinCamera;
+            
+            const { x, y, width, height } = this.kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
+                x: 0,
+                y: 0,
+                width: unitsWithinCamera,
+                height: unitsWithinCamera,
+                z: tunnelPart.z
+            }, true);
+            
+			this.kernel.gameContext.drawImage(tunnelPart.image, x, y, width, height);
 		}
 	}
 	

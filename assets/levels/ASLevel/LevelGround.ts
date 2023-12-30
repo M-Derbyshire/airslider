@@ -1,7 +1,6 @@
 import IKernel from '../../../Kernel/IKernel';
 import Kernel from '../../../Kernel/Kernel';
 import IHelpers from '../../../Kernel/helpers/IHelpers';
-import ICamera from '../../../engines/GraphicEngine/ICamera';
 
 /**
  * Draws an image on the ground at each side of the road.
@@ -11,7 +10,6 @@ export default class LevelGround
 	protected kernel:IKernel;
 	protected helpers:IHelpers;
 	
-	private _camera:ICamera;
 	private _canvasCtx:CanvasRenderingContext2D;
 	private _groundPopulatedInitially:boolean; // True if the images should be drawn from the start. If false, player is moving towards them
 	
@@ -27,12 +25,11 @@ export default class LevelGround
 	 * @param camera The level's camera
 	 * @param groundPopulatedInitially true if the images should already be there. If false, player is moving towards them
 	 */
-    constructor(camera:ICamera, groundPopulatedInitially:boolean = true)
+    constructor(groundPopulatedInitially:boolean = true)
     {
         this.kernel = Kernel.getInstance();
         this.helpers = this.kernel.helpers;
 
-        this._camera = camera;
         this._canvasCtx = this.kernel.gameContext;
 		this._groundPopulatedInitially = groundPopulatedInitially;
 		
@@ -44,9 +41,9 @@ export default class LevelGround
 	/**
 	 * Loads the level ground manager
 	 * @param imagePath the file path to the image asset
-	 * @param imageHeight the height to draw the image
+	 * @param imageHeight the height to draw the image (in units)
 	 * @param gapZDistance the number of units, on the z axis, between each image on the ground
-	 * @param imageStaticWidth if imageStaticWidth is not provided, the image will be stretched to fill the space. Provided width shouldn't be in units
+	 * @param imageStaticWidth if imageStaticWidth is not provided, the image will be stretched to fill the space. Provided width should be in units
 	 */
 	load(imagePath:string, imageHeight:number, gapZDistance:number, imageStaticWidth:number|null = null):void
 	{
@@ -157,26 +154,36 @@ export default class LevelGround
 	 */
 	private _drawLeftAndRightGroundImage(groundZPos:number):void
 	{
-		const offsetZPos = groundZPos - this.ground.offset;
+		// At 0 on the z-axis, each ground image should be fully off the screen (in the bottom corners)
 		
-		const canvasBottomEdge = this._camera.canvasPositionY + this._camera.canvasPositionHeight;
-		const canvasRightEdge = this._camera.canvasPositionX + this._camera.canvasPositionWidth;
+		const unitsWithinCamera = this.kernel.unitsWithinCamera;
 		
-		// The default for this needs to be double the width of the canvas (at 0 on z-axis) to look right
+		// The default for this needs to be double the width of the canvas (at 0 on z-axis) to look correct
 		const imageWidth = (this.ground.width) 
 			? this.ground.width 
-			: this._camera.canvasPositionX + (this._camera.canvasPositionWidth * 2);
+			: unitsWithinCamera * 2;
 		
-		const drawY = this.helpers.zCalc.y(canvasBottomEdge - this.ground.height, offsetZPos);
-		const drawWidth = this.helpers.zCalc.width(imageWidth, offsetZPos);
-		const drawHeight = this.helpers.zCalc.height(this.helpers.unit.yUnit(this.ground.height), offsetZPos);
+		const offsetZPos = groundZPos - this.ground.offset;
+		const yUnitValue = unitsWithinCamera - this.ground.height;
 		
-		// At 0 on the z-axis, these should be fully off the screen (in the bottom corners)
-		const leftDrawX = this.helpers.zCalc.x(this._camera.canvasPositionX - imageWidth, offsetZPos);
-		const rightDrawX = this.helpers.zCalc.x(canvasRightEdge, offsetZPos);
+		const leftDrawValues = this.kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
+			x: -imageWidth,
+			y: yUnitValue,
+			width: imageWidth,
+			height: this.ground.height,
+			z: offsetZPos
+		});
 		
-		this._drawGroundImage(leftDrawX, drawY, drawWidth, drawHeight);
-		this._drawGroundImage(rightDrawX, drawY, drawWidth, drawHeight);
+		const rightDrawValues = this.kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
+			x: unitsWithinCamera,
+			y: yUnitValue,
+			width: imageWidth,
+			height: this.ground.height,
+			z: offsetZPos
+		});
+		
+		this._drawGroundImage(leftDrawValues.x, leftDrawValues.y, leftDrawValues.width, leftDrawValues.height);
+		this._drawGroundImage(rightDrawValues.x, rightDrawValues.y, rightDrawValues.width, rightDrawValues.height);
 	}
 	
 	/**

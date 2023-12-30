@@ -104,6 +104,49 @@ export default class GraphicEngine implements IGraphicEngine {
     }
     
     /**
+     * Calculates the draw positons/dimensions in pixels for an entity that isn't z-scaled
+     * @param unitValues The position/dimension values (in units)
+     * @returns The pixel values for the x/y/width/height
+     */
+    getUnscaledDrawPositionsAndDimensions(unitValues:IDrawPositions&IDrawDimensions):IDrawPositions&IDrawDimensions
+    {
+        const { x, y, width, height } = unitValues;
+        
+        const cameraOffsettedXUnits = this.camera.unitCameraPositionCalc.x(x);
+        const cameraOffsettedYUnits = this.camera.unitCameraPositionCalc.y(y);
+        
+        return this.getStaticDrawPositionsAndDimensions({
+            x: cameraOffsettedXUnits,
+            y: cameraOffsettedYUnits,
+            width,
+            height
+        });
+    }
+    
+    /**
+     * Calculates the draw positons/dimensions in pixels for an entity that is scaled on the z-axis
+     * @param unitValues The position/dimension values (in units), plus the z position
+     * @param showNegative Should the element still be drawn if the z position is negative?
+     * @returns The pixel values for the scaled x/y/width/height
+     */
+    getScaledDrawPositionsAndDimensions(
+        unitValues:IDrawPositions&IDrawDimensions&{ z:number }, 
+        showNegative = false
+    ):IDrawPositions&IDrawDimensions
+    {
+        const zCalc = this._kernel.helpers.zCalc;
+        
+        const unscaled = this.getUnscaledDrawPositionsAndDimensions(unitValues);
+        
+        return {
+            x: zCalc.x(unscaled.x, unitValues.z, showNegative),
+            y: zCalc.y(unscaled.y, unitValues.z, showNegative),
+            width: zCalc.width(unscaled.width, unitValues.z, showNegative),
+            height: zCalc.height(unscaled.height, unitValues.z, showNegative)
+        };
+    }
+    
+    /**
      * Trigger the drawing of all of the models, in the correct order
      */
     private _drawModels():void
