@@ -73,29 +73,6 @@ export default class PauseButton extends ASHUDComponent {
     }
     
     /**
-     * Is the mouse pointer overlapping this component?
-     * @param pointX the x position (within the canvas's space) of the mouse pointer 
-     * @param pointY the y position (within the canvas's space) of the mouse pointer
-     * @returns true if it is overlapping, false if not
-     */
-    isPointerOverlapping(pointX:number, pointY:number):boolean
-    {
-        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
-            x: this.x, 
-            y: this.y, 
-            width: this.width, 
-            height: this.height
-        });
-        
-        return (
-            pointX >= x &&
-            pointY >= y &&
-            pointX <= (x + width) &&
-            pointY <= (y + height)
-        );
-    }
-    
-    /**
      * Handles the component being clicked
      */
     onClick()

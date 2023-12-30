@@ -124,14 +124,18 @@ export default class HUDComponent implements IHUDComponent
      */
 	isPointerOverlapping(pointX:number, pointY:number):boolean
 	{
-		const xUnit = this.helpers.unit.xUnit.bind(this.helpers.unit);
-		const yUnit = this.helpers.unit.yUnit.bind(this.helpers.unit);
-		
-		return (
-			pointX > xUnit(this.x) && 
-            pointX < (xUnit(this.x) + xUnit(this.width)) && 
-			pointY > yUnit(this.y) && 
-            pointY < (yUnit(this.y) + yUnit(this.height))
+        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height
+        });
+        
+        return (
+			pointX >= x && 
+            pointX <= (x + width) && 
+			pointY >= y && 
+            pointY <= (y + height)
 		);
 	}
 }
