@@ -1,5 +1,4 @@
 import { KernelStatus } from "../../../../Kernel/KernelStatus";
-import ICamera from "../../../../engines/GraphicEngine/ICamera";
 import ASHUDComponent from "../ASHUDComponent/ASHUDComponent"
 
 /**
@@ -31,9 +30,9 @@ export default class PauseButton extends ASHUDComponent {
         this.height = height;
     }
     
-    load(camera:ICamera):void 
+    load():void 
     {
-        super.load(camera);
+        super.load();
         this._imageSheet = this.kernel.loadImage("/assets/HUDs/components/PauseButton/images/button_sheet.png");
     }
     

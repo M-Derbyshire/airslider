@@ -41,18 +41,19 @@ export default class DamageFlash extends ASHUDComponent
             if(this.opacity <= 0)
             {
                 this._stopFlash();
+                return;
             }
             
-            this.ctx.globalAlpha = this.opacity;
-        
-            this.ctx.drawImage(
-                this.image,
-                this.camera.canvasPositionX,
-                this.camera.canvasPositionY,
-                this.camera.canvasPositionWidth,
-                this.camera.canvasPositionHeight
-            );
+            const unitsWithinCamera = this.kernel.unitsWithinCamera;
+            const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+                x: 0,
+                y: 0,
+                width: unitsWithinCamera,
+                height: unitsWithinCamera
+            });
             
+            this.ctx.globalAlpha = this.opacity;
+            this.ctx.drawImage(this.image, x, y, width, height);
             this.ctx.globalAlpha = 1;
         }
     }

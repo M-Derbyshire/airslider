@@ -14,7 +14,6 @@ export default class HUD implements IHUD
 {
     protected kernel: IKernel;
     protected helpers: IHelpers;
-    protected camera: ICamera;
     protected pointerEventManager: IPointerEventManager;
     protected components: IHUDComponent[]; //HUD components used by this HUD
     protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
@@ -33,12 +32,10 @@ export default class HUD implements IHUD
     
     /**
      * Loads the HUD
-     * @param camera the level's camera
      * @param pointerEventManager the level's PointerEventManager
      */
-    load(camera:ICamera, pointerEventManager:IPointerEventManager):void
+    load(pointerEventManager:IPointerEventManager):void
     {
-        this.camera = camera;
 		this.pointerEventManager = pointerEventManager;
     }
     
@@ -48,7 +45,7 @@ export default class HUD implements IHUD
     loadComponents():void
     {
         this.components.forEach(component => {
-            component.load(this.camera);
+            component.load();
             this.pointerEventManager.addPointerEventSubject(component);
         });
     }

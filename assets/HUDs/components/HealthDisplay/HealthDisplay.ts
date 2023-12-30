@@ -1,4 +1,3 @@
-import ICamera from '../../../../engines/GraphicEngine/ICamera';
 import Tarian from '../../../models/Tarian/Tarian';
 import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
 
@@ -54,9 +53,9 @@ export default class HealthDisplay extends ASHUDComponent
         this._cornerRadiusModifier = 5;
     }
     
-    load(camera:ICamera):void
+    load():void
     {
-        super.load(camera);
+        super.load();
         
         const imagesDirPath = "/assets/HUDs/components/HealthDisplay/images";
         this._borderImage = this.kernel.loadImage(`${imagesDirPath}/lightning-border.png`);

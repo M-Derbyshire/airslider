@@ -1,6 +1,4 @@
-import ICamera from "../../../engines/GraphicEngine/ICamera";
 import IPointerEventManager from "../../levels/Level/IPointerEventManager";
-import IModel from "../../models/Model/IModel";
 
 /**
  * A level's Heads Up Display
@@ -8,10 +6,9 @@ import IModel from "../../models/Model/IModel";
 export default interface IHUD {
     /**
      * Loads the HUD
-     * @param camera the level's camera
      * @param pointerEventManager the level's PointerEventManager
      */
-    load(camera:ICamera, pointerEventManager:IPointerEventManager):void;
+    load(pointerEventManager:IPointerEventManager):void;
     
     /**
      * Loads the HUD's components 

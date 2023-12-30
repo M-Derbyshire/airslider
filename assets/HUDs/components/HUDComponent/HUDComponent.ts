@@ -2,7 +2,6 @@ import Kernel from '../../../../Kernel/Kernel';
 import IKernel from '../../../../Kernel/IKernel';
 import IHUDComponent from './IHUDComponent';
 import IHelpers from '../../../../Kernel/helpers/IHelpers';
-import ICamera from '../../../../engines/GraphicEngine/ICamera';
 import ITextContent from '../../../../engines/GraphicEngine/ITextContent';
 
 /**
@@ -13,7 +12,6 @@ export default class HUDComponent implements IHUDComponent
     protected kernel: IKernel;
     protected helpers: IHelpers;
     protected ctx: CanvasRenderingContext2D;
-    protected camera: ICamera;
     protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
     
     /**
@@ -76,12 +74,8 @@ export default class HUDComponent implements IHUDComponent
     
     /**
      * Loads the component
-     * @param camera the game's camera
      */
-    load(camera:ICamera):void
-    {
-        this.camera = camera;
-    }
+    load():void {}
     
     /**
      * Unloads any assets that need to be unloaded by the component

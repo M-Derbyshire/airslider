@@ -2,7 +2,6 @@ import ASHUD from '../ASHUD/ASHUD';
 import HealthDisplay from '../components/HealthDisplay/HealthDisplay';
 import DamageFlash from '../components/DamageFlash/DamageFlash';
 import LowHealthFlash from '../components/LowHealthFlash/LowHealthFlash';
-import ICamera from '../../../engines/GraphicEngine/ICamera';
 import IPointerEventManager from '../../levels/Level/IPointerEventManager';
 import PauseButton from '../components/PauseButton/PauseButton';
 
@@ -11,9 +10,9 @@ export default class MainHUD extends ASHUD
     private _damageFlash:DamageFlash;
     private _lowHealthFlash:LowHealthFlash;
     
-    load(camera:ICamera, pointerEventManager:IPointerEventManager):void
+    load(pointerEventManager:IPointerEventManager):void
     {
-        super.load(camera, pointerEventManager);
+        super.load(pointerEventManager);
         
         this._damageFlash = new DamageFlash();
         this._lowHealthFlash = new LowHealthFlash();

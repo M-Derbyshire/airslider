@@ -1,4 +1,3 @@
-import ICamera from "../../../../engines/GraphicEngine/ICamera";
 import DamageFlash from "../DamageFlash/DamageFlash";
 
 /**
@@ -11,9 +10,9 @@ export default class LowHealthFlash extends DamageFlash
         super();
     }
     
-    load(camera:ICamera):void 
+    load():void 
     {
-        super.load(camera);
+        super.load();
         
         this.image = this.kernel.loadImage("/assets/HUDs/components/LowHealthFlash/images/damage.png");
     }

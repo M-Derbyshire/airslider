@@ -1,6 +1,3 @@
-import ICamera from "../../../../engines/GraphicEngine/ICamera";
-import IDrawDimensions from "../../../../engines/GraphicEngine/IDrawDimensions";
-import IDrawPositions from "../../../../engines/GraphicEngine/IDrawPositions";
 import ITextContent from "../../../../engines/GraphicEngine/ITextContent";
 
 /**
@@ -40,9 +37,8 @@ export default interface IHUDComponent {
     
     /**
      * Loads the component
-     * @param camera the game's camera
      */
-    load(camera:ICamera):void; 
+    load():void; 
     
     /**
      * Unloads any assets that need to be unloaded by the component

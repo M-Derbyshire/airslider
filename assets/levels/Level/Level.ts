@@ -150,7 +150,7 @@ export default class Level implements ILevel
      */
     private _loadHUD():void
     {
-        this.HUD.load(this.camera, this.pointerEventManager);
+        this.HUD.load(this.pointerEventManager);
         this.HUD.loadComponents();
     }
 }
