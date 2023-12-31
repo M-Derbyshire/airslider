@@ -12,12 +12,6 @@ import { KernelStatus } from "./KernelStatus";
  * Controls the entire game (this will be a singleton)
  */
 export default interface IKernel {
-    
-    /**
-     * Should the current FPS counter be displayed on the canvas?
-     */
-    displayFps:boolean;
-        
     /**
      * If we're displaying the FPS counter, what color should the text be?
      */

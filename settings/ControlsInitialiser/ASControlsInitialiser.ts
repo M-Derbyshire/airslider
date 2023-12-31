@@ -17,7 +17,7 @@ export default class ASControlsInitialiser extends ControlsInitialiser
 		
         this._currentMove = "";
         this._settings = this.kernel.settings;
-		this._playerModelIndex = (!isNaN(this._settings.playerModelIndex)) ? this._settings.playerModelIndex : 0;
+		this._playerModelIndex = 0; // 0 will always be the player's index
         
         this.initialisingFunctions = [
 			this.keyboardControls.bind(this)

@@ -79,7 +79,7 @@ export default class GraphicEngine implements IGraphicEngine {
         this._kernel.level.HUD.draw();
         this.camera.drawFront();
         
-        if(this._kernel.displayFps)
+        if(this._kernel.fpsDisplayColor)
             this._fpsMeter();
     }
     

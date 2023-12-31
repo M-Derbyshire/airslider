@@ -21,47 +21,35 @@ export default interface ISettings {
 	fpsLimit:number;
     
     /**
-     * Should the current FPS counter be displayed on the canvas?
+     * If we want to display the FPS counter, what color should the text be?
+     * The FPS counter is only drawn if this value is truthy
      */
-	displayFps:boolean;
+	fpsDisplayColor?:string;
     
     /**
-     * If we're displaying the FPS counter, what color should the text be?
-     */
-	fpsDisplayColor:string;
-    
-    /**
-     * How many drawSpace units are there within the camera's size (this value is used for both x and y)?
+     * How many draw-space units are there within the camera's size (this value is used for both x and y)?
+     * So, if this were 1000, then a model with a width and height of 1000 would take up the entire 
+     * screen (assuming their z position was 0)
      */
 	unitsWithinCamera:number;
     
     /**
-     * The horizontal size of the camera's aspect ratio (e.g. the "16" in "16:9")
+     * The horizontal size of the camera's aspect ratio (e.g. the 16 in "16:9")
      */
 	aspectRatioHorizontal:number;
     
     /**
-     * The vertical size of the camera's aspect ratio (e.g. the "9" in "16:9")
+     * The vertical size of the camera's aspect ratio (e.g. the 9 in "16:9")
      */
 	aspectRatioVertical:number;
     
     /**
-     * The index of the player model, in the Kernel's loadedModels array
+     * The class of the control's initialiser
      */
-	playerModelIndex:number;
-    
-    /**
-     * The class of the controls initialiser
-     */
-	controlsInitialiserClass:new()=>IControlsInitialiser;
+	ControlsInitialiserClass:new()=>IControlsInitialiser;
     
     /**
      * The class of the initial level
      */
-	initialLevelClass:new()=>ILevel;
-    
-    /**
-     * Any parameters required to initialise the initial level
-     */
-	initialLevelConstructorParameters:any[];  
+	InitialLevelClass:new()=>ILevel;
 };

@@ -76,12 +76,8 @@ export default class Kernel implements IKernel {
     private _controlInitialiser:IControlsInitialiser;
     
     /**
-     * Should the current FPS counter be displayed on the canvas?
-     */
-    displayFps:boolean;
-    
-    /**
-     * If we're displaying the FPS counter, what color should the text be?
+     * If we want to display the FPS counter, what color should the text be?
+     * The FPS counter is only drawn if this value is truthy.
      */
     fpsDisplayColor:string;
     
@@ -127,9 +123,8 @@ export default class Kernel implements IKernel {
         this._hasError = false; // Has an error been caught and passed to the error handler?
         this._errorHandler = new ErrorHandler();
         
-        this._controlInitialiser = new settings.controlsInitialiserClass();
+        this._controlInitialiser = new settings.ControlsInitialiserClass();
         
-        this.displayFps = settings.displayFps;
         this.fpsDisplayColor = settings.fpsDisplayColor;
         this.unitsWithinCamera = (!isNaN(settings.unitsWithinCamera)) ? settings.unitsWithinCamera : 1000;
     }
@@ -249,9 +244,8 @@ export default class Kernel implements IKernel {
         
         Object.keys(fonts).forEach((key:string) => this.loadFont(key, fonts[key as keyof typeof fonts]));
         
-        const initialLevelClass = this.settings.initialLevelClass;
-        const initialLevel = initialLevelClass.apply(Object.create(initialLevelClass.prototype), this.settings.initialLevelConstructorParameters) as ILevel;
-        this._loadLevel(initialLevel);
+        const InitialLevelClass = this.settings.InitialLevelClass;
+        this._loadLevel(new InitialLevelClass());
     }
     
     /**

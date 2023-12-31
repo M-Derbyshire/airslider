@@ -6,13 +6,10 @@ export default {
 	gameCanvas: document.getElementById("gameCanvas") as HTMLCanvasElement,
 	correctCanvasStyleToDevicePixelRatio: true,
 	fpsLimit: 70,
-	displayFps: true,
 	fpsDisplayColor: "blue",
 	unitsWithinCamera: 1000,
 	aspectRatioHorizontal: 17,
 	aspectRatioVertical: 9,
-	playerModelIndex: 0,
-	controlsInitialiserClass: ASControlsInitialiser,
-	initialLevelClass: TheConstruct,
-	initialLevelConstructorParameters: []
+	ControlsInitialiserClass: ASControlsInitialiser,
+	InitialLevelClass: TheConstruct
 } as ISettings;
