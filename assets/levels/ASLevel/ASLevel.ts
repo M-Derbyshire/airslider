@@ -25,6 +25,7 @@ import TarianExplosion from '../../models/TarianExplosion/TarianExplosion';
 import zCollisionEventCheck from './events/zCollisionEventCheck';
 import hitPlayerOrGroundEventCheck from './events/hitPlayerOrGroundEventCheck';
 import neonPidgeonOverlappingEventCheck from './events/neonPidgeonOverlappingEventCheck';
+import { CentralStateKey } from '../CentralStateKey';
 
 /**
  * The game's base Level class
@@ -102,6 +103,7 @@ export default class ASLevel extends Level
         const stdModels = super.getModels();
         
         this.player = new Tarian();
+        this.kernel.centralState.set(CentralStateKey.PlayerModelIndex, stdModels.length);
         
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
         this._startSignDisplay = new SignDisplay(this._startSign);

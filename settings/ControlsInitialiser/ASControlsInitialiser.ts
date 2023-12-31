@@ -1,6 +1,6 @@
-import ISettings from '../ISettings';
 import ControlsInitialiser from './ControlsInitialiser';
 import ASModel from '../../assets/models/ASModel/ASModel';
+import { CentralStateKey } from '../../assets/levels/CentralStateKey';
 
 /**
  * The game control's initialiser class
@@ -8,16 +8,12 @@ import ASModel from '../../assets/models/ASModel/ASModel';
 export default class ASControlsInitialiser extends ControlsInitialiser
 {
     private _currentMove:string; // The name of the keyboard key that's being pressed (only ones relevant to the controls)
-    private _playerModelIndex:number; // The index of the player model in the kernel.loadedModels array
-    private _settings:ISettings; // The game's settings
     
 	constructor()
 	{
 		super();
 		
         this._currentMove = "";
-        this._settings = this.kernel.settings;
-		this._playerModelIndex = 0; // 0 will always be the player's index
         
         this.initialisingFunctions = [
 			this.keyboardControls.bind(this)
@@ -27,7 +23,8 @@ export default class ASControlsInitialiser extends ControlsInitialiser
     keyboardControls():void
     {
         const keyDownListener = (e:KeyboardEvent) => {
-            const playerModel = this.kernel.loadedModels[this._playerModelIndex] as ASModel;
+            const playerModelIndex = this.kernel.centralState.get(CentralStateKey.PlayerModelIndex);
+            const playerModel = this.kernel.loadedModels[playerModelIndex] as ASModel;
             
             if(playerModel.canBeControlled && this._currentMove !== e.key)
             {
@@ -45,7 +42,8 @@ export default class ASControlsInitialiser extends ControlsInitialiser
         };
         
         const keyUpListener = (e:KeyboardEvent) => {
-            const playerModel = this.kernel.loadedModels[this._playerModelIndex] as ASModel;
+            const playerModelIndex = this.kernel.centralState.get(CentralStateKey.PlayerModelIndex);
+            const playerModel = this.kernel.loadedModels[playerModelIndex] as ASModel;
             
             if(playerModel.canBeControlled && this._currentMove === e.key)
             {

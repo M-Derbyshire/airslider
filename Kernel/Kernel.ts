@@ -76,6 +76,11 @@ export default class Kernel implements IKernel {
     private _controlInitialiser:IControlsInitialiser;
     
     /**
+     * A map for any state that needs to be accessible to all levels.
+     */
+    centralState:Map<string, any>;
+    
+    /**
      * If we want to display the FPS counter, what color should the text be?
      * The FPS counter is only drawn if this value is truthy.
      */
@@ -125,6 +130,7 @@ export default class Kernel implements IKernel {
         
         this._controlInitialiser = new settings.ControlsInitialiserClass();
         
+        this.centralState = new Map<string, any>();
         this.fpsDisplayColor = settings.fpsDisplayColor;
         this.unitsWithinCamera = (!isNaN(settings.unitsWithinCamera)) ? settings.unitsWithinCamera : 1000;
     }

@@ -1,3 +1,4 @@
+import { CentralStateKey } from '../../../levels/CentralStateKey';
 import Tarian from '../../../models/Tarian/Tarian';
 import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
 
@@ -27,19 +28,13 @@ export default class HealthDisplay extends ASHUDComponent
     private _cornerRadiusModifier:number;
     
     /**
-     * The index of the player model in the models array
-     */
-    private _targetIndex:number;
-    
-    /**
      * Constructor
      * @param x the x position (in units) of the health display
      * @param y the y position (in units) of the health display
      * @param width the width (in units) of the health display
      * @param height the height (in units) of the health display
-     * @param targetModelIndex The index of the player model in the models array
      */
-    constructor(x:number, y:number, width:number, height:number, targetModelIndex:number)
+    constructor(x:number, y:number, width:number, height:number)
     {
         super();
         
@@ -47,8 +42,6 @@ export default class HealthDisplay extends ASHUDComponent
         this.y = y;
         this.width = width;
         this.height = height;
-        
-        this._targetIndex = targetModelIndex;
         
         this._cornerRadiusModifier = 5;
     }
@@ -79,7 +72,9 @@ export default class HealthDisplay extends ASHUDComponent
     
     draw():void
     {
-        const health = (this.kernel.loadedModels[this._targetIndex] as unknown as Tarian).health;
+        const playerModelIndex = this.kernel.centralState.get(CentralStateKey.PlayerModelIndex);
+        const health = (this.kernel.loadedModels[playerModelIndex] as unknown as Tarian).health;
+        
 		const radiusModifierPixels = this.helpers.unit.xUnit(this._cornerRadiusModifier);
         
         // Determine the background color, based on the health

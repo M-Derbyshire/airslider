@@ -17,11 +17,9 @@ export default class MainHUD extends ASHUD
         this._damageFlash = new DamageFlash();
         this._lowHealthFlash = new LowHealthFlash();
         
-        const playerModelIndex = 0; //0 will always be the player's index
-        
         this.components.push(this._damageFlash);
         this.components.push(this._lowHealthFlash);
-        this.components.push(new HealthDisplay(25, 500, 150, 200, playerModelIndex));
+        this.components.push(new HealthDisplay(25, 500, 150, 200));
         this.components.push(new PauseButton(920, 25, 65, 100));
     }
     

@@ -13,6 +13,11 @@ import { KernelStatus } from "./KernelStatus";
  */
 export default interface IKernel {
     /**
+     * A map for any state that needs to be accessible to all levels.
+     */
+    centralState:Map<string, any>;
+    
+    /**
      * If we're displaying the FPS counter, what color should the text be?
      */
     fpsDisplayColor:string;
