@@ -62,7 +62,6 @@ export default class Level implements ILevel
         this.gameCanvas = this.kernel.gameCanvas;
         this.gameContext = this.kernel.gameContext;
         
-        // this.camera = camera;
         this.frameManager = frameManager;
         
         this.eventManager = eventManager;
