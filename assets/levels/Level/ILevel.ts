@@ -21,13 +21,11 @@ export default interface ILevel {
     
     /**
      * Loads and sets up the level
-     * @param camera The level's camera
      * @param frameManager The frame manager for the level
      * @param eventManager Manages the event monitoring for a level (not including mouse clicks or screen touches)
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
     load(
-        camera:ICamera, 
         frameManager:IFrameManager, 
         eventManager:EventManager,
         pointerEventManager:PointerEventManager

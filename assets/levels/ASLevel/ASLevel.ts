@@ -16,7 +16,6 @@ import Falcon from '../../models/Monsters/Falcon/Falcon';
 import Ghost from '../../models/Monsters/Ghost/Ghost';
 import ElectricHornet from '../../models/Monsters/ElectricHornet/ElectricHornet';
 import Monster from '../../models/Monster/Monster';
-import ICamera from '../../../engines/GraphicEngine/ICamera';
 import IModel from '../../models/Model/IModel';
 import ASModel from '../../models/ASModel/ASModel';
 import IFrameManager from '../../../engines/GraphicEngine/IFrameManager';
@@ -120,19 +119,17 @@ export default class ASLevel extends Level
 	
     /**
      * Loads and sets up the level
-     * @param camera The game's camera
      * @param frameManager The frame manager for the level
      * @param eventManager Manages the event monitoring for a level
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
 	load(
-        camera:ICamera, 
         frameManager:IFrameManager,
         eventManager:EventManager,
         pointerEventManager:PointerEventManager
     ):void
 	{
-		super.load(camera, frameManager, eventManager, pointerEventManager);
+		super.load(frameManager, eventManager, pointerEventManager);
         
         this.groundManager = new LevelGround();
         this._finishFlagsManager = new LevelGround(false); 

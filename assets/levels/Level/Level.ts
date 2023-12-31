@@ -5,7 +5,6 @@ import PointerEventManager from './PointerEventManager';
 import IEventManager from './IEventManager';
 import IHUD from '../../HUDs/HUD/IHUD';
 import IHelpers from '../../../Kernel/helpers/IHelpers';
-import ICamera from '../../../engines/GraphicEngine/ICamera';
 import IPointerEventManager from './IPointerEventManager';
 import IFrameManager from '../../../engines/GraphicEngine/IFrameManager';
 import IModel from '../../models/Model/IModel';
@@ -22,7 +21,6 @@ export default class Level implements ILevel
     protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
     
     protected frameManager: IFrameManager; // The frame manager for the level
-    protected camera: ICamera; // The level's camera
     
     protected eventManager: IEventManager; // Manages the event monitoring for a level (not including mouse clicks or screen touches)
     protected pointerEventManager:IPointerEventManager; // Manages any events relating to mouse clicks or screen touches
@@ -51,13 +49,11 @@ export default class Level implements ILevel
     
     /**
      * Loads and sets up the level
-     * @param camera The level's camera
      * @param frameManager The frame manager for the level
      * @param eventManager Manages the event monitoring for a level (not including mouse clicks or screen touches)
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
     load(
-        camera:ICamera, 
         frameManager:IFrameManager,
         eventManager:EventManager,
         pointerEventManager:PointerEventManager
@@ -66,7 +62,7 @@ export default class Level implements ILevel
         this.gameCanvas = this.kernel.gameCanvas;
         this.gameContext = this.kernel.gameContext;
         
-        this.camera = camera;
+        // this.camera = camera;
         this.frameManager = frameManager;
         
         this.eventManager = eventManager;

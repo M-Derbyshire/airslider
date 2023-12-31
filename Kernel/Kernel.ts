@@ -287,7 +287,6 @@ export default class Kernel implements IKernel {
         
         //do any extra setup
         level.load(
-            camera, 
             frameManager, 
             new EventManager(),
             new PointerEventManager()

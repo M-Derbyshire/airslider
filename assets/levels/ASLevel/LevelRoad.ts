@@ -11,7 +11,6 @@ export default class LevelRoad
     protected kernel:IKernel;
     protected helpers:IHelpers;
     
-    private _camera:ICamera;
     private _canvasCtx:CanvasRenderingContext2D;
     
     constructor()
@@ -22,11 +21,9 @@ export default class LevelRoad
     
     /**
      * Loads the LevelRoad
-     * @param camera The level's camera
      */
-    load(camera:ICamera):void
+    load():void
     {
-        this._camera = camera;
         this._canvasCtx = this.kernel.gameContext;
     }
     
@@ -39,11 +36,20 @@ export default class LevelRoad
         this._canvasCtx.lineWidth = 1;
         this._canvasCtx.fillStyle = color;
         
-        const leftEdge = this._camera.canvasPositionX;
-        const rightEdge = this._camera.canvasPositionX + this._camera.canvasPositionWidth;
-        const bottomEdge = this._camera.canvasPositionY + this._camera.canvasPositionHeight;
         const vanishPointX = this.helpers.zCalc.vPointX;
         const vanishPointY = this.helpers.zCalc.vPointY;
+        
+        const unitsWithinCamera = this.kernel.unitsWithinCamera;
+        const { x, y, width, height } = this.kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({
+            x: 0,
+            y: 0,
+            width: unitsWithinCamera,
+            height: unitsWithinCamera
+        });
+        
+        const leftEdge = x;
+        const rightEdge = x + width;
+        const bottomEdge = y + height;
         
         this._canvasCtx.beginPath();
         this._canvasCtx.moveTo(leftEdge, bottomEdge);

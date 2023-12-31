@@ -69,13 +69,12 @@ export default class TheConstruct extends ASLevel
     }
     
     load(
-        camera:ICamera, 
         frameManager:IFrameManager,
         eventManager:EventManager,
         pointerEventManager:PointerEventManager
     ):void
     {
-        super.load(camera, frameManager, eventManager, pointerEventManager);
+        super.load(frameManager, eventManager, pointerEventManager);
         
         this.tunnelSprite = this.kernel.loadImage("/assets/levels/TheConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
@@ -86,7 +85,7 @@ export default class TheConstruct extends ASLevel
             50
         );
         
-        this.roadManager.load(camera);
+        this.roadManager.load();
         
         //Setup the frame for the level
         const unitsWithinCamera = this.kernel.unitsWithinCamera;
