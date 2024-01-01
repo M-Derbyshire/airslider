@@ -1,5 +1,5 @@
 /**
- * Provides methods to calculate the correct drawing position/dimensions for an element, based on it position on the z axis.
+ * Provides methods to calculate the correct drawing position/dimensions for an element, based on its position on the z axis.
  * Also provides methods relating to consistent speed (regardless of a changing FPS) on the z axis
  */
 export default interface IZCalc {
