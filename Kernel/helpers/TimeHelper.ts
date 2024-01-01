@@ -9,9 +9,6 @@ export default class TimeHelper implements ITimeHelper
 {
     private _kernel:IKernel;
     
-    /**
-     * Constructor
-     */
     constructor()
     {
         this._kernel = Kernel.getInstance();
@@ -38,6 +35,15 @@ export default class TimeHelper implements ITimeHelper
     {
         return this.secondsToFrames(minutes) * 60;
     }
+    
+    /**
+     * Gets the total amount of milliseconds that the level has been active for
+     * @returns the amount of milliseconds that the level has been active for
+     */
+    getTotalMilliseconds():number
+    {
+        return this._kernel.totalLevelActiveMilliseconds;
+    }
 
     /**
      * Gets the total amount of seconds that the level has been active for
@@ -47,13 +53,4 @@ export default class TimeHelper implements ITimeHelper
     {
         return this.getTotalMilliseconds() / 1000;
     }
-
-    /**
-     * Gets the total amount of milliseconds that the level has been active for
-     * @returns the amount of milliseconds that the level has been active for
-     */
-    getTotalMilliseconds():number
-    {
-        return this._kernel.totalLevelActiveMilliseconds;
-    }
-}
+};
