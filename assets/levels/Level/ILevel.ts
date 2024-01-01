@@ -1,4 +1,3 @@
-import ICamera from "../../../engines/GraphicEngine/ICamera";
 import IHUD from "../../HUDs/HUD/IHUD";
 import IModel from "../../models/Model/IModel";
 import IFrameManager from "../../../engines/GraphicEngine/IFrameManager";

@@ -28,5 +28,4 @@ export default interface IHitBox {
      * The height (in units) of the box
      */
     height:number;
-    
 };

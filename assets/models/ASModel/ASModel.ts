@@ -1,6 +1,5 @@
 import Model from '../Model/Model';
 import ASLevel from '../../levels/ASLevel/ASLevel';
-import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 
 export default class ASModel extends Model {
 	

@@ -1,10 +1,8 @@
 import Kernel from '../../../Kernel/Kernel';
 import IKernel from '../../../Kernel/IKernel';
 import IHelpers from '../../../Kernel/helpers/IHelpers';
-import ICamera from '../../../engines/GraphicEngine/ICamera';
 import IHUDComponent from '../components/HUDComponent/IHUDComponent';
 import IPointerEventManager from '../../levels/Level/IPointerEventManager';
-import IModel from '../../models/Model/IModel';
 import IHUD from './IHUD';
 
 /**

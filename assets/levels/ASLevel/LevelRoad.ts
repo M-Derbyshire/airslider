@@ -1,7 +1,6 @@
 import IKernel from '../../../Kernel/IKernel';
 import Kernel from '../../../Kernel/Kernel';
 import IHelpers from '../../../Kernel/helpers/IHelpers';
-import ICamera from '../../../engines/GraphicEngine/ICamera';
 
 /**
  * Draws the level's road
