@@ -188,11 +188,6 @@ export default class Kernel implements IKernel {
     get levelHasBeenPrepared(){return (this._levelQueue.length > 0) ? this._levelQueue[0].hasBeenPrepared : false}
     
     /**
-     * The loaded image/audio assets
-     */
-    get loadedAssets(){return this._assetHandler.loadedAssets.map(loadedAsset => loadedAsset.asset);}
-    
-    /**
      * Loads and handles assets
      */
     get assetHandler(){return this._assetHandler;}

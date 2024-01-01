@@ -1,26 +1,26 @@
 import IKernel from "../IKernel";
 import Kernel from "../Kernel";
 import IAssetHandler from "./IAssetHandler";
-import ILoadedAsset from "./ILoadedAsset";
+import ILoadedAssetData from "./ILoadedAssetData";
 
 /**
- * Loads and handles assets
+ * Loads and manages assets
  */
 export default class AssetHandler implements IAssetHandler
 {
     private _kernel:IKernel;
-    private _rootPath:string;
-    private _assetsStillLoading:number;
+    private _rootPath:string; // The root directory/path, added to the beginning of all asset file paths
+    private _assetsStillLoading:number; // The number of assets that are still loading
+    private _loadedAssets:Map<string, ILoadedAssetData>; // The loaded image/audio assets
+    private _loadedFontPaths:string[]; // Asset paths for loaded (or currently loading) fonts
     
     /**
-     * The loaded image/audio assets
+     * How many assets are still loading?
      */
-    loadedAssets:ILoadedAsset[];
-    
-    /**
-     * Asset paths for loaded/loading fonts
-     */
-    loadedFontPaths:string[];
+    get assetsStillLoading()
+    {
+        return this._assetsStillLoading;
+    }
     
     /**
      * Constructor
@@ -31,27 +31,11 @@ export default class AssetHandler implements IAssetHandler
         this._kernel = Kernel.getInstance();
         
         this._rootPath = rootPath;
-        this._assetsStillLoading = 0; //increased when asset starts loading, decrease when done
+        this._assetsStillLoading = 0;
         
-        this.loadedAssets = [];
-        this.loadedFontPaths = [];
+        this._loadedAssets = new Map<string, ILoadedAssetData>();
+        this._loadedFontPaths = [];
     }
-    
-    /**
-     * How many assets are still loading?
-     */
-    get assetsStillLoading(){return this._assetsStillLoading;}
-    set assetsStillLoading(newVal){this._assetsStillLoading = newVal;}
-    
-    /**
-     * Will be called when an asset has finished loading
-     */
-    private _defaultAssetCallback():void
-    {
-        this.assetsStillLoading--;
-    }
-    
-    
     
     /**
      * Starts the loading of an asset into the asset handler, and returns a reference to it. If the asset has already been 
@@ -62,21 +46,19 @@ export default class AssetHandler implements IAssetHandler
      */
     loadAsset(obj:HTMLImageElement|HTMLAudioElement, path:string):HTMLImageElement|HTMLAudioElement
     {
-        path = this._prepareAssetPath(path);
-        const heldAssetIdx = this._checkAssetHeld(path); //Returns either the index number, or -1
+        const preparedPath = this._prepareAssetPath(path);
+        const currentlyHeldAsset = this._loadedAssets.get(preparedPath);
         
-        
-		if(heldAssetIdx > -1)
+		if(currentlyHeldAsset)
         {
-            this.loadedAssets[heldAssetIdx].usageCount++;
-            return this.loadedAssets[heldAssetIdx].asset;
+            currentlyHeldAsset.usageCount++;
+            return currentlyHeldAsset.asset;
         }
         
-        this._assetsStillLoading++;
-        const newLoadedAsset:ILoadedAsset = {
-            path,
+        const newLoadedAsset:ILoadedAssetData = {
+            path: preparedPath,
             asset: obj,
-            usageCount: 1, // How many entities are currently using this?
+            usageCount: 1,
             loaded: false
         }; 
         
@@ -93,17 +75,14 @@ export default class AssetHandler implements IAssetHandler
         };
 		
         if(obj instanceof Image)
-        {
             newLoadedAsset.asset.onload = afterLoadCallback;
-        }
         else if(obj instanceof Audio)
-        {
             newLoadedAsset.asset.addEventListener("canplaythrough", afterLoadCallback);
-        }
         
-        newLoadedAsset.asset.src = path;
+        this._assetsStillLoading++;
+        newLoadedAsset.asset.src = preparedPath;
         
-        this.loadedAssets.push(newLoadedAsset);
+        this._loadedAssets.set(preparedPath, newLoadedAsset);
         return newLoadedAsset.asset;
     }
     
@@ -114,20 +93,22 @@ export default class AssetHandler implements IAssetHandler
      */
     loadFont(name:string, path:string):void
     {
-        if(this.loadedFontPaths.includes(path)) return;
+        if(this._loadedFontPaths.includes(path)) 
+            return;
         
         const font = new FontFace(name, `url(${this._prepareAssetPath(path)})`);
         
-        font.load().then((newFont) => {
-            (document.fonts as FontFaceSet & { add:(f:FontFace)=>void }).add(newFont);
-            this._defaultAssetCallback();
-        }).catch((err:any) => {
-            this._kernel.handleError(err);
-        });
+        font.load()
+            .then((newFont) => {
+                const fontFaceSet = document.fonts as FontFaceSet & { add:(f:FontFace)=>void };
+                
+                fontFaceSet.add(newFont);
+                this._defaultAssetCallback();
+            })
+            .catch((err:any) => this._kernel.handleError(err));
         
         this._assetsStillLoading++;
-        
-        this.loadedFontPaths.push(path);
+        this._loadedFontPaths.push(path);
     }
     
     /**
@@ -137,57 +118,43 @@ export default class AssetHandler implements IAssetHandler
      */
     releaseAsset(path:string):void
     {
-        path = this._prepareAssetPath(path);
-        const heldAssetIdx = this._checkAssetHeld(path);
+        const preparedPath = this._prepareAssetPath(path);
+        const heldAsset = this._loadedAssets.get(preparedPath);
         
-        if(heldAssetIdx === -1)
-        {
+        if(!heldAsset)
             return;
-        }
         
-        this.loadedAssets[heldAssetIdx].usageCount--;
+        heldAsset.usageCount--;
         
-        if(this.loadedAssets[heldAssetIdx].usageCount === 0)
-        {
-            this.loadedAssets.splice(heldAssetIdx, 1);
-        }
+        if(heldAsset.usageCount === 0)
+            this._loadedAssets.delete(preparedPath);
     }
     
     /**
-     * Resets the usage counts of all assets to 0 (to be used after all the assets that need 
-     * unloading have been unloaded, to ensure the remaining assets have the right usage count 
-     * once the next level has loaded -- meaning they can be unloaded correctly at a later 
-     * time)
+     * Resets the usage counts of all assets to 0 (This can be used after all the assets that need 
+     * unloading have been unloaded, to ensure that the remaining assets have the right usage count 
+     * once the next level has loaded)
      */
     resetAllUsageCounts():void
     {
-        this.loadedAssets.forEach(asset => asset.usageCount = 0);
+        this._loadedAssets.forEach(asset => asset.usageCount = 0);
     }
     
     /**
-     * Makes any required modifications to the asset path, before it is used
+     * This will be called when an asset has finished loading
+     */
+    private _defaultAssetCallback():void
+    {
+        this._assetsStillLoading--;
+    }
+    
+    /**
+     * Makes any required modifications to the asset path before it is used
      * @param path the original asset path
      * @returns the modified asset path
      */
     private _prepareAssetPath(path:string):string
     {
         return this._rootPath + path;
-    }
-    
-    /**
-     * Checks if an asset is currently held, and returns its index (or -1 if it isn't)
-     * @param path the path to the asset file
-     * @returns the index of the asset if it has been loaded, or -1 if not
-     */
-    private _checkAssetHeld(path:string):number
-    {
-        for(let i = 0; i < this.loadedAssets.length; i++)
-        {
-            if(this.loadedAssets[i].path === path)
-            {
-                return i;
-            }
-        }
-        return -1;
     }
 }

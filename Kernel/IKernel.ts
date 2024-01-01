@@ -78,11 +78,6 @@ export default interface IKernel {
     readonly levelHasBeenPrepared:boolean;
     
     /**
-     * The loaded image/audio assets
-     */
-    readonly loadedAssets:(HTMLImageElement|HTMLAudioElement)[];
-    
-    /**
      * Loads and handles assets
      */
     readonly assetHandler:IAssetHandler;
