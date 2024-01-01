@@ -2,10 +2,9 @@ import Kernel from "../Kernel";
 import { IErrorHandler } from "./IErrorHandler";
 
 /**
- * Manages error-handling for the entire game
+ * Manages error-handling for the game
  */
-class ErrorHandler implements IErrorHandler {
-    
+export default class ErrorHandler implements IErrorHandler {
     /**
      * The game's canvas
      */
@@ -27,14 +26,15 @@ class ErrorHandler implements IErrorHandler {
     private _fontColor:string;
     
     /**
-     * A base font size (between 0 and 100) for the error display
+     * A font size (between 0 and 100) for the error display
      */
-    private _baseFontSize:number;
+    private _relativeFontSize:number;
     
     /**
-     * Constructor
-     * @returns An ErrorHandler
+     * Which font to use for the error display
      */
+    private _fontFamily:string;
+    
     constructor() {
         const kernel = Kernel.getInstance();
         this._canvas = kernel.gameCanvas;
@@ -43,27 +43,29 @@ class ErrorHandler implements IErrorHandler {
         this._backgroundColor = "#330000";
         this._fontColor = "#fbb";
         
-        this._baseFontSize = 20;
+        this._fontFamily = "Arial";
+        this._relativeFontSize = 20;
     }
     
     /**
-     * Handles errors
-     * @param err the error to handle (doesn't have to be an instance of Error)
+     * Handles the given error
+     * @param err the error to handle (this doesn't have to be an instance of Error)
      */
     handleError(err: any): void {
-        
-        if(err instanceof Error) {
+        if(err instanceof Error) 
+        {
             console.error(err);
-        } else {
+        } 
+        else
+        {
             let errorText:string;
             
-            if(err.message) {
+            if(err.message)
                 errorText = err.message;
-            } else if (typeof err === "string") {
+            else if (typeof err === "string")
                 errorText = err;
-            } else {
+            else
                 errorText = err.toString();
-            }
             
             console.error(errorText);
         }
@@ -88,32 +90,28 @@ class ErrorHandler implements IErrorHandler {
         const titleText = "An Error has Occurred";
         const messageText = "Please see the developer console for more details";
         
-        const font = "Arial";
         const baseFontSize = this._getRealFontSize();
         const titleFontSize = baseFontSize * 2;
         
-        const canvasHalfWidth = this._canvas.width / 2;
-        const canvasHalfHeight = this._canvas.height / 2;
-        const titleYPos = canvasHalfHeight * 0.5;
-        const messageYPos = canvasHalfHeight * 1.5;
+        const canvasXCenter = this._canvas.width / 2;
+        const canvasYCenter = this._canvas.height / 2;
+        const titleYPos = canvasYCenter * 0.5;
+        const messageYPos = canvasYCenter * 1.5;
         
         this._canvasCtx.fillStyle = this._fontColor;
         this._canvasCtx.textAlign = "center";
         
-        this._canvasCtx.font = `bolder ${titleFontSize}px ${font}`;
-        this._canvasCtx.fillText(titleText, canvasHalfWidth, titleYPos);
+        this._canvasCtx.font = `bolder ${titleFontSize}px ${this._fontFamily}`;
+        this._canvasCtx.fillText(titleText, canvasXCenter, titleYPos);
         
-        this._canvasCtx.font = `normal ${baseFontSize}px ${font}`;
-        this._canvasCtx.fillText(messageText, canvasHalfWidth, messageYPos);
+        this._canvasCtx.font = `normal ${baseFontSize}px ${this._fontFamily}`;
+        this._canvasCtx.fillText(messageText, canvasXCenter, messageYPos);
     }
     
     /**
      * Calculates the desired font size, based on the canvas size
      */
     private _getRealFontSize():number {
-        const drawUnit = this._canvas.width / 100;
-        return (this._baseFontSize * drawUnit) / 10; // dividing by another 10 gets the desired effect
+        return this._relativeFontSize * (this._canvas.width / 1000);
     }
-}
-
-export default ErrorHandler;
+};
