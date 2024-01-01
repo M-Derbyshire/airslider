@@ -3,7 +3,6 @@
  * methods for keeping speeds consistent when the FPS changes
  */
 export default interface IUnitHelper {
-    
     /**
      * Passes the camera's dimensions (not in units) into the helper's internal state
      * @param cameraCanvasWidth the width of the camera's screen, on the canvas
@@ -38,5 +37,4 @@ export default interface IUnitHelper {
      * @returns a more consistent value to be used as the actual speed
      */
     ySpeed(speed:number):number;
-    
 };

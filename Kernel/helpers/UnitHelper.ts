@@ -9,69 +9,69 @@ import IUnitHelper from './IUnitHelper';
 export default class UnitHelper implements IUnitHelper
 {
     private _kernel:IKernel;
-    private _unitsWithinCamera:number;
-    private _canvasHeight:number;
-    private _canvasWidth:number;
+    
+    private _unitsWithinCamera:number; // The amount of draw-space x/y units there are within the camera's size
+    private _cameraWidth:number; // The height of the camera (not in units)
+    private _cameraHeight:number; // The width of the camera (not in units)
     
     /**
      * Constructor
-     * @param unitsWithinCamera how many "units" are there within the camera's screen (for both axis')?
+     * @param unitsWithinCamera the amount of draw-space x/y units there are within the camera's size
      */
     constructor(unitsWithinCamera:number)
     {
         this._kernel = Kernel.getInstance();
-        this._unitsWithinCamera = unitsWithinCamera;
         
-        // The width/height of the screen on the canvas (not in units)
-        this._canvasHeight = 0;
-        this._canvasWidth = 0;
+        this._unitsWithinCamera = unitsWithinCamera;
+        this._cameraHeight = 0;
+        this._cameraWidth = 0;
     }
     
     /**
      * Passes the camera's dimensions (not in units) into the helper's internal state
-     * @param cameraCanvasWidth the width of the camera's screen, on the canvas
-     * @param cameraCanvasHeight the height of the camera's screen, on the canvas
+     * @param cameraCanvasWidth the width of the camera on the canvas
+     * @param cameraCanvasHeight the height of the camera on the canvas
      */
     setDimensions(cameraCanvasWidth:number, cameraCanvasHeight:number):void
     {
-        this._canvasWidth = cameraCanvasWidth;
-        this._canvasHeight = cameraCanvasHeight;
+        this._cameraWidth = cameraCanvasWidth;
+        this._cameraHeight = cameraCanvasHeight;
     }
     
     /**
-     * Converts an x position (in units) into the correct position on canvas
-     * @param unitVal the x position in units
+     * Converts an x position (in units) into the pixel position on canvas
+     * @param unitValue the x position in units
      * @returns the correct x position on canvas
      */
-    xUnit(unitVal:number):number
+    xUnit(unitValue:number):number
     {
-        return this._unitValToCanvasVal(unitVal, this._canvasWidth);
+        return this._unitValueToPixelValue(unitValue, this._cameraWidth);
     }
     
     /**
-     * Converts a y position (in units) into the correct position on canvas
-     * @param unitVal the y position in units
+     * Converts a y position (in units) into the pixel position on canvas
+     * @param unitValue the y position in units
      * @returns the correct y position on canvas
      */
-    yUnit(unitVal:number):number
+    yUnit(unitValue:number):number
     {
-        return this._unitValToCanvasVal(unitVal, this._canvasHeight);
+        return this._unitValueToPixelValue(unitValue, this._cameraHeight);
     }
     
     /**
-     * Converts a "unit" position/dimension value into an actual value, based on the size of the canvas/camera
-     * @param unitVal the position/dimension value, in "units"
-     * @param cameraAxisSize the size of the camera on the given axis (in actual canvas dimensions)
+     * Converts a "unit" position/dimension value into a pixel value, based on the size of the camera
+     * @param unitValue the position/dimension value, in "units"
+     * @param cameraAxisSize the size of the camera on the given axis (not in units)
      * @returns the actual value to use when drawing to the canvas
      */
-    private _unitValToCanvasVal(unitVal:number, cameraAxisSize:number):number
+    private _unitValueToPixelValue(unitValue:number, cameraAxisSize:number):number
     {
-        return ((cameraAxisSize / this._unitsWithinCamera) * unitVal);
+        return (cameraAxisSize / this._unitsWithinCamera) * unitValue;
     }
     
     /**
      * Converts a speed on the x axis into a value that remains consistent, regardless of a changing FPS
-     * @param speed the x speed
+     * @param speed the speed to convert into a consistent value
      * @returns a more consistent value to be used as the actual speed
      */
     xSpeed(speed:number):number
@@ -81,7 +81,7 @@ export default class UnitHelper implements IUnitHelper
 
     /**
      * Converts a speed on the y axis into a value that remains consistent, regardless of a changing FPS
-     * @param speed the y speed
+     * @param speed the speed to convert into a consistent value
      * @returns a more consistent value to be used as the actual speed
      */
     ySpeed(speed:number):number
@@ -98,4 +98,4 @@ export default class UnitHelper implements IUnitHelper
     {
         return speed / this._kernel.fps; 
     }
-}
+};

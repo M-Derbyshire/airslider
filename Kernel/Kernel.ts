@@ -87,7 +87,7 @@ export default class Kernel implements IKernel {
     fpsDisplayColor:string;
     
     /**
-     * How many drawSpace x/y units are there within the camera's size?
+     * The amount of draw-space x/y units there are within the camera's size
      */
     unitsWithinCamera:number;
     
