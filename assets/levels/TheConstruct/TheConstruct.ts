@@ -120,7 +120,7 @@ export default class TheConstruct extends ASLevel
         
         this.outsideVisible = true;
         
-        this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
+        this.patternManager.setStartingZPosition(this.helpers.zCalc.vanishingPointDepth);
         this.patternManager.clearPatterns();
         
         // this.tunnelManager.createStartingTunnel([

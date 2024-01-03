@@ -35,8 +35,12 @@ export default class LevelRoad
         this._canvasCtx.lineWidth = 1;
         this._canvasCtx.fillStyle = color;
         
-        const vanishPointX = this.helpers.zCalc.vPointX;
-        const vanishPointY = this.helpers.zCalc.vPointY;
+        const unitHelpers = this.helpers.unit;
+        const zCalc = this.helpers.zCalc;
+        const camera = this.kernel.graphicEngine.camera;
+        
+        const vanishPointX = camera.canvasPositionX + unitHelpers.xUnit(zCalc.vanishingPointX);
+        const vanishPointY = camera.canvasPositionY + unitHelpers.yUnit(zCalc.vanishingPointY);
         
         const unitsWithinCamera = this.kernel.unitsWithinCamera;
         const { x, y, width, height } = this.kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({

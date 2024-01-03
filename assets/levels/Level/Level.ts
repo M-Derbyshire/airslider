@@ -84,8 +84,6 @@ export default class Level implements ILevel
      */
     prepare():void
     {
-        this.setupZCalc();
-        
         this.HUD.prepare();
         
         this.registerLevelEvents();
@@ -128,17 +126,6 @@ export default class Level implements ILevel
      * Registers any events that will need to be monitored during gameplay
      */
     protected registerLevelEvents():void {}
-    
-    /**
-     * Set the default settings of the zCalc
-     */
-	protected setupZCalc():void
-	{
-		this.helpers.zCalc.setVanishPoint(
-            () => (this.gameCanvas.width / 2), 
-            () => (this.gameCanvas.height / 2)
-        );
-	}
     
     /**
      * Loads the level's HUD

@@ -39,8 +39,8 @@ export default class UnitHelper implements IUnitHelper
     }
     
     /**
-     * Converts an x position (in units) into the pixel position on canvas
-     * @param unitValue the x position in units
+     * Converts an x value (in units) into the correct pixel value
+     * @param unitVal the x position in units
      * @returns the correct x position on canvas
      */
     xUnit(unitValue:number):number
@@ -49,8 +49,8 @@ export default class UnitHelper implements IUnitHelper
     }
     
     /**
-     * Converts a y position (in units) into the pixel position on canvas
-     * @param unitValue the y position in units
+     * Converts a y value (in units) into the correct pixel value
+     * @param unitVal the y position in units
      * @returns the correct y position on canvas
      */
     yUnit(unitValue:number):number

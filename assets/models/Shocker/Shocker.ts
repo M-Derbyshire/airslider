@@ -107,7 +107,7 @@ export default class Shocker extends ASModel
         super.prepare();
         
         this.setYPositionFromBottom(this.height);
-        this.z = this.helpers.zCalc.vPointDepth;
+        this.z = this.helpers.zCalc.vanishingPointDepth;
         
         this.active = false;
         

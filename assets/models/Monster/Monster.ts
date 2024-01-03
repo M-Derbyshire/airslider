@@ -123,7 +123,7 @@ export default class Monster extends ASModel {
             this.moveIn(level.maxLevelSpeedRaw);
             this.fireWeapon = false;
             
-            if(this.z >= this.helpers.zCalc.vPointDepth)
+            if(this.z >= this.helpers.zCalc.vanishingPointDepth)
                 this.active = false;
         }
 	}

@@ -11,14 +11,14 @@ export default interface IUnitHelper {
     setDimensions(cameraCanvasWidth:number, cameraCanvasHeight:number):void;
     
     /**
-     * Converts an x position (in units) into the correct position on canvas
+     * Converts an x value (in units) into the correct pixel value
      * @param unitVal the x position in units
      * @returns the correct x position on canvas
      */
     xUnit(unitVal:number):number;
     
     /**
-     * Converts a y position (in units) into the correct position on canvas
+     * Converts a y value (in units) into the correct pixel value
      * @param unitVal the y position in units
      * @returns the correct y position on canvas
      */

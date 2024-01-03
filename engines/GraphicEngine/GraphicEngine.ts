@@ -226,7 +226,6 @@ export default class GraphicEngine implements IGraphicEngine {
         
         // It should be noted that these should be ran on loading as well (as it is the first setting of the below)
         this.camera.setCameraSize();
-        this._helpers.zCalc.resetVanishPointPosition();
         this._helpers.unit.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
     }
 }

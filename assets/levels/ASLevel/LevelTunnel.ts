@@ -29,7 +29,7 @@ export default class LevelTunnel
     newTunnelPart(image:HTMLImageElement|null, length:number = 1):ITunnelPart
     {
         return {
-            z: this.helpers.zCalc.vPointDepth,
+            z: this.helpers.zCalc.vanishingPointDepth,
             length: length,
             image,
             active: false
@@ -100,7 +100,7 @@ export default class LevelTunnel
         
         return (
             !!closestPart && // tunnel is populated
-            this._getLastTunnelPart().z >= this.helpers.zCalc.vPointDepth && // furthest piece is at vanishing point
+            this._getLastTunnelPart().z >= this.helpers.zCalc.vanishingPointDepth && // furthest piece is at vanishing point
             (closestPart.z + closestPart.length) <= 0 // nearest piece is behind camera
         );
 	}
@@ -176,7 +176,7 @@ export default class LevelTunnel
 		const nextPart = this.tunnel[currentPartIndex + 1];
 		
 		return (!nextPart.active && 
-					(currentPart.z + currentPart.length) <= this.helpers.zCalc.vPointDepth);
+					(currentPart.z + currentPart.length) <= this.helpers.zCalc.vanishingPointDepth);
 	}
 	
     /**

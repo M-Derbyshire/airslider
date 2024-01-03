@@ -1,83 +1,71 @@
+import IKernel from "../IKernel";
+import Kernel from "../Kernel";
 import IZCalc from "./IZCalc";
 
 /**
- * Provides methods to calculate the correct drawing position/dimensions for an element, based on it position on the z axis.
- * Also provides methods relating to consistent speed (regardless of a changing FPS) on the z axis
+ * Provides methods to calculate the correct positions/dimensions for drawing an element, based on its position on the z axis.
+ * Also provides methods relating to keeping a consistent speed (regardless of a changing FPS) on the z axis.
  */
 export default class ZCalc implements IZCalc
 {
-    private _vPointX:number;
-    private _vPointY:number;
-    private _vPointDepth:number;
+    private _kernel:IKernel;
     
-    private _precalculatedScalingMultipliers:number[];
-    private _calcVPointX:()=>number;
-    private _calcVPointY:()=>number;
+    private _vanishingPointX:number; // The x position (in units) of the vanishing point
+    private _vanishingPointY:number; // The y position (in units) of the vanishing point
+    private _vanishingPointDepth:number; // The amount of possible positions that there should be on the z axis
     
-    /**
-     * Constructor
-     */
+    private _precalculatedScalingMultipliers:number[]; // This is explained in the "Scaled Positions and Dimensions" section below
+    
     constructor()
     {
-        //Vanishing point settings
-        this._vPointX;
-        this._vPointY;
-        this._vPointDepth; //the max z position
-		
-		this._precalculatedScalingMultipliers = []; // This is explained in the "Scaled Positions and Dimensions" below
+        this._kernel = Kernel.getInstance();
         
-        //The vanishing point is defined in literal canvas positions,
-        //so these functions will be used to calculate the new values
-        //on a screen resize.
-        this._calcVPointX = () => 0;
-        this._calcVPointY = () => 0;
+        this._vanishingPointX = 0;
+        this._vanishingPointY = 0;
+		
+		this._precalculatedScalingMultipliers = [];
     }
     
     //-------------------------- getters and setters ----------------------------
     
 	/**
-     * The x position (not in units) of the vanishing point
+     * The x position (in units) of the vanishing point
      */
-    get vPointX(){return this._vPointX;}
+    get vanishingPointX()
+    {
+        return this._vanishingPointX;
+    }
 	
 	/**
-     * The y position (not in units) of the vanishing point
+     * The y position (in units) of the vanishing point
      */
-    get vPointY(){return this._vPointY;}
+    get vanishingPointY()
+    {
+        return this._vanishingPointY;
+    }
     
 	/**
-     * the "z unit" position of the vanishing point, on the z axis
+     * The amount of possible positions that there should be on the z axis
      */
-    get vPointDepth(){return this._vPointDepth;}
+    get vanishingPointDepth()
+    {
+        return this._vanishingPointDepth;
+    }
     
     /**
-     * Used to set the vanishing point. The x and y positions are provided through callback functions, as they may need to change if 
-     * the canvas element is resized
-     * @param canvasXPosCalcFunction a function that returns the correct x position (not in units) of the vanishing point, on the canvas
-     * @param canvasYPosCalcFunction a function that returns the correct y position (not in units) of the vanishing point, on the canvas
-     * @param depth how many possible positions should there be on the z axis?
+     * Used to set the vanishing point.
+     * @param x the x position (in units) of the vanishing point
+     * @param y the y position (in units) of the vanishing point
+     * @param depth the amount of possible positions that there should be on the z axis
      */
-    setVanishPoint(canvasXPosCalcFunction:()=>number, canvasYPosCalcFunction:()=>number, depth:number = 1000):void
-     {
-        this._calcVPointX = canvasXPosCalcFunction;
-        this._calcVPointY = canvasYPosCalcFunction;
-        
-        this._vPointDepth = depth;
+    setVanishPoint(x:number, y:number, depth:number = 1000):void
+    {
+        this._vanishingPointX = x;
+        this._vanishingPointY = y;
+        this._vanishingPointDepth = depth;
 		
-		this.resetVanishPointPosition();
 		this._precalculateScalingMultipliers();
     }
-    
-	/**
-     * Calls the callback functions (that were passed to the setVanishPoint method) for the x/y positions of the vanishing point, and 
-     * resets the values in the internal state
-     */
-    resetVanishPointPosition():void
-    {
-        this._vPointX = this._calcVPointX();
-        this._vPointY = this._calcVPointY();
-    }
-	
     
     //-------------------------- Z Axis Speed ----------------------------------
     
@@ -92,19 +80,16 @@ export default class ZCalc implements IZCalc
         return speed / fps;
     }
     
-	
-	
 	/*
 		------------------- Scaled Positions and Dimensions ---------------------
 		
-		This class is designed to provide the ability to create sprite-scaling games,
+		This class gives us the ability to create sprite-scaling games,
 		by providing position/dimension values, based on a given z-axis position.
 		
 		If the z-axis position is greater than the vanishing point, or it is a negative 
 		number (and the developer doesn't want to display negative values), then the 
 		sprite doesn't need to be displayed. In these cases, the x, y, width and height 
 		methods will return 0.
-		
 		
 		******************************
 		Problem: "The Oatmeal Effect":
@@ -115,11 +100,11 @@ export default class ZCalc implements IZCalc
 		position:
 		
 		-------------------------------------------------------------------------
-		//For X and Y:
+		// For X and Y:
 		const depthUnit = (vanishingPointX - xPosition) / vanishingPointDepth;
         return xPosition + (zPosition * depthUnit);
 		
-		//And for Width and Height:
+		// And for Width and Height:
 		const depthUnit = width / vanishingPointDepth;
         return width - (zPosition * depthUnit);
 		-------------------------------------------------------------------------
@@ -143,8 +128,8 @@ export default class ZCalc implements IZCalc
 		
 		During the calculation of the scaling multipliers, a "shrunkDepth" is used. This is 
 		the vanishing point depth, divided by 8 (a number chosen through trial and error). 
-		The reason for the division on the vanishing point depth is because, even though the 
-		speed of movement will appear consistent, the continuous reduction of the multiplier 
+		The reason for this division on the vanishing point depth is because (even though the 
+		speed of movement will appear consistent) the continuous reduction of the multiplier 
 		means that any scaled values would not actually reach the vanishing point when at the 
 		deepest z-position.
 		
@@ -166,21 +151,25 @@ export default class ZCalc implements IZCalc
 				make the sprite move towards/from it.
     */
 	
+    /**
+     * Pre-calculates the scaling multiplier values. See the "Scaled Positions and Dimensions" section above
+     */
     private _precalculateScalingMultipliers():void
 	{
-		const shrunkDepth = this._vPointDepth / 8;
+        this._precalculatedScalingMultipliers = [];
+        
+		const shrunkDepth = this._vanishingPointDepth / 8;
 		
 		let multiplier = 1;
-		for(let z = 0; z <= this._vPointDepth; z++)
+		for(let z = 0; z <= this._vanishingPointDepth; z++)
 		{
 			this._precalculatedScalingMultipliers.push(multiplier);
 			multiplier -= (multiplier / shrunkDepth);
 		}
 	}
 	
-	
 	/**
-     * Takes an x position (not in units), and calculates the correct x position to use, based on the given z position
+     * Takes an x position (not in units), and calculates the correct x position to draw with, based on the given z position
      * @param xPosition the original x position (not in units)
      * @param zPosition the z position of the element being drawn
      * @param showNegative should the element still be drawn if the z position is negative?
@@ -188,11 +177,16 @@ export default class ZCalc implements IZCalc
      */
     x(xPosition:number, zPosition:number, showNegative:boolean = false):number
     {
-        return this._position(zPosition, xPosition, this._vPointX, showNegative);
+        const vanishPointPixels = this._kernel.helpers.unit.xUnit(this._vanishingPointX);
+        
+        const camera = this._kernel.graphicEngine.camera;
+        const positionedVanishPointPixels = camera.canvasPositionX + vanishPointPixels;
+        
+        return this._position(zPosition, xPosition, positionedVanishPointPixels, showNegative);
     }
     
 	/**
-     * Takes an y position (not in units), and calculates the correct y position to use, based on the given z position
+     * Takes an y position (not in units), and calculates the correct y position to draw with, based on the given z position
      * @param yPosition the original y position (not in units)
      * @param zPosition the z position of the element being drawn
      * @param showNegative should the element still be drawn if the z position is negative?
@@ -200,11 +194,16 @@ export default class ZCalc implements IZCalc
      */
     y(yPosition:number, zPosition:number, showNegative:boolean = false):number
     {
-        return this._position(zPosition, yPosition, this._vPointY, showNegative);
+        const vanishPointPixels = this._kernel.helpers.unit.yUnit(this._vanishingPointY);
+        
+        const camera = this._kernel.graphicEngine.camera;
+        const positionedVanishPointPixels = camera.canvasPositionY + vanishPointPixels;
+        
+        return this._position(zPosition, yPosition, positionedVanishPointPixels, showNegative);
     }
     
 	/**
-     * Takes a width value (not in units) and calculates the correct value to use, based on the given z position
+     * Takes a width value (not in units) and calculates the correct value to draw with, based on the given z position
      * @param width the original width (not in units)
      * @param zPosition the z position of the element being drawn
      * @param showNegative should the element still be drawn if the z position is negative?
@@ -216,7 +215,7 @@ export default class ZCalc implements IZCalc
     }
     
 	/**
-     * Takes a height value (not in units) and calculates the correct value to use, based on the given z position
+     * Takes a height value (not in units) and calculates the correct value to draw with, based on the given z position
      * @param height the original height (not in units)
      * @param zPosition the z position of the element being drawn
      * @param showNegative should the element still be drawn if the z position is negative?
@@ -226,67 +225,59 @@ export default class ZCalc implements IZCalc
     {
         return this._dimension(zPosition, height, showNegative);
     }
-    
 	
 	/**
-	 * Takes a z position, x/y position, and the vanishing point's position on that axis.
+	 * Takes a z position, an x/y position, and the vanishing point's position on the correct axis.
 	 * Returns the scaled value for the position on that axis.
 	 * @param zPosition the z position of the element being drawn
-	 * @param axisPosition the x/y position
-	 * @param axisVPoint the position of the vanishing point on this axis
+	 * @param axisPosition the x or y position
+	 * @param axisVanishPoint the position of the vanishing point on this axis
 	 * @param showNegative should the element still be drawn if the z position is negative?
 	 * @returns the scaled value for the position on the given axis, or 0 if the z position is "out of view"
 	 */
-    private _position(zPosition:number, axisPosition:number, axisVPoint:number, showNegative:boolean):number
+    private _position(zPosition:number, axisPosition:number, axisVanishPoint:number, showNegative:boolean):number
     {
         if(this._isOutOfView(zPosition, showNegative))
-        {
             return 0;
-        } 
-		else 
-		{
-			//We need a positive z-index, so if it's negative we'll flip it now, then flip the 
-			//multiplier once we have it.
-			const originalZPosition = zPosition;
-            zPosition = (originalZPosition < 0) ? -zPosition : zPosition;
-			
-			const distanceToVPoint = (axisVPoint - axisPosition);
-			const multiplier = this._precalculatedScalingMultipliers[Math.round(zPosition)];
-			
-			const positiveMultiplier = (1 - multiplier);
-			const realMultiplier = ((originalZPosition < 0) ? -positiveMultiplier : positiveMultiplier);
-			
-			return axisPosition + (distanceToVPoint * realMultiplier);
-        }
+		
+        // We need a positive z-index to get the scaler, so if it's negative we'll 
+        // flip it, then flip the multiplier later to get a negative position again.
+        const positiveZPosition = Math.abs(zPosition);
+        
+        const distanceToVanishPoint = (axisVanishPoint - axisPosition);
+        
+        const multiplier = this._precalculatedScalingMultipliers[Math.round(positiveZPosition)];
+        const invertedMultiplier = (1 - multiplier); // (e.g. 0.25 becomes 0.75)
+        const realMultiplier = (zPosition < 0) ? -invertedMultiplier : invertedMultiplier;
+        
+        return axisPosition + (distanceToVanishPoint * realMultiplier);
     }
     
     /**
 	 * Takes a z position and a width/height value. Returns the scaled value for the width/height.
 	 * @param zPosition the z position of the element being drawn
-	 * @param dimension the width/height value
+	 * @param dimension the width or height value
 	 * @param showNegative should the element still be drawn if the z position is negative?
-	 * @returns the scaled width/height value on the given axis, or 0 if the z position is "out of view"
+	 * @returns the scaled width/height value, or 0 if the z position is "out of view"
 	 */
     private _dimension(zPosition:number, dimension:number, showNegative:boolean):number
     {
         if(this._isOutOfView(zPosition, showNegative))
-        {
             return 0;
-        } 
-		else 
-		{
-			//We need a positive z-index, so if it's negative we'll flip it now, then correct the 
-			//result later.
-			const originalZPosition = zPosition;
-			zPosition = (originalZPosition < 0) ? -zPosition : zPosition;
-			
-			const positiveMultiplier = this._precalculatedScalingMultipliers[Math.round(zPosition)];
-			const changedDimension = (dimension * positiveMultiplier);
-			
-			return (originalZPosition < 0) ? (dimension + (dimension - changedDimension)) : changedDimension;
-        }
+		
+        // We need a positive z-index to get the scaler, so if it's negative we'll flip it 
+        // now, then correct the result later.
+        const positiveZPosition = Math.abs(zPosition);
+        
+        const multiplier = this._precalculatedScalingMultipliers[Math.round(positiveZPosition)];
+        const changedDimension = (dimension * multiplier);
+        
+        const result = (zPosition < 0) 
+                            ? (dimension + (dimension - changedDimension)) 
+                            : changedDimension;
+        
+        return result;
     }
-	
 	
 	/**
 	 * Is the given z position not visible?
@@ -296,6 +287,9 @@ export default class ZCalc implements IZCalc
 	 */
 	private _isOutOfView(zPosition:number, showNegative:boolean):boolean
     {
-        return (zPosition > this.vPointDepth || (!showNegative && zPosition < 0));
+        return (
+            zPosition > this._vanishingPointDepth || // Position is too far in the distance
+            (!showNegative && zPosition < 0) // Position is negative, and that's not considered visible
+        );
     }
 }

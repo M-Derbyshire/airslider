@@ -74,7 +74,7 @@ export default class Sign extends ASModel
         super.prepare();
         
         if(this._startPosition === null)
-            this._startPosition = this.helpers.zCalc.vPointDepth;
+            this._startPosition = this.helpers.zCalc.vanishingPointDepth;
         
         this.x = -100;
         this.y = 0;

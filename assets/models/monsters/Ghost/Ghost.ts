@@ -81,7 +81,7 @@ export default class Ghost extends Monster {
         
         this.state = "normal";
         
-        this.startZ = this.helpers.zCalc.vPointDepth;
+        this.startZ = this.helpers.zCalc.vanishingPointDepth;
         this.setYPositionFromBottom(this.height);
         this.startY = this.y;
         this.centerXPosition();

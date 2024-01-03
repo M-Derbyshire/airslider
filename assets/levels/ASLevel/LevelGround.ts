@@ -114,7 +114,7 @@ export default class LevelGround
 		this.groundZPositions = [];
 		
 		//Start from the furthest away, and move inwards, so we don't draw the distant ones on top of the closer ones
-		for(let zPos = this.helpers.zCalc.vPointDepth; zPos >= 0; zPos -= this.distance)
+		for(let zPos = this.helpers.zCalc.vanishingPointDepth; zPos >= 0; zPos -= this.distance)
 		{
 			this.groundZPositions.push(zPos);
 		}

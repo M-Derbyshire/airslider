@@ -151,6 +151,9 @@ export default class ASLevel extends Level
     {
         super.prepare();
         
+        const axisVanishPointPosition = this.kernel.unitsWithinCamera / 2;
+        this.helpers.zCalc.setVanishPoint(axisVanishPointPosition, axisVanishPointPosition);
+        
         this.leftEdge = 0;
         this.rightEdge = this.kernel.unitsWithinCamera;
         
@@ -354,7 +357,7 @@ export default class ASLevel extends Level
      */
 	private _setupPatternManager():void
 	{
-		this.patternManager.setStartingZPosition(this.helpers.zCalc.vPointDepth);
+		this.patternManager.setStartingZPosition(this.helpers.zCalc.vanishingPointDepth);
 	}
 	
     /**
@@ -472,7 +475,7 @@ export default class ASLevel extends Level
         }
         
         // Once the player has vanished into the distance, finish the level
-        if(this.player.z > this.helpers.zCalc.vPointDepth)
+        if(this.player.z > this.helpers.zCalc.vanishingPointDepth)
             this.levelStop();
     }
 }
