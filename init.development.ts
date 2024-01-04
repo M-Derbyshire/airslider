@@ -5,7 +5,7 @@ let initiated = false;
 // start up the kernel
 window.addEventListener("click", function() {
 	if(!initiated) {
-		Kernel.getInstance().initiate();
+		Kernel.init();
 		initiated = true;
 	}
 }, true);

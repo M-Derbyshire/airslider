@@ -50,6 +50,28 @@ export default class Kernel implements IKernel {
         return new Kernel();
     }
     
+    /**
+     * Triggers the game
+     */
+    static init()
+    {
+        const instance = this.getInstance();
+        
+        if(instance.level) // If we've already initiated the game
+            return;
+        
+        try {
+            instance.load();
+        } catch (err:any) {
+            instance.handleError(err);
+        }
+        
+        if(!instance._hasError) {
+            // Run is re-called by the browser for each frame, so it will need to handle any errors thrown by itself
+            instance.run();
+        }
+    }
+    
     
     private _settings:ISettings;
     private _gameCanvas:HTMLCanvasElement;
@@ -175,7 +197,7 @@ export default class Kernel implements IKernel {
     /**
      * The current level that is being ran
      */
-    get level(){return this._levelQueue[0]!.level}
+    get level(){return this._levelQueue[0]?.level}
     
     /**
      * The models loaded by the current level
@@ -515,25 +537,6 @@ export default class Kernel implements IKernel {
         if(this._status !== KernelStatus.Paused && timePassed >= 1)
         {
             this._totalLevelActiveMilliseconds += timePassed;
-        }
-    }
-    
-    // Initiating the game -----------------------------------------------------------------
-    
-    /**
-     * Loads the kernel, and starts the game running
-     */
-    initiate():void
-    {
-        try {
-            this.load();
-        } catch (err:any) {
-            this.handleError(err);
-        }
-        
-        if(!this._hasError) {
-            // Run is re-called by the browser for each frame, so it will need to handle any errors thrown by itself
-            this.run();
         }
     }
 }

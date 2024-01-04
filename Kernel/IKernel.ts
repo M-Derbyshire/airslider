@@ -65,7 +65,7 @@ export default interface IKernel {
     /**
      * The current level that is being ran
      */
-    readonly level:ILevel;
+    readonly level?:ILevel;
     
     /**
      * The models loaded by the current level
@@ -173,10 +173,5 @@ export default interface IKernel {
      * @param err the error to handle (doesn't have to be an instance of Error)
      */
     handleError(err:any):void
-    
-    /**
-     * Loads the kernel, and starts the game running
-     */
-    initiate():void;
     
 };
