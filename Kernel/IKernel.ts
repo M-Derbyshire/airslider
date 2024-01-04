@@ -9,21 +9,24 @@ import IAssetHandler from "./AssetHandler/IAssetHandler";
 import { KernelStatus } from "./KernelStatus";
 
 /**
- * Controls the entire game (this will be a singleton)
+ * This will be a singleton that controls the entire game, and provides other entities with 
+ * access to certain functionality and data.
  */
 export default interface IKernel {
     /**
-     * A map for any state that needs to be accessible to all levels.
+     * A map to store any state that needs to be accessible to all levels.
      */
     centralState:Map<string, any>;
     
     /**
-     * If we're displaying the FPS counter, what color should the text be?
+     * If we want to display the FPS counter, this is the color the text should be.
+     * The FPS counter is only drawn if this value is truthy.
      */
     fpsDisplayColor:string;
     
     /**
-     * The amount of draw-space x/y units there are within the camera's size
+     * The amount of draw-space units there are within the camera's size.
+     * This is the amount for both the X and Y axis.
      */
     unitsWithinCamera:number;
     
@@ -48,12 +51,12 @@ export default interface IKernel {
     readonly fpsLimit:number;
     
     /**
-     * The total milliseconds that the level has not been paused or stopped for any reason
+     * The total amount of milliseconds that the level has not been paused or stopped for any reason
      */
     readonly totalLevelActiveMilliseconds:number;
     
     /**
-     * The root directory/path, added to the beginning of all asset file paths
+     * The root directory/path, added to the beginning of all file paths when loading assets
      */
     readonly rootPath:string;
     
@@ -78,12 +81,12 @@ export default interface IKernel {
     readonly levelHasBeenPrepared:boolean;
     
     /**
-     * Loads and handles assets
+     * Loads and manages assets
      */
     readonly assetHandler:IAssetHandler;
     
     /**
-     * How many assets are still loading?
+     * The amount of assets that are still loading
      */
     readonly assetsStillLoading:number;
     
@@ -103,7 +106,7 @@ export default interface IKernel {
     readonly soundEngine:ISoundEngine;
     
     /**
-     * The canvas element that the game should be drawn on
+     * The HTML canvas element that the game should be drawn on
      */
     readonly gameCanvas:HTMLCanvasElement;
     
@@ -124,14 +127,13 @@ export default interface IKernel {
     load():void;
     
     /**
-     * Unloads the current level, releasing any assets that need releasing
+     * Unloads the current level, triggering the release of any assets that need releasing
      */
     unloadCurrentLevel():void;
     
     /**
      * Loads an image (if not already loaded) with the asset handler
      * @param path the file path to the image
-     * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
      * @returns the image object
      */
     loadImage(path:string):HTMLImageElement;
@@ -152,26 +154,25 @@ export default interface IKernel {
     
     /**
      * Finds the loaded asset with the given file path, and reduces the usage count against it. The asset should stay 
-     * loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it. (fonts 
-     * cannot be unloaded)
+     * loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it (fonts 
+     * cannot be unloaded).
      * @param path the file path of the asset
      */
     releaseAsset(path:string):void;
     
     /**
-     * Runs the game
+     * Runs the game loop
      */
     run():void;
     
     /**
-     * Paues/unpauses the game (if the current level is pauseable)
+     * Pauses/unpauses the game (if the current level is pauseable)
      */
     toggleGamePause():void;
     
     /**
      * Handles errors
-     * @param err the error to handle (doesn't have to be an instance of Error)
+     * @param error the error to handle (this doesn't have to be an instance of Error)
      */
-    handleError(err:any):void
-    
+    handleError(error:any):void
 };

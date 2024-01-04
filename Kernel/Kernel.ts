@@ -29,7 +29,8 @@ import EventManager from '../assets/levels/Level/EventManager';
 import PointerEventManager from '../assets/levels/Level/PointerEventManager';
 
 /**
- * Controls the entire game (this will be a singleton)
+ * This will be a singleton that controls the entire game, and provides other entities with 
+ * access to certain functionality and data.
  */
 export default class Kernel implements IKernel {
     
@@ -98,18 +99,19 @@ export default class Kernel implements IKernel {
     private _controlInitialiser:IControlsInitialiser;
     
     /**
-     * A map for any state that needs to be accessible to all levels.
+     * A map to store any state that needs to be accessible to all levels.
      */
     centralState:Map<string, any>;
     
     /**
-     * If we want to display the FPS counter, what color should the text be?
+     * If we want to display the FPS counter, this is the color the text should be.
      * The FPS counter is only drawn if this value is truthy.
      */
     fpsDisplayColor:string;
     
     /**
-     * The amount of draw-space x/y units there are within the camera's size
+     * The amount of draw-space units there are within the camera's size.
+     * This is the amount for both the X and Y axis.
      */
     unitsWithinCamera:number;
     
@@ -137,7 +139,7 @@ export default class Kernel implements IKernel {
         const filePath = window.location.pathname;
         this._rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
         
-        this._assetHandler = new AssetHandler(this._rootPath);
+        this._assetHandler = new AssetHandler();
         
         this._levelQueue = [];
         
@@ -160,12 +162,12 @@ export default class Kernel implements IKernel {
     //getters and setters ----------------------------------------------------------------------
     
     /**
-     * The current status of the level
+     * The current status of the game (e.g. is it playing, or in another state)
      */
     get status(){return this._status;}
     
     /**
-     * The different settings for the game
+     * The settings for the game
      */
     get settings(){return this._settings;}
     
@@ -180,12 +182,12 @@ export default class Kernel implements IKernel {
     get fpsLimit(){return this._fpsLimit;}
     
     /**
-     * The total milliseconds that the level has not been paused or stopped for any reason
+     * The total amount of milliseconds that the level has not been paused or stopped for any reason
      */
     get totalLevelActiveMilliseconds(){return this._totalLevelActiveMilliseconds;}
     
     /**
-     * The root directory/path, added to the beginning of all asset file paths
+     * The root directory/path, added to the beginning of all file paths when loading assets
      */
     get rootPath(){return this._rootPath;}
     
@@ -210,12 +212,12 @@ export default class Kernel implements IKernel {
     get levelHasBeenPrepared(){return (this._levelQueue.length > 0) ? this._levelQueue[0].hasBeenPrepared : false}
     
     /**
-     * Loads and handles assets
+     * Loads and manages assets
      */
     get assetHandler(){return this._assetHandler;}
     
     /**
-     * How many assets are still loading?
+     * The amount of assets that are still loading
      */
     get assetsStillLoading(){return this.assetHandler.assetsStillLoading;}
     
@@ -235,7 +237,7 @@ export default class Kernel implements IKernel {
     get soundEngine(){return this._levelQueue[0].engines.soundEngine;}
     
     /**
-     * The canvas element that the game should be drawn on
+     * The HTML canvas element that the game should be drawn on
      */
 	get gameCanvas(){return this._gameCanvas;}
     
@@ -320,7 +322,7 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Unloads the current level, releasing any assets that need releasing
+     * Unloads the current level, triggering the release of any assets that need releasing
      */
     unloadCurrentLevel():void
     {
@@ -391,7 +393,6 @@ export default class Kernel implements IKernel {
     /**
      * Loads an image (if not already loaded) with the asset handler
      * @param path the file path to the image
-     * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
      * @returns the image object
      */
     loadImage(path:string):HTMLImageElement
@@ -402,7 +403,6 @@ export default class Kernel implements IKernel {
     /**
      * Loads an audio file (if not already loaded) with the asset handler
      * @param path the file path to the audio file
-     * @param callback a callback function, to run when the asset has finished loading (this function should still call the asset handler's default asset callback)
      * @returns the audio object
      */
     loadAudio(path:string):HTMLAudioElement
@@ -422,8 +422,8 @@ export default class Kernel implements IKernel {
     
     /**
      * Finds the loaded asset with the given file path, and reduces the usage count against it. The asset should stay 
-     * loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it. (fonts 
-     * cannot be unloaded)
+     * loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it (fonts 
+     * cannot be unloaded).
      * @param path the file path of the asset
      */
     releaseAsset(path:string):void
@@ -435,7 +435,7 @@ export default class Kernel implements IKernel {
     //running the game ---------------------------------------------------------------
     
     /**
-     * Runs the game
+     * Runs the game loop
      */
     run():void
     {
@@ -498,12 +498,12 @@ export default class Kernel implements IKernel {
     
     /**
      * Handles errors
-     * @param err the error to handle (doesn't have to be an instance of Error)
+     * @param error the error to handle (this doesn't have to be an instance of Error)
      */
-    handleError(err:any):void
+    handleError(error:any):void
     {
         this._hasError = true;
-        this._errorHandler.handleError(err);
+        this._errorHandler.handleError(error);
     }
     
     /**
