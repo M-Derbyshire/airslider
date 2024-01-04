@@ -2,7 +2,7 @@ const Dotenv = require('dotenv-webpack');
 
 module.exports = env => ({
 	entry: {
-		entry: `./initialiseGame.${env.development ? "development" : "production"}.ts`
+		entry: `./init.${env.development ? "development" : "production"}.ts`
 	},
 	module: {
 		rules: [
