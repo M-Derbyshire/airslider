@@ -18,7 +18,7 @@ import IHelpers from './helpers/IHelpers';
 import ILoadedLevel from './ILoadedLevel';
 import ILevel from '../assets/levels/Level/ILevel';
 import IModel from '../assets/models/Model/IModel';
-import IPreparedEngines from './IPreparedEngines';
+import IPreparedEngines from './ILevelEngines';
 import ICamera from '../engines/GraphicEngine/ICamera';
 import IFrameManager from '../engines/GraphicEngine/IFrameManager';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';
@@ -200,17 +200,17 @@ export default class Kernel implements IKernel {
     /**
      * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
      */
-    get gameEngine(){return this._levelQueue[0].preparedEngines.gameEngine;}
+    get gameEngine(){return this._levelQueue[0].engines.gameEngine;}
     
     /**
      * The engine that controls the drawing to the screen
      */
-    get graphicEngine(){return this._levelQueue[0].preparedEngines.graphicEngine;}
+    get graphicEngine(){return this._levelQueue[0].engines.graphicEngine;}
     
     /**
      * The engine that controls the sound/music of the game
      */
-    get soundEngine(){return this._levelQueue[0].preparedEngines.soundEngine;}
+    get soundEngine(){return this._levelQueue[0].engines.soundEngine;}
     
     /**
      * The canvas element that the game should be drawn on
@@ -278,7 +278,7 @@ export default class Kernel implements IKernel {
 		const camera = new Camera(aspectRatioHorizontal, aspectRatioVertical);
 		const frameManager = new FrameManager(camera);
 		
-        const preparedEngines = this._initialiseAllEngines(camera, frameManager); // new engines, aimed at this level
+        const engines = this._initialiseAllEngines(camera, frameManager); // new engines, aimed at this level
         
         //do any extra setup
         level.load(
@@ -294,7 +294,7 @@ export default class Kernel implements IKernel {
         this._loadModels(loadedModels);
         
         //hasBeenPrepared should be set to true if the level (and it's models) have had the prepare() method called
-        this._levelQueue.push({ level, hasBeenPrepared: false, loadedModels, preparedEngines });
+        this._levelQueue.push({ level, hasBeenPrepared: false, loadedModels, engines });
     }
     
     /**

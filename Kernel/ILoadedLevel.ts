@@ -1,12 +1,11 @@
 import ILevel from "../assets/levels/Level/ILevel";
 import IModel from "../assets/models/Model/IModel";
-import IPreparedEngines from "./IPreparedEngines";
+import ILevelEngines from "./ILevelEngines";
 
 /**
- * A loaded level, with the other elements it requires
+ * A level that has been loaded, along with the other elements it requires
  */
 export default interface ILoadedLevel {
-    
     /**
      * The loaded level
      */
@@ -25,6 +24,5 @@ export default interface ILoadedLevel {
     /**
      * The engines that will run this level
      */
-    preparedEngines:IPreparedEngines;
-    
+    engines:ILevelEngines;
 };

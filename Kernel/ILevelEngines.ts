@@ -5,8 +5,7 @@ import ISoundEngine from "../engines/SoundEngine/ISoundEngine";
 /**
  * The engines that will be used to run a level
  */
-export default interface IPreparedEngines {
-    
+export default interface ILevelEngines {
     /**
      * The game engine
      */
@@ -21,5 +20,4 @@ export default interface IPreparedEngines {
      * The sound engine
      */
     soundEngine:ISoundEngine;
-    
 };
