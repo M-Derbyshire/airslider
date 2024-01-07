@@ -1,4 +1,2 @@
 node_modules/
 dist/game.bundle.js
-.env.production
-.env.development
