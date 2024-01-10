@@ -244,14 +244,6 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Loads and manages assets
-     */
-    get assetHandler()
-    {
-        return this._assetHandler;
-    }
-    
-    /**
      * The amount of assets that are still loading
      */
     get assetsStillLoading()
@@ -345,7 +337,7 @@ export default class Kernel implements IKernel {
         this.level.unload();
         
         this._totalLevelActiveMilliseconds = 0;
-        this.assetHandler.resetAllUsageCounts();
+        this._assetHandler.resetAllUsageCounts();
         this._controlInitialiser.unregisterEventListeners();
         
         this._levelQueue.shift();

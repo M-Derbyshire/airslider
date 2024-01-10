@@ -5,7 +5,6 @@ import IGraphicEngine from "../engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "../engines/SoundEngine/ISoundEngine";
 import ISettings from "../settings/ISettings";
 import IHelpers from "./helpers/IHelpers";
-import IAssetHandler from "./AssetHandler/IAssetHandler";
 import { KernelStatus } from "./KernelStatus";
 
 /**
@@ -79,11 +78,6 @@ export default interface IKernel {
      * Has the current level been prepared? (using the Level.prepare method)
      */
     readonly levelHasBeenPrepared:boolean;
-    
-    /**
-     * Loads and manages assets
-     */
-    readonly assetHandler:IAssetHandler;
     
     /**
      * The amount of assets that are still loading
