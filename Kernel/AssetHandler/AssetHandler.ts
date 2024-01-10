@@ -34,7 +34,7 @@ export default class AssetHandler implements IAssetHandler
     /**
      * Starts the loading of an asset into the asset handler, and returns a reference to it. If the asset has already been 
      * loaded, the reference to it will be returned, and the handler's internal usage count for that asset will be incremented
-     * @param obj an object of the correct asset type (will be used as the asset object)
+     * @param obj an object of the correct asset type (this will be used as the asset object, if the asset hasn't already been loaded)
      * @param path the path to the asset file
      * @returns the asset object
      */

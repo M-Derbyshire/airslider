@@ -142,24 +142,24 @@ export default class TheConstruct extends ASLevel
         // }
         
         // Send some shockers
-        this.levelSection(
-            "shockers",
-            15000,
-            25000,
-            null,
-            () => this.shockerManager.sendShockers(),
-            null
-        );
+        // this.levelSection(
+        //     "shockers",
+        //     15000,
+        //     25000,
+        //     null,
+        //     () => this.shockerManager.sendShockers(),
+        //     null
+        // );
 		
 		// Runs the monster sequence
-        // this.levelSection(
-        //     "monster", 
-        //     15000, 
-        //     90000, 
-        //     () => this.monsters.forEach(monster => monster.start()),
-        //     null,
-        //     () => this.monsters.forEach(monster => monster.stop())
-        // );
+        this.levelSection(
+            "monster", 
+            15000, 
+            90000, 
+            () => this.monsters.forEach(monster => monster.start()),
+            null,
+            () => this.monsters.forEach(monster => monster.stop())
+        );
 		
 		
 		//Set a pattern of shockers going

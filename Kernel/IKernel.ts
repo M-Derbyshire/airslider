@@ -93,17 +93,17 @@ export default interface IKernel {
     /**
      * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
      */
-    readonly gameEngine:IGameEngine;
+    readonly gameEngine?:IGameEngine;
     
     /**
      * The engine that controls the drawing to the screen
      */
-    readonly graphicEngine:IGraphicEngine;
+    readonly graphicEngine?:IGraphicEngine;
     
     /**
      * The engine that controls the sound/music of the game
      */
-    readonly soundEngine:ISoundEngine;
+    readonly soundEngine?:ISoundEngine;
     
     /**
      * The HTML canvas element that the game should be drawn on
@@ -132,14 +132,14 @@ export default interface IKernel {
     unloadCurrentLevel():void;
     
     /**
-     * Loads an image (if not already loaded) with the asset handler
+     * Loads an image with the asset handler
      * @param path the file path to the image
      * @returns the image object
      */
     loadImage(path:string):HTMLImageElement;
     
     /**
-     * Loads an audio file (if not already loaded) with the asset handler
+     * Loads an audio file with the asset handler
      * @param path the file path to the audio file
      * @returns the audio object
      */

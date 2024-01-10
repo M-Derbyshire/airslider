@@ -18,7 +18,7 @@ import IHelpers from './helpers/IHelpers';
 import ILoadedLevel from './ILoadedLevel';
 import ILevel from '../assets/levels/Level/ILevel';
 import IModel from '../assets/models/Model/IModel';
-import IPreparedEngines from './ILevelEngines';
+import ILevelEngines from './ILevelEngines';
 import ICamera from '../engines/GraphicEngine/ICamera';
 import IFrameManager from '../engines/GraphicEngine/IFrameManager';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';
@@ -33,26 +33,27 @@ import PointerEventManager from '../assets/levels/Level/PointerEventManager';
  * access to certain functionality and data.
  */
 export default class Kernel implements IKernel {
-    
-    static _instance:Kernel; //The single instance of Kernel
+
+    // *********************** Static Methods/Properties **********************************
+    static _instance:Kernel; // The singleton instance of Kernel
     
     /**
-     * Returns the singleton instance of the kernel
-     * @returns The singleton instance of the kernel
+     * Gets the singleton instance of the kernel
+     * @returns the singleton instance of the kernel
      */
     static getInstance():Kernel
     {
-        //The Kernel constructor will return the single instance
-        //if it has already been created, and if not then it will create
-        //it. We want the same behaviour for this method. The only
-        //actual reason for this method is language -- it's better
-        //that people know you're "getting" the "instance", then thinking
-        //you are truly making something "new".
+        // The Kernel constructor will return the singleton instance
+        // if it has already been created, and if not then it will create
+        // it. We want the same behaviour for this method. The only
+        // actual reason for this method is language -- it's better
+        // that people know you're "getting" the "instance", then thinking
+        // you are truly making something "new".
         return new Kernel();
     }
     
     /**
-     * Triggers the game
+     * Triggers the starting of the game
      */
     static init()
     {
@@ -67,36 +68,34 @@ export default class Kernel implements IKernel {
             instance.handleError(err);
         }
         
-        if(!instance._hasError) {
-            // Run is re-called by the browser for each frame, so it will need to handle any errors thrown by itself
-            instance.run();
-        }
+        if(!instance._hasError)
+            instance.run(); // Runs the first frame. This is then re-called by the browser for every other frame
     }
+    // ************************************************************************************
     
     
-    private _settings:ISettings;
-    private _gameCanvas:HTMLCanvasElement;
-    private _gameContext:CanvasRenderingContext2D;
-    private _correctCanvasStyleToDevicePixelRatio:boolean;
+    private _settings:ISettings; // The settings for the game
+    private _gameCanvas:HTMLCanvasElement; // The HTML canvas element that the game should be drawn on
+    private _gameContext:CanvasRenderingContext2D; // The 2D context from the HTML canvas element
+    private _correctCanvasStyleToDevicePixelRatio:boolean; // Should the canvas's styling width/height be corrected, based on the Device Pixel Ratio?
     
-    private _fps:number;
-    private _highestFpsReached:number;
-    private _fpsLimit:number;
-    private _lastTime:Date;
+    private _fps:number; // The current Frames Per Second of the game
+    private _highestFpsReached:number; // The highest FPS the game has reached
+    private _fpsLimit:number; // The maximum FPS that the game should be allowed to run at
+    private _lastTime:Date; // The date/time that the last frame ran
     
-    private _totalLevelActiveMilliseconds:number;
-    private _status:KernelStatus;
-    private _hasError:boolean;
-    private _errorHandler:IErrorHandler;
+    private _levelQueue:ILoadedLevel[]; // The queue of levels that have been loaded (or are currently loading)
+    private _totalLevelActiveMilliseconds:number; // The total amount of milliseconds that the level has not been paused or stopped for any reason
+    private _status:KernelStatus; // The current status of the game (e.g. is it playing, paused, or in another state)
     
-    private _rootPath:string;
-    private _assetHandler:IAssetHandler;
+    private _hasError:boolean; // Has an error been caught and passed to the error handler?
+    private _errorHandler:IErrorHandler; // Manages error-handling for the game
     
-    private _levelQueue:ILoadedLevel[];
+    private _rootPath:string; // The root directory/path, added to the beginning of all file paths when loading assets
+    private _assetHandler:IAssetHandler; // Loads and manages assets
     
-    private _helpers:IHelpers;
-    
-    private _controlInitialiser:IControlsInitialiser;
+    private _helpers:IHelpers; // Provides a number of "helper" objects, that each calculate and/or provide useful values
+    private _controlInitialiser:IControlsInitialiser; // Handles the initialising of the game's controls
     
     /**
      * A map to store any state that needs to be accessible to all levels.
@@ -116,6 +115,8 @@ export default class Kernel implements IKernel {
     unitsWithinCamera:number;
     
     
+    
+    
     /**
      * Constructor
      * @returns The singleton instance of the kernel
@@ -128,13 +129,12 @@ export default class Kernel implements IKernel {
         }
         Kernel._instance = this;
         
-        const settings = (process.env.GAME_ENV === "development") ? devSettings : prodSettings;
-        this._settings = settings;
+        this._settings = (process.env.GAME_ENV === "development") ? devSettings : prodSettings;
         
         this._fps = 60;
         this._highestFpsReached = 0;
-        this._fpsLimit = (!isNaN(settings.fpsLimit)) ? settings.fpsLimit : 70;
-        this._lastTime = new Date(); //used when calculating fps and enforcing fps limit
+        this._fpsLimit = (!isNaN(this._settings.fpsLimit)) ? this._settings.fpsLimit : 70;
+        this._lastTime = new Date();
         
         const filePath = window.location.pathname;
         this._rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -143,116 +143,175 @@ export default class Kernel implements IKernel {
         
         this._levelQueue = [];
         
-		this._gameCanvas = settings.gameCanvas;
+		this._gameCanvas = this._settings.gameCanvas;
 		this._gameContext = this.gameCanvas.getContext("2d")!;
-        this._correctCanvasStyleToDevicePixelRatio = settings.correctCanvasStyleToDevicePixelRatio;
+        this._correctCanvasStyleToDevicePixelRatio = this._settings.correctCanvasStyleToDevicePixelRatio;
         
-        this._totalLevelActiveMilliseconds = 0; //total ms that the game has not been paused or stopped for any reason
+        this._totalLevelActiveMilliseconds = 0;
         this._status = KernelStatus.Active;
-        this._hasError = false; // Has an error been caught and passed to the error handler?
+        this._hasError = false;
         this._errorHandler = new ErrorHandler();
         
-        this._controlInitialiser = new settings.ControlsInitialiserClass();
+        const ControlsInitialiserClass = this._settings.ControlsInitialiserClass;
+        this._controlInitialiser = new ControlsInitialiserClass();
         
         this.centralState = new Map<string, any>();
-        this.fpsDisplayColor = settings.fpsDisplayColor;
-        this.unitsWithinCamera = (!isNaN(settings.unitsWithinCamera)) ? settings.unitsWithinCamera : 1000;
+        this.fpsDisplayColor = this._settings.fpsDisplayColor;
+        this.unitsWithinCamera = this._settings.unitsWithinCamera;
     }
     
-    //getters and setters ----------------------------------------------------------------------
+    
     
     /**
      * The current status of the game (e.g. is it playing, or in another state)
      */
-    get status(){return this._status;}
+    get status()
+    {
+        return this._status;
+    }
     
     /**
      * The settings for the game
      */
-    get settings(){return this._settings;}
+    get settings()
+    {
+        return this._settings;
+    }
     
     /**
      * The current Frames Per Second of the game
      */
-    get fps(){return this._fps;}
+    get fps()
+    {
+        return this._fps;
+    }
     
     /**
      * The maximum FPS that the game should be allowed to run at
      */
-    get fpsLimit(){return this._fpsLimit;}
+    get fpsLimit()
+    {
+        return this._fpsLimit;
+    }
     
     /**
      * The total amount of milliseconds that the level has not been paused or stopped for any reason
      */
-    get totalLevelActiveMilliseconds(){return this._totalLevelActiveMilliseconds;}
+    get totalLevelActiveMilliseconds()
+    {
+        return this._totalLevelActiveMilliseconds;
+    }
     
     /**
      * The root directory/path, added to the beginning of all file paths when loading assets
      */
-    get rootPath(){return this._rootPath;}
+    get rootPath()
+    {
+        return this._rootPath;
+    }
     
     /**
      * Provides a number of "helper" objects, that each calculate and/or provide useful values
      */
-    get helpers() {return this._helpers;}
+    get helpers() 
+    {
+        return this._helpers;
+    }
     
     /**
      * The current level that is being ran
+     * @returns the currently running level, or undefined
      */
-    get level(){return this._levelQueue[0]?.level}
+    get level()
+    {
+        return this._levelQueue[0]?.level;
+    }
     
     /**
      * The models loaded by the current level
      */
-    get loadedModels(){return (this._levelQueue.length > 0) ? this._levelQueue[0].loadedModels : [];}
+    get loadedModels()
+    {
+        return (this._levelQueue.length > 0) ? this._levelQueue[0].loadedModels : [];
+    }
     
     /**
      * Has the current level been prepared? (using the Level.prepare method)
      */
-    get levelHasBeenPrepared(){return (this._levelQueue.length > 0) ? this._levelQueue[0].hasBeenPrepared : false}
+    get levelHasBeenPrepared()
+    {
+        return (this._levelQueue.length > 0) ? this._levelQueue[0].hasBeenPrepared : false;
+    }
     
     /**
      * Loads and manages assets
      */
-    get assetHandler(){return this._assetHandler;}
+    get assetHandler()
+    {
+        return this._assetHandler;
+    }
     
     /**
      * The amount of assets that are still loading
      */
-    get assetsStillLoading(){return this.assetHandler.assetsStillLoading;}
+    get assetsStillLoading()
+    {
+        return this._assetHandler.assetsStillLoading;
+    }
     
     /**
      * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
+     * @returns the game engine, or undefined if there's no loaded levels
      */
-    get gameEngine(){return this._levelQueue[0].engines.gameEngine;}
+    get gameEngine()
+    {
+        return this._levelQueue[0]?.engines.gameEngine;
+    }
     
     /**
      * The engine that controls the drawing to the screen
+     * @returns the graphic engine, or undefined if there's no loaded levels
      */
-    get graphicEngine(){return this._levelQueue[0].engines.graphicEngine;}
+    get graphicEngine()
+    {
+        return this._levelQueue[0]?.engines.graphicEngine;
+    }
     
     /**
      * The engine that controls the sound/music of the game
+     * @returns the sound engine, or undefined if there's no loaded levels
      */
-    get soundEngine(){return this._levelQueue[0].engines.soundEngine;}
+    get soundEngine()
+    {
+        return this._levelQueue[0]?.engines.soundEngine;
+    }
     
     /**
      * The HTML canvas element that the game should be drawn on
      */
-	get gameCanvas(){return this._gameCanvas;}
+	get gameCanvas()
+    {
+        return this._gameCanvas;
+    }
     
     /**
      * The 2D context from the HTML canvas element
      */
-	get gameContext(){return this._gameContext;}
+	get gameContext()
+    {
+        return this._gameContext;
+    }
     
     /**
      * Should the canvas's styling width/height be corrected, based on the Device Pixel Ratio?
      */
-    get correctCanvasStyleToDevicePixelRatio(){return this._correctCanvasStyleToDevicePixelRatio;}
+    get correctCanvasStyleToDevicePixelRatio()
+    {
+        return this._correctCanvasStyleToDevicePixelRatio;
+    }
     
     
-    // loading/unloading methods --------------------------------------------------------------------------
+    
     
     /**
      * Loads the elements needed for the kernel, and the initial level
@@ -267,58 +326,14 @@ export default class Kernel implements IKernel {
             unit: new UnitHelper(this.unitsWithinCamera)
         };
         
-        Object.keys(fonts).forEach((key:string) => this.loadFont(key, fonts[key as keyof typeof fonts]));
+        // Load the fonts from the "fonts" object
+        Object.keys(fonts).forEach((key:string) => {
+            const fontPath = fonts[key as keyof typeof fonts];
+            this.loadFont(key, fontPath);
+        });
         
         const InitialLevelClass = this.settings.InitialLevelClass;
         this._loadLevel(new InitialLevelClass());
-    }
-    
-    /**
-     * Sets up any event listeners to pause/unpause the game automatically (e.g. when the user switches tabs)
-     */
-    private _setupAutoPause():void
-    {
-        document.addEventListener("visibilitychange", () => {
-            if(document.visibilityState === "hidden" && this.status === KernelStatus.Active)
-                this.toggleGamePause();
-        });
-        
-        // Unfortunately, if the window is resized, we need to unpause the game so everything can be 
-        // redrawn, with the new size settings.
-        window.addEventListener("resize", () => {
-            if(this.status === KernelStatus.Paused)
-                this.toggleGamePause();
-        });
-    }
-    
-    /**
-     * Loads the given level, and adds it to the kernel's internal level queue
-     * @param level the level to load
-     */
-    private _loadLevel(level:ILevel):void
-    {
-		const aspectRatioHorizontal = (!isNaN(this.settings.aspectRatioHorizontal)) ? this.settings.aspectRatioHorizontal : 17;
-		const aspectRatioVertical = (!isNaN(this.settings.aspectRatioVertical)) ? this.settings.aspectRatioVertical : 9;
-		const camera = new Camera(aspectRatioHorizontal, aspectRatioVertical);
-		const frameManager = new FrameManager(camera);
-		
-        const engines = this._initialiseAllEngines(camera, frameManager); // new engines, aimed at this level
-        
-        //do any extra setup
-        level.load(
-            frameManager, 
-            new EventManager(),
-            new PointerEventManager()
-        );
-        
-        //Get models here
-        const loadedModels = level.getModels();
-        
-        //Now we can load the models
-        this._loadModels(loadedModels);
-        
-        //hasBeenPrepared should be set to true if the level (and it's models) have had the prepare() method called
-        this._levelQueue.push({ level, hasBeenPrepared: false, loadedModels, engines });
     }
     
     /**
@@ -329,69 +344,18 @@ export default class Kernel implements IKernel {
         this.loadedModels.forEach(model => model.unload());
         this.level.unload();
         
-        this.assetHandler.resetAllUsageCounts();
         this._totalLevelActiveMilliseconds = 0;
+        this.assetHandler.resetAllUsageCounts();
         this._controlInitialiser.unregisterEventListeners();
         
         this._levelQueue.shift();
     }
     
-    /**
-     * Loads the given models
-     * @param models the models to be loaded
-     * @param engines the engines used by the level that provided these models
-     */
-    private _loadModels(models:IModel[]):void
-	{
-        models.forEach((model, idx) => {
-            const animManager = new ModelAnimationsManager(model);
-            
-            model.loadedIndex = idx;
-            model.load(animManager);
-        });
-	}
+    
+    
     
     /**
-     * Triggers the preparation of the level, and all models
-     */
-    private _prepareCurrentLevelAndModels():void
-    {
-        this.level.prepare();
-        this.loadedModels.forEach(model => model.prepare());
-        this._initialiseControls();
-        
-        this._levelQueue[0].hasBeenPrepared = true;
-    }
-    
-	/**
-     * Returns a new instances of all engines
-     * @param camera The level's camera
-     * @param frameManager Manages the frames of a level
-     * @returns The new instances of all engines
-     */
-	private _initialiseAllEngines(camera:ICamera, frameManager:IFrameManager):IPreparedEngines
-	{
-		const gameEngine = new GameEngine();
-        const graphicEngine = new GraphicEngine(camera, frameManager);
-        
-        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-        const soundEngine = new SoundEngine(new AudioContext());
-        
-        return { gameEngine, graphicEngine, soundEngine };
-	}
-    
-    /**
-     * Triggers the initialisation of the game's controls
-     */
-	private _initialiseControls():void
-	{
-		this._controlInitialiser.initialiseControls();
-	}
-    
-    // Asset management
-    
-    /**
-     * Loads an image (if not already loaded) with the asset handler
+     * Loads an image with the asset handler
      * @param path the file path to the image
      * @returns the image object
      */
@@ -401,7 +365,7 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Loads an audio file (if not already loaded) with the asset handler
+     * Loads an audio file with the asset handler
      * @param path the file path to the audio file
      * @returns the audio object
      */
@@ -432,33 +396,49 @@ export default class Kernel implements IKernel {
     }
     
     
-    //running the game ---------------------------------------------------------------
+    
+    
+    /**
+     * Handles errors
+     * @param error the error to handle (this doesn't have to be an instance of Error)
+     */
+    handleError(error:any):void
+    {
+        this._hasError = true;
+        this._errorHandler.handleError(error);
+    }
+    
+    
     
     /**
      * Runs the game loop
      */
     run():void
     {
+        // Request that the browser re-runs this method for the next frame
         requestAnimationFrame(this.run.bind(this));
         
+        // Don't run if there was an error
+        if(this._hasError) 
+            return;
+        
+        // Don't run unless it's time for the next frame
+        const currentDateTime = new Date();
+        const timeSinceLastFrame = currentDateTime.getTime() - this._lastTime.getTime();
+        if (
+            timeSinceLastFrame < (1000 / this._fpsLimit) || // Are we over the max FPS limit? OR
+            (this.assetsStillLoading > 0 && !this.levelHasBeenPrepared) // Is the current level still loading assets?
+        )
+        {
+            return;
+        }
+        
         try {
-            // Don't run if there's been an error
-            if(this._hasError) return;
-            
-            // Don't run unless it's time for next frame
-            let dt = new Date();
-            if((dt.getTime() - this._lastTime.getTime()) < (1000 / this._fpsLimit) || (!this.levelHasBeenPrepared && this.assetsStillLoading > 0))
-                return;
-            
             if(!this.levelHasBeenPrepared)
-            {
                 this._prepareCurrentLevelAndModels();
-            }
             
-            this._fps = this._getNewFps(dt);
-            
-            this._updateTotalTime(dt);
-            this._lastTime = dt;
+            this._fps = this._getNewFps(currentDateTime);
+            this._updateTotalTime(currentDateTime);
             
             if(this._status !== KernelStatus.Paused)
             {
@@ -468,9 +448,9 @@ export default class Kernel implements IKernel {
             }
             
             if(this._status === KernelStatus.PrePaused)
-            {
                 this._status = KernelStatus.Paused;
-            }
+            
+            this._lastTime = currentDateTime;
         } catch (err:any) {
             this.handleError(err);
         }
@@ -496,15 +476,112 @@ export default class Kernel implements IKernel {
         }
     }
     
+    
+    
+    
     /**
-     * Handles errors
-     * @param error the error to handle (this doesn't have to be an instance of Error)
+     * Sets up any event listeners to pause/unpause the game automatically (e.g. when the user switches tabs)
      */
-    handleError(error:any):void
+    private _setupAutoPause():void
     {
-        this._hasError = true;
-        this._errorHandler.handleError(error);
+        // If the player switches tabs/windows, pause the game
+        document.addEventListener("visibilitychange", () => {
+            if(document.visibilityState === "hidden" && this.status === KernelStatus.Active)
+                this.toggleGamePause();
+        });
+        
+        // Unfortunately, if the window is resized we need to unpause the game so that everything can be 
+        // redrawn with the new size settings.
+        window.addEventListener("resize", () => {
+            if(this.status === KernelStatus.Paused)
+                this.toggleGamePause();
+        });
     }
+    
+    /**
+     * Loads the given level, and adds it to the kernel's internal level queue
+     * @param level the level to load
+     */
+    private _loadLevel(level:ILevel):void
+    {
+		const aspectRatioHorizontal = this.settings.aspectRatioHorizontal;
+		const aspectRatioVertical = this.settings.aspectRatioVertical;
+		const camera = new Camera(aspectRatioHorizontal, aspectRatioVertical);
+		const frameManager = new FrameManager(camera);
+		
+        const engines = this._initialiseAllEngines(camera, frameManager); // New engines, setup for this level
+        
+        level.load(
+            frameManager, 
+            new EventManager(),
+            new PointerEventManager()
+        );
+        
+        const loadedModels = level.getModels();
+        this._loadModels(loadedModels);
+        
+        this._levelQueue.push({ 
+            level, 
+            hasBeenPrepared: false, 
+            loadedModels, 
+            engines 
+        });
+    }
+    
+    /**
+     * Loads the given models
+     * @param models the models to be loaded
+     * @param engines the engines used by the level that provided these models
+     */
+    private _loadModels(models:IModel[]):void
+	{
+        models.forEach((model, idx) => {
+            const animationsManager = new ModelAnimationsManager(model);
+            
+            model.loadedIndex = idx;
+            model.load(animationsManager);
+        });
+	}
+    
+    /**
+     * Triggers the preparation of the current level, and all of its models
+     */
+    private _prepareCurrentLevelAndModels():void
+    {
+        if(this.level)
+        {
+            this.level.prepare();
+            this.loadedModels.forEach(model => model.prepare());
+            this._initialiseControls();
+            
+            this._levelQueue[0].hasBeenPrepared = true;
+        }
+    }
+    
+	/**
+     * Returns new instances of all engines
+     * @param camera The level's camera
+     * @param frameManager Manages the frames of a level
+     * @returns The new instances of all engines
+     */
+	private _initialiseAllEngines(camera:ICamera, frameManager:IFrameManager):ILevelEngines
+	{
+		const gameEngine = new GameEngine();
+        const graphicEngine = new GraphicEngine(camera, frameManager);
+        
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        const soundEngine = new SoundEngine(new AudioContext());
+        
+        return { gameEngine, graphicEngine, soundEngine };
+	}
+    
+    /**
+     * Triggers the initialisation of the game's controls
+     */
+	private _initialiseControls():void
+	{
+		this._controlInitialiser.initialiseControls();
+	}
     
     /**
      * Calculates an estimate of the game's current FPS
@@ -513,11 +590,17 @@ export default class Kernel implements IKernel {
      */
     private _getNewFps(currentDateTime:Date):number
     {
-        //If the browser window/tab is not open, requestAnimationFrame can pause.
-        //However, this can cause unexpected behaviour because the frame rate will drop for one 
-        //frame when the player returns to the tab/window. 
-        //Therefore, we will store the highest frame rate achieved, and just return that if the 
-        //current rate is unexpectably low
+        /*
+            If the browser window/tab is not visible, the browser will stop calling the 
+            run method until it is visible again.
+            
+            However, this can cause unexpected behaviour because the frame rate will drop for a single  
+            frame when the player returns to the tab/window. 
+            
+            Therefore, we will store the highest frame rate achieved, and return that if the 
+            current rate is unexpectably low.
+        */
+       
         const currentFps = 1000 / (currentDateTime.getTime() - this._lastTime.getTime());
         
         if(currentFps > this._highestFpsReached)
@@ -527,16 +610,14 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Updates the kernel's internal count of the total time the current level has been active
+     * Updates the kernel's internal count of how long the current level has been active (in milliseconds)
      * @param currentDateTime The current date/time
      */
     private _updateTotalTime(currentDateTime:Date):void
     {
-        let timePassed = Math.floor(currentDateTime.getMilliseconds()) - Math.floor(this._lastTime.getMilliseconds());
+        const timePassed = Math.floor(currentDateTime.getMilliseconds()) - Math.floor(this._lastTime.getMilliseconds());
         
         if(this._status !== KernelStatus.Paused && timePassed >= 1)
-        {
             this._totalLevelActiveMilliseconds += timePassed;
-        }
     }
-}
+};
