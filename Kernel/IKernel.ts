@@ -114,12 +114,6 @@ export default interface IKernel {
      */
     readonly correctCanvasStyleToDevicePixelRatio:boolean;
     
-    
-    /**
-     * Loads the elements needed for the kernel, and the initial level
-     */
-    load():void;
-    
     /**
      * Unloads the current level, triggering the release of any assets that need releasing
      */

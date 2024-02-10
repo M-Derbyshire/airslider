@@ -63,7 +63,7 @@ export default class Kernel implements IKernel {
             return;
         
         try {
-            instance.load();
+            instance._load();
         } catch (err:any) {
             instance.handleError(err);
         }
@@ -305,28 +305,6 @@ export default class Kernel implements IKernel {
     
     
     
-    /**
-     * Loads the elements needed for the kernel, and the initial level
-     */
-    load():void
-    {
-        this._setupAutoPause();
-        
-        this._helpers = {
-            zCalc: new ZCalc(),
-            time: new TimeHelper(),
-            unit: new UnitHelper(this.unitsWithinCamera)
-        };
-        
-        // Load the fonts from the "fonts" object
-        Object.keys(fonts).forEach((key:string) => {
-            const fontPath = fonts[key as keyof typeof fonts];
-            this.loadFont(key, fontPath);
-        });
-        
-        const InitialLevelClass = this.settings.InitialLevelClass;
-        this._loadLevel(new InitialLevelClass());
-    }
     
     /**
      * Unloads the current level, triggering the release of any assets that need releasing
@@ -470,6 +448,29 @@ export default class Kernel implements IKernel {
     
     
     
+    
+    /**
+     * Loads the elements needed for the kernel, and the initial level
+     */
+    private _load():void
+    {
+        this._setupAutoPause();
+        
+        this._helpers = {
+            zCalc: new ZCalc(),
+            time: new TimeHelper(),
+            unit: new UnitHelper(this.unitsWithinCamera)
+        };
+        
+        // Load the fonts from the "fonts" object
+        Object.keys(fonts).forEach((key:string) => {
+            const fontPath = fonts[key as keyof typeof fonts];
+            this.loadFont(key, fontPath);
+        });
+        
+        const InitialLevelClass = this.settings.InitialLevelClass;
+        this._loadLevel(new InitialLevelClass());
+    }
     
     /**
      * Sets up any event listeners to pause/unpause the game automatically (e.g. when the user switches tabs)
