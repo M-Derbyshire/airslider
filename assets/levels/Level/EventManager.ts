@@ -52,6 +52,14 @@ export default class EventManager implements IEventManager
     }
     
     /**
+     * Removes all the registered event checks
+     */
+    clearEvents():void
+    {
+        this._events = [];
+    }
+    
+    /**
      * Runs the event checks, along with any extra events associated with the level's models
      */
     checkForEvents():void

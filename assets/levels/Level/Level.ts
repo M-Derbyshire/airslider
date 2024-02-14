@@ -86,6 +86,7 @@ export default class Level implements ILevel
     {
         this.HUD.prepare();
         
+        this.eventManager.clearEvents();
         this.registerLevelEvents();
         this.kernel.loadedModels.forEach(model => this.pointerEventManager.addPointerEventSubject(model));
     }

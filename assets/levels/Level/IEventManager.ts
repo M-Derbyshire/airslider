@@ -19,6 +19,11 @@ export default interface IEventManager {
     registerEventsArray(events:IEventDetails[]):void;
     
     /**
+     * Removes all the registered event checks
+     */
+    clearEvents():void;
+    
+    /**
      * Runs the event checks, along with any extra events associated with the level's models
      */
     checkForEvents():void;    
