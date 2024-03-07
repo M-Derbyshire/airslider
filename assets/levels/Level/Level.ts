@@ -111,7 +111,10 @@ export default class Level implements ILevel
     /**
      * Runs the level's actions. This is ran on every frame.
      */
-    act():void {}
+    act():void
+    {
+        this.pointerEventManager.checkForHoverEvents();
+    }
     
     /**
      * Draws anything that needs to be in the back (behind the models) of the level
