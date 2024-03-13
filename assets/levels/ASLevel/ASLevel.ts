@@ -64,6 +64,10 @@ export default class ASLevel extends Level
     levelSpeed:number; // The level speed (after being calculated by the zCalc)
     protected levelSpeedAccl:number; // How quickly does the speed accelerate at the start?
     
+    // Music management
+    protected music:HTMLAudioElement; // The chosen music for the level
+    private _musicFilePaths:string[]; // File paths to the music that a level could choose to load
+    
     // Level section management 
     private _activeSections: string[]; // The IDs of the level sections that are currently active
     private _openingSectionId = "opening"; // The ID of the level's opening section
@@ -92,6 +96,9 @@ export default class ASLevel extends Level
         this.tunnelManager = new LevelTunnel();
         
         this._signStartingZPosition = 50;
+        
+        const musicDir = "/assets/levels/ASLevel/music";
+        this._musicFilePaths = [];
 	}
     
     /**
@@ -142,6 +149,10 @@ export default class ASLevel extends Level
             50,
             312
         );
+        
+        const chosenMusicFilePath = this._chooseMusicPath();
+        if(!!chosenMusicFilePath)
+            this.music = this.kernel.loadAudio(chosenMusicFilePath);
 	}
     
     /**
@@ -477,5 +488,37 @@ export default class ASLevel extends Level
         // Once the player has vanished into the distance, finish the level
         if(this.player.z > this.helpers.zCalc.vanishingPointDepth)
             this.levelStop();
+    }
+    
+    /**
+     * Chooses the music filepath from the array of music filepaths, and returns it.
+     * This will set the music filepath in the Kernel's centralState map, so it 
+     * can ensure that the next level doesn't select the same music (if 
+     * multiple paths are available).
+     * If no filepaths are availble, this will return null.
+     */
+    private _chooseMusicPath():string|null
+    {
+        if(!this._musicFilePaths.length)
+            return null;
+        
+        if(this._musicFilePaths.length === 1)
+            return this._musicFilePaths[0];
+        
+        // We want to filter out the filepath used by the previous level
+        const selectableFilePaths = this._musicFilePaths.filter(
+            filepath => filepath !== this.kernel.centralState.get(CentralStateKey.LastMusicSelectedPath)
+        );
+        
+        // Now choose a random path
+        const lastIndex = selectableFilePaths.length - 1;
+        const indexToSelect = Math.round(
+            Math.random() * lastIndex
+        );
+        
+        const chosenPath = selectableFilePaths[indexToSelect];
+        
+        this.kernel.centralState.set(CentralStateKey.LastMusicSelectedPath, chosenPath);
+        return chosenPath;
     }
 }
