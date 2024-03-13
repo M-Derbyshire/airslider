@@ -1,14 +1,14 @@
 import Level from '../Level/Level';
 import MainHUD from '../../HUDs/MainHUD/MainHUD';
 import LevelRoad from './LevelRoad';
-import ShockerManager from './ShockerManager';
+import ObstacleManager from './ObstacleManager';
 import ModelXPositionPatternManager from './ModelXPositionPatternManager';
 import LevelGround from './LevelGround';
 import LevelTunnel from './LevelTunnel';
 import Sign from '../../models/Sign/Sign';
 import SignDisplay from '../../models/SignDisplay/SignDisplay';
 import Tarian from '../../models/Tarian/Tarian';
-import Shocker from '../..//models/Shocker/Shocker';
+import Shocker from '../../models/Obstacles/Shocker/Shocker';
 import NeonPidgeon from '../../models/Monsters/NeonPidgeon/NeonPidgeon';
 import LavaBall from '../../models/Monsters/attacks/LavaBall/LavaBall';
 import Lightning from '../../models/Monsters/attacks/Lightning/Lightning';
@@ -49,8 +49,8 @@ export default class ASLevel extends Level
     protected tunnelSprite: HTMLImageElement;
     protected tunnelSpriteLength: number;
     
-    // Shocker management
-    protected shockerManager: ShockerManager;
+    // Obstacle management
+    protected obstacleManager: ObstacleManager;
     protected patternManager: ModelXPositionPatternManager;
     
     // Models we want to keep references to
@@ -90,7 +90,7 @@ export default class ASLevel extends Level
 		this.roadManager = new LevelRoad();
         this.roadColor = "#999999";
         
-        this.shockerManager = new ShockerManager();
+        this.obstacleManager = new ObstacleManager();
 		this.patternManager = new ModelXPositionPatternManager();
         
         this.tunnelManager = new LevelTunnel();
@@ -177,7 +177,7 @@ export default class ASLevel extends Level
         
         this._finishFlagsActive = false;
         
-        this._setupShockerManager(this.leftEdge, this.rightEdge);
+        this._setupObstacleManager(this.leftEdge, this.rightEdge);
 		this._setupPatternManager();
         
         this.outsideVisible = false;
@@ -372,13 +372,13 @@ export default class ASLevel extends Level
 	}
 	
     /**
-     * Sets up the shocker manager
+     * Sets up the obstacle manager
      * @param leftEdge the left edge (in units) of the level
      * @param rightEdge the right edge (in units) of the level
      */
-	private _setupShockerManager(leftEdge:number, rightEdge:number):void
+	private _setupObstacleManager(leftEdge:number, rightEdge:number):void
 	{
-		this.shockerManager.setAreaEdges(leftEdge, rightEdge);
+		this.obstacleManager.setAreaEdges(leftEdge, rightEdge);
 	}
     
     /**

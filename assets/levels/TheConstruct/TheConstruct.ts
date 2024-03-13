@@ -4,7 +4,7 @@ import Falcon from '../../models/Monsters/Falcon/Falcon';
 import BabyDragon from '../../models/Monsters/BabyDragon/BabyDragon';
 import LavaBall from '../../models/Monsters/attacks/LavaBall/LavaBall';
 import Ghost from '../../models/Monsters/Ghost/Ghost';
-import Shocker from '../../models/Shocker/Shocker';
+import Shocker from '../../models/Obstacles/Shocker/Shocker';
 import ElectricSeahorse from '../../models/Monsters/ElectricSeahorse/ElectricSeahorse';
 import Lightning from '../../models/Monsters/attacks/Lightning/Lightning';
 import Frame from '../../../engines/GraphicEngine/Frame';
@@ -53,17 +53,17 @@ export default class TheConstruct extends ASLevel
             // models[models.length - 2] as Monster
         ];
 
-        this.shockerManager.setPlayerModel(this.player);
-        this.shockerManager.setShockerModelRange(models.length, models.length + 100);
-        this.shockerManager.setCurrentShockerCount(5);
+        this.obstacleManager.setPlayerModel(this.player);
+        this.obstacleManager.setObstacleModelRange(models.length, models.length + 100);
+        this.obstacleManager.setCurrentObstacleCount(5);
         
-        let shockerRange = this.shockerManager.shockerModelRange;
-        for(let i = shockerRange.from; i <= shockerRange.to; i++)
+        let obstacleRange = this.obstacleManager.obstacleModelRange;
+        for(let i = obstacleRange.from; i <= obstacleRange.to; i++)
         {
 			models.push(new Shocker("yellow", "static"));
         }
 		
-		this.patternManager.setPatternDefaults(shockerRange.from, shockerRange.to);
+		this.patternManager.setPatternDefaults(obstacleRange.from, obstacleRange.to);
         
         return models;
     }
@@ -143,11 +143,11 @@ export default class TheConstruct extends ASLevel
         
         // Send some shockers
         // this.levelSection(
-        //     "shockers",
+        //     "obstacles",
         //     15000,
         //     25000,
         //     null,
-        //     () => this.shockerManager.sendShockers(),
+        //     () => this.obstacleManager.sendObstacle(),
         //     null
         // );
 		
@@ -164,7 +164,7 @@ export default class TheConstruct extends ASLevel
 		
 		//Set a pattern of shockers going
         // this.levelSection(
-        //     "shockerPattern",
+        //     "obstaclePattern",
         //     15000,
         //     25000,
         //     () => {
