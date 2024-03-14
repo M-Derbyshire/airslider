@@ -13,11 +13,6 @@ import { KernelStatus } from "./KernelStatus";
  */
 export default interface IKernel {
     /**
-     * A map to store any state that needs to be accessible to all levels.
-     */
-    centralState:Map<string, any>;
-    
-    /**
      * If we want to display the FPS counter, this is the color the text should be.
      * The FPS counter is only drawn if this value is truthy.
      */
@@ -28,6 +23,11 @@ export default interface IKernel {
      * This is the amount for both the X and Y axis.
      */
     unitsWithinCamera:number;
+    
+    /**
+     * A map to store any state that needs to be accessible to all levels.
+     */
+    readonly centralState:Map<string, any>;
     
     /**
      * The current status of the game (e.g. is it playing, or in another state)

@@ -91,16 +91,13 @@ export default class Kernel implements IKernel {
     private _hasError:boolean; // Has an error been caught and passed to the error handler?
     private _errorHandler:IErrorHandler; // Manages error-handling for the game
     
+    private _centralState:Map<string, any>; // A map to store any state that needs to be accessible to all levels.
+    
     private _rootPath:string; // The root directory/path, added to the beginning of all file paths when loading assets
     private _assetHandler:IAssetHandler; // Loads and manages assets
     
     private _helpers:IHelpers; // Provides a number of "helper" objects, that each calculate and/or provide useful values
     private _controlInitialiser:IControlsInitialiser; // Handles the initialising of the game's controls
-    
-    /**
-     * A map to store any state that needs to be accessible to all levels.
-     */
-    centralState:Map<string, any>;
     
     /**
      * If we want to display the FPS counter, this is the color the text should be.
@@ -151,16 +148,23 @@ export default class Kernel implements IKernel {
         this._status = KernelStatus.Active;
         this._hasError = false;
         this._errorHandler = new ErrorHandler();
+        this._centralState = new Map<string, any>();
         
         const ControlsInitialiserClass = this._settings.ControlsInitialiserClass;
         this._controlInitialiser = new ControlsInitialiserClass();
         
-        this.centralState = new Map<string, any>();
         this.fpsDisplayColor = this._settings.fpsDisplayColor;
         this.unitsWithinCamera = this._settings.unitsWithinCamera;
     }
     
     
+    /**
+     * A map to store any state that needs to be accessible to all levels.
+     */
+    get centralState()
+    {
+        return this._centralState;
+    }
     
     /**
      * The current status of the game (e.g. is it playing, or in another state)
