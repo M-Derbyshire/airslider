@@ -37,7 +37,6 @@ export default class PointerEventManager implements IPointerEventManager {
 		this._canvasPointerY = 0;
 		
 		this._clickEventCallback = (e:MouseEvent) => {
-			e.preventDefault();
 			this._moveEventCallback(e); // Make sure the pointer x/y are set
 			this._onPointerEventCallback("onClick");
 		};
