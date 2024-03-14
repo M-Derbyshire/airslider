@@ -2,7 +2,6 @@
   "name": "airshock",
   "version": "1.0.0",
   "description": "A game by Matthew Stuart Derbyshire",
-  "main": "index.html",
   "devDependencies": {
     "@babel/register": "^7.21.0",
     "dotenv-webpack": "^8.0.1",
@@ -13,9 +12,7 @@
     "webpack-dev-server": "^4.15.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build:debug": ".\\node_modules\\.bin\\webpack --env development --mode development",
-    "serve:debug": "npx webpack serve --env development --mode=development"
+    "serve:dev": "npx webpack serve --env development --mode=development"
   },
   "repository": {
     "type": "git",
