@@ -40,7 +40,7 @@ export default class LavaBall extends ASModel {
                 drawWidth: ballWidth,
                 drawHeight: ballHeight,
 				frameCoordinates: [
-					{ x: 0, y: 0, width: 59, height: 59 }
+					{ x: 0, y: 0, width: 65, height: 59 }
 				]
             }),
             break: this.animationManager.createAnimation({
@@ -50,10 +50,10 @@ export default class LavaBall extends ASModel {
                 drawHeight: ballHeight,
                 nextAnimation: "none",
 				frameCoordinates: [
-					{ x: 0, y: 0, width: 59, height: 59 },
-					{ x: 0, y: 60, width: 59, height: 59 },
-					{ x: 0, y: 120, width: 59, height: 59 },
-					{ x: 0, y: 180, width: 59, height: 59 },
+					{ x: 0, y: 0, width: 65, height: 59 },
+					{ x: 0, y: 60, width: 65, height: 59 },
+					{ x: 0, y: 120, width: 65, height: 59 },
+					{ x: 0, y: 180, width: 65, height: 59 },
 				]
             }),
             none: this.animationManager.createAnimation({
