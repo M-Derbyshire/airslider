@@ -179,12 +179,14 @@ export default class HealthDisplay extends ASHUDComponent
      */
     private _drawBorder()
     {
-        const paddingUnits = 5; // Used to push the border out a bit
+        // Used to push the border in/out a bit
+        const paddingUnitsX = 5;
+        const paddingUnitsY = 10;
         
-        const xPos = this.x - paddingUnits;
-        const yPos = this.y - paddingUnits;
-        const unitWidth = this.width + (paddingUnits * 2);
-        const unitHeight = this.height + (paddingUnits * 2);
+        const xPos = this.x - paddingUnitsX;
+        const yPos = this.y - paddingUnitsY;
+        const unitWidth = this.width + (paddingUnitsX * 2);
+        const unitHeight = this.height + (paddingUnitsY * 2);
         
         const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
             x: xPos, 
