@@ -1,7 +1,11 @@
 import Model from '../Model/Model';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 
-export default class ASModel extends Model {
+/**
+ * The game's base Model class
+ */
+export default class ASModel extends Model 
+{
 	
     protected levelLeftEdge:number; // The left edge of the level
     protected levelRightEdge:number; // The right edge of the level

@@ -9,7 +9,8 @@ import IHitBox from './IHitBox';
 /**
  * An object in the game (such as a character, monster, power-up, etc)
  */
-export default class Model implements IModel {
+export default class Model implements IModel 
+{
     protected kernel: IKernel;
     protected helpers: IHelpers;
     protected animationManager: IModelAnimationsManager;

@@ -1,0 +1,61 @@
+{
+    "templateDirectoryPath": "/scaff_templates",
+    "commands": [
+        {
+            "name": "baseHUD",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "/base/hud.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "baseHUDComponent",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "/base/hudComponent.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "baseLevel",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "/base/level.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "baseModel",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "/base/model.ts"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
