@@ -5,7 +5,7 @@ import IControlsInitialiser from './IControlsInitialiser';
 
 /**
  * Handles the initialising of the game's controls. 
- * Children of this class should contain methods that add event listeners to this.registeredEventListeners
+ * Children of this class should contain methods that add event listeners to the this.registeredEventListeners array
  */
 export default class ControlsInitialiser implements IControlsInitialiser
 {
@@ -14,12 +14,12 @@ export default class ControlsInitialiser implements IControlsInitialiser
 	/**
 	 * Any event-listener functions should be added to this, so they can be registered/unregistered
 	 */
-	registeredEventListeners:IRegisteredEventListener[];
+	protected registeredEventListeners:IRegisteredEventListener[];
 	
 	/**
 	 * An array of functions that add the required event listeners to this.registeredEventListeners
 	 */
-	initialisingFunctions:{():void;}[];
+	protected initialisingFunctions:{():void;}[];
 	
     constructor()
     {
