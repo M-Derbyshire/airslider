@@ -56,6 +56,62 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "HUD",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "/hud.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "HUDComponent",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "/hudComponent.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "level",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "/level.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "model",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "/model.ts"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

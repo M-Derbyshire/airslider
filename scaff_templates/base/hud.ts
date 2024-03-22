@@ -2,7 +2,7 @@ import HUD from "../HUD/HUD";
 import IPointerEventManager from '../../levels/Level/IPointerEventManager';
 
 /**
- * A base class for a Heads up display
+ * A base class for a Heads Up Display
  */
 export default class {: name :} extends HUD
 {
