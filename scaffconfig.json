@@ -112,6 +112,15 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "controlsInitialiser",
+            "files": [
+                {
+                    "name": "{: name :}.ts",
+                    "templatePath": "/controlsInitialiser.ts"
+                }
+            ]
         }
     ]
 }

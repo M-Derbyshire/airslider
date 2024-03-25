@@ -13,6 +13,7 @@
   },
   "scripts": {
     "serve:dev": "npx webpack serve --env development --mode=development",
+    "make:controlsInitialiser": "cd ./settings/ControlsInitialiser && scaff controlsInitialiser",
     "make:hud": "cd ./assets/HUDs && scaff HUD",
     "make:hudComponent": "cd ./assets/HUDs/components && scaff HUDComponent",
     "make:level": "cd ./assets/levels && scaff level",
