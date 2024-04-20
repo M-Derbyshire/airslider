@@ -1,4 +1,4 @@
 export default {
-    Mechanical: "/assets/fonts/Mechanical/Mechanical-g5Y5.otf",
+    CourierPrime: "/assets/fonts/CourierPrime/CourierPrime-Regular.ttf",
     Jost: "/assets/fonts/Jost/Jost-VariableFont_wght.ttf"
 };
