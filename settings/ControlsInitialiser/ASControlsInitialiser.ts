@@ -23,6 +23,8 @@ export default class ASControlsInitialiser extends ControlsInitialiser
     keyboardControls():void
     {
         const keyDownListener = (e:KeyboardEvent) => {
+            if(!this.kernel.loadedModels.length) return;
+            
             const playerModelIndex = this.kernel.centralState.get(CentralStateKey.PlayerModelIndex);
             const playerModel = this.kernel.loadedModels[playerModelIndex] as ASModel;
             
@@ -42,6 +44,8 @@ export default class ASControlsInitialiser extends ControlsInitialiser
         };
         
         const keyUpListener = (e:KeyboardEvent) => {
+            if(!this.kernel.loadedModels.length) return;
+            
             const playerModelIndex = this.kernel.centralState.get(CentralStateKey.PlayerModelIndex);
             const playerModel = this.kernel.loadedModels[playerModelIndex] as ASModel;
             

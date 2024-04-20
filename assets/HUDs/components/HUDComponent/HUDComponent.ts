@@ -67,6 +67,8 @@ export default class HUDComponent implements IHUDComponent
             font: "Arial",
             color: "red",
             style: "bolder", // See the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
+            alignment: "left",
+            lineGap: 0
         };
         
         this.active = true;
@@ -90,19 +92,15 @@ export default class HUDComponent implements IHUDComponent
      */
     drawText():void
     {
-        const { x, y } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({ 
-            x: this.text.x, 
-            y: this.text.y, 
-            width: 0, 
-            height: 0 
-        });
-        
-        const drawSize = this.helpers.unit.yUnit(this.text.size);
-        
-        this.ctx.font = `${this.text.style} ${drawSize}px ${this.text.font}`;
-        this.ctx.fillStyle = this.text.color;
-        
-        this.ctx.fillText(this.text.content, x, y);
+        this.kernel.graphicEngine.drawText(
+            this.text,
+            {
+                x: this.x,
+                y: this.y,
+                z: 0
+            },
+            "static"
+        );
     }
     
     /**

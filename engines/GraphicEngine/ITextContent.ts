@@ -18,7 +18,7 @@ export default interface ITextContent {
     y:number;
     
     /**
-     * The font size for the text
+     * Determines the font size for the text
      */
     size:number;
     
@@ -37,4 +37,14 @@ export default interface ITextContent {
      * (CanvasRenderingContext2D.font).
      */
     style:string;
+    
+    /**
+     * Used as the HTML5 Canvas's "textAlign" property
+     */
+    alignment:CanvasTextAlign;
+    
+    /**
+     * Determines the size of the gap between each line of text
+     */
+    lineGap:number;
 };

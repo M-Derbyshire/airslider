@@ -450,6 +450,36 @@ export default class Kernel implements IKernel {
         }
     }
     
+    /**
+     * Loads the given level, and adds it to the kernel's internal level queue
+     * @param level the level to load
+     */
+    loadLevel(level:ILevel):void
+    {
+		const aspectRatioHorizontal = this.settings.aspectRatioHorizontal;
+		const aspectRatioVertical = this.settings.aspectRatioVertical;
+		const camera = new Camera(aspectRatioHorizontal, aspectRatioVertical);
+		const frameManager = new FrameManager(camera);
+		
+        const engines = this._initialiseAllEngines(camera, frameManager); // New engines, setup for this level
+        
+        level.load(
+            frameManager, 
+            new EventManager(),
+            new PointerEventManager()
+        );
+        
+        const loadedModels = level.getModels();
+        this._loadModels(loadedModels);
+        
+        this._levelQueue.push({ 
+            level, 
+            hasBeenPrepared: false, 
+            loadedModels, 
+            engines 
+        });
+    }
+    
     
     
     
@@ -473,7 +503,7 @@ export default class Kernel implements IKernel {
         });
         
         const InitialLevelClass = this.settings.InitialLevelClass;
-        this._loadLevel(new InitialLevelClass());
+        this.loadLevel(new InitialLevelClass());
     }
     
     /**
@@ -492,36 +522,6 @@ export default class Kernel implements IKernel {
         window.addEventListener("resize", () => {
             if(this.status === KernelStatus.Paused)
                 this.toggleGamePause();
-        });
-    }
-    
-    /**
-     * Loads the given level, and adds it to the kernel's internal level queue
-     * @param level the level to load
-     */
-    private _loadLevel(level:ILevel):void
-    {
-		const aspectRatioHorizontal = this.settings.aspectRatioHorizontal;
-		const aspectRatioVertical = this.settings.aspectRatioVertical;
-		const camera = new Camera(aspectRatioHorizontal, aspectRatioVertical);
-		const frameManager = new FrameManager(camera);
-		
-        const engines = this._initialiseAllEngines(camera, frameManager); // New engines, setup for this level
-        
-        level.load(
-            frameManager, 
-            new EventManager(),
-            new PointerEventManager()
-        );
-        
-        const loadedModels = level.getModels();
-        this._loadModels(loadedModels);
-        
-        this._levelQueue.push({ 
-            level, 
-            hasBeenPrepared: false, 
-            loadedModels, 
-            engines 
         });
     }
     
@@ -567,7 +567,7 @@ export default class Kernel implements IKernel {
         const graphicEngine = new GraphicEngine(camera, frameManager);
         
         const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-        const soundEngine = new SoundEngine(new AudioContext());
+        const soundEngine = new SoundEngine(AudioContext);
         
         return { gameEngine, graphicEngine, soundEngine };
 	}

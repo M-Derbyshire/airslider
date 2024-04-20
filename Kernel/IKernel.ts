@@ -115,6 +115,12 @@ export default interface IKernel {
     readonly correctCanvasStyleToDevicePixelRatio:boolean;
     
     /**
+     * Loads the given level, and adds it to the kernel's internal level queue
+     * @param level the level to load
+     */
+    loadLevel(level:ILevel):void;
+    
+    /**
      * Unloads the current level, triggering the release of any assets that need releasing
      */
     unloadCurrentLevel():void;

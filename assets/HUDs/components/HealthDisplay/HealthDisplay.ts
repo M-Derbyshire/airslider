@@ -61,12 +61,14 @@ export default class HealthDisplay extends ASHUDComponent
         // Setup the text positions/dimensions
         this.text = {
             content: "",
-            x: this.x + (this.width * 0.4),
-            y: this.y + (this.height * 0.6),
+            x: this.width * 0.4,
+            y: this.height * 0.6,
             size: 65,
             font: "Jost",
             color: "#00FFFA",
-            style: ""
+            style: "",
+            alignment: "left",
+            lineGap: 0
         }
     }
     

@@ -1,6 +1,7 @@
 import ICamera from "./ICamera";
 import IDrawDimensions from "./IDrawDimensions";
 import IDrawPositions from "./IDrawPositions";
+import ITextContent from "./ITextContent";
 
 /**
  * The engine that controls the drawing to the screen
@@ -15,6 +16,20 @@ export default interface IGraphicEngine {
      * Triggers the clearing and re-drawing of the screen
      */
     run():void;
+    
+    /**
+     * Draws text onto the canvas
+     * @param text the text content, and the details required to draw it
+     * @param entityUnitValues the x/y/z values (in units) of the entity that owns the text
+     * @param scaleType determines which method is used to scale the position/size of the text
+     * @param showNegative if scaling the text, should it still be drawn when the z-index is negative?
+     */
+    drawText(
+        textContent:ITextContent, 
+        entityUnitValues:IDrawPositions & { z:number }, 
+        scaleType:"static"|"scaled", 
+        showNegative?:boolean
+    ):void;
     
     /**
      * Calculates the draw positons/dimensions in pixels for a static entity (such as a HUD Component)

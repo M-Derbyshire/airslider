@@ -15,24 +15,24 @@ export default class SoundEngine implements ISoundEngine {
     // The sounds we're currently playing (not including music, or sounds that are force-loading)
     private _currentSounds:Map<string, HTMLAudioElement>;
     
+    private _audioContextClass:new()=>AudioContext; // The class to use for the audio context
     private _audioContext:AudioContext; // Manages the audio processing
     private _trackMap:Map<string, MediaElementAudioSourceNode>; // A map of tracks from the AudioContext
     
     /**
      * Constructor
-     * @param audioContext Manages the audio processing
+     * @param audioContextClass The class to use to instantiate an AudioContext (Which manages the audio processing). We 
+     * don't want to create an AudioContext before the user has interacted with the tab, as the browser will not allow 
+     * it to trigger any sound. This will be used to instantiate the AudioContext at a later time.
      */
-    constructor(audioContext:AudioContext)
+    constructor(audioContextClass:new()=>AudioContext)
     {
         this._kernel = Kernel.getInstance();
         
         this._currentSounds = new Map<string, HTMLAudioElement>();
         this._trackMap = new Map<string, MediaElementAudioSourceNode>();
         
-        this._audioContext = audioContext;
-        
-        if (this._audioContext.state === "suspended") 
-            this._audioContext.resume();
+        this._audioContextClass = audioContextClass;
     }
     
     /**
@@ -190,9 +190,23 @@ export default class SoundEngine implements ISoundEngine {
     {
         if(!this._trackMap.has(audio.src))
         {
+            if(!this._audioContext)
+                this._instantiateAudioContext();
+            
             const track = this._audioContext.createMediaElementSource(audio);
             track.connect(this._audioContext.destination);
             this._trackMap.set(audio.src, track);
         }
+    }
+    
+    /**
+     * This instantiates and stores a new AudioContext object
+     */
+    private _instantiateAudioContext()
+    {
+        this._audioContext = new this._audioContextClass();
+        
+        if (this._audioContext.state === "suspended") 
+            this._audioContext.resume();
     }
 }

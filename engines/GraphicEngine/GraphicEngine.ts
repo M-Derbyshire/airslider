@@ -6,6 +6,7 @@ import IFrameManager from './IFrameManager';
 import IHelpers from '../../Kernel/helpers/IHelpers';
 import IDrawPositions from './IDrawPositions';
 import IDrawDimensions from './IDrawDimensions';
+import ITextContent from './ITextContent';
 
 /**
  * The engine that controls the drawing to the screen
@@ -84,66 +85,134 @@ export default class GraphicEngine implements IGraphicEngine {
     }
     
     /**
-     * Calculates the draw positons/dimensions in pixels for a static entity (such as a HUD Component)
+     * Draws text onto the canvas
+     * @param text the text content, and the details required to draw it
+     * @param entityUnitValues the x/y/z values (in units) of the entity that owns the text
+     * @param scaleType determines which method is used to scale the position/size of the text
+     * @param showNegative if scaling the text, should it still be drawn when the z-index is negative?
+     */
+    drawText(
+        textContent:ITextContent, 
+        entityUnitValues:IDrawPositions & { z:number }, 
+        scaleType:"static"|"scaled", 
+        showNegative?:boolean
+    ):void
+    {
+        // Scale the position/dimension values
+        let x:number;
+        let y:number; 
+        let height:number;
+        let lineGap:number;
+        const unscaledValues = {
+            x: entityUnitValues.x + textContent.x,
+            y: entityUnitValues.y + textContent.y,
+            z: entityUnitValues.z,
+            height: textContent.size
+        };
+        
+        if(scaleType == "static")
+        {
+            ({ x, y, height } = this.getStaticDrawPositionsAndDimensions(unscaledValues));
+            lineGap = this.getStaticDrawPositionsAndDimensions({ height: textContent.lineGap }).height;
+        }
+        else
+        {
+            ({ x, y, height } = this.getScaledDrawPositionsAndDimensions(unscaledValues, !!showNegative));
+            lineGap = this.getScaledDrawPositionsAndDimensions({ 
+                height: textContent.lineGap,
+                z: unscaledValues.z
+            }, !!showNegative).height;
+        }
+        
+        // Setup style and alignment properties
+        this._gameCtx.font = `${textContent.style} ${height}px ${textContent.font}`;
+        this._gameCtx.fillStyle = textContent.color;
+        this._gameCtx.textAlign = textContent.alignment;
+        
+        // Split the text into the individual lines
+        const lines = textContent.content.split("\n");
+        
+        // Draw the lines of text
+        lines.forEach(line => {
+            this._gameCtx.fillText(line, x, y);
+            y += (height + lineGap);
+        });
+    }
+    
+    /**
+     * Calculates the draw positons/dimensions in pixels for a static entity (such as a HUD Component).
+     * If any values aren't provided, 0 will be returned as the result.
      * @param unitValues The position/dimension values (in units)
      * @returns The pixel values for the x/y/width/height
      */
-    getStaticDrawPositionsAndDimensions(unitValues:IDrawPositions&IDrawDimensions):IDrawPositions&IDrawDimensions
+    getStaticDrawPositionsAndDimensions(unitValues:Partial<IDrawPositions&IDrawDimensions>):IDrawPositions&IDrawDimensions
     {
         const { x, y, width, height } = unitValues;
         
         const cameraX = this.camera.canvasPositionX;
         const cameraY = this.camera.canvasPositionY;
         
-        return {
-            x: cameraX + this._helpers.unit.xUnit(x),
-            y: cameraY + this._helpers.unit.yUnit(y),
-            width: this._helpers.unit.xUnit(width),
-            height: this._helpers.unit.yUnit(height)
-        };
+        const pixelValues = { x: 0, y: 0, width: 0, height: 0 };
+        
+        if(this._isSetNumber(x)) pixelValues.x = cameraX + this._helpers.unit.xUnit(x);
+        if(this._isSetNumber(y)) pixelValues.y = cameraY + this._helpers.unit.yUnit(y);
+        if(this._isSetNumber(width)) pixelValues.width = this._helpers.unit.xUnit(width);
+        if(this._isSetNumber(height)) pixelValues.height = this._helpers.unit.yUnit(height)
+        
+        return pixelValues;
     }
     
     /**
-     * Calculates the draw positons/dimensions in pixels for an entity that isn't z-scaled
+     * Calculates the draw positons/dimensions in pixels for an entity that isn't z-scaled.
+     * If any values aren't provided, 0 will be returned as the result.
      * @param unitValues The position/dimension values (in units)
      * @returns The pixel values for the x/y/width/height
      */
-    getUnscaledDrawPositionsAndDimensions(unitValues:IDrawPositions&IDrawDimensions):IDrawPositions&IDrawDimensions
+    getUnscaledDrawPositionsAndDimensions(unitValues:Partial<IDrawPositions&IDrawDimensions>):IDrawPositions&IDrawDimensions
     {
         const { x, y, width, height } = unitValues;
         
-        const cameraOffsettedXUnits = this.camera.unitCameraPositionCalc.x(x);
-        const cameraOffsettedYUnits = this.camera.unitCameraPositionCalc.y(y);
-        
         return this.getStaticDrawPositionsAndDimensions({
-            x: cameraOffsettedXUnits,
-            y: cameraOffsettedYUnits,
+            x: (this._isSetNumber(x)) ? this.camera.unitCameraPositionCalc.x(x) : undefined,
+            y: (this._isSetNumber(y)) ? this.camera.unitCameraPositionCalc.y(y) : undefined,
             width,
             height
         });
     }
     
     /**
-     * Calculates the draw positons/dimensions in pixels for an entity that is scaled on the z-axis
+     * Calculates the draw positons/dimensions in pixels for an entity that is scaled on the z-axis.
+     * If any values aren't provided, 0 will be returned as the result.
      * @param unitValues The position/dimension values (in units), plus the z position
      * @param showNegative Should the element still be drawn if the z position is negative?
      * @returns The pixel values for the scaled x/y/width/height
      */
     getScaledDrawPositionsAndDimensions(
-        unitValues:IDrawPositions&IDrawDimensions&{ z:number }, 
+        unitValues:Partial<IDrawPositions&IDrawDimensions>&{ z:number }, 
         showNegative = false
     ):IDrawPositions&IDrawDimensions
     {
         const zCalc = this._kernel.helpers.zCalc;
         
-        const unscaled = this.getUnscaledDrawPositionsAndDimensions(unitValues);
+        const unscaledValues = this.getUnscaledDrawPositionsAndDimensions(unitValues);
+        const scaledValues = { x: 0, y: 0, width: 0, height: 0 };
         
-        return {
-            x: zCalc.x(unscaled.x, unitValues.z, showNegative),
-            y: zCalc.y(unscaled.y, unitValues.z, showNegative),
-            width: zCalc.width(unscaled.width, unitValues.z, showNegative),
-            height: zCalc.height(unscaled.height, unitValues.z, showNegative)
-        };
+        if(this._isSetNumber(unitValues.x)) scaledValues.x = zCalc.x(unscaledValues.x, unitValues.z, showNegative);
+        if(this._isSetNumber(unitValues.y)) scaledValues.y = zCalc.y(unscaledValues.y, unitValues.z, showNegative);
+        if(this._isSetNumber(unitValues.width)) scaledValues.width = zCalc.width(unscaledValues.width, unitValues.z, showNegative);
+        if(this._isSetNumber(unitValues.height)) scaledValues.height = zCalc.height(unscaledValues.height, unitValues.z, showNegative);
+        
+        return scaledValues;
+    }
+    
+    /**
+     * Determines if an optional number variable has been set
+     * @param val either a number, or an unset value (e.g. null, undefined)
+     * @returns true if the value is a valid number, false if it's an "unset" value
+     */
+    private _isSetNumber(val?:number):boolean
+    {
+        return (typeof val === "number");
     }
     
     /**

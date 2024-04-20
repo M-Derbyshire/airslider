@@ -120,7 +120,7 @@ export default class AssetHandler implements IAssetHandler
         
         heldAsset.usageCount--;
         
-        if(heldAsset.usageCount === 0)
+        if(heldAsset.usageCount <= 0)
             this._loadedAssets.delete(preparedPath);
     }
     

@@ -115,22 +115,11 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     drawText():void
     {
-        const text = this._model.text;
-            
-        const originalPositions = {
-            x: this._model.x + text.x,
-            y: this._model.y + text.y,
-            z: this._model.z,
-            width: 0,
-            height: text.size
-        }
-        
-        const calculatedPositions = this.getDrawPositionsAndDimensions(originalPositions);
-        
-        this._canvasCtx.font = `${text.style} ${calculatedPositions.height}px ${text.font}`;
-        this._canvasCtx.fillStyle = text.color;
-        
-        this._canvasCtx.fillText(text.content, calculatedPositions.x, calculatedPositions.y);
+        this._kernel.graphicEngine.drawText(
+            this._model.text,
+            this._model,
+            "scaled"
+        );
     }
     
     /**

@@ -94,6 +94,8 @@ export default class Sign extends ASModel
             font: "Mechanical",
             color: "white",
             style: "normal",
+            alignment: "left",
+            lineGap: 0
         };
     }
     

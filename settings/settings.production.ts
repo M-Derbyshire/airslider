@@ -1,5 +1,5 @@
+import EpilepsyWarning from '../assets/levels/EpilepsyWarning/EpilepsyWarning';
 import ASControlsInitialiser from './ControlsInitialiser/ASControlsInitialiser';
-import TheConstruct from '../assets/levels/TheConstruct/TheConstruct';
 import ISettings from './ISettings';
 
 export default {
@@ -11,5 +11,5 @@ export default {
 	aspectRatioHorizontal: 17,
 	aspectRatioVertical: 9,
 	ControlsInitialiserClass: ASControlsInitialiser,
-	InitialLevelClass: TheConstruct
+	InitialLevelClass: EpilepsyWarning
 } as ISettings;

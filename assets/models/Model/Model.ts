@@ -215,6 +215,8 @@ export default class Model implements IModel
             font: "Arial",
             color: "red",
             style: "bolder", // See the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
+            alignment: "left",
+            lineGap: 0
         };
     }
     
