@@ -183,6 +183,17 @@ export default class SoundEngine implements ISoundEngine {
     }
     
     /**
+     * Release any resources the engine is using (to be used when unloading the level)
+     */
+    teardown():void
+    {
+        if(this._audioContext)
+            this._audioContext.close();
+        
+        this._trackMap.forEach(track => track.disconnect());
+    }
+    
+    /**
      * Sets up an audio source in the AudioContext (if it has not been done already for the given audio)
      * @param audio the audio source
      */

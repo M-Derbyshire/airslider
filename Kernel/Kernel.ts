@@ -318,6 +318,8 @@ export default class Kernel implements IKernel {
         this.loadedModels.forEach(model => model.unload());
         this.level.unload();
         
+        this.soundEngine.teardown();
+        
         this._totalLevelActiveMilliseconds = 0;
         this._assetHandler.resetAllUsageCounts();
         this._controlInitialiser.unregisterEventListeners();
