@@ -1,6 +1,6 @@
 import ASHUD from "../ASHUD/ASHUD";
-import TextOnlyButton from "../components/TextOnlyButton/TextOnlyButton";
-import TextOnly from "../components/TextOnly/TextOnly";
+import TextOnlyButton from "../components/UI-Components/TextOnlyButton/TextOnlyButton";
+import TextOnly from "../components/UI-Components/TextOnly/TextOnly";
 
 /**
  * Displays text for a warning screen

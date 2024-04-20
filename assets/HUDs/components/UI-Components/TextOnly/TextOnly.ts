@@ -1,4 +1,4 @@
-import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
+import ASHUDComponent from '../../ASHUDComponent/ASHUDComponent';
 
 /**
  * A HUD component that displays text only

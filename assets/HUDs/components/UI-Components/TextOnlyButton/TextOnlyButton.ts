@@ -1,4 +1,4 @@
-import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
+import ASHUDComponent from '../../ASHUDComponent/ASHUDComponent';
 
 /**
  * A HUDComponent that is a button, but only the text is visible
