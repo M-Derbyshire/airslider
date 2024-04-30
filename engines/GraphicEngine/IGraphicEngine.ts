@@ -31,28 +31,31 @@ export default interface IGraphicEngine {
         showNegative?:boolean
     ):void;
     
-    /**
-     * Calculates the draw positons/dimensions in pixels for a static entity (such as a HUD Component)
+     /**
+     * Calculates the draw positons/dimensions in pixels for a static entity (such as a HUD Component).
+     * If any values aren't provided, 0 will be returned as the result.
      * @param unitValues The position/dimension values (in units)
      * @returns The pixel values for the x/y/width/height
      */
-    getStaticDrawPositionsAndDimensions(unitValues:IDrawPositions&IDrawDimensions):IDrawPositions&IDrawDimensions;
+     getStaticDrawPositionsAndDimensions(unitValues:Partial<IDrawPositions&IDrawDimensions>):IDrawPositions&IDrawDimensions;
     
     /**
-     * Calculates the draw positons/dimensions in pixels for an entity that isn't z-scaled
+     * Calculates the draw positons/dimensions in pixels for an entity that isn't z-scaled.
+     * If any values aren't provided, 0 will be returned as the result.
      * @param unitValues The position/dimension values (in units)
      * @returns The pixel values for the x/y/width/height
      */
-    getUnscaledDrawPositionsAndDimensions(unitValues:IDrawPositions&IDrawDimensions):IDrawPositions&IDrawDimensions;
+    getUnscaledDrawPositionsAndDimensions(unitValues:Partial<IDrawPositions&IDrawDimensions>):IDrawPositions&IDrawDimensions;
     
     /**
-     * Calculates the draw positons/dimensions in pixels for an entity that is scaled on the z-axis
+     * Calculates the draw positons/dimensions in pixels for an entity that is scaled on the z-axis.
+     * If any values aren't provided, 0 will be returned as the result.
      * @param unitValues The position/dimension values (in units), plus the z position
      * @param showNegative Should the element still be drawn if the z position is negative?
      * @returns The pixel values for the scaled x/y/width/height
      */
     getScaledDrawPositionsAndDimensions(
-        unitValues:IDrawPositions&IDrawDimensions&{ z:number }, 
+        unitValues:Partial<IDrawPositions&IDrawDimensions>&{ z:number }, 
         showNegative?:boolean
     ):IDrawPositions&IDrawDimensions;
 };

@@ -25,7 +25,7 @@ export default class TextOnlyButton extends ASHUDComponent
      * @param fontName the name of the font to use
      * @param textColor the color of the text
      * @param textStyle see the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
-     * @param drawBoundaryBox should a box be drawn around the button (used to test its position)
+     * @param drawBoundaryBox should a box be drawn around the button (can be used to test its position/dimensions)
      */
 	constructor(
         onClick:()=>void,
@@ -38,7 +38,7 @@ export default class TextOnlyButton extends ASHUDComponent
         fontName:string,
         textColor:string,
         textStyle?:string,
-        drawBoundaryBox?:boolean
+        drawBoundaryBox:boolean = false
     )
 	{
 		super();
@@ -56,7 +56,7 @@ export default class TextOnlyButton extends ASHUDComponent
         this._textColor = textColor;
         this._textStyle = textStyle;
         
-        this._drawBoundaryBox = !!drawBoundaryBox;
+        this._drawBoundaryBox = drawBoundaryBox;
 	}
     
     /**
@@ -110,6 +110,6 @@ export default class TextOnlyButton extends ASHUDComponent
      */
     onClick()
     {
-        if(this._onClick) this._onClick();
+        this._onClick();
     }
 }
