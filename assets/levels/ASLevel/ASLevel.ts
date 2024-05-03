@@ -152,7 +152,10 @@ export default class ASLevel extends Level
         
         const chosenMusicFilePath = this._chooseMusicPath();
         if(chosenMusicFilePath)
+        {
             this.music = this.kernel.loadAudio(chosenMusicFilePath);
+            this.assetsToUnload.push(chosenMusicFilePath);
+        }
 	}
     
     /**
