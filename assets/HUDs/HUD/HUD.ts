@@ -42,10 +42,7 @@ export default class HUD implements IHUD
      */
     loadComponents():void
     {
-        this.components.forEach(component => {
-            component.load();
-            this.pointerEventManager.addPointerEventSubject(component);
-        });
+        this.components.forEach(component => component.load());
     }
     
     /**
@@ -63,7 +60,10 @@ export default class HUD implements IHUD
      */
     prepare():void
     {
-        this.components.forEach(component => component.prepare());
+        this.components.forEach(component => {
+            component.prepare();
+            this.pointerEventManager.addPointerEventSubject(component);
+        });
     }
     
     /**

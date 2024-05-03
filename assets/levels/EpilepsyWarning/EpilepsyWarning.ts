@@ -1,7 +1,7 @@
 import Level from '../Level/Level';
 import WarningScreenTexts from '../../HUDs/WarningScreenTexts/WarningScreenTexts';
-import TheConstruct from '../TheConstruct/TheConstruct';
 import { KernelStatus } from '../../../Kernel/KernelStatus';
+import TheConstructLoadingScreen from '../LoadingScreens/TheConstructLoadingScreen/TheConstructLoadingScreen';
 
 /**
  * A level that acts as a neurosensitivity warning
@@ -37,7 +37,7 @@ Player discretion is advised.`;
         super.prepare();
         
         this.kernel.graphicEngine.camera.setColors(this._backgroundColor, "#000000");
-        this.kernel.loadLevel(new TheConstruct()); // In the future, this will be the loading screen
+        this.kernel.loadLevel(new TheConstructLoadingScreen());
     }
     
     /**
