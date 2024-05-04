@@ -24,16 +24,8 @@ export default interface IAssetHandler {
     loadFont(name:string, path:string):void;
     
     /**
-     * Reduces the usage count against a loaded asset.
-     * The asset should stay loaded if there are still entities using it, but if the usage count goes down to 0, it will be removed
+     * Deletes the asset with the given file path
      * @param path the path to the asset file
      */
     releaseAsset(path:string):void;
-    
-    /**
-     * Resets the usage counts of all assets to 0 (This can be used after all the assets that need 
-     * unloading have been unloaded, to ensure that the remaining assets have the right usage count 
-     * once the next level has loaded)
-     */
-    resetAllUsageCounts():void
 };

@@ -13,11 +13,6 @@ export default interface ILoadedAssetData {
     path:string;
     
     /**
-     * The number of entities that are currently using this asset
-     */
-    usageCount:number;
-    
-    /**
      * Has this asset finished its initial load?
      */
     loaded:boolean;

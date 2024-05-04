@@ -44,15 +44,11 @@ export default class AssetHandler implements IAssetHandler
         const currentlyHeldAsset = this._loadedAssets.get(preparedPath);
         
 		if(currentlyHeldAsset)
-        {
-            currentlyHeldAsset.usageCount++;
             return currentlyHeldAsset.asset;
-        }
         
         const newLoadedAsset:ILoadedAssetData = {
             path: preparedPath,
             asset: obj,
-            usageCount: 1,
             loaded: false
         }; 
         
@@ -106,32 +102,13 @@ export default class AssetHandler implements IAssetHandler
     }
     
     /**
-     * Reduces the usage count against the loaded asset with the given file path.
-     * The asset should stay loaded if there are still entities using it, but if the usage count goes down to 0, it will be removed
+     * Deletes the asset with the given file path
      * @param path the path to the asset file
      */
     releaseAsset(path:string):void
     {
         const preparedPath = this._prepareAssetPath(path);
-        const heldAsset = this._loadedAssets.get(preparedPath);
-        
-        if(!heldAsset)
-            return;
-        
-        heldAsset.usageCount--;
-        
-        if(heldAsset.usageCount <= 0)
-            this._loadedAssets.delete(preparedPath);
-    }
-    
-    /**
-     * Resets the usage counts of all assets to 0 (This can be used after all the assets that need 
-     * unloading have been unloaded, to ensure that the remaining assets have the right usage count 
-     * once the next level has loaded)
-     */
-    resetAllUsageCounts():void
-    {
-        this._loadedAssets.forEach(asset => asset.usageCount = 0);
+        this._loadedAssets.delete(preparedPath);
     }
     
     /**

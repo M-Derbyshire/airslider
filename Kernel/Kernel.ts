@@ -319,9 +319,7 @@ export default class Kernel implements IKernel {
         this.level.unload();
         
         this.soundEngine.teardown();
-        
         this._totalLevelActiveMilliseconds = 0;
-        this._assetHandler.resetAllUsageCounts();
         this._controlInitialiser.unregisterEventListeners();
         
         this._levelQueue.shift();
@@ -361,9 +359,7 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Finds the loaded asset with the given file path, and reduces the usage count against it. The asset should stay 
-     * loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it (fonts 
-     * cannot be unloaded).
+     * Deletes the asset with the given file path (fonts cannot be released).
      * @param path the file path of the asset
      */
     releaseAsset(path:string):void

@@ -147,9 +147,7 @@ export default interface IKernel {
     loadFont(name:string, path:string):void;
     
     /**
-     * Finds the loaded asset with the given file path, and reduces the usage count against it. The asset should stay 
-     * loaded if there are still entities using it, but if the usage count goes down to 0, this will remove it (fonts 
-     * cannot be unloaded).
+     * Deletes the asset with the given file path (fonts cannot be released).
      * @param path the file path of the asset
      */
     releaseAsset(path:string):void;

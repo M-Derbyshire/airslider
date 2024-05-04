@@ -99,7 +99,7 @@ export default class TheConstruct extends ASLevel
             0
         );
         this.tunnelLightMaskIndex = frame.loadLightMask(
-            "/assets/levels/ASLevel/images/tunnelLightMask.png",
+            "/assets/levels/TheConstruct/images/tunnelLightMask.png",
             0.25
         );
         
@@ -107,7 +107,7 @@ export default class TheConstruct extends ASLevel
             "/assets/levels/TheConstruct/images/theConstructTunnel.png",
             "/assets/levels/TheConstruct/images/testBackground.png",
             "/assets/levels/TheConstruct/images/testBackgroundMask.png",
-            "/assets/levels/Level/images/tunnelLightMask.png",
+            "/assets/levels/TheConstruct/images/tunnelLightMask.png",
             "/assets/levels/TheConstruct/images/ground.png"
         );
         
