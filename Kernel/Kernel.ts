@@ -99,6 +99,8 @@ export default class Kernel implements IKernel {
     private _helpers:IHelpers; // Provides a number of "helper" objects, that each calculate and/or provide useful values
     private _controlInitialiser:IControlsInitialiser; // Handles the initialising of the game's controls
     
+    private _currentLevelShouldBeUnloaded:boolean; // If this is true, the current level will get unloaded after the current frame has been drawn
+    
     /**
      * If we want to display the FPS counter, this is the color the text should be.
      * The FPS counter is only drawn if this value is truthy.
@@ -152,6 +154,8 @@ export default class Kernel implements IKernel {
         
         const ControlsInitialiserClass = this._settings.ControlsInitialiserClass;
         this._controlInitialiser = new ControlsInitialiserClass();
+        
+        this._currentLevelShouldBeUnloaded = false;
         
         this.fpsDisplayColor = this._settings.fpsDisplayColor;
         this.unitsWithinCamera = this._settings.unitsWithinCamera;
@@ -311,18 +315,11 @@ export default class Kernel implements IKernel {
     
     
     /**
-     * Unloads the current level, triggering the release of any assets that need releasing
+     * Marks the current level as ready to be unloaded
      */
     unloadCurrentLevel():void
     {
-        this.loadedModels.forEach(model => model.unload());
-        this.level.unload();
-        
-        this.soundEngine.teardown();
-        this._totalLevelActiveMilliseconds = 0;
-        this._controlInitialiser.unregisterEventListeners();
-        
-        this._levelQueue.shift();
+        this._currentLevelShouldBeUnloaded = true;
     }
     
     
@@ -423,6 +420,12 @@ export default class Kernel implements IKernel {
                 this._status = KernelStatus.Paused;
             
             this._lastTime = currentDateTime;
+            
+            if(this._currentLevelShouldBeUnloaded)
+            {
+                this._unloadCurrentLevel();
+                this._currentLevelShouldBeUnloaded = false;
+            }
         } catch (err:any) {
             this.handleError(err);
         }
@@ -577,6 +580,21 @@ export default class Kernel implements IKernel {
 	{
 		this._controlInitialiser.initialiseControls();
 	}
+    
+    /**
+     * Unloads the current level, triggering the release of any assets that need releasing
+     */
+    private _unloadCurrentLevel():void
+    {
+        this.loadedModels.forEach(model => model.unload());
+        this.level.unload();
+        
+        this.soundEngine.teardown();
+        this._totalLevelActiveMilliseconds = 0;
+        this._controlInitialiser.unregisterEventListeners();
+        
+        this._levelQueue.shift();
+    }
     
     /**
      * Calculates an estimate of the game's current FPS

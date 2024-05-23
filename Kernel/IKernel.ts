@@ -121,7 +121,7 @@ export default interface IKernel {
     loadLevel(level:ILevel):void;
     
     /**
-     * Unloads the current level, triggering the release of any assets that need releasing
+     * Marks the current level as ready to be unloaded
      */
     unloadCurrentLevel():void;
     
