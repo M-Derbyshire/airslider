@@ -52,6 +52,8 @@ export default class HUDComponent implements IHUDComponent
         this.ctx = this.kernel.gameContext;
         
         this.assetsToUnload = [];
+        
+        this.active = true;
     }
     
     /**
@@ -70,8 +72,6 @@ export default class HUDComponent implements IHUDComponent
             alignment: "left",
             lineGap: 0
         };
-        
-        this.active = true;
     }
     
     /**
