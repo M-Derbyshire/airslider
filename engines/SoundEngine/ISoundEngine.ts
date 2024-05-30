@@ -67,9 +67,4 @@ export default interface ISoundEngine {
      * @param sound The sound to be forced to load
      */
     forceLoad(sound:HTMLAudioElement):void;
-    
-    /**
-     * Release any resources the engine is using (to be used when unloading the level)
-     */
-    teardown():void;
 };

@@ -7,7 +7,6 @@ import ISoundEngine from './ISoundEngine';
  * The engine that controls the sound/music of the game
  */
 export default class SoundEngine implements ISoundEngine {
-    
     private _kernel:IKernel;
     
     private _music:HTMLAudioElement; // The level's music
@@ -15,24 +14,14 @@ export default class SoundEngine implements ISoundEngine {
     // The sounds we're currently playing (not including music, or sounds that are force-loading)
     private _currentSounds:Map<string, HTMLAudioElement>;
     
-    private _audioContextClass:new()=>AudioContext; // The class to use for the audio context
-    private _audioContext:AudioContext; // Manages the audio processing
-    private _trackMap:Map<string, MediaElementAudioSourceNode>; // A map of tracks from the AudioContext
-    
     /**
      * Constructor
-     * @param audioContextClass The class to use to instantiate an AudioContext (Which manages the audio processing). We 
-     * don't want to create an AudioContext before the user has interacted with the tab, as the browser will not allow 
-     * it to trigger any sound. This will be used to instantiate the AudioContext at a later time.
      */
-    constructor(audioContextClass:new()=>AudioContext)
+    constructor()
     {
         this._kernel = Kernel.getInstance();
         
         this._currentSounds = new Map<string, HTMLAudioElement>();
-        this._trackMap = new Map<string, MediaElementAudioSourceNode>();
-        
-        this._audioContextClass = audioContextClass;
     }
     
     /**
@@ -44,7 +33,6 @@ export default class SoundEngine implements ISoundEngine {
     }
     set music(newValue:HTMLAudioElement)
     {
-        this._setupAudioContextTrack(newValue);
         this._music = newValue;
     }
     
@@ -119,8 +107,6 @@ export default class SoundEngine implements ISoundEngine {
      */
     playSound(sound:HTMLAudioElement, loop:boolean = false):void
     {
-        this._setupAudioContextTrack(sound);
-        
         sound.currentTime = 0; // Position needs to be reset so sounds will restart if they're triggered mid-way through playing
         sound.muted = false; // Sound may be muted, if it was in the middle of being force-loaded
         sound.loop = loop;
@@ -167,8 +153,6 @@ export default class SoundEngine implements ISoundEngine {
      */
     forceLoad(sound:HTMLAudioElement):void
     {
-        this._setupAudioContextTrack(sound);
-        
         const eventListenerType = "ended";
         
         const unmute = () => {
@@ -180,44 +164,5 @@ export default class SoundEngine implements ISoundEngine {
         sound.muted = true;
         sound.addEventListener(eventListenerType, unmute);
         sound.play();
-    }
-    
-    /**
-     * Release any resources the engine is using (to be used when unloading the level)
-     */
-    teardown():void
-    {
-        if(this._audioContext)
-            this._audioContext.close();
-        
-        this._trackMap.forEach(track => track.disconnect());
-    }
-    
-    /**
-     * Sets up an audio source in the AudioContext (if it has not been done already for the given audio)
-     * @param audio the audio source
-     */
-    private _setupAudioContextTrack(audio:HTMLAudioElement)
-    {
-        if(!this._trackMap.has(audio.src))
-        {
-            if(!this._audioContext)
-                this._instantiateAudioContext();
-            
-            const track = this._audioContext.createMediaElementSource(audio);
-            track.connect(this._audioContext.destination);
-            this._trackMap.set(audio.src, track);
-        }
-    }
-    
-    /**
-     * This instantiates and stores a new AudioContext object
-     */
-    private _instantiateAudioContext()
-    {
-        this._audioContext = new this._audioContextClass();
-        
-        if (this._audioContext.state === "suspended") 
-            this._audioContext.resume();
     }
 }

@@ -566,9 +566,7 @@ export default class Kernel implements IKernel {
 	{
 		const gameEngine = new GameEngine();
         const graphicEngine = new GraphicEngine(camera, frameManager);
-        
-        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-        const soundEngine = new SoundEngine(AudioContext);
+        const soundEngine = new SoundEngine();
         
         return { gameEngine, graphicEngine, soundEngine };
 	}
@@ -589,7 +587,6 @@ export default class Kernel implements IKernel {
         this.loadedModels.forEach(model => model.unload());
         this.level.unload();
         
-        this.soundEngine.teardown();
         this._totalLevelActiveMilliseconds = 0;
         this._controlInitialiser.unregisterEventListeners();
         
