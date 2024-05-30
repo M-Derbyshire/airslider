@@ -86,6 +86,7 @@ export default class Kernel implements IKernel {
     
     private _levelQueue:ILoadedLevel[]; // The queue of levels that have been loaded (or are currently loading)
     private _totalLevelActiveMilliseconds:number; // The total amount of milliseconds that the level has not been paused or stopped for any reason
+    private _timeSinceLastFrameMS:number; // The amount of milliseconds that passed between the last frame, and this one
     private _status:KernelStatus; // The current status of the game (e.g. is it playing, paused, or in another state)
     
     private _hasError:boolean; // Has an error been caught and passed to the error handler?
@@ -147,6 +148,7 @@ export default class Kernel implements IKernel {
         this._correctCanvasStyleToDevicePixelRatio = this._settings.correctCanvasStyleToDevicePixelRatio;
         
         this._totalLevelActiveMilliseconds = 0;
+        this._timeSinceLastFrameMS = 0;
         this._status = KernelStatus.Active;
         this._hasError = false;
         this._errorHandler = new ErrorHandler();
@@ -208,6 +210,14 @@ export default class Kernel implements IKernel {
     get totalLevelActiveMilliseconds()
     {
         return this._totalLevelActiveMilliseconds;
+    }
+    
+    /**
+     * The amount of milliseconds that passed between the last frame, and this one
+     */
+    get timeSinceLastFrameMS()
+    {
+        return this._timeSinceLastFrameMS;
     }
     
     /**
@@ -401,6 +411,8 @@ export default class Kernel implements IKernel {
         {
             return;
         }
+        
+        this._timeSinceLastFrameMS = timeSinceLastFrame;
         
         try {
             if(!this.levelHasBeenPrepared)
