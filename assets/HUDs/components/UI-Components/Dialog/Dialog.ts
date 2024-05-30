@@ -99,10 +99,10 @@ export default class Dialog extends ASHUDComponent
     /**
      * Changes whether this dialog should be displayed
      */
-    toggleDisplay()
+    setDisplay(display:boolean)
     {
-        this.active = !this.active;
-        this._actionButton.active = this.active;
+        this.active = display;
+        this._actionButton.active = display;
     }
     
     /**

@@ -26,6 +26,7 @@ import zCollisionEventCheck from './events/zCollisionEventCheck';
 import hitPlayerOrGroundEventCheck from './events/hitPlayerOrGroundEventCheck';
 import neonPidgeonOverlappingEventCheck from './events/neonPidgeonOverlappingEventCheck';
 import { CentralStateKey } from '../CentralStateKey';
+import ILevel from '../Level/ILevel';
 
 /**
  * The game's base Level class
@@ -64,6 +65,17 @@ export default class ASLevel extends Level
     levelSpeed:number; // The level speed (after being calculated by the zCalc)
     protected levelSpeedAccl:number; // How quickly does the speed accelerate at the start?
     
+    // Level ending
+    
+    // If the player has completed the level, this will be a positive number (the time in milliseconds). It will be negative if not set.
+    protected levelCompletedAtMS:number;
+    private _nextLevelDialogDelayMS:number; // The delay between the level being completed, and the next-level dialog being displayed
+    get completed()
+    {
+        return this.levelCompletedAtMS > -1;
+    }
+    protected NextLevelLoadingScreen:new()=>ILevel; // The class of the loading screen for the next level
+    
     // Music management
     protected music:HTMLAudioElement; // The chosen music for the level
     private _musicFilePaths:string[]; // File paths to the music that a level could choose to load
@@ -99,6 +111,8 @@ export default class ASLevel extends Level
         
         const musicDir = "/assets/levels/ASLevel/music";
         this._musicFilePaths = [];
+        
+        this._nextLevelDialogDelayMS = 2000;
 	}
     
     /**
@@ -184,6 +198,8 @@ export default class ASLevel extends Level
 		this._setupPatternManager();
         
         this.outsideVisible = false;
+        
+        this.levelCompletedAtMS = -1;
     }
     
     /**
@@ -355,6 +371,9 @@ export default class ASLevel extends Level
                 
                 // Start the finish flags
                 this._finishFlagsActive = true;
+                
+                // Start the loading of the next level's loading screen
+                this.kernel.loadLevel(new this.NextLevelLoadingScreen());
             }
             
             this._levelClosing(msStart);
@@ -489,8 +508,14 @@ export default class ASLevel extends Level
         }
         
         // Once the player has vanished into the distance, finish the level
-        if(this.player.z > this.helpers.zCalc.vanishingPointDepth)
+        if(this.player.z > this.helpers.zCalc.vanishingPointDepth && !this.completed)
+        {
             this.levelStop();
+            this.levelCompletedAtMS = currentMs;
+        }
+        
+        if(this.completed && currentMs > this.levelCompletedAtMS + this._nextLevelDialogDelayMS)
+            (this.HUD as MainHUD).displayNextLevelDialog();
     }
     
     /**

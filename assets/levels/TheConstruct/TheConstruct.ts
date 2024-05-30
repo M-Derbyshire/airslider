@@ -17,6 +17,7 @@ import IFrameManager from '../../../engines/GraphicEngine/IFrameManager';
 import Monster from '../../models/Monster/Monster';
 import EventManager from '../Level/EventManager';
 import PointerEventManager from '../Level/PointerEventManager';
+import TheConstructLoadingScreen from '../LoadingScreens/TheConstructLoadingScreen/TheConstructLoadingScreen';
 
 /**
  * Testing/development level
@@ -29,6 +30,8 @@ export default class TheConstruct extends ASLevel
     constructor()
     {
         super();
+        
+        this.NextLevelLoadingScreen = TheConstructLoadingScreen;
     }
     
     getModels():IModel[]
