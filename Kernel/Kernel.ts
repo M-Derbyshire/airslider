@@ -419,13 +419,13 @@ export default class Kernel implements IKernel {
             if(this._status === KernelStatus.PrePaused)
                 this._status = KernelStatus.Paused;
             
-            this._lastTime = currentDateTime;
-            
             if(this._currentLevelShouldBeUnloaded)
             {
                 this._unloadCurrentLevel();
                 this._currentLevelShouldBeUnloaded = false;
             }
+            
+            this._lastTime = currentDateTime;
         } catch (err:any) {
             this.handleError(err);
         }
