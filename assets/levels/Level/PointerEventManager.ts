@@ -115,6 +115,7 @@ export default class PointerEventManager implements IPointerEventManager {
 	{
 		this._subjects.forEach(subject => {
 			if(
+				!!subject.active &&
 				typeof subject[actionMethodName] === "function" && 
 				subject.isPointerOverlapping(this._canvasPointerX, this._canvasPointerY)
 			)

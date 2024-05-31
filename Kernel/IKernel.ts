@@ -131,6 +131,11 @@ export default interface IKernel {
     unloadCurrentLevel():void;
     
     /**
+     * Restarts the current level
+     */
+    restartCurrentLevel():void;
+    
+    /**
      * Loads an image with the asset handler
      * @param path the file path to the image
      * @returns the image object

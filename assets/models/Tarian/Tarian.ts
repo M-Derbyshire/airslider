@@ -307,7 +307,7 @@ export default class Tarian extends ASModel {
 		if(this.lost && this.z < 0)
         {
             this.active = false;
-            (this.kernel.level as ASLevel).levelStop();
+            (this.kernel.level as ASLevel).handlePlayerLoss();
         }
 	}
 	

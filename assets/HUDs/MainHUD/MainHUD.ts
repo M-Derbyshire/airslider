@@ -15,6 +15,9 @@ export default class MainHUD extends ASHUD
     private _nextLevelDialog:Dialog;
     private _nextLevelButton:TextButton;
     
+    private _retryLevelDialog:Dialog;
+    private _retryLevelButton:TextButton;
+    
     load(pointerEventManager:IPointerEventManager):void
     {
         super.load(pointerEventManager);
@@ -46,10 +49,29 @@ export default class MainHUD extends ASHUD
             dialogFontSize
         );
         
+        this._retryLevelButton = new TextButton(
+            () => this._triggerRetryLevel(),
+            0,
+            0,
+            dialogButtonWidth,
+            dialogButtonHeight,
+            "Retry",
+            dialogButtonFontSize
+        );
+        this._retryLevelDialog = new Dialog(
+            "Track Failed",
+            this._retryLevelButton,
+            dialogWidth,
+            dialogHeight,
+            dialogFontSize
+        );
+        
         this.components.push(this._damageFlash);
         this.components.push(this._lowHealthFlash);
         this.components.push(this._nextLevelDialog);
         this.components.push(this._nextLevelButton);
+        this.components.push(this._retryLevelDialog);
+        this.components.push(this._retryLevelButton);
         this.components.push(new HealthDisplay(25, 500, 150, 200));
         this.components.push(new PauseButton(920, 25, 65, 100));
     }
@@ -89,7 +111,7 @@ export default class MainHUD extends ASHUD
     }
     
     /**
-     * Toggles whether the next-level dialog is displayed
+     * Displays the next-level dialog
      */
     displayNextLevelDialog():void
     {
@@ -97,10 +119,26 @@ export default class MainHUD extends ASHUD
     }
     
     /**
+     * Displays the retry-level dialog
+     */
+    displayRetryLevelDialog():void
+    {
+        this._retryLevelDialog.setDisplay(true);
+    }
+    
+    /**
      * Trigger the change to the next level
      */
-    _triggerNextLevel():void
+    private _triggerNextLevel():void
     {
         this.kernel.unloadCurrentLevel();
+    }
+    
+    /**
+     * Trigger the restarting of the level
+     */
+    private _triggerRetryLevel():void
+    {
+        this.kernel.restartCurrentLevel();
     }
 }

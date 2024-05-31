@@ -44,7 +44,7 @@ export default class ASLevel extends Level
     protected roadManager: LevelRoad;
     protected groundManager: LevelGround;
     protected tunnelManager: LevelTunnel;
-    protected outsideVisible:boolean;
+    protected outsideVisible: boolean;
     protected tunnelLightMaskIndex:number;
     protected outsideLightMaskIndex: number;
     protected tunnelSprite: HTMLImageElement;
@@ -67,13 +67,21 @@ export default class ASLevel extends Level
     
     // Level ending
     
-    // If the player has completed the level, this will be a positive number (the time in milliseconds). It will be negative if not set.
+    // If the player has completed/lost the level, one of these will be set to a positive number (the time in milliseconds)
     protected levelCompletedAtMS:number;
-    private _nextLevelDialogDelayMS:number; // The delay between the level being completed, and the next-level dialog being displayed
-    get completed()
+    protected stoppedForlossAtMS:number;
+    
+    get completed() // Has the level been completed?
     {
-        return this.levelCompletedAtMS > -1;
+        return this.levelCompletedAtMS > 0;
     }
+    get lost() // Has the level been lost?
+    {
+        return this.stoppedForlossAtMS > 0;
+    }
+    
+    private _nextLevelDialogDelayMS:number; // The delay between the level being completed, and the next-level dialog being displayed
+    private _retryLevelDialogDelayMS:number; // The delay between the level loss sequence ending, and the retry-level dialog being displayed
     protected NextLevelLoadingScreen:new()=>ILevel; // The class of the loading screen for the next level
     
     // Music management
@@ -113,6 +121,7 @@ export default class ASLevel extends Level
         this._musicFilePaths = [];
         
         this._nextLevelDialogDelayMS = 2000;
+        this._retryLevelDialogDelayMS = 2000;
 	}
     
     /**
@@ -200,6 +209,7 @@ export default class ASLevel extends Level
         this.outsideVisible = false;
         
         this.levelCompletedAtMS = -1;
+        this.stoppedForlossAtMS = -1;
     }
     
     /**
@@ -217,6 +227,11 @@ export default class ASLevel extends Level
         
         // Run the opening section, if required
         this._levelOpening();
+        
+        // Display the retry-level dialog, if required
+        const currentMs = this.helpers.time.getTotalMilliseconds();
+        if(this.lost && currentMs > this.stoppedForlossAtMS + this._retryLevelDialogDelayMS)
+            (this.HUD as MainHUD).displayRetryLevelDialog();
     }
     
     /**
@@ -235,10 +250,19 @@ export default class ASLevel extends Level
     }
     
     /**
+     * Handles the loss of the player
+     */
+    handlePlayerLoss():void
+    {
+        this.stoppedForlossAtMS = this.helpers.time.getTotalMilliseconds();
+        this._stopLevel();
+    }
+    
+    /**
      * Stops the level (and triggers the stop on all models)
      * This may be triggered by the level's closing sequence, or by another entity in the game
      */
-	levelStop():void
+	_stopLevel():void
     {
         this.levelMoving = false;
         this.kernel.loadedModels.forEach(model => (model as ASModel).levelStopped());
@@ -510,7 +534,7 @@ export default class ASLevel extends Level
         // Once the player has vanished into the distance, finish the level
         if(this.player.z > this.helpers.zCalc.vanishingPointDepth && !this.completed)
         {
-            this.levelStop();
+            this._stopLevel();
             this.levelCompletedAtMS = currentMs;
         }
         

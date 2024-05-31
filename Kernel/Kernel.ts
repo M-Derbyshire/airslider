@@ -135,6 +135,7 @@ export default class Kernel implements IKernel {
         this._highestFpsReached = 0;
         this._fpsLimit = (!isNaN(this._settings.fpsLimit)) ? this._settings.fpsLimit : 70;
         this._lastTime = new Date();
+        this._timeSinceLastFrameMS = 0;
         
         const filePath = window.location.pathname;
         this._rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -147,15 +148,9 @@ export default class Kernel implements IKernel {
 		this._gameContext = this.gameCanvas.getContext("2d")!;
         this._correctCanvasStyleToDevicePixelRatio = this._settings.correctCanvasStyleToDevicePixelRatio;
         
-        this._totalLevelActiveMilliseconds = 0;
-        this._timeSinceLastFrameMS = 0;
-        this._status = KernelStatus.Active;
         this._hasError = false;
         this._errorHandler = new ErrorHandler();
         this._centralState = new Map<string, any>();
-        
-        const ControlsInitialiserClass = this._settings.ControlsInitialiserClass;
-        this._controlInitialiser = new ControlsInitialiserClass();
         
         this._currentLevelShouldBeUnloaded = false;
         
@@ -330,6 +325,15 @@ export default class Kernel implements IKernel {
     unloadCurrentLevel():void
     {
         this._currentLevelShouldBeUnloaded = true;
+    }
+    
+    /**
+     * Restarts the current level
+     */
+    restartCurrentLevel():void
+    {
+        this._prepareKernelForLevelStart();
+        this._levelQueue[0].hasBeenPrepared = false;
     }
     
     
@@ -517,6 +521,8 @@ export default class Kernel implements IKernel {
         
         const InitialLevelClass = this.settings.InitialLevelClass;
         this.loadLevel(new InitialLevelClass());
+        
+        this._prepareKernelForLevelStart();
     }
     
     /**
@@ -552,6 +558,18 @@ export default class Kernel implements IKernel {
             model.load(animationsManager);
         });
 	}
+    
+    /**
+     * Gets the kernel ready when a new level is about to start
+     */
+    private _prepareKernelForLevelStart():void
+    {
+        this._totalLevelActiveMilliseconds = 0;
+        this._status = KernelStatus.Active;
+        
+        const ControlsInitialiserClass = this._settings.ControlsInitialiserClass;
+        this._controlInitialiser = new ControlsInitialiserClass();
+    }
     
     /**
      * Triggers the preparation of the current level, and all of its models
@@ -603,6 +621,8 @@ export default class Kernel implements IKernel {
         this._controlInitialiser.unregisterEventListeners();
         
         this._levelQueue.shift();
+        
+        this._prepareKernelForLevelStart();
     }
     
     /**
