@@ -1,5 +1,5 @@
 {
-  "name": "airshock",
+  "name": "airslider",
   "version": "1.0.0",
   "description": "A game by Matthew Stuart Derbyshire",
   "devDependencies": {
@@ -25,12 +25,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/M-Derbyshire/AirShock.git"
+    "url": "git+https://github.com/M-Derbyshire/airslider.git"
   },
   "author": "Matthew Stuart Derbyshire",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/M-Derbyshire/AirShock/issues"
+    "url": "https://github.com/M-Derbyshire/airslider/issues"
   },
-  "homepage": "https://github.com/M-Derbyshire/AirShock#readme"
+  "homepage": "https://github.com/M-Derbyshire/airslider#readme"
 }
