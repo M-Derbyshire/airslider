@@ -2,7 +2,7 @@ import ASModel from '../ASModel/ASModel';
 import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 
 /**
- * A class for a Model
+ * A racer on the track
  */
 export default class Racer extends ASModel
 {
