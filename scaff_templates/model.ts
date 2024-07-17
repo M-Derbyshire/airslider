@@ -19,7 +19,7 @@ export default class {: name :} extends {: baseClass :}
      */
     load(animationManager:IModelAnimationsManager):void 
     {
-        super.load(animationManager)
+        super.load(animationManager);
         
         // Handle loading any assets here
         

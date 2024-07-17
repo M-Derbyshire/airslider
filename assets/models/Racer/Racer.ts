@@ -1,16 +1,29 @@
 import ASModel from '../ASModel/ASModel';
 import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
+import { RacerColor } from './RacerColor';
 
 /**
  * A racer on the track
  */
 export default class Racer extends ASModel
 {
-    constructor()
+    private _color:RacerColor;
+    
+    private _initialZ:number; // The z position of this model at the start of the level
+    private _initialXCenter:number; // The x position (centered) of this model at the start of the level
+    
+    /**
+     * Constructor
+     * 
+     * @param zPosition The initial z position of the model
+     * @param xCenterPosition The x position that the model should be initially centered at
+     */
+    constructor(zPosition:number, xCenterPosition:number)
 	{
 		super();
         
-		// Handle construction here
+        this._initialXCenter = xCenterPosition;
+        this._initialZ = zPosition;
 	}
     
     /**
@@ -19,13 +32,41 @@ export default class Racer extends ASModel
      */
     load(animationManager:IModelAnimationsManager):void 
     {
-        super.load(animationManager)
+        super.load(animationManager);
         
-        // Handle loading any assets here
+        this._setRandomColor();
         
-        this.assetsToUnload.push(
-            // Any assets that need to be unloaded (when the level is unloaded) should be added here
-        );
+        const spritesheetPath = "/assets/models/Racer/anim/racers-spritesheet.png";
+        
+        // All the frames share the same width/height.
+        const frameWidth = 92;
+        const frameHeight = 119;
+        
+        // There are 3 versions of the same animation (different colours) on the spritesheet.
+        
+        const colorXPositions = { // These are the same for every frame of each version
+            [RacerColor.Blue]: 0,
+            [RacerColor.Red]: 92,
+            [RacerColor.Yellow]: 184
+        };
+        const xPosition = colorXPositions[this._color];
+        
+        const frameYPositions = [1, 120, 242, 364]; // These are the same for every color
+        
+        this.animationManager.registerAnimations({
+            forward: this.animationManager.createAnimation({
+                sheetPath: spritesheetPath, 
+                fps: 24,
+                drawWidth: 120,
+                drawHeight: 170,
+				frameCoordinates: [
+					{ x: xPosition, y: frameYPositions[0], width: frameWidth, height: frameHeight },
+					{ x: xPosition, y: frameYPositions[1], width: frameWidth, height: frameHeight },
+					{ x: xPosition, y: frameYPositions[2], width: frameWidth, height: frameHeight },
+					{ x: xPosition, y: frameYPositions[3], width: frameWidth, height: frameHeight }
+				]
+            })
+        });
     }
     
     /**
@@ -35,7 +76,14 @@ export default class Racer extends ASModel
     {
         super.prepare();
         
-        // Set anything that will need setting/resetting when the level starts/restarts
+        this.active = true;
+        this.state = "forward";
+        
+        this.zSpeed = 0;
+        
+        this.z = this._initialZ;
+        this.x = this._initialXCenter - (this.width / 2);
+        this.setYPositionFromBottom(this.height);
     }
     
     /**
@@ -49,12 +97,17 @@ export default class Racer extends ASModel
     }
     
     /**
-     * Any extra event checks relevant to all models
+     * 
      */
-    protected extraEvents():void
+    private _setRandomColor()
     {
-        super.extraEvents();
+        const colors = [
+            RacerColor.Blue,
+            RacerColor.Red,
+            RacerColor.Yellow
+        ];
         
-        // Check for (and handle) any extra events that could happen on the model
+        const choiceIndex = Math.round(Math.random() * (colors.length - 1));
+        this._color = colors[choiceIndex];
     }
 };
