@@ -2,6 +2,8 @@ import ASModel from '../ASModel/ASModel';
 import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 import { RacerColor } from './RacerColor';
 
+let lastColorChosen:RacerColor; // The last color used when setting the Racer's color
+
 /**
  * A racer on the track
  */
@@ -18,10 +20,11 @@ export default class Racer extends ASModel
      * @param zPosition The initial z position of the model
      * @param xCenterPosition The x position that the model should be initially centered at
      */
-    constructor(zPosition:number, xCenterPosition:number)
+    constructor(color:RacerColor, zPosition:number, xCenterPosition:number)
 	{
 		super();
         
+        this._color = color;
         this._initialXCenter = xCenterPosition;
         this._initialZ = zPosition;
 	}
@@ -33,8 +36,6 @@ export default class Racer extends ASModel
     load(animationManager:IModelAnimationsManager):void 
     {
         super.load(animationManager);
-        
-        this._setRandomColor();
         
         const spritesheetPath = "/assets/models/Racer/anim/racers-spritesheet.png";
         
@@ -93,21 +94,6 @@ export default class Racer extends ASModel
     {
         super.act();
         
-        // Here you can trigger any actions that need to happen on every frame
-    }
-    
-    /**
-     * 
-     */
-    private _setRandomColor()
-    {
-        const colors = [
-            RacerColor.Blue,
-            RacerColor.Red,
-            RacerColor.Yellow
-        ];
-        
-        const choiceIndex = Math.round(Math.random() * (colors.length - 1));
-        this._color = colors[choiceIndex];
+        this.moveIn(this.zSpeed);
     }
 };

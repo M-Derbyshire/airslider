@@ -221,7 +221,12 @@ export default class GraphicEngine implements IGraphicEngine {
     private _drawModels():void
     {
 		// We need to make sure that the models are drawn ordered by the Z position.
-		const zSortedModels = [...this._kernel.loadedModels].sort((a, b) => b.z - a.z);
+		const zSortedModels = [...this._kernel.loadedModels].sort((a, b) => {
+            const zA = typeof a.z === 'number' ? a.z : 0;
+            const zB = typeof b.z === 'number' ? b.z : 0;
+            
+            return zB - zA;
+        });
         
 		zSortedModels.forEach(model => {
             const isOnCamera = this.camera.isOnCamera(model.x, model.y, model.width, model.height, model.z);

@@ -27,6 +27,7 @@ import hitPlayerOrGroundEventCheck from './events/hitPlayerOrGroundEventCheck';
 import neonPidgeonOverlappingEventCheck from './events/neonPidgeonOverlappingEventCheck';
 import { CentralStateKey } from '../CentralStateKey';
 import ILevel from '../Level/ILevel';
+import RacerManager from './RacerManager';
 
 /**
  * The game's base Level class
@@ -49,6 +50,9 @@ export default class ASLevel extends Level
     protected outsideLightMaskIndex: number;
     protected tunnelSprite: HTMLImageElement;
     protected tunnelSpriteLength: number;
+    
+    // Management of the other racers on the track
+    protected racerManager: RacerManager;
     
     // Obstacle management
     protected obstacleManager: ObstacleManager;
@@ -115,7 +119,9 @@ export default class ASLevel extends Level
         
         this.tunnelManager = new LevelTunnel();
         
-        this._signStartingZPosition = 50;
+        this.racerManager = new RacerManager();
+        
+        this._signStartingZPosition = 90;
         
         const musicDir = "/assets/levels/ASLevel/music";
         this._musicFilePaths = [];
@@ -139,13 +145,16 @@ export default class ASLevel extends Level
         this._startSignDisplay = new SignDisplay(this._startSign);
         this._finishSign = new Sign("FINISH", null, this._signStartingZPosition, false);
         
+        const racers = this.racerManager.getModels();
+        
         return [
             ...stdModels,
             this.player,
             new TarianExplosion(this.player),
             this._startSign,
             this._startSignDisplay,
-            this._finishSign
+            this._finishSign,
+            ...racers
         ];
     }
 	
@@ -232,6 +241,9 @@ export default class ASLevel extends Level
         const currentMs = this.helpers.time.getTotalMilliseconds();
         if(this.lost && currentMs > this.stoppedForlossAtMS + this._retryLevelDialogDelayMS)
             (this.HUD as MainHUD).displayRetryLevelDialog();
+        
+        // Let the RacerManager do what it needs to do each frame
+        this.racerManager.act();
     }
     
     /**
@@ -490,6 +502,7 @@ export default class ASLevel extends Level
         if(this._activeSections.includes(this._openingSectionId) && this._startSignDisplay.state === "finished")
         {
             this._levelMovementStart();
+            this.racerManager.startLaunchSequence();
             
             // Remove opening from _activeSections
             this._activeSections = this._activeSections.filter((cs:string) => cs !== this._openingSectionId);
