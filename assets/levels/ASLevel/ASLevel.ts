@@ -203,6 +203,8 @@ export default class ASLevel extends Level
         this.leftEdge = 0;
         this.rightEdge = this.kernel.unitsWithinCamera;
         
+        this.racerManager.prepare();
+        
         this.groundManager.setupGround();
         this._finishFlagsManager.setupGround();
         
@@ -278,6 +280,7 @@ export default class ASLevel extends Level
     {
         this.levelMoving = false;
         this.kernel.loadedModels.forEach(model => (model as ASModel).levelStopped());
+        this.racerManager.startOvertakeSequence();
     }
     
     
