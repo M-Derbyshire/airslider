@@ -115,11 +115,6 @@ export default interface IKernel {
     readonly gameContext:CanvasRenderingContext2D;
     
     /**
-     * Should the canvas's styling width/height be corrected, based on the Device Pixel Ratio?
-     */
-    readonly correctCanvasStyleToDevicePixelRatio:boolean;
-    
-    /**
      * Loads the given level, and adds it to the kernel's internal level queue
      * @param level the level to load
      */

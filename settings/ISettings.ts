@@ -11,11 +11,6 @@ export default interface ISettings {
     gameCanvas:HTMLCanvasElement;
     
     /**
-     * Should the canvas's css width/height be corrected, based on the Device Pixel Ratio?
-     */
-	correctCanvasStyleToDevicePixelRatio:boolean;
-    
-    /**
      * The maximum FPS that the game should be allowed to run at
      */
 	fpsLimit:number;

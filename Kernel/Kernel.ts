@@ -77,7 +77,6 @@ export default class Kernel implements IKernel {
     private _settings:ISettings; // The settings for the game
     private _gameCanvas:HTMLCanvasElement; // The HTML canvas element that the game should be drawn on
     private _gameContext:CanvasRenderingContext2D; // The 2D context from the HTML canvas element
-    private _correctCanvasStyleToDevicePixelRatio:boolean; // Should the canvas's styling width/height be corrected, based on the Device Pixel Ratio?
     
     private _fps:number; // The current Frames Per Second of the game
     private _highestFpsReached:number; // The highest FPS the game has reached
@@ -146,7 +145,6 @@ export default class Kernel implements IKernel {
         
 		this._gameCanvas = this._settings.gameCanvas;
 		this._gameContext = this.gameCanvas.getContext("2d")!;
-        this._correctCanvasStyleToDevicePixelRatio = this._settings.correctCanvasStyleToDevicePixelRatio;
         
         this._hasError = false;
         this._errorHandler = new ErrorHandler();
@@ -305,14 +303,6 @@ export default class Kernel implements IKernel {
 	get gameContext()
     {
         return this._gameContext;
-    }
-    
-    /**
-     * Should the canvas's styling width/height be corrected, based on the Device Pixel Ratio?
-     */
-    get correctCanvasStyleToDevicePixelRatio()
-    {
-        return this._correctCanvasStyleToDevicePixelRatio;
     }
     
     

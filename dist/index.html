@@ -20,6 +20,24 @@
     <body>
         <canvas id="gameCanvas"></canvas>
         
+        <script>
+            // We need to change the styling for the canvas, based on the DPI,
+            // to avoid it being stretched and blurry.
+            
+            // getComputedStyle is used in case the canvas size is in percentages. Slice takes off the "px".
+            // .width and .height are not the same as .style.width and .style.height, and if they
+            // are less than the style values, the image can be blurry (we also need to take into
+            // account the devicePixelRatio)
+            
+            const canvas = document.getElementById("gameCanvas");
+            const computedStyles = window.getComputedStyle(canvas);
+            const devicePixelRatio = (window.devicePixelRatio || 1);
+            
+            canvas.width = Number(computedStyles.width.slice(0, -2)) * devicePixelRatio;
+            canvas.height = Number(computedStyles.height.slice(0, -2)) * devicePixelRatio;
+        </script>
+        
+        <!-- Run the game -->
         <script src="./game.bundle.js"></script>
     </body>
 </html>

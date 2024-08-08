@@ -39,8 +39,7 @@ export default class GraphicEngine implements IGraphicEngine {
         this._lastFrameCanvasWidth = 0;
         this._lastFrameCanvasHeight = 0;
         
-        // This needs to be ran here, so other entities can use these dimensions on startup
-        this._setCanvasCorrectWidthHeight();
+        this._handleCanvasSizeChange();
     }
     
     /**
@@ -53,7 +52,7 @@ export default class GraphicEngine implements IGraphicEngine {
         // Need to do this, rather than using an event listener, as the onResize listener
         // doesn't react to a change of canvas size if the size is set in percentages.
         if(this._canvasSizeHasChanged()) 
-            this._setCanvasCorrectWidthHeight();
+            this._handleCanvasSizeChange();
         
         // Clear everything on the game canvas
         this._gameCtx.clearRect(0, 0, this._gameCanvas.width, this._gameCanvas.height);
@@ -278,31 +277,14 @@ export default class GraphicEngine implements IGraphicEngine {
      * Will then call reset methods on any elements that need to be aware of the canvas element 
      * changing size.
      * 
-     * This should also be called on loading, to allow a number of elements to have the new 
-     * width/height values.
+     * Handles the canvas size changing (This should also be called on game initialisation).
      */
-    private _setCanvasCorrectWidthHeight():void
+    private _handleCanvasSizeChange():void
     {
-        const kernel = Kernel.getInstance();
-        
-        if(kernel.correctCanvasStyleToDevicePixelRatio)
-        {
-            const devicePixelRatio = (window.devicePixelRatio || 1);
-            
-            // Need to change the styling for the canvas, based on the DPI,
-            // to avoid it being stretched and blurry.
-            
-            // getComputedStyle is used incase the canvas size is in %. Slice takes off the "px".
-            // .width and .height are not the same as .style.width and .style.height, and if they
-            // are less than the style values, the image can be blurry (we also need to take into
-            // account the devicePixelRatio)
-            const computedStyles = window.getComputedStyle(this._gameCanvas);
-            this._gameCanvas.width = Number(computedStyles.width.slice(0, -2)) * devicePixelRatio;
-            this._gameCanvas.height = Number(computedStyles.height.slice(0, -2)) * devicePixelRatio;
-        }
+        const unitHelpers = Kernel.getInstance().helpers.unit;
         
         // It should be noted that these should be ran on loading as well (as it is the first setting of the below)
         this.camera.setCameraSize();
-        kernel.helpers.unit.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
+        unitHelpers.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
     }
 }
