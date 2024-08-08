@@ -3,7 +3,6 @@ import ASControlsInitialiser from './ControlsInitialiser/ASControlsInitialiser';
 import ISettings from './ISettings';
 
 export default {
-	gameCanvas: document.getElementById("gameCanvas") as HTMLCanvasElement,
 	fpsLimit: 70,
 	fpsDisplayColor: "blue",
 	unitsWithinCamera: 1000,

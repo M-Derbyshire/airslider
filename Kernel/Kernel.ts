@@ -55,7 +55,7 @@ export default class Kernel implements IKernel {
     /**
      * Triggers the starting of the game
      */
-    static init()
+    static init(canvas:HTMLCanvasElement)
     {
         const instance = this.getInstance();
         
@@ -63,6 +63,7 @@ export default class Kernel implements IKernel {
             return;
         
         try {
+            instance.gameCanvas = canvas;
             instance._load();
         } catch (err:any) {
             instance.handleError(err);
@@ -143,7 +144,7 @@ export default class Kernel implements IKernel {
         
         this._levelQueue = [];
         
-		this._gameCanvas = this._settings.gameCanvas;
+		this._gameCanvas ??= document.getElementsByTagName("canvas")[0] ?? undefined;
 		this._gameContext = this.gameCanvas.getContext("2d")!;
         
         this._hasError = false;
@@ -295,6 +296,11 @@ export default class Kernel implements IKernel {
 	get gameCanvas()
     {
         return this._gameCanvas;
+    }
+    
+    private set gameCanvas(c:HTMLCanvasElement)
+    {
+        this._gameCanvas = c;
     }
     
     /**

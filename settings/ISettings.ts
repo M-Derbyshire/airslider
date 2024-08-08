@@ -6,11 +6,6 @@ import ILevel from "../assets/levels/Level/ILevel";
  */
 export default interface ISettings {
     /**
-     * The canvas element that the game should be drawn on
-     */
-    gameCanvas:HTMLCanvasElement;
-    
-    /**
      * The maximum FPS that the game should be allowed to run at
      */
 	fpsLimit:number;
