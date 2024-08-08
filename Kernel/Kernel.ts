@@ -41,7 +41,7 @@ export default class Kernel implements IKernel {
      * Gets the singleton instance of the kernel
      * @returns the singleton instance of the kernel
      */
-    static getInstance():Kernel
+    static getInstance(canvas?:HTMLCanvasElement):Kernel
     {
         // The Kernel constructor will return the singleton instance
         // if it has already been created, and if not then it will create
@@ -49,7 +49,7 @@ export default class Kernel implements IKernel {
         // actual reason for this method is language -- it's better
         // that people know you're "getting" the "instance", then thinking
         // you are truly making something "new".
-        return new Kernel();
+        return new Kernel(canvas);
     }
     
     /**
@@ -57,7 +57,7 @@ export default class Kernel implements IKernel {
      */
     static init(canvas:HTMLCanvasElement)
     {
-        const instance = this.getInstance();
+        const instance = this.getInstance(canvas);
         
         if(instance.level) // If we've already initiated the game
             return;
@@ -121,13 +121,21 @@ export default class Kernel implements IKernel {
      * Constructor
      * @returns The singleton instance of the kernel
      */
-    private constructor()
+    private constructor(canvas?:HTMLCanvasElement)
     {
         if(Kernel._instance)
         {
             return Kernel._instance;
         }
         Kernel._instance = this;
+        
+        // While we want the canvas parameter to be optional for the constructor/getInstance() methods (so it's 
+        // not needed when we're getting the pre-existing kernel instance), it is still a requirement when 
+        // initially constructing the singleton instance.
+        if(!canvas)
+            throw new Error("Cannot initialise the game's Kernel without a canvas element");
+        
+        this.gameCanvas = canvas;
         
         this._settings = (process.env.GAME_ENV === "development") ? devSettings : prodSettings;
         
@@ -143,9 +151,6 @@ export default class Kernel implements IKernel {
         this._assetHandler = new AssetHandler();
         
         this._levelQueue = [];
-        
-		this._gameCanvas ??= document.getElementsByTagName("canvas")[0] ?? undefined;
-		this._gameContext = this.gameCanvas.getContext("2d")!;
         
         this._hasError = false;
         this._errorHandler = new ErrorHandler();
@@ -301,6 +306,7 @@ export default class Kernel implements IKernel {
     private set gameCanvas(c:HTMLCanvasElement)
     {
         this._gameCanvas = c;
+        this._gameContext = c.getContext("2d")!;
     }
     
     /**
