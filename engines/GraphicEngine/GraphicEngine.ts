@@ -273,17 +273,12 @@ export default class GraphicEngine implements IGraphicEngine {
     }
     
     /**
-     * Corrects the canvas element's styling width/height, based on the Device Pixel Ratio.
-     * Will then call reset methods on any elements that need to be aware of the canvas element 
-     * changing size.
-     * 
      * Handles the canvas size changing (This should also be called on game initialisation).
      */
     private _handleCanvasSizeChange():void
     {
         const unitHelpers = Kernel.getInstance().helpers.unit;
         
-        // It should be noted that these should be ran on loading as well (as it is the first setting of the below)
         this.camera.setCameraSize();
         unitHelpers.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
     }
