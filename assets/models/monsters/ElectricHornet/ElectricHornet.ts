@@ -1,3 +1,4 @@
+import Kernel from '../../../../Kernel/Kernel';
 import IHitBox from '../../Model/IHitBox';
 import IModel from '../../Model/IModel';
 import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
@@ -34,8 +35,10 @@ export default class ElectricHornet extends Monster {
     {
         super.load(animationManager);
         
+        const kernel = Kernel.getInstance();        
+        
         const buzzSoundPath = "/assets/models/monsters/ElectricHornet/sounds/buzz.mp3";
-        this._buzzSound = this.kernel.loadAudio(buzzSoundPath);
+        this._buzzSound = kernel.loadAudio(buzzSoundPath);
         this.assetsToUnload.push(buzzSoundPath);
         
         const spritesheetPath = "/assets/models/monsters/ElectricHornet/anim/electricHornet_spritesheet.png";
@@ -55,7 +58,7 @@ export default class ElectricHornet extends Monster {
         });
         
         const damageFlashImagePath = "/assets/HUDs/components/DamageFlash/images/yellow.png";
-        this.damageFlashImage = this.kernel.loadImage(damageFlashImagePath);
+        this.damageFlashImage = kernel.loadImage(damageFlashImagePath);
         this.assetsToUnload.push(damageFlashImagePath);
     }
     
@@ -118,7 +121,7 @@ export default class ElectricHornet extends Monster {
     
     start(): void {
         super.start();
-        this.kernel.soundEngine.playSound(this._buzzSound, true);
+        Kernel.getInstance().soundEngine.playSound(this._buzzSound, true);
     }
     
     enter():void
@@ -127,8 +130,10 @@ export default class ElectricHornet extends Monster {
         {
             this.moveLeft(this.enterXSpeed);
         } else {
+            const timeHelpers = Kernel.getInstance().helpers.time;
+            
             this.entering = false;
-            this._nextDropTime = this.helpers.time.getTotalMilliseconds() + this._initialDropWait;
+            this._nextDropTime = timeHelpers.getTotalMilliseconds() + this._initialDropWait;
         }
     }
     
@@ -152,7 +157,7 @@ export default class ElectricHornet extends Monster {
 	{
 		this.exiting = false;
     	this.active = false;
-        this.kernel.soundEngine.stopSound(this._buzzSound);
+        Kernel.getInstance().soundEngine.stopSound(this._buzzSound);
 	}
     
     // Monster actions -----------------------------------------------------
@@ -162,6 +167,8 @@ export default class ElectricHornet extends Monster {
      */
     private _fly():void
     {
+        const timeHelpers = Kernel.getInstance().helpers.time;
+        
         // Handle collision with level edges (if the model is over an edge, and still moving in that direction)
         if((this.x <= this.levelLeftEdge && this.xSpeed < 0) || 
             ((this.x + this.width) >= this.levelRightEdge && this.xSpeed > 0))
@@ -176,7 +183,7 @@ export default class ElectricHornet extends Monster {
         {
             this._nextDropTime = this._getNextDropTime();
         } 
-        else if(this.helpers.time.getTotalMilliseconds() >= this._nextDropTime)
+        else if(timeHelpers.getTotalMilliseconds() >= this._nextDropTime)
         {
             this._triggerDrop();
         }
@@ -188,7 +195,7 @@ export default class ElectricHornet extends Monster {
      */
     private _getNextDropTime():number
 	{
-        const currentTime = this.helpers.time.getTotalMilliseconds();
+        const currentTime = Kernel.getInstance().helpers.time.getTotalMilliseconds();
 		return currentTime + this._dropWaitOffset + Math.floor(Math.random() * this._dropWaitRange);
 	}
     

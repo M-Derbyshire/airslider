@@ -1,3 +1,4 @@
+import Kernel from '../../../../../Kernel/Kernel';
 import ASModel from '../../../ASModel/ASModel';
 import IModel from '../../../Model/IModel';
 import IModelAnimationsManager from '../../../Model/ModelAnimationsManager/IModelAnimationsManager';
@@ -33,7 +34,7 @@ export default class Lightning extends ASModel {
         });
         
         const damageFlashImagePath = "/assets/HUDs/components/DamageFlash/images/yellow.png";
-        this.damageFlashImage = this.kernel.loadImage(damageFlashImagePath);
+        this.damageFlashImage = Kernel.getInstance().loadImage(damageFlashImagePath);
         this.assetsToUnload.push(damageFlashImagePath);
     }
     
@@ -55,7 +56,7 @@ export default class Lightning extends ASModel {
         //However, in this instance, that's not the case, so we need to account for the frame rate.
         //Players can take this damage over multiple frames at a time, and we don't want people taking more damage on higher framerates.
         //Therefore, during the gameplay, the actual damage dealt will be the _damageValue, modified with the frame rate.
-        this.damageDealt = this._damageValue / this.kernel.fps;
+        this.damageDealt = this._damageValue / Kernel.getInstance().fps;
     }
     
     hitPlayerEventAction(otherModel:IModel):void {} // no action actually required

@@ -1,3 +1,4 @@
+import Kernel from '../../../Kernel/Kernel';
 import ASModel from '../ASModel/ASModel';
 import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Sign from '../Sign/Sign';
@@ -35,9 +36,11 @@ export default class SignDisplay extends ASModel
     {
         super.load(animationManager);
         
+        const kernel = Kernel.getInstance();
+        
         // Not adding these to assetsToUnload, as every level needs this
-        this._countdownBeep = this.kernel.loadAudio("/assets/models/SignDisplay/sounds/countdown_beep.mp3");
-        this._startBeep = this.kernel.loadAudio("/assets/models/SignDisplay/sounds/countdown_go.mp3");
+        this._countdownBeep = kernel.loadAudio("/assets/models/SignDisplay/sounds/countdown_beep.mp3");
+        this._startBeep = kernel.loadAudio("/assets/models/SignDisplay/sounds/countdown_go.mp3");
         
         const sheetPath = "/assets/models/SignDisplay/anim/display_open_spritesheet.png";
         
@@ -108,14 +111,16 @@ export default class SignDisplay extends ASModel
     {
         super.prepare();
         
+        const kernel = Kernel.getInstance();
+        
         this.x = 325;
         this.y = 115;
         
         this.state = "off";
         this.active = true;
         
-        this.kernel.soundEngine.forceLoad(this._countdownBeep);
-        this.kernel.soundEngine.forceLoad(this._startBeep);
+        kernel.soundEngine.forceLoad(this._countdownBeep);
+        kernel.soundEngine.forceLoad(this._startBeep);
         
         this._lastLightChangeMS = 0;
         this._lightChangeWaitMS = 1500;
@@ -155,9 +160,11 @@ export default class SignDisplay extends ASModel
         else
             changeWaitMS = this._lightChangeWaitMS;
         
+        const totalActiveMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+        
         return (
             this.state !== "finish" && 
-            this.helpers.time.getTotalMilliseconds() >= (this._lastLightChangeMS + changeWaitMS)
+            totalActiveMS >= (this._lastLightChangeMS + changeWaitMS)
         );
     }
     
@@ -166,25 +173,27 @@ export default class SignDisplay extends ASModel
      */
     private _changeToNextLightState():void
     {
-        this._lastLightChangeMS = this.helpers.time.getTotalMilliseconds();
+        const kernel = Kernel.getInstance();
+        
+        this._lastLightChangeMS = kernel.helpers.time.getTotalMilliseconds();
         
         switch(this.state)
         {
             case "off":
                 this.state = "one";
-                this.kernel.soundEngine.playSound(this._countdownBeep);
+                kernel.soundEngine.playSound(this._countdownBeep);
                 break;
             case "one":
                 this.state = "two";
-                this.kernel.soundEngine.playSound(this._countdownBeep);
+                kernel.soundEngine.playSound(this._countdownBeep);
                 break;
             case "two":
                 this.state = "three";
-                this.kernel.soundEngine.playSound(this._countdownBeep);
+                kernel.soundEngine.playSound(this._countdownBeep);
                 break;
             case "three":
                 this.state = "go";
-                this.kernel.soundEngine.playSound(this._startBeep);
+                kernel.soundEngine.playSound(this._startBeep);
                 break;
             case "go":
                 this.state = "finished";

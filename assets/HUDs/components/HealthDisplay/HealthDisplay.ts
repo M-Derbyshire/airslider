@@ -1,3 +1,4 @@
+import Kernel from '../../../../Kernel/Kernel';
 import { CentralStateKey } from '../../../levels/CentralStateKey';
 import Tarian from '../../../models/Tarian/Tarian';
 import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
@@ -50,9 +51,11 @@ export default class HealthDisplay extends ASHUDComponent
     {
         super.load();
         
+        const kernel = Kernel.getInstance();
+        
         const imagesDirPath = "/assets/HUDs/components/HealthDisplay/images";
-        this._borderImage = this.kernel.loadImage(`${imagesDirPath}/lightning-border.png`);
-        this._spannerImage = this.kernel.loadImage(`${imagesDirPath}/spanner.png`);
+        this._borderImage = kernel.loadImage(`${imagesDirPath}/lightning-border.png`);
+        this._spannerImage = kernel.loadImage(`${imagesDirPath}/spanner.png`);
     }
     
     prepare():void {
@@ -74,10 +77,12 @@ export default class HealthDisplay extends ASHUDComponent
     
     draw():void
     {
-        const playerModelIndex = this.kernel.centralState.get(CentralStateKey.PlayerModelIndex);
-        const health = (this.kernel.loadedModels[playerModelIndex] as unknown as Tarian).health;
+        const kernel = Kernel.getInstance();
         
-		const radiusModifierPixels = this.helpers.unit.xUnit(this._cornerRadiusModifier);
+        const playerModelIndex = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
+        const health = (kernel.loadedModels[playerModelIndex] as unknown as Tarian).health;
+        
+		const radiusModifierPixels = kernel.helpers.unit.xUnit(this._cornerRadiusModifier);
         
         // Determine the background color, based on the health
         let color:string;
@@ -109,7 +114,7 @@ export default class HealthDisplay extends ASHUDComponent
     {
         const unitWidth = this.width * 0.33;
         
-        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = Kernel.getInstance().graphicEngine.getStaticDrawPositionsAndDimensions({
             x: this.x, 
             y: this.y, 
             width: unitWidth, 
@@ -133,7 +138,7 @@ export default class HealthDisplay extends ASHUDComponent
         const xPos = this.x + (this.width * 0.33);
         const yPos = this.y + (this.height * 0.25);
         
-        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = Kernel.getInstance().graphicEngine.getStaticDrawPositionsAndDimensions({
             x: xPos, 
             y: yPos, 
             width: unitWidth, 
@@ -166,7 +171,7 @@ export default class HealthDisplay extends ASHUDComponent
         const unitWidth = (this.width * 0.33) - (xPaddingUnits * 2);
         const unitHeight = this.height - (yPaddingUnits * 2)
         
-        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = Kernel.getInstance().graphicEngine.getStaticDrawPositionsAndDimensions({
             x: xPos, 
             y: yPos, 
             width: unitWidth, 
@@ -190,10 +195,10 @@ export default class HealthDisplay extends ASHUDComponent
         const unitWidth = this.width + (paddingUnitsX * 2);
         const unitHeight = this.height + (paddingUnitsY * 2);
         
-        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = Kernel.getInstance().graphicEngine.getStaticDrawPositionsAndDimensions({
             x: xPos, 
             y: yPos, 
-            width: unitWidth, 
+            width: unitWidth,
             height: unitHeight
         });
         

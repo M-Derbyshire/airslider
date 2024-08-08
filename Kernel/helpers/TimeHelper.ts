@@ -1,5 +1,4 @@
 import Kernel from '../Kernel';
-import IKernel from '../IKernel';
 import ITimeHelper from './ITimeHelper';
 
 /**
@@ -7,13 +6,6 @@ import ITimeHelper from './ITimeHelper';
  */
 export default class TimeHelper implements ITimeHelper
 {
-    private _kernel:IKernel;
-    
-    constructor()
-    {
-        this._kernel = Kernel.getInstance();
-    }
-    
     /**
      * Calculates the amount of frames that will be rendered during a given amount of seconds (as this 
      * is based on a dynamic FPS, the returned value can only be considered an estimate).
@@ -22,7 +14,7 @@ export default class TimeHelper implements ITimeHelper
      */
     secondsToFrames(seconds:number):number
     {
-        return Math.floor(seconds * this._kernel.fps);
+        return Math.floor(seconds * Kernel.getInstance().fps);
     }
 
     /**
@@ -42,7 +34,7 @@ export default class TimeHelper implements ITimeHelper
      */
     getTotalMilliseconds():number
     {
-        return this._kernel.totalLevelActiveMilliseconds;
+        return Kernel.getInstance().totalLevelActiveMilliseconds;
     }
 
     /**

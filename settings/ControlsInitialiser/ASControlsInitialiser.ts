@@ -1,6 +1,7 @@
 import ControlsInitialiser from './ControlsInitialiser';
 import ASModel from '../../assets/models/ASModel/ASModel';
 import { CentralStateKey } from '../../assets/levels/CentralStateKey';
+import Kernel from '../../Kernel/Kernel';
 
 /**
  * The game control's initialiser class
@@ -22,11 +23,13 @@ export default class ASControlsInitialiser extends ControlsInitialiser
 	
     keyboardControls():void
     {
+        const kernel = Kernel.getInstance();
+        
         const keyDownListener = (e:KeyboardEvent) => {
-            if(!this.kernel.loadedModels.length) return;
+            if(!kernel.loadedModels.length) return;
             
-            const playerModelIndex = this.kernel.centralState.get(CentralStateKey.PlayerModelIndex);
-            const playerModel = this.kernel.loadedModels[playerModelIndex] as ASModel;
+            const playerModelIndex = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
+            const playerModel = kernel.loadedModels[playerModelIndex] as ASModel;
             
             if(playerModel.canBeControlled && this._currentMove !== e.key)
             {
@@ -44,10 +47,10 @@ export default class ASControlsInitialiser extends ControlsInitialiser
         };
         
         const keyUpListener = (e:KeyboardEvent) => {
-            if(!this.kernel.loadedModels.length) return;
+            if(!kernel.loadedModels.length) return;
             
-            const playerModelIndex = this.kernel.centralState.get(CentralStateKey.PlayerModelIndex);
-            const playerModel = this.kernel.loadedModels[playerModelIndex] as ASModel;
+            const playerModelIndex = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
+            const playerModel = kernel.loadedModels[playerModelIndex] as ASModel;
             
             if(playerModel.canBeControlled && this._currentMove === e.key)
             {

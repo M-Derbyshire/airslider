@@ -1,6 +1,4 @@
 import IRegisteredEventListener from './IRegisteredEventListener';
-import Kernel from '../../Kernel/Kernel';
-import IKernel from '../../Kernel/IKernel';
 import IControlsInitialiser from './IControlsInitialiser';
 
 /**
@@ -9,8 +7,6 @@ import IControlsInitialiser from './IControlsInitialiser';
  */
 export default class ControlsInitialiser implements IControlsInitialiser
 {
-	protected kernel:IKernel;
-	
 	/**
 	 * Any event-listener functions should be added to this, so they can be registered/unregistered
 	 */
@@ -23,8 +19,6 @@ export default class ControlsInitialiser implements IControlsInitialiser
 	
     constructor()
     {
-        this.kernel = Kernel.getInstance();
-		
 		this.registeredEventListeners = [];
 		this.initialisingFunctions = [];
     }

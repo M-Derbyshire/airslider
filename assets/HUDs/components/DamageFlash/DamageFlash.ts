@@ -1,3 +1,4 @@
+import Kernel from '../../../../Kernel/Kernel';
 import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
 
 /**
@@ -44,8 +45,10 @@ export default class DamageFlash extends ASHUDComponent
                 return;
             }
             
-            const unitsWithinCamera = this.kernel.unitsWithinCamera;
-            const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+            const kernel = Kernel.getInstance();
+            
+            const unitsWithinCamera = kernel.unitsWithinCamera;
+            const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
                 x: 0,
                 y: 0,
                 width: unitsWithinCamera,
@@ -77,7 +80,7 @@ export default class DamageFlash extends ASHUDComponent
      */
 	private _getFPSConsistentSpeed():number
 	{
-		return this.flashSpeed / this.kernel.fps;
+		return this.flashSpeed / Kernel.getInstance().fps;
 	}
 	
     /**

@@ -1,17 +1,12 @@
-import Kernel from '../../Kernel/Kernel';
-import IKernel from '../../Kernel/IKernel';
 import ICamera from './ICamera';
-import IHelpers from '../../Kernel/helpers/IHelpers';
 import ICameraPositions from './ICameraPositions';
 import ICameraDrawPositionsCalc from './ICameraDrawPositionsCalc';
+import Kernel from '../../Kernel/Kernel';
 
 /**
  * A level's camera
  */
 export default class Camera implements ICamera {
-    private _kernel:IKernel;
-    private _helpers:IHelpers;
-    
     private _canvas:HTMLCanvasElement;
     private _canvasCtx:CanvasRenderingContext2D;
     private _aspectRatioHorizontal:number; // The horizontal aspect ratio value (e.g. the "16" in "16:9")
@@ -32,11 +27,10 @@ export default class Camera implements ICamera {
      */
     constructor(aspectRatioHorizontal:number = 17, aspectRatioVertical:number = 9)
     {
-        this._kernel = Kernel.getInstance();
-        this._helpers = this._kernel.helpers;
+        const kernel = Kernel.getInstance();
         
-        this._canvas = this._kernel.gameCanvas;
-        this._canvasCtx = this._kernel.gameContext;
+        this._canvas = kernel.gameCanvas;
+        this._canvasCtx = kernel.gameContext;
         this._aspectRatioHorizontal = aspectRatioHorizontal;
         this._aspectRatioVertical = aspectRatioVertical;
         
@@ -151,15 +145,17 @@ export default class Camera implements ICamera {
      */
     isOnCamera(drawSpaceX:number, drawSpaceY:number, widthUnits:number, heightUnits:number, zPosition:number = 0):boolean
     {
-        const unscaledX = this._helpers.unit.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this._positions.canvas.x;
-        const unscaledY = this._helpers.unit.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this._positions.canvas.y;
-        const unscaledWidth = this._helpers.unit.xUnit(widthUnits);
-        const unscaledHeight = this._helpers.unit.yUnit(heightUnits);
+        const helpers = Kernel.getInstance().helpers;
         
-        const scaledX = this._helpers.zCalc.x(unscaledX, zPosition);
-        const scaledY = this._helpers.zCalc.y(unscaledY, zPosition);
-        const scaledWidth = this._helpers.zCalc.width(unscaledWidth, zPosition);
-        const scaledHeight = this._helpers.zCalc.height(unscaledHeight, zPosition);
+        const unscaledX = helpers.unit.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this._positions.canvas.x;
+        const unscaledY = helpers.unit.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this._positions.canvas.y;
+        const unscaledWidth = helpers.unit.xUnit(widthUnits);
+        const unscaledHeight = helpers.unit.yUnit(heightUnits);
+        
+        const scaledX = helpers.zCalc.x(unscaledX, zPosition);
+        const scaledY = helpers.zCalc.y(unscaledY, zPosition);
+        const scaledWidth = helpers.zCalc.width(unscaledWidth, zPosition);
+        const scaledHeight = helpers.zCalc.height(unscaledHeight, zPosition);
         
         return (
             (scaledX + scaledWidth >= this._positions.canvas.x &&
@@ -239,7 +235,8 @@ export default class Camera implements ICamera {
      */
     moveLeft(speed:number):void
     {
-        this._positions.drawSpace.x -= this._helpers.unit.xSpeed(speed);
+        const unitHelper = Kernel.getInstance().helpers.unit;
+        this._positions.drawSpace.x -= unitHelper.xSpeed(speed);
     }
     
     /**
@@ -248,7 +245,8 @@ export default class Camera implements ICamera {
      */
     moveRight(speed:number):void
     {
-        this._positions.drawSpace.x += this._helpers.unit.xSpeed(speed);
+        const unitHelper = Kernel.getInstance().helpers.unit;
+        this._positions.drawSpace.x += unitHelper.xSpeed(speed);
     }
     
     /**
@@ -257,7 +255,8 @@ export default class Camera implements ICamera {
      */
     moveUp(speed:number):void
     {
-        this._positions.drawSpace.y -= this._helpers.unit.ySpeed(speed);
+        const unitHelper = Kernel.getInstance().helpers.unit;
+        this._positions.drawSpace.y -= unitHelper.ySpeed(speed);
     }
     
     /**
@@ -266,6 +265,7 @@ export default class Camera implements ICamera {
      */
     moveDown(speed:number):void
     {
-        this._positions.drawSpace.y += this._helpers.unit.ySpeed(speed);
+        const unitHelper = Kernel.getInstance().helpers.unit;
+        this._positions.drawSpace.y += unitHelper.ySpeed(speed);
     }
 };

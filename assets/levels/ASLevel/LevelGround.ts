@@ -1,15 +1,10 @@
-import IKernel from '../../../Kernel/IKernel';
-import Kernel from '../../../Kernel/Kernel';
-import IHelpers from '../../../Kernel/helpers/IHelpers';
+import Kernel from "../../../Kernel/Kernel";
 
 /**
  * Draws an image on the ground at each side of the road.
  */
 export default class LevelGround
 {
-	protected kernel:IKernel;
-	protected helpers:IHelpers;
-	
 	private _canvasCtx:CanvasRenderingContext2D;
 	private _groundPopulatedInitially:boolean; // True if the images should be drawn from the start. If false, player is moving towards them
 	
@@ -27,10 +22,7 @@ export default class LevelGround
 	 */
     constructor(groundPopulatedInitially:boolean = true)
     {
-        this.kernel = Kernel.getInstance();
-        this.helpers = this.kernel.helpers;
-
-        this._canvasCtx = this.kernel.gameContext;
+        this._canvasCtx = Kernel.getInstance().gameContext;
 		this._groundPopulatedInitially = groundPopulatedInitially;
 		
 		this._removeGround = false;
@@ -98,7 +90,7 @@ export default class LevelGround
 	private _getPopulatedGroundObject(path:string, height:number, width:number|null):IGround
 	{
 		return {
-            image: this.kernel.loadImage(path),
+            image: Kernel.getInstance().loadImage(path),
             height, //Height to draw the image
 			width,
             offset: 0 //The amount the images have all moved along the z-axis
@@ -111,10 +103,12 @@ export default class LevelGround
 	 */
 	private _populateGroundZPositions():void
 	{
+		const vanishingPointDepth = Kernel.getInstance().helpers.zCalc.vanishingPointDepth;
+		
 		this.groundZPositions = [];
 		
 		//Start from the furthest away, and move inwards, so we don't draw the distant ones on top of the closer ones
-		for(let zPos = this.helpers.zCalc.vanishingPointDepth; zPos >= 0; zPos -= this.distance)
+		for(let zPos = vanishingPointDepth; zPos >= 0; zPos -= this.distance)
 		{
 			this.groundZPositions.push(zPos);
 		}
@@ -156,7 +150,9 @@ export default class LevelGround
 	{
 		// At 0 on the z-axis, each ground image should be fully off the screen (in the bottom corners)
 		
-		const unitsWithinCamera = this.kernel.unitsWithinCamera;
+		const kernel = Kernel.getInstance();
+		const unitsWithinCamera = kernel.unitsWithinCamera;
+		const graphicEngine = kernel.graphicEngine;
 		
 		// The default for this needs to be double the width of the canvas (at 0 on z-axis) to look correct
 		const imageWidth = (this.ground.width) 
@@ -166,7 +162,7 @@ export default class LevelGround
 		const offsetZPos = groundZPos - this.ground.offset;
 		const yUnitValue = unitsWithinCamera - this.ground.height;
 		
-		const leftDrawValues = this.kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
+		const leftDrawValues = graphicEngine.getScaledDrawPositionsAndDimensions({
 			x: -imageWidth,
 			y: yUnitValue,
 			width: imageWidth,
@@ -174,7 +170,7 @@ export default class LevelGround
 			z: offsetZPos
 		});
 		
-		const rightDrawValues = this.kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
+		const rightDrawValues = graphicEngine.getScaledDrawPositionsAndDimensions({
 			x: unitsWithinCamera,
 			y: yUnitValue,
 			width: imageWidth,

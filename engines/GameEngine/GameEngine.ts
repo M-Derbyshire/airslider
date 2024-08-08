@@ -1,18 +1,10 @@
 import Kernel from '../../Kernel/Kernel';
-import IKernel from '../../Kernel/IKernel';
 import IGameEngine from './IGameEngine';
 
 /**
  * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
  */
-export default class GameEngine implements IGameEngine {
-    private _kernel:IKernel;
-    
-    constructor()
-    {
-        this._kernel = Kernel.getInstance();
-    }
-    
+export default class GameEngine implements IGameEngine {    
     /**
      * Triggers the actions of levels/models, and then triggers the event checking/handling
      */
@@ -28,7 +20,7 @@ export default class GameEngine implements IGameEngine {
      */
     private _runLevelActions():void
     {
-        this._kernel.level.act();
+        Kernel.getInstance().level.act();
     }
     
     /**
@@ -36,7 +28,7 @@ export default class GameEngine implements IGameEngine {
      */
     private _runModelActions():void
     {
-        this._kernel.loadedModels.forEach(model => {
+        Kernel.getInstance().loadedModels.forEach(model => {
             if(model.active)
                 model.act();
         });
@@ -47,6 +39,6 @@ export default class GameEngine implements IGameEngine {
      */
     private _runEventChecks():void
     {
-        this._kernel.level.checkForEvents();
+        Kernel.getInstance().level.checkForEvents();
     }
 }

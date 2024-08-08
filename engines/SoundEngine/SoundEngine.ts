@@ -1,4 +1,3 @@
-import IKernel from '../../Kernel/IKernel';
 import Kernel from '../../Kernel/Kernel';
 import { KernelStatus } from '../../Kernel/KernelStatus';
 import ISoundEngine from './ISoundEngine';
@@ -7,8 +6,6 @@ import ISoundEngine from './ISoundEngine';
  * The engine that controls the sound/music of the game
  */
 export default class SoundEngine implements ISoundEngine {
-    private _kernel:IKernel;
-    
     private _music:HTMLAudioElement; // The level's music
     
     // The sounds we're currently playing (not including music, or sounds that are force-loading)
@@ -19,8 +16,6 @@ export default class SoundEngine implements ISoundEngine {
      */
     constructor()
     {
-        this._kernel = Kernel.getInstance();
-        
         this._currentSounds = new Map<string, HTMLAudioElement>();
     }
     
@@ -107,13 +102,15 @@ export default class SoundEngine implements ISoundEngine {
      */
     playSound(sound:HTMLAudioElement, loop:boolean = false):void
     {
+        const kernel = Kernel.getInstance();
+        
         sound.currentTime = 0; // Position needs to be reset so sounds will restart if they're triggered mid-way through playing
         sound.muted = false; // Sound may be muted, if it was in the middle of being force-loaded
         sound.loop = loop;
         
         this._currentSounds.set(sound.src, sound);
         
-        if(this._kernel.status === KernelStatus.Active)
+        if(kernel.status === KernelStatus.Active)
             sound.play();
     }
     

@@ -1,23 +1,18 @@
-import Kernel from '../../../Kernel/Kernel';
-import IKernel from '../../../Kernel/IKernel';
 import EventManager from './EventManager';
 import PointerEventManager from './PointerEventManager';
 import IEventManager from './IEventManager';
 import IHUD from '../../HUDs/HUD/IHUD';
-import IHelpers from '../../../Kernel/helpers/IHelpers';
 import IPointerEventManager from './IPointerEventManager';
 import IFrameManager from '../../../engines/GraphicEngine/IFrameManager';
 import IModel from '../../models/Model/IModel';
 import ILevel from './ILevel';
+import Kernel from '../../../Kernel/Kernel';
 
 /**
  * A level of the game
  */
 export default class Level implements ILevel
 {
-    protected kernel: IKernel;
-    protected helpers: IHelpers;
-    
     protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
     
     protected frameManager: IFrameManager; // The frame manager for the level
@@ -40,9 +35,6 @@ export default class Level implements ILevel
     
     constructor()
     {
-        this.kernel = Kernel.getInstance();
-        this.helpers = this.kernel.helpers;
-        
         this.assetsToUnload = [];
         this.isPauseable = true;
     }
@@ -59,8 +51,10 @@ export default class Level implements ILevel
         pointerEventManager:PointerEventManager
     ):void
     {
-        this.gameCanvas = this.kernel.gameCanvas;
-        this.gameContext = this.kernel.gameContext;
+        const kernel = Kernel.getInstance();
+        
+        this.gameCanvas = kernel.gameCanvas;
+        this.gameContext = kernel.gameContext;
         
         this.frameManager = frameManager;
         
@@ -75,7 +69,7 @@ export default class Level implements ILevel
      */
     unload():void
     {
-        this.assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
+        this.assetsToUnload.forEach(asset => Kernel.getInstance().releaseAsset(asset));
         this.pointerEventManager.removeEventHandlers();
     }
     
@@ -88,7 +82,7 @@ export default class Level implements ILevel
         
         this.eventManager.clearEvents();
         this.registerLevelEvents();
-        this.kernel.loadedModels.forEach(model => this.pointerEventManager.addPointerEventSubject(model));
+        Kernel.getInstance().loadedModels.forEach(model => this.pointerEventManager.addPointerEventSubject(model));
     }
     
     /**

@@ -1,18 +1,16 @@
-import Kernel from '../../../../Kernel/Kernel';
-import IKernel from '../../../../Kernel/IKernel';
 import IModel from '../IModel';
 import IAnimation from './IAnimation';
 import IAnimationDetails from './IAnimationDetails';
 import IModelAnimationsManager, { AnimationsObject } from './IModelAnimationsManager';
 import IDrawDimensions from '../../../../engines/GraphicEngine/IDrawDimensions';
 import IDrawPositions from '../../../../engines/GraphicEngine/IDrawPositions';
+import Kernel from '../../../../Kernel/Kernel';
 
 /**
  * Manages a model's animations
  */
 export default class ModelAnimationsManager implements IModelAnimationsManager {
     private _model:IModel; // A reference to the model
-    private _kernel:IKernel; // A reference to the kernel
     private _canvasCtx:CanvasRenderingContext2D; // The 2D context from the canvas element
     
     /**
@@ -31,8 +29,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     constructor(model:IModel)
     {
-        this._kernel = Kernel.getInstance();
-        this._canvasCtx = this._kernel.gameContext;
+        this._canvasCtx = Kernel.getInstance().gameContext;
         
         this._model = model;
         
@@ -56,7 +53,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     }:IAnimationDetails):IAnimation
     {
         if(!this.sheetMap.has(sheetPath))
-            this.sheetMap.set(sheetPath, this._kernel.loadImage(sheetPath));
+            this.sheetMap.set(sheetPath, Kernel.getInstance().loadImage(sheetPath));
         
         let anim:IAnimation = {
 			spritesheet: this.sheetMap.get(sheetPath)!,
@@ -115,7 +112,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     drawText():void
     {
-        this._kernel.graphicEngine.drawText(
+        Kernel.getInstance().graphicEngine.drawText(
             this._model.text,
             this._model,
             "scaled"
@@ -147,7 +144,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
 	getDrawPositionsAndDimensions(originalValues:IDrawPositions&IDrawDimensions&{ z:number }):IDrawPositions&IDrawDimensions
 	{
-        return this._kernel.graphicEngine.getScaledDrawPositionsAndDimensions(originalValues);
+        return Kernel.getInstance().graphicEngine.getScaledDrawPositionsAndDimensions(originalValues);
 	}
 	
     /**
@@ -156,21 +153,23 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     private _getNextFrameCoordinates():IDrawPositions&IDrawDimensions
     {
+        const kernel = Kernel.getInstance();
+        
         const animation = this.animations[this._model.state];
 		let currentFrameIndex = animation.currentFrameIndex;
 		
         //First, we need to determine how many game-loop frames we need to wait before we move on to the next 
         //frame of this sprite's animation. This is to ensure that the sprite's animation remains consistent
         //if the game's fps changes (It also means that the sprite can have a different fps to the game-loop).
-        animation.nextCount = Math.floor(this._kernel.fps / animation.fps);
+        animation.nextCount = Math.floor(kernel.fps / animation.fps);
         
         // Change the frame to the next one, if it is time to
         if(animation.waitCount >= animation.nextCount)
         {
-            if(animation.fps > this._kernel.fps)
+            if(animation.fps > kernel.fps)
                 //If the sprite has more frames per second than the current game fps,
                 //skip the necessary amount of frames to make up for that.
-                currentFrameIndex += Math.floor(animation.fps / this._kernel.fps);
+                currentFrameIndex += Math.floor(animation.fps / kernel.fps);
             else
                 //If the sprite has less or equal frames per second to the game-loop's fps,
                 //we can just move to the next frame now.

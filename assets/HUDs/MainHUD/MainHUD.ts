@@ -6,6 +6,7 @@ import IPointerEventManager from '../../levels/Level/IPointerEventManager';
 import PauseButton from '../components/PauseButton/PauseButton';
 import Dialog from '../components/UI-Components/Dialog/Dialog';
 import TextButton from '../components/UI-Components/TextButton/TextButton';
+import Kernel from '../../../Kernel/Kernel';
 
 export default class MainHUD extends ASHUD
 {
@@ -131,7 +132,7 @@ export default class MainHUD extends ASHUD
      */
     private _triggerNextLevel():void
     {
-        this.kernel.unloadCurrentLevel();
+        Kernel.getInstance().unloadCurrentLevel();
     }
     
     /**
@@ -139,6 +140,6 @@ export default class MainHUD extends ASHUD
      */
     private _triggerRetryLevel():void
     {
-        this.kernel.restartCurrentLevel();
+        Kernel.getInstance().restartCurrentLevel();
     }
 }

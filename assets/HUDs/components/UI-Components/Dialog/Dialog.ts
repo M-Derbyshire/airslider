@@ -1,3 +1,4 @@
+import Kernel from '../../../../../Kernel/Kernel';
 import ASHUDComponent from '../../ASHUDComponent/ASHUDComponent';
 
 /**
@@ -51,7 +52,7 @@ export default class Dialog extends ASHUDComponent
         super.prepare();
         
         // We determine the x/y using the width/height (to ensure it's always centered)
-        const unitsWithinCamera = this.kernel.unitsWithinCamera;
+        const unitsWithinCamera = Kernel.getInstance().unitsWithinCamera;
         this.x = (unitsWithinCamera / 2) - (this.width / 2);
         this.y = (unitsWithinCamera / 2) - (this.height / 2);
         
@@ -87,7 +88,7 @@ export default class Dialog extends ASHUDComponent
     {
         super.draw();
         
-        const ctx = this.kernel.gameContext;
+        const ctx = Kernel.getInstance().gameContext;
         const originalFillColor = ctx.fillStyle;
         
         this._drawBorder(ctx);
@@ -111,16 +112,18 @@ export default class Dialog extends ASHUDComponent
      */
     _drawBorder(ctx:CanvasRenderingContext2D)
     {
+        const kernel = Kernel.getInstance();
+        
         ctx.fillStyle = this._borderColor;
         
-        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({ 
+        const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({ 
             x: this.x - this._borderX,
             y: this.y - this._borderY,
             width: this.width + (this._borderX * 2),
             height: this.height + (this._borderY * 2)
         });
         
-        const cornerRadius = this.helpers.unit.xUnit(this._cornerRadiusModifier);
+        const cornerRadius = kernel.helpers.unit.xUnit(this._cornerRadiusModifier);
         
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, cornerRadius);
@@ -133,16 +136,18 @@ export default class Dialog extends ASHUDComponent
      */
     _drawBackground(ctx:CanvasRenderingContext2D)
     {
+        const kernel = Kernel.getInstance();
+        
         ctx.fillStyle = this._backgroundColor;
         
-        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({ 
+        const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({ 
             x: this.x, 
             y: this.y, 
             width: this.width, 
             height: this.height
         });
         
-        const cornerRadius = this.helpers.unit.xUnit(this._cornerRadiusModifier);
+        const cornerRadius = kernel.helpers.unit.xUnit(this._cornerRadiusModifier);
         
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, cornerRadius);

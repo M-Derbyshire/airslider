@@ -1,3 +1,4 @@
+import Kernel from '../../../../Kernel/Kernel';
 import IHitBox from '../../Model/IHitBox';
 import IModel from '../../Model/IModel';
 import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
@@ -63,15 +64,17 @@ export default class NeonPidgeon extends Monster {
     {
         super.load(animationManager);
         
+        const kernel = Kernel.getInstance();
+        
         const fullModelWidth = 337;
         this._edgeOverflow = fullModelWidth / 2;
         
         const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/none.png";
-        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
+        this.damageFlashImage = kernel.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
         
         const flapSoundPath = "/assets/models/monsters/NeonPidgeon/sounds/flap.mp3";
-        this._flapSound = this.kernel.loadAudio(flapSoundPath);
+        this._flapSound = kernel.loadAudio(flapSoundPath);
         this.assetsToUnload.push(flapSoundPath);
         
         const spritesheetPath = "/assets/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png";
@@ -218,7 +221,7 @@ export default class NeonPidgeon extends Monster {
     
     start(): void {
         super.start();
-        this.kernel.soundEngine.forceLoad(this._flapSound);
+        Kernel.getInstance().soundEngine.forceLoad(this._flapSound);
     }
     
     enter():void
@@ -227,8 +230,10 @@ export default class NeonPidgeon extends Monster {
         {
             this.moveLeft(this.enterXSpeed);
         } else {
+            const timeHelpers = Kernel.getInstance().helpers.time;
+            
             this.entering = false;
-            this._nextDrop = this.helpers.time.getTotalMilliseconds() + this.initialDropWait;
+            this._nextDrop = timeHelpers.getTotalMilliseconds() + this.initialDropWait;
         }
     }
     
@@ -324,9 +329,9 @@ export default class NeonPidgeon extends Monster {
      */
 	private _getNextDropTime():number
 	{
-		return this.helpers.time.getTotalMilliseconds() + 
-									this.dropWaitOffset + 
-									Math.floor(Math.random() * this.dropWaitRange);
+        const totalActiveMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+        
+		return totalActiveMS + this.dropWaitOffset + Math.floor(Math.random() * this.dropWaitRange);
 	}
 	
     /**
@@ -335,10 +340,9 @@ export default class NeonPidgeon extends Monster {
      */
 	private _monsterShouldDrop():boolean
 	{
-		return (
-            this.helpers.time.getTotalMilliseconds() >= this._nextDrop && 
-            this.overlapping
-        );
+        const totalActiveMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+        
+		return (totalActiveMS >= this._nextDrop && this.overlapping);
 	}
 	
     /**
@@ -378,8 +382,10 @@ export default class NeonPidgeon extends Monster {
     {
         const pidgeonBottomEdge = this.y + this.height;
         
+        const unitsWithinCamera = Kernel.getInstance().unitsWithinCamera;
+        
         // Make sure the player doesn't lose extra health if they collide from the side
-        if((pidgeonBottomEdge > otherModel.y) && (pidgeonBottomEdge < this.kernel.unitsWithinCamera))
+        if((pidgeonBottomEdge > otherModel.y) && (pidgeonBottomEdge < unitsWithinCamera))
             this.y = otherModel.y - this.height - 1;
         
         if(this.state == "falling")

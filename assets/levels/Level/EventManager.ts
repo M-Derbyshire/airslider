@@ -1,19 +1,16 @@
-import Kernel from '../../../Kernel/Kernel';
 import IEventManager, { IEvent, IEventDetails } from './IEventManager';
 import IModel from '../../models/Model/IModel';
-import IKernel from '../../../Kernel/IKernel';
+import Kernel from '../../../Kernel/Kernel';
 
 /**
  * Manages the event monitoring for a level (doesn't include touch/mouse events)
  */
 export default class EventManager implements IEventManager
 {
-    private _kernel:IKernel;
     private _events:IEvent[];
     
     constructor()
     {
-        this._kernel = Kernel.getInstance();
         this._events = [];
     }
     
@@ -28,7 +25,7 @@ export default class EventManager implements IEventManager
         const class1Models:IModel[] = [];
         const class2Models:IModel[] = [];
         
-        this._kernel.loadedModels.forEach(model => {
+        Kernel.getInstance().loadedModels.forEach(model => {
             if(model.constructor.name === event.class1.name) class1Models.push(model);
             if(model.constructor.name === event.class2.name) class2Models.push(model);
         });
@@ -87,6 +84,6 @@ export default class EventManager implements IEventManager
      */
     private _checkForExtraModelEvents():void
     {
-        this._kernel.loadedModels.forEach(model => model.checkForExtraEvents());
+        Kernel.getInstance().loadedModels.forEach(model => model.checkForExtraEvents());
     }
 };

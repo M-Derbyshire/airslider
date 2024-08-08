@@ -1,29 +1,18 @@
-import IKernel from '../../../Kernel/IKernel';
-import Kernel from '../../../Kernel/Kernel';
-import IHelpers from '../../../Kernel/helpers/IHelpers';
+import Kernel from "../../../Kernel/Kernel";
 
 /**
  * Draws the level's road
  */
 export default class LevelRoad
 {
-    protected kernel:IKernel;
-    protected helpers:IHelpers;
-    
     private _canvasCtx:CanvasRenderingContext2D;
-    
-    constructor()
-    {
-        this.kernel = Kernel.getInstance();
-        this.helpers = this.kernel.helpers;
-    }
     
     /**
      * Loads the LevelRoad
      */
     load():void
     {
-        this._canvasCtx = this.kernel.gameContext;
+        this._canvasCtx = Kernel.getInstance().gameContext;
     }
     
     /**
@@ -35,15 +24,16 @@ export default class LevelRoad
         this._canvasCtx.lineWidth = 1;
         this._canvasCtx.fillStyle = color;
         
-        const unitHelpers = this.helpers.unit;
-        const zCalc = this.helpers.zCalc;
-        const camera = this.kernel.graphicEngine.camera;
+        const kernel = Kernel.getInstance();
+        const unitHelpers = kernel.helpers.unit;
+        const zCalc = kernel.helpers.zCalc;
+        const camera = kernel.graphicEngine.camera;
         
         const vanishPointX = camera.canvasPositionX + unitHelpers.xUnit(zCalc.vanishingPointX);
         const vanishPointY = camera.canvasPositionY + unitHelpers.yUnit(zCalc.vanishingPointY);
         
-        const unitsWithinCamera = this.kernel.unitsWithinCamera;
-        const { x, y, width, height } = this.kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({
+        const unitsWithinCamera = kernel.unitsWithinCamera;
+        const { x, y, width, height } = kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({
             x: 0,
             y: 0,
             width: unitsWithinCamera,

@@ -1,21 +1,15 @@
-import Kernel from '../../Kernel/Kernel';
-import IKernel from '../../Kernel/IKernel';
 import IGraphicEngine from './IGraphicEngine';
 import ICamera from './ICamera';
 import IFrameManager from './IFrameManager';
-import IHelpers from '../../Kernel/helpers/IHelpers';
 import IDrawPositions from './IDrawPositions';
 import IDrawDimensions from './IDrawDimensions';
 import ITextContent from './ITextContent';
+import Kernel from '../../Kernel/Kernel';
 
 /**
  * The engine that controls the drawing to the screen
  */
 export default class GraphicEngine implements IGraphicEngine {
-    
-    private _kernel:IKernel;
-    private _helpers:IHelpers;
-    
     private _gameCanvas:HTMLCanvasElement; // The canvas that we're drawing on
     private _gameCtx:CanvasRenderingContext2D; // The 2D context for the canvas
     private _frameManager:IFrameManager; // Manages the level's frames
@@ -35,11 +29,10 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     constructor(camera:ICamera, frameManager:IFrameManager)
     {
-        this._kernel = Kernel.getInstance();
-        this._helpers = this._kernel.helpers;
+        const kernel = Kernel.getInstance();
 		
-        this._gameCanvas = this._kernel.gameCanvas;
-        this._gameCtx = this._kernel.gameContext;
+        this._gameCanvas = kernel.gameCanvas;
+        this._gameCtx = kernel.gameContext;
         this.camera = camera;
         this._frameManager = frameManager;
         
@@ -55,6 +48,8 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     run():void
     {
+        const kernel = Kernel.getInstance();
+        
         // Need to do this, rather than using an event listener, as the onResize listener
         // doesn't react to a change of canvas size if the size is set in percentages.
         if(this._canvasSizeHasChanged()) 
@@ -69,18 +64,18 @@ export default class GraphicEngine implements IGraphicEngine {
         // Draw the elements that are behind the models
         this.camera.drawBack();
         this._frameManager.drawFramesBack();
-        this._kernel.level.drawBack();
+        kernel.level.drawBack();
         
         // Now the models
         this._drawModels();
         
         //Finally, draw everything that needs to be drawn on top of the models
-        this._kernel.level.drawFront();
+        kernel.level.drawFront();
         this._frameManager.drawFramesFront();
-        this._kernel.level.HUD.draw();
+        kernel.level.HUD.draw();
         this.camera.drawFront();
         
-        if(this._kernel.fpsDisplayColor)
+        if(kernel.fpsDisplayColor)
             this._fpsMeter();
     }
     
@@ -147,6 +142,8 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     getStaticDrawPositionsAndDimensions(unitValues:Partial<IDrawPositions&IDrawDimensions>):IDrawPositions&IDrawDimensions
     {
+        const helpers = Kernel.getInstance().helpers;
+        
         const { x, y, width, height } = unitValues;
         
         const cameraX = this.camera.canvasPositionX;
@@ -154,10 +151,10 @@ export default class GraphicEngine implements IGraphicEngine {
         
         const pixelValues = { x: 0, y: 0, width: 0, height: 0 };
         
-        if(this._isSetNumber(x)) pixelValues.x = cameraX + this._helpers.unit.xUnit(x);
-        if(this._isSetNumber(y)) pixelValues.y = cameraY + this._helpers.unit.yUnit(y);
-        if(this._isSetNumber(width)) pixelValues.width = this._helpers.unit.xUnit(width);
-        if(this._isSetNumber(height)) pixelValues.height = this._helpers.unit.yUnit(height)
+        if(this._isSetNumber(x)) pixelValues.x = cameraX + helpers.unit.xUnit(x);
+        if(this._isSetNumber(y)) pixelValues.y = cameraY + helpers.unit.yUnit(y);
+        if(this._isSetNumber(width)) pixelValues.width = helpers.unit.xUnit(width);
+        if(this._isSetNumber(height)) pixelValues.height = helpers.unit.yUnit(height)
         
         return pixelValues;
     }
@@ -192,7 +189,7 @@ export default class GraphicEngine implements IGraphicEngine {
         showNegative = false
     ):IDrawPositions&IDrawDimensions
     {
-        const zCalc = this._kernel.helpers.zCalc;
+        const zCalc = Kernel.getInstance().helpers.zCalc;
         
         const unscaledValues = this.getUnscaledDrawPositionsAndDimensions(unitValues);
         const scaledValues = { x: 0, y: 0, width: 0, height: 0 };
@@ -220,8 +217,10 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     private _drawModels():void
     {
+        const loadedModels = Kernel.getInstance().loadedModels;
+        
 		// We need to make sure that the models are drawn ordered by the Z position.
-		const zSortedModels = [...this._kernel.loadedModels].sort((a, b) => {
+		const zSortedModels = [...loadedModels].sort((a, b) => {
             const zA = typeof a.z === 'number' ? a.z : 0;
             const zB = typeof b.z === 'number' ? b.z : 0;
             
@@ -241,11 +240,13 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     private _fpsMeter():void
     {
-        const fps = Math.round(this._kernel.fps * 100) / 100; // 2 decimal places
+        const kernel = Kernel.getInstance();
+        
+        const fps = Math.round(kernel.fps * 100) / 100; // 2 decimal places
         
         const fontSize = 30;
         this._gameCtx.font = fontSize + "px Arial";
-        this._gameCtx.fillStyle = this._kernel.fpsDisplayColor;
+        this._gameCtx.fillStyle = kernel.fpsDisplayColor;
         
         this._gameCtx.fillText(`FPS: ${fps}`, 10, (10 + fontSize));
     }
@@ -282,7 +283,9 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     private _setCanvasCorrectWidthHeight():void
     {
-        if(this._kernel.correctCanvasStyleToDevicePixelRatio)
+        const kernel = Kernel.getInstance();
+        
+        if(kernel.correctCanvasStyleToDevicePixelRatio)
         {
             const devicePixelRatio = (window.devicePixelRatio || 1);
             
@@ -300,6 +303,6 @@ export default class GraphicEngine implements IGraphicEngine {
         
         // It should be noted that these should be ran on loading as well (as it is the first setting of the below)
         this.camera.setCameraSize();
-        this._helpers.unit.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
+        kernel.helpers.unit.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
     }
 }

@@ -1,3 +1,4 @@
+import Kernel from '../../../Kernel/Kernel';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
 import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
@@ -73,8 +74,9 @@ export default class Sign extends ASModel
     {
         super.prepare();
         
+        const vanishingPointDepth = Kernel.getInstance().helpers.zCalc.vanishingPointDepth;
         if(this._startPosition === null)
-            this._startPosition = this.helpers.zCalc.vanishingPointDepth;
+            this._startPosition = vanishingPointDepth;
         
         this.x = -100;
         this.y = 0;
@@ -130,7 +132,7 @@ export default class Sign extends ASModel
      */
     private _setZSpeedBasedOnLevelSpeed():void
 	{
-        const level = this.kernel.level as ASLevel;
+        const level = Kernel.getInstance().level as ASLevel;
         
 		if(level.levelMoving)
             this.zSpeed = level.levelSpeed;

@@ -1,5 +1,4 @@
-import IKernel from '../../../Kernel/IKernel';
-import Kernel from '../../../Kernel/Kernel';
+import Kernel from "../../../Kernel/Kernel";
 
 /*
 	Used to position a set of models on the x-axis, in a way that will make 
@@ -9,8 +8,6 @@ import Kernel from '../../../Kernel/Kernel';
 */
 export default class ModelXPositionPatternManager
 {
-	private _kernel:IKernel;
-	
 	/**
 	 * Where on the z axis should the pattern of models begin?
 	 */
@@ -36,8 +33,6 @@ export default class ModelXPositionPatternManager
 	
 	constructor()
 	{
-		this._kernel = Kernel.getInstance();
-		
 		this._modelIndexRange = {
 			from: -1,
 			to: -1
@@ -158,7 +153,7 @@ export default class ModelXPositionPatternManager
 		const lastIndex = pattern.lastModelIndexUsed;
 		if(lastIndex < 0) return true;
 		
-		const lastModelUsed = this._kernel.loadedModels[lastIndex];
+		const lastModelUsed = Kernel.getInstance().loadedModels[lastIndex];
 		
 		return (lastModelUsed.z <= (this._startingZPos - pattern.zGap));
 	}
@@ -186,7 +181,7 @@ export default class ModelXPositionPatternManager
 	{
 		if(fromPosition === toPosition) return [fromPosition]; // We only need the one model in this situation
 		
-		const modelWidth = this._kernel.loadedModels[this._modelIndexRange.from].width;
+		const modelWidth = Kernel.getInstance().loadedModels[this._modelIndexRange.from].width;
 		
 		// The width available to place models
 		const spaceForPositions = (toPosition - fromPosition);
@@ -217,7 +212,7 @@ export default class ModelXPositionPatternManager
 	private _setNextModelToXPosition(xPos:number, pattern:IActivePattern):void
 	{
 		pattern.lastModelIndexUsed = this._getNextModelIndexInRange();
-		const currentModel = this._kernel.loadedModels[pattern.lastModelIndexUsed];
+		const currentModel = Kernel.getInstance().loadedModels[pattern.lastModelIndexUsed];
 		
 		const modelCenterOffset = currentModel.width / 2;
 		

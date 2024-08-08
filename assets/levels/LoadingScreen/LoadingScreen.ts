@@ -6,6 +6,7 @@ import ILevel from '../Level/ILevel';
 import Frame from '../../../engines/GraphicEngine/Frame';
 import LoadingScreenHUD from '../../HUDs/LoadingScreenHUD/LoadingScreenHUD';
 import { KernelStatus } from '../../../Kernel/KernelStatus';
+import Kernel from '../../../Kernel/Kernel';
 
 /**
  * A base class for loading screens
@@ -36,7 +37,7 @@ export default class LoadingScreen extends Level
 	{
 		super.load(frameManager, eventManager, pointerEventManager);
         
-        const unitsWithinCamera = this.kernel.unitsWithinCamera;
+        const unitsWithinCamera = Kernel.getInstance().unitsWithinCamera;
         const frame = new Frame(0, 0, unitsWithinCamera, unitsWithinCamera);
         
         const backgroundIndex = frame.loadBackground(this.backgroundImagePath);
@@ -56,10 +57,12 @@ export default class LoadingScreen extends Level
     {
         super.prepare();
         
-        const axisVanishPointPosition = this.kernel.unitsWithinCamera / 2;
-        this.helpers.zCalc.setVanishPoint(axisVanishPointPosition, axisVanishPointPosition);
+        const kernel = Kernel.getInstance();
         
-        this.kernel.loadLevel(new this.LevelToLoad());
+        const axisVanishPointPosition = kernel.unitsWithinCamera / 2;
+        kernel.helpers.zCalc.setVanishPoint(axisVanishPointPosition, axisVanishPointPosition);
+        
+        kernel.loadLevel(new this.LevelToLoad());
     }
     
     /**
@@ -69,10 +72,12 @@ export default class LoadingScreen extends Level
     {
         super.act();
         
-        // We don't want this level to pause (e.g. on the browser changing to another tab)
-        if(this.kernel.status === KernelStatus.PrePaused)
-            this.kernel.toggleGamePause();
+        const kernel = Kernel.getInstance();
         
-        (this.HUD as LoadingScreenHUD).setLevelHasLoaded(this.kernel.assetsStillLoading === 0);
+        // We don't want this level to pause (e.g. on the browser changing to another tab)
+        if(kernel.status === KernelStatus.PrePaused)
+            kernel.toggleGamePause();
+        
+        (this.HUD as LoadingScreenHUD).setLevelHasLoaded(kernel.assetsStillLoading === 0);
     }
 };

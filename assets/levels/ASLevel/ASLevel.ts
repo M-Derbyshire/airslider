@@ -28,6 +28,7 @@ import neonPidgeonOverlappingEventCheck from './events/neonPidgeonOverlappingEve
 import { CentralStateKey } from '../CentralStateKey';
 import ILevel from '../Level/ILevel';
 import RacerManager from './RacerManager';
+import Kernel from '../../../Kernel/Kernel';
 
 /**
  * The game's base Level class
@@ -139,7 +140,7 @@ export default class ASLevel extends Level
         const stdModels = super.getModels();
         
         this.player = new Tarian();
-        this.kernel.centralState.set(CentralStateKey.PlayerModelIndex, stdModels.length);
+        Kernel.getInstance().centralState.set(CentralStateKey.PlayerModelIndex, stdModels.length);
         
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
         this._startSignDisplay = new SignDisplay(this._startSign);
@@ -185,7 +186,7 @@ export default class ASLevel extends Level
         const chosenMusicFilePath = this._chooseMusicPath();
         if(chosenMusicFilePath)
         {
-            this.music = this.kernel.loadAudio(chosenMusicFilePath);
+            this.music = Kernel.getInstance().loadAudio(chosenMusicFilePath);
             this.assetsToUnload.push(chosenMusicFilePath);
         }
 	}
@@ -197,11 +198,13 @@ export default class ASLevel extends Level
     {
         super.prepare();
         
-        const axisVanishPointPosition = this.kernel.unitsWithinCamera / 2;
-        this.helpers.zCalc.setVanishPoint(axisVanishPointPosition, axisVanishPointPosition);
+        const kernel = Kernel.getInstance();
+        
+        const axisVanishPointPosition = kernel.unitsWithinCamera / 2;
+        kernel.helpers.zCalc.setVanishPoint(axisVanishPointPosition, axisVanishPointPosition);
         
         this.leftEdge = 0;
-        this.rightEdge = this.kernel.unitsWithinCamera;
+        this.rightEdge = kernel.unitsWithinCamera;
         
         this.racerManager.prepare();
         
@@ -230,6 +233,8 @@ export default class ASLevel extends Level
     {
         super.act();
         
+        const timeHelpers = Kernel.getInstance().helpers.time;
+        
         // Keeps level speed consistent, via the fps
         this._updateLevelSpeed();
         
@@ -240,7 +245,7 @@ export default class ASLevel extends Level
         this._levelOpening();
         
         // Display the retry-level dialog, if required
-        const currentMs = this.helpers.time.getTotalMilliseconds();
+        const currentMs = timeHelpers.getTotalMilliseconds();
         if(this.lost && currentMs > this.stoppedForlossAtMS + this._retryLevelDialogDelayMS)
             (this.HUD as MainHUD).displayRetryLevelDialog();
         
@@ -268,7 +273,9 @@ export default class ASLevel extends Level
      */
     handlePlayerLoss():void
     {
-        this.stoppedForlossAtMS = this.helpers.time.getTotalMilliseconds();
+        const timeHelpers = Kernel.getInstance().helpers.time;
+        
+        this.stoppedForlossAtMS = timeHelpers.getTotalMilliseconds();
         this._stopLevel();
     }
     
@@ -279,7 +286,7 @@ export default class ASLevel extends Level
 	_stopLevel():void
     {
         this.levelMoving = false;
-        this.kernel.loadedModels.forEach(model => (model as ASModel).levelStopped());
+        Kernel.getInstance().loadedModels.forEach(model => (model as ASModel).levelStopped());
         this.racerManager.startOvertakeSequence();
     }
     
@@ -372,7 +379,7 @@ export default class ASLevel extends Level
         endCallback?:()=>void
     ) {
         if(this.levelMoving) {
-            const currentMS = this.helpers.time.getTotalMilliseconds();
+            const currentMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
         
             if(currentMS >= msStart && currentMS <= msEnd) 
             {
@@ -404,7 +411,9 @@ export default class ASLevel extends Level
      */
     protected levelEndSection(msStart:number)
     {
-        if(this.helpers.time.getTotalMilliseconds() >= msStart) {
+        const kernel = Kernel.getInstance();
+        
+        if(kernel.helpers.time.getTotalMilliseconds() >= msStart) {
             if(!this._activeSections.includes(this._closingSectionId)) {
                 this._activeSections.push(this._closingSectionId);
                 
@@ -412,7 +421,7 @@ export default class ASLevel extends Level
                 this._finishFlagsActive = true;
                 
                 // Start the loading of the next level's loading screen
-                this.kernel.loadLevel(new this.NextLevelLoadingScreen());
+                kernel.loadLevel(new this.NextLevelLoadingScreen());
             }
             
             this._levelClosing(msStart);
@@ -429,7 +438,8 @@ export default class ASLevel extends Level
      */
 	private _setupPatternManager():void
 	{
-		this.patternManager.setStartingZPosition(this.helpers.zCalc.vanishingPointDepth);
+        const vanishingPointDepth = Kernel.getInstance().helpers.zCalc.vanishingPointDepth;
+		this.patternManager.setStartingZPosition(vanishingPointDepth);
 	}
 	
     /**
@@ -461,14 +471,16 @@ export default class ASLevel extends Level
     {
         if(this.levelMoving)
         {
+            const kernel = Kernel.getInstance();
+            
             if(this.levelSpeedRaw < this.maxLevelSpeedRaw)
             {
-                this.levelSpeedRaw += this.helpers.zCalc.speed(this.levelSpeedAccl, this.kernel.fps);
+                this.levelSpeedRaw += kernel.helpers.zCalc.speed(this.levelSpeedAccl, kernel.fps);
             } else {
                 this.levelSpeedRaw = this.maxLevelSpeedRaw;
             }
             
-            this.levelSpeed = this.helpers.zCalc.speed(this.levelSpeedRaw, this.kernel.fps);
+            this.levelSpeed = kernel.helpers.zCalc.speed(this.levelSpeedRaw, kernel.fps);
         }
         else
         {
@@ -527,7 +539,9 @@ export default class ASLevel extends Level
      */
     private _levelClosing(closingStartMS:number)
     {
-        const currentMs = this.helpers.time.getTotalMilliseconds();
+        const helpers = Kernel.getInstance().helpers;
+        
+        const currentMs = helpers.time.getTotalMilliseconds();
         
         if(!this._finishSign.active)
         {
@@ -548,7 +562,7 @@ export default class ASLevel extends Level
         }
         
         // Once the player has vanished into the distance, finish the level
-        if(this.player.z > this.helpers.zCalc.vanishingPointDepth && !this.completed)
+        if(this.player.z > helpers.zCalc.vanishingPointDepth && !this.completed)
         {
             this._stopLevel();
             this.levelCompletedAtMS = currentMs;
@@ -573,9 +587,11 @@ export default class ASLevel extends Level
         if(this._musicFilePaths.length === 1)
             return this._musicFilePaths[0];
         
+        const kernel = Kernel.getInstance();
+        
         // We want to filter out the filepath used by the previous level
         const selectableFilePaths = this._musicFilePaths.filter(
-            filepath => filepath !== this.kernel.centralState.get(CentralStateKey.LastMusicSelectedPath)
+            filepath => filepath !== kernel.centralState.get(CentralStateKey.LastMusicSelectedPath)
         );
         
         // Now choose a random path
@@ -586,7 +602,7 @@ export default class ASLevel extends Level
         
         const chosenPath = selectableFilePaths[indexToSelect];
         
-        this.kernel.centralState.set(CentralStateKey.LastMusicSelectedPath, chosenPath);
+        kernel.centralState.set(CentralStateKey.LastMusicSelectedPath, chosenPath);
         return chosenPath;
     }
 }

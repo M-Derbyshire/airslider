@@ -1,3 +1,4 @@
+import Kernel from '../../../Kernel/Kernel';
 import ASModel from '../ASModel/ASModel';
 import IAnimation from '../Model/ModelAnimationsManager/IAnimation';
 import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
@@ -36,7 +37,7 @@ export default class TarianExplosion extends ASModel {
         super.load(animationManager);
         
         // Not adding this to assetsToUnload, as every level needs this
-        this._alarmSound = this.kernel.loadAudio("/assets/models/TarianExplosion/sounds/alarm.mp3");
+        this._alarmSound = Kernel.getInstance().loadAudio("/assets/models/TarianExplosion/sounds/alarm.mp3");
         
         this.animationManager.registerAnimations({
             standard: this.animationManager.createAnimation({
@@ -86,7 +87,7 @@ export default class TarianExplosion extends ASModel {
     private _runSound():void
     {
         if(this._animFrame.width === 0)
-            this.kernel.soundEngine.playSound(this._alarmSound);
+            Kernel.getInstance().soundEngine.playSound(this._alarmSound);
     }
     
     /**
@@ -94,8 +95,10 @@ export default class TarianExplosion extends ASModel {
      */
     private _resize():void
     {
-        this._animFrame.width += this.kernel.helpers.unit.xSpeed(this._resizeSpeedX);
-        this._animFrame.height += this.kernel.helpers.unit.ySpeed(this._resizeSpeedY);
+        const kernel = Kernel.getInstance();
+        
+        this._animFrame.width += kernel.helpers.unit.xSpeed(this._resizeSpeedX);
+        this._animFrame.height += kernel.helpers.unit.ySpeed(this._resizeSpeedY);
         
         if(this._animFrame.width > this._maxWidth || this._animFrame.height > this._maxHeight)
         {

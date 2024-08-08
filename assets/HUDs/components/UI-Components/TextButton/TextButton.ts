@@ -1,3 +1,4 @@
+import Kernel from '../../../../../Kernel/Kernel';
 import TextOnlyButton from '../TextOnlyButton/TextOnlyButton';
 
 /**
@@ -64,7 +65,7 @@ export default class TextButton extends TextOnlyButton
     {
         super.load();
         
-        this._borderPiecesImage = this.kernel.loadImage("/assets/HUDs/components/UI-Components/TextButton/images/borderPieces.png");
+        this._borderPiecesImage = Kernel.getInstance().loadImage("/assets/HUDs/components/UI-Components/TextButton/images/borderPieces.png");
     }
     
     /**
@@ -95,19 +96,20 @@ export default class TextButton extends TextOnlyButton
      */
     private _drawBackground()
     {
-        const ctx = this.kernel.gameContext;
+        const kernel = Kernel.getInstance();
+        const ctx = kernel.gameContext;
         
         const originalFillColor = ctx.fillStyle;
         ctx.fillStyle = (this._isHovering) ? this._hoverBackgroundColor : this._backgroundColor;
         
-        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({ 
+        const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({ 
             x: this.x, 
             y: this.y, 
             width: this.width, 
             height: this.height
         });
         
-        const cornerRadius = this.helpers.unit.xUnit(this._cornerRadiusModifier);
+        const cornerRadius = kernel.helpers.unit.xUnit(this._cornerRadiusModifier);
         
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, cornerRadius);
@@ -133,7 +135,8 @@ export default class TextButton extends TextOnlyButton
         
         
         // Next, we need to determine the co-ordinates to draw all the required pieces (in pixels)
-        const getPixelValues = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions.bind(this.kernel.graphicEngine);
+        const graphicEngine = Kernel.getInstance().graphicEngine;
+        const getPixelValues = graphicEngine.getStaticDrawPositionsAndDimensions.bind(graphicEngine);
         
         const edgePixels = getPixelValues({
             x: this.x,

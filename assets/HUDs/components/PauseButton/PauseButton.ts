@@ -1,3 +1,4 @@
+import Kernel from "../../../../Kernel/Kernel";
 import { KernelStatus } from "../../../../Kernel/KernelStatus";
 import ASHUDComponent from "../ASHUDComponent/ASHUDComponent"
 
@@ -33,12 +34,14 @@ export default class PauseButton extends ASHUDComponent {
     load():void 
     {
         super.load();
-        this._imageSheet = this.kernel.loadImage("/assets/HUDs/components/PauseButton/images/button_sheet.png");
+        this._imageSheet = Kernel.getInstance().loadImage("/assets/HUDs/components/PauseButton/images/button_sheet.png");
     }
     
     draw()
     {
         super.draw();
+        
+        const kernel = Kernel.getInstance();
         
         /**
          * The source image should contain multiple button images, stacked vertically.
@@ -48,10 +51,10 @@ export default class PauseButton extends ASHUDComponent {
         const pauseButtonSourceYPx = 0;
         const playButtonSourceYPx = buttonSourceDiameter;
         
-        const sourceYPx = (this.kernel.status === KernelStatus.Active) ? pauseButtonSourceYPx : playButtonSourceYPx;
+        const sourceYPx = (kernel.status === KernelStatus.Active) ? pauseButtonSourceYPx : playButtonSourceYPx;
         
         // The positions/sizes to actually draw the sprite with
-        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
             x: this.x, 
             y: this.y, 
             width: this.width, 
@@ -76,6 +79,6 @@ export default class PauseButton extends ASHUDComponent {
      */
     onClick()
     {
-        this.kernel.toggleGamePause();
+        Kernel.getInstance().toggleGamePause();
     }
 };

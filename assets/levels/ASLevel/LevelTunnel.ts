@@ -1,22 +1,14 @@
-import IKernel from '../../../Kernel/IKernel';
-import Kernel from '../../../Kernel/Kernel';
-import IHelpers from '../../../Kernel/helpers/IHelpers';
+import Kernel from "../../../Kernel/Kernel";
 
 /**
  * Manages the level's tunnels
  */
 export default class LevelTunnel
 {
-    protected kernel:IKernel;
-    protected helpers:IHelpers;
-    
     tunnel:ITunnelPart[]; // The sections of the tunnel
     
     constructor()
-    {
-        this.kernel = Kernel.getInstance();
-        this.helpers = this.kernel.helpers;
-        
+    {   
         this.tunnel = [];
     }
     
@@ -29,7 +21,7 @@ export default class LevelTunnel
     newTunnelPart(image:HTMLImageElement|null, length:number = 1):ITunnelPart
     {
         return {
-            z: this.helpers.zCalc.vanishingPointDepth,
+            z: Kernel.getInstance().helpers.zCalc.vanishingPointDepth,
             length: length,
             image,
             active: false
@@ -96,11 +88,13 @@ export default class LevelTunnel
      */
 	private _isTunnelPopulatedToVanishingPoint():boolean
 	{
+        const zCalc = Kernel.getInstance().helpers.zCalc;
+        
         const closestPart = this.tunnel[0] ?? null;
         
         return (
             !!closestPart && // tunnel is populated
-            this._getLastTunnelPart().z >= this.helpers.zCalc.vanishingPointDepth && // furthest piece is at vanishing point
+            this._getLastTunnelPart().z >= zCalc.vanishingPointDepth && // furthest piece is at vanishing point
             (closestPart.z + closestPart.length) <= 0 // nearest piece is behind camera
         );
 	}
@@ -131,9 +125,11 @@ export default class LevelTunnel
 	{
 		if(tunnelPart.image) //(null is a clear piece)
 		{
-            const unitsWithinCamera = this.kernel.unitsWithinCamera;
+            const kernel = Kernel.getInstance();
             
-            const { x, y, width, height } = this.kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
+            const unitsWithinCamera = kernel.unitsWithinCamera;
+            
+            const { x, y, width, height } = kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
                 x: 0,
                 y: 0,
                 width: unitsWithinCamera,
@@ -141,7 +137,7 @@ export default class LevelTunnel
                 z: tunnelPart.z
             }, true);
             
-			this.kernel.gameContext.drawImage(tunnelPart.image, x, y, width, height);
+			kernel.gameContext.drawImage(tunnelPart.image, x, y, width, height);
 		}
 	}
 	
@@ -171,12 +167,16 @@ export default class LevelTunnel
         // If this is the last part of the tunnel (or there's only 1 part left in the tunnel), we don't need to do anything
 		if(this.tunnel.length === (currentPartIndex + 1))
             return false;
+        
+        const zCalc = Kernel.getInstance().helpers.zCalc;
 		
 		const currentPart = this.tunnel[currentPartIndex];
 		const nextPart = this.tunnel[currentPartIndex + 1];
 		
-		return (!nextPart.active && 
-					(currentPart.z + currentPart.length) <= this.helpers.zCalc.vanishingPointDepth);
+		return (
+            !nextPart.active && 
+            (currentPart.z + currentPart.length) <= zCalc.vanishingPointDepth
+        );
 	}
 	
     /**

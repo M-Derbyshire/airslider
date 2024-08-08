@@ -1,4 +1,3 @@
-import IKernel from '../IKernel';
 import Kernel from '../Kernel';
 import IUnitHelper from './IUnitHelper';
 
@@ -8,8 +7,6 @@ import IUnitHelper from './IUnitHelper';
  */
 export default class UnitHelper implements IUnitHelper
 {
-    private _kernel:IKernel;
-    
     private _unitsWithinCamera:number; // The amount of draw-space x/y units there are within the camera's size
     private _cameraWidth:number; // The height of the camera (not in units)
     private _cameraHeight:number; // The width of the camera (not in units)
@@ -20,8 +17,6 @@ export default class UnitHelper implements IUnitHelper
      */
     constructor(unitsWithinCamera:number)
     {
-        this._kernel = Kernel.getInstance();
-        
         this._unitsWithinCamera = unitsWithinCamera;
         this._cameraHeight = 0;
         this._cameraWidth = 0;
@@ -96,6 +91,6 @@ export default class UnitHelper implements IUnitHelper
      */
     private _consistentSpeed(speed:number):number
     {
-        return speed / this._kernel.fps; 
+        return speed / Kernel.getInstance().fps; 
     }
 };

@@ -1,3 +1,4 @@
+import Kernel from '../../../Kernel/Kernel';
 import MainHUD from '../../HUDs/MainHUD/MainHUD';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
@@ -261,7 +262,7 @@ export default class Tarian extends ASModel {
      */
     private _handleLowHealthFlash():void
     {
-        const hud = this.kernel.level.HUD as MainHUD;
+        const hud = Kernel.getInstance().level.HUD as MainHUD;
         
         if(this.health <= 10 && this.health > 0 && !hud.isLowHealthFlashActive())
             hud.startLowHealthFlash();
@@ -278,7 +279,7 @@ export default class Tarian extends ASModel {
         if(this.lost)
         {
             if(!this._lostAtTimeMS)
-                this._lostAtTimeMS = this.helpers.time.getTotalMilliseconds();
+                this._lostAtTimeMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
             
             this._handleOnScreenAfterLoss();
             this._handleLeavingScreenAfterLoss();
@@ -290,9 +291,11 @@ export default class Tarian extends ASModel {
      */
 	private _handleOnScreenAfterLoss():void
 	{
+        const totalActiveMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+        
         if(
             this.z >= -5 && 
-            (this._lostAtTimeMS + 3000) < this.helpers.time.getTotalMilliseconds()
+            (this._lostAtTimeMS + 3000) < totalActiveMS
         )
         {
             this.zSpeed = -this._lostZSpeed;
@@ -307,7 +310,7 @@ export default class Tarian extends ASModel {
 		if(this.lost && this.z < 0)
         {
             this.active = false;
-            (this.kernel.level as ASLevel).handlePlayerLoss();
+            (Kernel.getInstance().level as ASLevel).handlePlayerLoss();
         }
 	}
 	
@@ -327,9 +330,11 @@ export default class Tarian extends ASModel {
      */
 	private _setXSpeedBasedOnAcceleration():void
 	{
-		if(this.helpers.time.getTotalMilliseconds() - this._lastSpeedChange >= 100) //1 tenth of a second
+        const totalActiveMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+        
+		if(totalActiveMS - this._lastSpeedChange >= 100) //1 tenth of a second
         {
-            this._lastSpeedChange = this.helpers.time.getTotalMilliseconds();
+            this._lastSpeedChange = totalActiveMS;
 			this._changeSpeed();
         }
 	}
@@ -449,7 +454,7 @@ export default class Tarian extends ASModel {
             }
             
             if(other.damageFlashImage)
-                (this.kernel.level.HUD as MainHUD).startDamageFlash(other.damageFlashImage);
+                (Kernel.getInstance().level.HUD as MainHUD).startDamageFlash(other.damageFlashImage);
         }
     }
 }

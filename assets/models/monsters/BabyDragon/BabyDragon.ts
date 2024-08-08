@@ -1,3 +1,4 @@
+import Kernel from '../../../../Kernel/Kernel';
 import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
@@ -46,8 +47,10 @@ export default class BabyDragon extends Monster
     {
         super.load(animationManager);
         
+        const kernel = Kernel.getInstance();
+        
         const wingSoundPath = "/assets/models/monsters/BabyDragon/sounds/flap.mp3";
-        this._wingSound = this.kernel.loadAudio(wingSoundPath);
+        this._wingSound = kernel.loadAudio(wingSoundPath);
         this.assetsToUnload.push(wingSoundPath);
         
         const spritesheetPath = "/assets/models/monsters/BabyDragon/anim/babyDragon-spritesheet.png";
@@ -140,7 +143,7 @@ export default class BabyDragon extends Monster
         // The wing sound may restart too soon when changing between left/right animations.
         // Therefore, we run the sound on the last frame of the animation, not the first.
         if(animationChangedFrame && flappingAnimation.currentFrameIndex === flappingAnimation.frameCoordinates.length - 1)
-            this.kernel.soundEngine.playSound(this._wingSound);
+            Kernel.getInstance().soundEngine.playSound(this._wingSound);
         
         this._lastAnimFrame = flappingAnimation.currentFrameIndex;
     }
@@ -149,7 +152,7 @@ export default class BabyDragon extends Monster
     
     start(): void {
         super.start();
-        this.kernel.soundEngine.forceLoad(this._wingSound);
+        Kernel.getInstance().soundEngine.forceLoad(this._wingSound);
     }
     
     enter():void
@@ -217,7 +220,7 @@ export default class BabyDragon extends Monster
      */
     private _shouldChangeDirection():boolean
     {
-        const runningTime = this.kernel.totalLevelActiveMilliseconds;
+        const runningTime = Kernel.getInstance().totalLevelActiveMilliseconds;
         
         // The initial time to change direction
         if(!this._nextDirectionToggleTime)
@@ -267,7 +270,7 @@ export default class BabyDragon extends Monster
             //After the first drop, the below triggers any further drops
             (this.fireWeapon &&
             nextLavaBall.state !== "drop" && //When we check for this with .active, there's a bug where it can stop dropping balls
-            (altLavaBall.y > this.kernel.unitsWithinCamera / 1.5)))
+            (altLavaBall.y > Kernel.getInstance().unitsWithinCamera / 1.5)))
         {
             this._dropBall();
             this._nextLavaBallIndex = this._altLavaBallIndex;

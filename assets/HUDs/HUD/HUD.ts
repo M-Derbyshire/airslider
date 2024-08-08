@@ -1,17 +1,13 @@
-import Kernel from '../../../Kernel/Kernel';
-import IKernel from '../../../Kernel/IKernel';
-import IHelpers from '../../../Kernel/helpers/IHelpers';
 import IHUDComponent from '../components/HUDComponent/IHUDComponent';
 import IPointerEventManager from '../../levels/Level/IPointerEventManager';
 import IHUD from './IHUD';
+import Kernel from '../../../Kernel/Kernel';
 
 /**
  * A level's Heads Up Display
  */
 export default class HUD implements IHUD
 {
-    protected kernel: IKernel;
-    protected helpers: IHelpers;
     protected pointerEventManager: IPointerEventManager;
     protected components: IHUDComponent[]; //HUD components used by this HUD
     protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
@@ -21,9 +17,6 @@ export default class HUD implements IHUD
      */
     constructor()
     {
-        this.kernel = Kernel.getInstance();
-        this.helpers = this.kernel.helpers;
-        
         this.components = [];
         this.assetsToUnload = [];
     }
@@ -50,7 +43,7 @@ export default class HUD implements IHUD
      */
     unload():void
     {
-        this.assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
+        this.assetsToUnload.forEach(asset => Kernel.getInstance().releaseAsset(asset));
         this.components.forEach(component => component.unload());
     }
     

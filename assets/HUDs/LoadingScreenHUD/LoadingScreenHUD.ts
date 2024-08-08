@@ -3,6 +3,7 @@ import IPointerEventManager from '../../levels/Level/IPointerEventManager';
 import TextOnly from "../components/UI-Components/TextOnly/TextOnly";
 import TextButton from "../components/UI-Components/TextButton/TextButton";
 import IHUDComponent from "../components/HUDComponent/IHUDComponent";
+import Kernel from "../../../Kernel/Kernel";
 
 /**
  * HUD for all the loading screens
@@ -37,7 +38,7 @@ export default class LoadingScreenHUD extends ASHUD
         const btnWidth = 150;
         const btnHeight = 75
         this._continueButton = new TextButton(
-            () => this.kernel.unloadCurrentLevel(),
+            () => Kernel.getInstance().unloadCurrentLevel(),
             xPos - (btnWidth / 2),
             yPos - (btnHeight / 2),
             btnWidth,

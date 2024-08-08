@@ -1,3 +1,4 @@
+import Kernel from '../../../../Kernel/Kernel';
 import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
@@ -35,7 +36,7 @@ export default class ElectricSeahorse extends Monster {
         super.load(animationManager);
         
         const wingSoundPath = "/assets/models/monsters/ElectricSeahorse/sounds/flap.mp3";
-        this._wingSound = this.kernel.loadAudio(wingSoundPath);
+        this._wingSound = Kernel.getInstance().loadAudio(wingSoundPath);
         this.assetsToUnload.push(wingSoundPath);
         
         const spritesheetPath = "/assets/models/monsters/ElectricSeahorse/anim/electricSeahorse-spritesheet.png";
@@ -94,7 +95,7 @@ export default class ElectricSeahorse extends Monster {
     
     start(): void {
         super.start();
-        this.kernel.soundEngine.forceLoad(this._wingSound);
+        Kernel.getInstance().soundEngine.forceLoad(this._wingSound);
     }
     
     enter():void
@@ -140,7 +141,7 @@ export default class ElectricSeahorse extends Monster {
         const animationChangedFrame = this._lastAnimFrame !== flappingAnimation.currentFrameIndex;
         
         if(this.state === "move" && animationChangedFrame && flappingAnimation.currentFrameIndex === 1)
-            this.kernel.soundEngine.playSound(this._wingSound);
+            Kernel.getInstance().soundEngine.playSound(this._wingSound);
         
         this._lastAnimFrame = flappingAnimation.currentFrameIndex;
         
@@ -160,7 +161,8 @@ export default class ElectricSeahorse extends Monster {
 		this._handleOverlappingOfLevelEdges();
         
         //We want to change direction at random times
-        if (this.kernel.totalLevelActiveMilliseconds >= this._nextDirectionChangeMilliSeconds)
+        const totalActiveMS = Kernel.getInstance().totalLevelActiveMilliseconds;
+        if (totalActiveMS >= this._nextDirectionChangeMilliSeconds)
         {
             this.xSpeed = -this.xSpeed;
             this._nextDirectionChangeMilliSeconds = this._getNewDirectionChangeTimeMS();
@@ -209,8 +211,9 @@ export default class ElectricSeahorse extends Monster {
     {
         const minChangeTimeMS = 2000;
         const maxChangeTimeMS = 4000;
+        const totalActiveMS = Kernel.getInstance().totalLevelActiveMilliseconds;
         
-        return this.kernel.totalLevelActiveMilliseconds + (Math.random() * (maxChangeTimeMS - minChangeTimeMS)) + minChangeTimeMS;
+        return totalActiveMS + (Math.random() * (maxChangeTimeMS - minChangeTimeMS)) + minChangeTimeMS;
     }
     
     /**

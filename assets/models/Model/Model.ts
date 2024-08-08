@@ -1,18 +1,14 @@
-import Kernel from '../../../Kernel/Kernel';
 import IModel from './IModel';
-import IKernel from '../../../Kernel/IKernel';
-import IHelpers from '../../../Kernel/helpers/IHelpers';
 import IModelAnimationsManager from './ModelAnimationsManager/IModelAnimationsManager';
 import ITextContent from '../../../engines/GraphicEngine/ITextContent';
 import IHitBox from './IHitBox';
+import Kernel from '../../../Kernel/Kernel';
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)
  */
 export default class Model implements IModel 
 {
-    protected kernel: IKernel;
-    protected helpers: IHelpers;
     protected animationManager: IModelAnimationsManager;
     protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
     protected drawHitBoxes:boolean; // If we set this to true, we'll draw the boxes from this.getHitBoxes()
@@ -36,10 +32,7 @@ export default class Model implements IModel
     text:ITextContent;
     
     constructor()
-    {    
-        this.kernel = Kernel.getInstance();
-        this.helpers = this.kernel.helpers;
-        
+    {
         this.assetsToUnload = [];
     }
     
@@ -225,7 +218,7 @@ export default class Model implements IModel
      */
     unload():void
     {
-        this.assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
+        this.assetsToUnload.forEach(asset => Kernel.getInstance().releaseAsset(asset));
     }
     
     /**
@@ -294,7 +287,8 @@ export default class Model implements IModel
      */
     moveLeft(speed:number):void
     {
-        this.x -= this.helpers.unit.xSpeed(speed);
+        const unitHelpers = Kernel.getInstance().helpers.unit;
+        this.x -= unitHelpers.xSpeed(speed);
     }
     
     /**
@@ -303,7 +297,8 @@ export default class Model implements IModel
      */
     moveRight(speed:number):void
     {
-        this.x += this.helpers.unit.xSpeed(speed);
+        const unitHelpers = Kernel.getInstance().helpers.unit;
+        this.x += unitHelpers.xSpeed(speed);
     }
     
     /**
@@ -312,7 +307,8 @@ export default class Model implements IModel
      */
     moveUp(speed:number):void
     {
-        this.y -= this.helpers.unit.ySpeed(speed);
+        const unitHelpers = Kernel.getInstance().helpers.unit;
+        this.y -= unitHelpers.ySpeed(speed);
     }
     
     /**
@@ -321,7 +317,8 @@ export default class Model implements IModel
      */
     moveDown(speed:number):void
     {
-        this.y += this.helpers.unit.ySpeed(speed);
+        const unitHelpers = Kernel.getInstance().helpers.unit;
+        this.y += unitHelpers.ySpeed(speed);
     }
     
     /**
@@ -330,7 +327,10 @@ export default class Model implements IModel
      */
     moveIn(speed:number):void
     {
-        this.z += this.helpers.zCalc.speed(speed, this.kernel.fps);
+        const kernel = Kernel.getInstance();
+        const zCalc = kernel.helpers.zCalc;
+        
+        this.z += zCalc.speed(speed, kernel.fps);
     }
     
     /**
@@ -339,6 +339,9 @@ export default class Model implements IModel
      */
     moveOut(speed:number):void
     {
-        this.z -= this.helpers.zCalc.speed(speed, this.kernel.fps);
+        const kernel = Kernel.getInstance();
+        const zCalc = kernel.helpers.zCalc;
+        
+        this.z -= zCalc.speed(speed, kernel.fps);
     }
 }

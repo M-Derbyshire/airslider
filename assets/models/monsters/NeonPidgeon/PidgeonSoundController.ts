@@ -1,4 +1,3 @@
-import IKernel from "../../../../Kernel/IKernel";
 import Kernel from "../../../../Kernel/Kernel";
 import NeonPidgeon from "./NeonPidgeon";
 
@@ -7,8 +6,6 @@ import NeonPidgeon from "./NeonPidgeon";
  * their sound effects don't flap over each other.
  */
 export default class PidgeonSoundController {
-    private _kernel:IKernel;
-    
     private _pidgeon1:NeonPidgeon; // The first pidgeon model
     private _pidgeon2:NeonPidgeon; // The second pidgeon model
     
@@ -21,8 +18,6 @@ export default class PidgeonSoundController {
      */
     constructor(pidgeon1:NeonPidgeon, pidgeon2:NeonPidgeon)
     {
-        this._kernel = Kernel.getInstance();
-        
         this._pidgeon1 = pidgeon1;
         this._pidgeon2 = pidgeon2;
         
@@ -59,7 +54,7 @@ export default class PidgeonSoundController {
             // The frame index will always be 0 when off screen, as the animation won't be progressed (since the model won't be drawn),
             // so instead we play the sound every time it's on the second frame
             if(animationChangedFrame && flappingAnimFrame === 1) 
-                this._kernel.soundEngine.playSound(flapSound);
+                Kernel.getInstance().soundEngine.playSound(flapSound);
                 
             this._lastFlappingAnimFrame = flappingAnimFrame;
         }

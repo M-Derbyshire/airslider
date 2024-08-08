@@ -1,3 +1,4 @@
+import Kernel from '../../../../Kernel/Kernel';
 import IModel from '../../Model/IModel';
 import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
@@ -62,8 +63,10 @@ export default class Falcon extends Monster {
     {
         super.load(animationManager);
         
+        const kernel = Kernel.getInstance();
+        
         const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/none.png";
-        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
+        this.damageFlashImage = kernel.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
         
         const spritesheet = "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png";
@@ -148,6 +151,8 @@ export default class Falcon extends Monster {
     {
         super.prepare();
         
+        const timeHelpers = Kernel.getInstance().helpers.time;
+        
         this.actions = [
             this.stalking,
             this.strafe,
@@ -161,8 +166,8 @@ export default class Falcon extends Monster {
         this.startY = 75;
         this.startX = this.levelLeftEdge - this.offScreenUnits;
         this.startZ = this.playerModel.z;
-        this.dropWaitOffset = this.helpers.time.secondsToFrames(5);
-        this.dropWaitRange = this.helpers.time.secondsToFrames(5);
+        this.dropWaitOffset = timeHelpers.secondsToFrames(5);
+        this.dropWaitRange = timeHelpers.secondsToFrames(5);
         
         this.overlapping = false;
         this.lastSwoop = -1;
@@ -189,7 +194,8 @@ export default class Falcon extends Monster {
         {
             this.moveRight(this.enterXSpeed);
         } else {
-            this.lastSwoop = this.helpers.time.getTotalMilliseconds();
+            const timeHelpers = Kernel.getInstance().helpers.time;
+            this.lastSwoop = timeHelpers.getTotalMilliseconds();
             this.entering = false;
         }
     }
@@ -222,7 +228,8 @@ export default class Falcon extends Monster {
         //keep monster centered above player
         this.x = this.playerModel.x + (this.playerModel.width / 2) - (this.width / 2);
         
-        if(this.helpers.time.getTotalMilliseconds() - this.lastSwoop >= this.swoopWait)
+        const timeHelpers = Kernel.getInstance().helpers.time;
+        if(timeHelpers.getTotalMilliseconds() - this.lastSwoop >= this.swoopWait)
         {
             this.swoopWait = (Math.random() * 2000) + 500; //between 0.5 and 2 seconds
             // will set the lastSwoop time after swooping has finished (see reposition())
@@ -321,14 +328,16 @@ export default class Falcon extends Monster {
 	
     reposition():void
     {
+        const helpers = Kernel.getInstance().helpers;
+        
         //get player center and monster center; also pre-calculate the real speed of the monster
         const playerCenter = this.playerModel.x + (this.playerModel.width / 2)
         const monsterCenter = this.x + (this.width / 2);
-        const preCalculatedMonsterSpeed = this.helpers.unit.xSpeed(this.xSpeed);
+        const preCalculatedMonsterSpeed = helpers.unit.xSpeed(this.xSpeed);
         
         if(this._isFalconCenteredAbovePlayer(playerCenter, monsterCenter, preCalculatedMonsterSpeed))
         {
-            this.lastSwoop = this.helpers.time.getTotalMilliseconds();
+            this.lastSwoop = helpers.time.getTotalMilliseconds();
             this.nextAction();
         } else {
             this._moveFalconToCenterAbovePlayer(playerCenter, monsterCenter);

@@ -1,5 +1,6 @@
 import Model from '../Model/Model';
 import ASLevel from '../../levels/ASLevel/ASLevel';
+import Kernel from '../../../Kernel/Kernel';
 
 /**
  * The game's base Model class
@@ -31,7 +32,8 @@ export default class ASModel extends Model
      */
     protected centerXPosition():void
     {
-        this.x = (this.kernel.unitsWithinCamera / 2) - (this.width / 2);
+        const unitsWithinCamera = Kernel.getInstance().unitsWithinCamera;
+        this.x = (unitsWithinCamera / 2) - (this.width / 2);
     }
     
     /**
@@ -40,7 +42,8 @@ export default class ASModel extends Model
      */
     protected setYPositionFromBottom(pos:number):void
     {
-        this.y = this.kernel.unitsWithinCamera - pos;
+        const unitsWithinCamera = Kernel.getInstance().unitsWithinCamera;
+        this.y = unitsWithinCamera - pos;
     }
     
     /**
@@ -50,7 +53,7 @@ export default class ASModel extends Model
     protected getVolumeForDistance():number
     {
         // This is the point where the sound should be inaudible
-        const soundInaudiblePoint = this.kernel.helpers.zCalc.vanishingPointDepth / 2;
+        const soundInaudiblePoint = Kernel.getInstance().helpers.zCalc.vanishingPointDepth / 2;
         
         // First we figure out what the volume should change by if the model moved 1 unit on the z axis
         const singleUnitValue = 1 / soundInaudiblePoint;
@@ -65,7 +68,7 @@ export default class ASModel extends Model
     {
         super.prepare();
         
-        const level = this.kernel.level as ASLevel;
+        const level = Kernel.getInstance().level as ASLevel;
         
         this.levelLeftEdge = level.leftEdge;
         this.levelRightEdge = level.rightEdge;

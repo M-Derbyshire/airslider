@@ -1,3 +1,4 @@
+import Kernel from '../../../../Kernel/Kernel';
 import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Obstacle, { obstacleModes } from '../../Obstacle/Obstacle';
 import Tarian from '../../Tarian/Tarian';
@@ -69,7 +70,7 @@ export default class Shocker extends Obstacle
         });
         
         const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/yellow.png";
-        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
+        this.damageFlashImage = Kernel.getInstance().loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
     }
 }

@@ -18,6 +18,7 @@ import Monster from '../../models/Monster/Monster';
 import EventManager from '../Level/EventManager';
 import PointerEventManager from '../Level/PointerEventManager';
 import TheConstructLoadingScreen from '../LoadingScreens/TheConstructLoadingScreen/TheConstructLoadingScreen';
+import Kernel from '../../../Kernel/Kernel';
 
 /**
  * Testing/development level
@@ -79,7 +80,9 @@ export default class TheConstruct extends ASLevel
     {
         super.load(frameManager, eventManager, pointerEventManager);
         
-        this.tunnelSprite = this.kernel.loadImage("/assets/levels/TheConstruct/images/theConstructTunnel.png");
+        const kernel = Kernel.getInstance();
+        
+        this.tunnelSprite = kernel.loadImage("/assets/levels/TheConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
         
         this.groundManager.load(
@@ -91,7 +94,7 @@ export default class TheConstruct extends ASLevel
         this.roadManager.load();
         
         //Setup the frame for the level
-        const unitsWithinCamera = this.kernel.unitsWithinCamera;
+        const unitsWithinCamera = kernel.unitsWithinCamera;
         let frame = new Frame(0, 0, unitsWithinCamera, unitsWithinCamera);
         
         const frameBackgroundIndex = frame.loadBackground("/assets/levels/TheConstruct/images/testBackground.png");
@@ -121,9 +124,11 @@ export default class TheConstruct extends ASLevel
     {
         super.prepare();
         
+        const kernel = Kernel.getInstance();
+        
         this.outsideVisible = true;
         
-        this.patternManager.setStartingZPosition(this.helpers.zCalc.vanishingPointDepth);
+        this.patternManager.setStartingZPosition(kernel.helpers.zCalc.vanishingPointDepth);
         this.patternManager.clearPatterns();
         
         // this.tunnelManager.createStartingTunnel([

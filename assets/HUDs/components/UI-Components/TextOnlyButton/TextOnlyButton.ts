@@ -1,3 +1,4 @@
+import Kernel from '../../../../../Kernel/Kernel';
 import ASHUDComponent from '../../ASHUDComponent/ASHUDComponent';
 
 /**
@@ -88,12 +89,13 @@ export default class TextOnlyButton extends ASHUDComponent
         
         if(this._drawBoundaryBox)
         {
-            const ctx = this.kernel.gameContext;
+            const kernel = Kernel.getInstance();
+            const ctx = kernel.gameContext;
             
             const originalStrokeColor = ctx.strokeStyle;
             ctx.strokeStyle = "red";
             
-            const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({ 
+            const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({ 
                 x: this.x, 
                 y: this.y, 
                 width: this.width, 

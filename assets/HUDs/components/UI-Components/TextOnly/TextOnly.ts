@@ -1,3 +1,4 @@
+import Kernel from '../../../../../Kernel/Kernel';
 import ASHUDComponent from '../../ASHUDComponent/ASHUDComponent';
 
 /**
@@ -49,7 +50,7 @@ export default class TextOnly extends ASHUDComponent
         this._alignment = alignment
         this._lineGap = lineGap;
         
-        this.width = this.kernel.unitsWithinCamera;
+        this.width = Kernel.getInstance().unitsWithinCamera;
         this.height = fontSize + 10;
 	}
     

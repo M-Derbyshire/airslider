@@ -1,3 +1,4 @@
+import Kernel from '../../../../../Kernel/Kernel';
 import ASModel from '../../../ASModel/ASModel';
 import IModel from '../../../Model/IModel';
 import IModelAnimationsManager from '../../../Model/ModelAnimationsManager/IModelAnimationsManager';
@@ -68,7 +69,7 @@ export default class LavaBall extends ASModel {
         });
         
         const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/fire.png";
-        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
+        this.damageFlashImage = Kernel.getInstance().loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
     }
     

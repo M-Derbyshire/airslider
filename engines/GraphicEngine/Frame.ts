@@ -1,14 +1,11 @@
-import IFrame from './IFrame';
 import Kernel from '../../Kernel/Kernel';
-import IKernel from '../../Kernel/IKernel';
+import IFrame from './IFrame';
 import ILightMask from './ILightMask';
 
 /**
  * A single area of a level
  */
 export default class Frame implements IFrame {
-    private _kernel:IKernel;
-    
     private _canvasCtx:CanvasRenderingContext2D; // The 2D context from the canvas element
     
     // These are the indexes of the currently selected background and lightmask in the 
@@ -48,8 +45,7 @@ export default class Frame implements IFrame {
      */
     constructor(x:number, y:number, width:number, height:number)
     {
-        this._kernel = Kernel.getInstance();
-        this._canvasCtx = this._kernel.gameContext;
+        this._canvasCtx = Kernel.getInstance().gameContext;
         
         this._loadedLightMasks = [];
         this._loadedBackgrounds = [];
@@ -68,7 +64,9 @@ export default class Frame implements IFrame {
      */
     loadBackground(path:string):number
     {
-        this._loadedBackgrounds.push(this._kernel.loadImage(path));
+        const kernel = Kernel.getInstance();
+        
+        this._loadedBackgrounds.push(kernel.loadImage(path));
         return this._loadedBackgrounds.length - 1;
     }
     
@@ -80,9 +78,11 @@ export default class Frame implements IFrame {
      * @returns the index number of the image in the Frame's internal array
      */
     loadLightMask(path:string, luminosity:number):number
-    {   
+    {
+        const kernel = Kernel.getInstance();
+        
         this._loadedLightMasks.push({
-            image: this._kernel.loadImage(path),
+            image: kernel.loadImage(path),
             luminosity: 1 - luminosity
         });
         
@@ -114,7 +114,9 @@ export default class Frame implements IFrame {
     {
         if(this._lightMaskIndex !== null)
         {
-            const { x, y, width, height } = this._kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({
+            const graphicEngine = Kernel.getInstance().graphicEngine;
+            
+            const { x, y, width, height } = graphicEngine.getUnscaledDrawPositionsAndDimensions({
                 x: this.x,
                 y: this.y,
                 width: this.width,
@@ -136,7 +138,9 @@ export default class Frame implements IFrame {
     {
         if(this._backgroundIndex !== null)
         {
-            const { x, y, width, height } = this._kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({
+            const graphicEngine = Kernel.getInstance().graphicEngine;
+            
+            const { x, y, width, height } = graphicEngine.getUnscaledDrawPositionsAndDimensions({
                 x: this.x,
                 y: this.y,
                 width: this.width,

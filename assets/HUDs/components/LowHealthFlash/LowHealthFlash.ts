@@ -1,3 +1,4 @@
+import Kernel from "../../../../Kernel/Kernel";
 import DamageFlash from "../DamageFlash/DamageFlash";
 
 /**
@@ -14,7 +15,7 @@ export default class LowHealthFlash extends DamageFlash
     {
         super.load();
         
-        this.image = this.kernel.loadImage("/assets/HUDs/components/LowHealthFlash/images/damage.png");
+        this.image = Kernel.getInstance().loadImage("/assets/HUDs/components/LowHealthFlash/images/damage.png");
     }
     
     prepare():void 

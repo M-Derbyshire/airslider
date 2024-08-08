@@ -1,4 +1,3 @@
-import IKernel from "../IKernel";
 import Kernel from "../Kernel";
 import IZCalc from "./IZCalc";
 
@@ -8,8 +7,6 @@ import IZCalc from "./IZCalc";
  */
 export default class ZCalc implements IZCalc
 {
-    private _kernel:IKernel;
-    
     private _vanishingPointX:number; // The x position (in units) of the vanishing point
     private _vanishingPointY:number; // The y position (in units) of the vanishing point
     private _vanishingPointDepth:number; // The amount of possible positions that there should be on the z axis
@@ -18,8 +15,6 @@ export default class ZCalc implements IZCalc
     
     constructor()
     {
-        this._kernel = Kernel.getInstance();
-        
         this._vanishingPointX = 0;
         this._vanishingPointY = 0;
 		
@@ -177,9 +172,11 @@ export default class ZCalc implements IZCalc
      */
     x(xPosition:number, zPosition:number, showNegative:boolean = false):number
     {
-        const vanishPointPixels = this._kernel.helpers.unit.xUnit(this._vanishingPointX);
+        const kernel = Kernel.getInstance();
         
-        const camera = this._kernel.graphicEngine.camera;
+        const vanishPointPixels = kernel.helpers.unit.xUnit(this._vanishingPointX);
+        
+        const camera = kernel.graphicEngine.camera;
         const positionedVanishPointPixels = camera.canvasPositionX + vanishPointPixels;
         
         return this._position(zPosition, xPosition, positionedVanishPointPixels, showNegative);
@@ -194,9 +191,11 @@ export default class ZCalc implements IZCalc
      */
     y(yPosition:number, zPosition:number, showNegative:boolean = false):number
     {
-        const vanishPointPixels = this._kernel.helpers.unit.yUnit(this._vanishingPointY);
+        const kernel = Kernel.getInstance();
         
-        const camera = this._kernel.graphicEngine.camera;
+        const vanishPointPixels = kernel.helpers.unit.yUnit(this._vanishingPointY);
+        
+        const camera = kernel.graphicEngine.camera;
         const positionedVanishPointPixels = camera.canvasPositionY + vanishPointPixels;
         
         return this._position(zPosition, yPosition, positionedVanishPointPixels, showNegative);

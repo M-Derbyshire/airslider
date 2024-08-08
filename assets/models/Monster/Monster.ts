@@ -1,3 +1,4 @@
+import Kernel from '../../../Kernel/Kernel';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
 import Tarian from '../Tarian/Tarian';
@@ -115,7 +116,9 @@ export default class Monster extends ASModel {
      */
 	private _handlePlayerLoss():void
 	{
-        const level = this.kernel.level as ASLevel;
+        const kernel = Kernel.getInstance();
+        
+        const level = kernel.level as ASLevel;
         
 		if(!level.levelMoving && this.active)
         {
@@ -123,7 +126,7 @@ export default class Monster extends ASModel {
             this.moveIn(level.maxLevelSpeedRaw);
             this.fireWeapon = false;
             
-            if(this.z >= this.helpers.zCalc.vanishingPointDepth)
+            if(this.z >= kernel.helpers.zCalc.vanishingPointDepth)
                 this.active = false;
         }
 	}

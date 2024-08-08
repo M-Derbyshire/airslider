@@ -1,3 +1,4 @@
+import Kernel from "../../../Kernel/Kernel";
 import ASLevel from "../../levels/ASLevel/ASLevel";
 import ASModel from "../ASModel/ASModel";
 import IModel from "../Model/IModel";
@@ -54,7 +55,7 @@ export default class Obstacle extends ASModel
         super.prepare();
         
         this.setYPositionFromBottom(this.height);
-        this.z = this.helpers.zCalc.vanishingPointDepth;
+        this.z = Kernel.getInstance().helpers.zCalc.vanishingPointDepth;
         
         this.active = false;
         
@@ -93,10 +94,11 @@ export default class Obstacle extends ASModel
      */
 	private _setZSpeedBasedOnLevelSpeed():void
 	{
-        const level = this.kernel.level as ASLevel;
+        const kernel = Kernel.getInstance();
+        const level = kernel.level as ASLevel;
         
 		if(!level.levelMoving)
-            this.zSpeed = -(this.helpers.zCalc.speed(level.maxLevelSpeedRaw, this.kernel.fps) / 1.5);
+            this.zSpeed = -(kernel.helpers.zCalc.speed(level.maxLevelSpeedRaw, kernel.fps) / 1.5);
         else
             this.zSpeed = level.levelSpeed / 1.5;
 	}

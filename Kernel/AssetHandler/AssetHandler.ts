@@ -1,4 +1,3 @@
-import IKernel from "../IKernel";
 import Kernel from "../Kernel";
 import IAssetHandler from "./IAssetHandler";
 import ILoadedAssetData from "./ILoadedAssetData";
@@ -8,7 +7,6 @@ import ILoadedAssetData from "./ILoadedAssetData";
  */
 export default class AssetHandler implements IAssetHandler
 {
-    private _kernel:IKernel;
     private _assetsStillLoading:number; // The number of assets that are still loading
     private _loadedAssets:Map<string, ILoadedAssetData>; // The loaded image/audio assets
     private _loadedFontPaths:string[]; // Asset paths for loaded (or currently loading) fonts
@@ -23,8 +21,6 @@ export default class AssetHandler implements IAssetHandler
     
     constructor()
     {
-        this._kernel = Kernel.getInstance();
-        
         this._assetsStillLoading = 0;
         
         this._loadedAssets = new Map<string, ILoadedAssetData>();
@@ -52,8 +48,9 @@ export default class AssetHandler implements IAssetHandler
             loaded: false
         }; 
         
+        const kernel = Kernel.getInstance();
         newLoadedAsset.asset.onerror = (err:any) => {
-            this._kernel.handleError(err);
+            kernel.handleError(err);
         };
         
         const afterLoadCallback = () => {
@@ -86,6 +83,8 @@ export default class AssetHandler implements IAssetHandler
         if(this._loadedFontPaths.includes(path)) 
             return;
         
+        const kernel = Kernel.getInstance();
+        
         const font = new FontFace(name, `url(${this._prepareAssetPath(path)})`);
         
         font.load()
@@ -95,7 +94,7 @@ export default class AssetHandler implements IAssetHandler
                 fontFaceSet.add(newFont);
                 this._defaultAssetCallback();
             })
-            .catch((err:any) => this._kernel.handleError(err));
+            .catch((err:any) => kernel.handleError(err));
         
         this._assetsStillLoading++;
         this._loadedFontPaths.push(path);
@@ -126,6 +125,6 @@ export default class AssetHandler implements IAssetHandler
      */
     private _prepareAssetPath(path:string):string
     {
-        return this._kernel.rootPath + path;
+        return Kernel.getInstance().rootPath + path;
     }
 }

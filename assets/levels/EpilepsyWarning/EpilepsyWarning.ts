@@ -2,6 +2,7 @@ import Level from '../Level/Level';
 import WarningScreenTexts from '../../HUDs/WarningScreenTexts/WarningScreenTexts';
 import { KernelStatus } from '../../../Kernel/KernelStatus';
 import TheConstructLoadingScreen from '../LoadingScreens/TheConstructLoadingScreen/TheConstructLoadingScreen';
+import Kernel from '../../../Kernel/Kernel';
 
 /**
  * A level that acts as a neurosensitivity warning
@@ -25,7 +26,7 @@ Player discretion is advised.`;
             this._bodyText,
             this._continueText,
             this._textColor,
-            () => this.kernel.unloadCurrentLevel()
+            () => Kernel.getInstance().unloadCurrentLevel()
         );
 	}
     
@@ -36,8 +37,10 @@ Player discretion is advised.`;
     {
         super.prepare();
         
-        this.kernel.graphicEngine.camera.setColors(this._backgroundColor, "#000000");
-        this.kernel.loadLevel(new TheConstructLoadingScreen());
+        const kernel = Kernel.getInstance();
+        
+        kernel.graphicEngine.camera.setColors(this._backgroundColor, "#000000");
+        kernel.loadLevel(new TheConstructLoadingScreen());
     }
     
     /**
@@ -47,8 +50,10 @@ Player discretion is advised.`;
     {
         super.act();
         
+        const kernel = Kernel.getInstance();
+        
         // We don't want this level to pause (e.g. on the browser changing to another tab)
-        if(this.kernel.status === KernelStatus.PrePaused)
-            this.kernel.toggleGamePause();
+        if(kernel.status === KernelStatus.PrePaused)
+            kernel.toggleGamePause();
     }
 };

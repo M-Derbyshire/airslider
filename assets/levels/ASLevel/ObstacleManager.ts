@@ -1,6 +1,4 @@
-import IKernel from '../../../Kernel/IKernel';
 import Kernel from '../../../Kernel/Kernel';
-import IHelpers from '../../../Kernel/helpers/IHelpers';
 import IModel from '../../models/Model/IModel';
 
 /**
@@ -8,9 +6,6 @@ import IModel from '../../models/Model/IModel';
  */
 export default class ObstacleManager
 {
-	protected kernel:IKernel;
-	protected helpers:IHelpers;
-	
 	// The model of the player character
 	protected playerModel:IModel;
 	
@@ -50,9 +45,6 @@ export default class ObstacleManager
 	
     constructor()
     {
-        this.kernel = Kernel.getInstance();
-        this.helpers = this.kernel.helpers;
-		
         this._leftEdge = 0;
         this._rightEdge = 0;
         
@@ -117,14 +109,16 @@ export default class ObstacleManager
 			: (this._fromIndex + this._obstacleCount) - 1;
 		
 		
+		const kernel = Kernel.getInstance();
+		
         for(let i = this._fromIndex; i <= lastAvailableObstacleIndex; i++)
         {
-			const currentObstacle = this.kernel.loadedModels[i];
+			const currentObstacle = kernel.loadedModels[i];
 			
             if(this._isTimeToSendNextObstacle(i))
             {
 				currentObstacle.x = this._getObstacleXPosition(i);
-                currentObstacle.z = this.helpers.zCalc.vanishingPointDepth;
+                currentObstacle.z = kernel.helpers.zCalc.vanishingPointDepth;
                 currentObstacle.active = true;
             }
         }
@@ -137,15 +131,17 @@ export default class ObstacleManager
 	 */
 	private _isTimeToSendNextObstacle(currentModelIndex:number):boolean
 	{
-		const currentObstacle = this.kernel.loadedModels[currentModelIndex];
+		const kernel = Kernel.getInstance();
+		
+		const currentObstacle = kernel.loadedModels[currentModelIndex];
 		
 		if(!currentObstacle.active)
 		{
 			if (currentModelIndex === this._fromIndex) 
 				return true;
 			
-			const previousObstacle = this.kernel.loadedModels[currentModelIndex - 1];
-			const vanishingPointDepth = this.helpers.zCalc.vanishingPointDepth;
+			const previousObstacle = kernel.loadedModels[currentModelIndex - 1];
+			const vanishingPointDepth = kernel.helpers.zCalc.vanishingPointDepth;
 			
 			const previousObstacleHasMovedFarEnough = 
 				(previousObstacle.z + (vanishingPointDepth / this._obstacleCount) < vanishingPointDepth);
@@ -163,7 +159,7 @@ export default class ObstacleManager
 	 */
 	private _getObstacleXPosition(currentObstacleIndex:number):number
 	{
-		const currentObstacle = this.kernel.loadedModels[currentObstacleIndex];
+		const currentObstacle = Kernel.getInstance().loadedModels[currentObstacleIndex];
 		
 		if((currentObstacleIndex + 1) % 3 == 0) //the third of every 3 obstacles
 		{

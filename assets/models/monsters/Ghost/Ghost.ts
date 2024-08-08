@@ -1,3 +1,4 @@
+import Kernel from '../../../../Kernel/Kernel';
 import IModel from '../../Model/IModel';
 import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
@@ -47,8 +48,10 @@ export default class Ghost extends Monster {
     {
         super.load(animationManager);
         
+        const kernel = Kernel.getInstance();
+        
         const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/ghost.png";
-        this.damageFlashImage = this.kernel.loadImage(damageFlashSpritesheet);
+        this.damageFlashImage = kernel.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
         
         const spritesheetPath = "/assets/models/monsters/Ghost/anim/ghost-spritesheet.png";
@@ -81,7 +84,7 @@ export default class Ghost extends Monster {
         
         this.state = "normal";
         
-        this.startZ = this.helpers.zCalc.vanishingPointDepth;
+        this.startZ = Kernel.getInstance().helpers.zCalc.vanishingPointDepth;
         this.setYPositionFromBottom(this.height);
         this.startY = this.y;
         this.centerXPosition();

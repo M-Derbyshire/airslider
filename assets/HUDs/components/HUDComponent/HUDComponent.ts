@@ -1,16 +1,12 @@
-import Kernel from '../../../../Kernel/Kernel';
-import IKernel from '../../../../Kernel/IKernel';
 import IHUDComponent from './IHUDComponent';
-import IHelpers from '../../../../Kernel/helpers/IHelpers';
 import ITextContent from '../../../../engines/GraphicEngine/ITextContent';
+import Kernel from '../../../../Kernel/Kernel';
 
 /**
  * A component to be displayed by the Heads Up Display
  */
 export default class HUDComponent implements IHUDComponent
 {
-    protected kernel: IKernel;
-    protected helpers: IHelpers;
     protected ctx: CanvasRenderingContext2D;
     protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
     
@@ -47,9 +43,7 @@ export default class HUDComponent implements IHUDComponent
     
     constructor()
     {
-        this.kernel = Kernel.getInstance();
-        this.helpers = this.kernel.helpers;
-        this.ctx = this.kernel.gameContext;
+        this.ctx = Kernel.getInstance().gameContext;
         
         this.assetsToUnload = [];
         
@@ -84,7 +78,7 @@ export default class HUDComponent implements IHUDComponent
      */
     unload():void
     {
-        this.assetsToUnload.forEach(asset => this.kernel.releaseAsset(asset));
+        this.assetsToUnload.forEach(asset => Kernel.getInstance().releaseAsset(asset));
     }
     
     /**
@@ -92,7 +86,7 @@ export default class HUDComponent implements IHUDComponent
      */
     drawText():void
     {
-        this.kernel.graphicEngine.drawText(
+        Kernel.getInstance().graphicEngine.drawText(
             this.text,
             {
                 x: this.x,
@@ -116,7 +110,7 @@ export default class HUDComponent implements IHUDComponent
      */
 	isPointerOverlapping(pointX:number, pointY:number):boolean
 	{
-        const { x, y, width, height } = this.kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = Kernel.getInstance().graphicEngine.getStaticDrawPositionsAndDimensions({
             x: this.x,
             y: this.y,
             width: this.width,
