@@ -125,6 +125,7 @@ export default class AssetHandler implements IAssetHandler
      */
     private _prepareAssetPath(path:string):string
     {
-        return Kernel.getInstance().rootPath + path;
+        const relativePath = path.startsWith("/") ? path : `/${path}`;
+        return Kernel.getInstance().rootPath + relativePath;
     }
 }
