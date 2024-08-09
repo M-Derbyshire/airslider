@@ -13,7 +13,6 @@ import fonts from '../assets/fonts/fonts';
 import IKernel from './IKernel';
 import ISettings from '../settings/ISettings';
 import IAssetHandler from './AssetHandler/IAssetHandler';
-import IControlsInitialiser from '../settings/ControlsInitialiser/IControlsInitialiser';
 import IHelpers from './helpers/IHelpers';
 import ILoadedLevel from './ILoadedLevel';
 import ILevel from '../assets/levels/Level/ILevel';
@@ -98,7 +97,6 @@ export default class Kernel implements IKernel {
     private _assetHandler:IAssetHandler; // Loads and manages assets
     
     private _helpers:IHelpers; // Provides a number of "helper" objects, that each calculate and/or provide useful values
-    private _controlInitialiser:IControlsInitialiser; // Handles the initialising of the game's controls
     
     private _currentLevelShouldBeUnloaded:boolean; // If this is true, the current level will get unloaded after the current frame has been drawn
     
@@ -570,9 +568,6 @@ export default class Kernel implements IKernel {
     {
         this._totalLevelActiveMilliseconds = 0;
         this._status = KernelStatus.Active;
-        
-        const ControlsInitialiserClass = this._settings.ControlsInitialiserClass;
-        this._controlInitialiser = new ControlsInitialiserClass();
     }
     
     /**
@@ -584,7 +579,6 @@ export default class Kernel implements IKernel {
         {
             this.level.prepare();
             this.loadedModels.forEach(model => model.prepare());
-            this._initialiseControls();
             
             this._levelQueue[0].hasBeenPrepared = true;
         }
@@ -606,14 +600,6 @@ export default class Kernel implements IKernel {
 	}
     
     /**
-     * Triggers the initialisation of the game's controls
-     */
-	private _initialiseControls():void
-	{
-		this._controlInitialiser.initialiseControls();
-	}
-    
-    /**
      * Unloads the current level, triggering the release of any assets that need releasing
      */
     private _unloadCurrentLevel():void
@@ -622,7 +608,6 @@ export default class Kernel implements IKernel {
         this.level.unload();
         
         this._totalLevelActiveMilliseconds = 0;
-        this._controlInitialiser.unregisterEventListeners();
         
         this._levelQueue.shift();
         

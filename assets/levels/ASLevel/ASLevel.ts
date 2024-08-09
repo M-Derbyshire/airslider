@@ -29,6 +29,7 @@ import { CentralStateKey } from '../CentralStateKey';
 import ILevel from '../Level/ILevel';
 import RacerManager from './RacerManager';
 import Kernel from '../../../Kernel/Kernel';
+import ASControlsInitialiser from './ASControlsInitialiser';
 
 /**
  * The game's base Level class
@@ -111,6 +112,8 @@ export default class ASLevel extends Level
 		super();
         
         this.HUD = new MainHUD();
+        
+        this.controlsInitialiser = new ASControlsInitialiser();
 		
 		this.roadManager = new LevelRoad();
         this.roadColor = "#999999";

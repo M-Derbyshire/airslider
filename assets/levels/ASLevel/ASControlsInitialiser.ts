@@ -1,7 +1,7 @@
-import ControlsInitialiser from './ControlsInitialiser';
-import ASModel from '../../assets/models/ASModel/ASModel';
-import { CentralStateKey } from '../../assets/levels/CentralStateKey';
-import Kernel from '../../Kernel/Kernel';
+import ASModel from '../../models/ASModel/ASModel';
+import { CentralStateKey } from '../CentralStateKey';
+import Kernel from '../../../Kernel/Kernel';
+import ControlsInitialiser from '../Level/ControlsInitialiser';
 
 /**
  * The game control's initialiser class
@@ -17,11 +17,11 @@ export default class ASControlsInitialiser extends ControlsInitialiser
         this._currentMove = "";
         
         this.initialisingFunctions = [
-			this.keyboardControls.bind(this)
+			this._keyboardControls.bind(this)
 		];
 	}
 	
-    keyboardControls():void
+    private _keyboardControls():void
     {
         const kernel = Kernel.getInstance();
         

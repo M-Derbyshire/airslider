@@ -12,4 +12,9 @@ export default interface IControlsInitialiser {
 	 * Removes any registered event listeners
 	 */
 	unregisterEventListeners():void;
+	
+	/**
+	 * Returns true if there are event listeners active, or false if not
+	 */
+	hasActiveListeners():boolean;
 };

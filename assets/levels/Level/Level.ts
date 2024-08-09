@@ -7,6 +7,8 @@ import IFrameManager from '../../../engines/GraphicEngine/IFrameManager';
 import IModel from '../../models/Model/IModel';
 import ILevel from './ILevel';
 import Kernel from '../../../Kernel/Kernel';
+import IControlsInitialiser from './IControlsInitialiser';
+import ControlsInitialiser from './ControlsInitialiser';
 
 /**
  * A level of the game
@@ -23,6 +25,8 @@ export default class Level implements ILevel
     protected gameCanvas: HTMLCanvasElement; // The canvas element that the game should be drawn on
     protected gameContext: CanvasRenderingContext2D; // The 2D context from the HTML canvas element
     
+    protected controlsInitialiser: IControlsInitialiser; // Handles the initialising of the game's controls
+    
     /**
      * The Heads Up Display for the level
      */
@@ -37,6 +41,8 @@ export default class Level implements ILevel
     {
         this.assetsToUnload = [];
         this.isPauseable = true;
+        
+        this.controlsInitialiser = new ControlsInitialiser();
     }
     
     /**
@@ -61,6 +67,8 @@ export default class Level implements ILevel
         this.eventManager = eventManager;
         this.pointerEventManager = pointerEventManager;
         
+        this.controlsInitialiser.initialiseControls();
+        
         this._loadHUD();
     }
     
@@ -71,6 +79,7 @@ export default class Level implements ILevel
     {
         this.assetsToUnload.forEach(asset => Kernel.getInstance().releaseAsset(asset));
         this.pointerEventManager.removeEventHandlers();
+        this.controlsInitialiser.unregisterEventListeners();
     }
     
     /**

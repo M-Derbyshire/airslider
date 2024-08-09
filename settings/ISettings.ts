@@ -1,4 +1,3 @@
-import IControlsInitialiser from "./ControlsInitialiser/IControlsInitialiser";
 import ILevel from "../assets/levels/Level/ILevel";
 
 /**
@@ -40,11 +39,6 @@ export default interface ISettings {
      * The vertical size of the camera's aspect ratio (e.g. the 9 in "16:9")
      */
 	aspectRatioVertical:number;
-    
-    /**
-     * The class of the control's initialiser
-     */
-	ControlsInitialiserClass:new()=>IControlsInitialiser;
     
     /**
      * The class of the initial level

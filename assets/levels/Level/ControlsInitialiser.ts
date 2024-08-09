@@ -1,5 +1,5 @@
-import IRegisteredEventListener from './IRegisteredEventListener';
 import IControlsInitialiser from './IControlsInitialiser';
+import IRegisteredEventListener from './IRegisteredEventListener';
 
 /**
  * Handles the initialising of the game's controls. 
@@ -44,5 +44,13 @@ export default class ControlsInitialiser implements IControlsInitialiser
 		);
 		
 		this.registeredEventListeners = [];
+	}
+	
+	/**
+	 * Returns true if there are event listeners active, or false if not
+	 */
+	hasActiveListeners():boolean
+	{
+		return this.registeredEventListeners.length > 0;
 	}
 }
