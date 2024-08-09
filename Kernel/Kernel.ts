@@ -38,9 +38,11 @@ export default class Kernel implements IKernel {
     
     /**
      * Gets the singleton instance of the kernel
+     * @param canvas The Canvas element that the game should be drawn onto
+     * @param settingsOverrides An object that contains overrides for some of the game's settings
      * @returns the singleton instance of the kernel
      */
-    static getInstance(canvas?:HTMLCanvasElement):Kernel
+    static getInstance(canvas?:HTMLCanvasElement, settingsOverrides?:any):Kernel
     {
         // The Kernel constructor will return the singleton instance
         // if it has already been created, and if not then it will create
@@ -48,15 +50,17 @@ export default class Kernel implements IKernel {
         // actual reason for this method is language -- it's better
         // that people know you're "getting" the "instance", then thinking
         // you are truly making something "new".
-        return new Kernel(canvas);
+        return new Kernel(canvas, settingsOverrides);
     }
     
     /**
      * Triggers the starting of the game
+     * @param canvas The Canvas element that the game should be drawn onto
+     * @param settingsOverrides An object that contains overrides for some of the game's settings
      */
-    static init(canvas:HTMLCanvasElement)
+    static init(canvas:HTMLCanvasElement, settingsOverrides?:any)
     {
-        const instance = this.getInstance(canvas);
+        const instance = this.getInstance(canvas, settingsOverrides);
         
         if(instance.level) // If we've already initiated the game
             return;
@@ -118,9 +122,11 @@ export default class Kernel implements IKernel {
     
     /**
      * Constructor
+     * @param canvas The Canvas element that the game should be drawn onto
+     * @param settingsOverrides An object that contains overrides for some of the game's settings
      * @returns The singleton instance of the kernel
      */
-    private constructor(canvas?:HTMLCanvasElement)
+    private constructor(canvas?:HTMLCanvasElement, settingsOverrides:any = {})
     {
         if(Kernel._instance)
         {
@@ -136,7 +142,10 @@ export default class Kernel implements IKernel {
         
         this.gameCanvas = canvas;
         
-        this._settings = (process.env.GAME_ENV === "development") ? devSettings : prodSettings;
+        this._settings = {
+            ...(process.env.GAME_ENV === "development" ? devSettings : prodSettings),
+            ...settingsOverrides
+        };
         
         this._fps = 60;
         this._highestFpsReached = 0;
