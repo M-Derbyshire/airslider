@@ -50,7 +50,7 @@ export default class TextOnly extends ASHUDComponent
         this._alignment = alignment
         this._lineGap = lineGap;
         
-        this.width = Kernel.getInstance().unitsWithinCamera;
+        this.width = Kernel.getInstance().unitsWithinCameraX;
         this.height = fontSize + 10;
 	}
     

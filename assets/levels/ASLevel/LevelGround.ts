@@ -151,16 +151,15 @@ export default class LevelGround
 		// At 0 on the z-axis, each ground image should be fully off the screen (in the bottom corners)
 		
 		const kernel = Kernel.getInstance();
-		const unitsWithinCamera = kernel.unitsWithinCamera;
 		const graphicEngine = kernel.graphicEngine;
 		
 		// The default for this needs to be double the width of the canvas (at 0 on z-axis) to look correct
 		const imageWidth = (this.ground.width) 
 			? this.ground.width 
-			: unitsWithinCamera * 2;
+			: kernel.unitsWithinCameraX * 2;
 		
 		const offsetZPos = groundZPos - this.ground.offset;
-		const yUnitValue = unitsWithinCamera - this.ground.height;
+		const yUnitValue = kernel.unitsWithinCameraY - this.ground.height;
 		
 		const leftDrawValues = graphicEngine.getScaledDrawPositionsAndDimensions({
 			x: -imageWidth,
@@ -171,7 +170,7 @@ export default class LevelGround
 		});
 		
 		const rightDrawValues = graphicEngine.getScaledDrawPositionsAndDimensions({
-			x: unitsWithinCamera,
+			x: kernel.unitsWithinCameraX,
 			y: yUnitValue,
 			width: imageWidth,
 			height: this.ground.height,

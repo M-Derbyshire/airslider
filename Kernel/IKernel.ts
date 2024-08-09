@@ -20,9 +20,10 @@ export default interface IKernel {
     
     /**
      * The amount of draw-space units there are within the camera's size.
-     * This is the amount for both the X and Y axis.
+     * There are seperate amounts for both the X and Y axis.
      */
-    unitsWithinCamera:number;
+    unitsWithinCameraX:number;
+    unitsWithinCameraY:number;
     
     /**
      * A map to store any state that needs to be accessible to all levels.

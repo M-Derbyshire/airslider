@@ -12,7 +12,7 @@ import IModel from "../../../models/Model/IModel";
 const hitPlayerOrGroundEventCheck = (modelA:IModel, modelAActionMethodName:string, modelB:IModel, modelBActionMethodName:string):void =>
 {
     //Ground hit check
-    if(modelA.y + modelA.height >= Kernel.getInstance().unitsWithinCamera)
+    if(modelA.y + modelA.height >= Kernel.getInstance().unitsWithinCameraY)
     {
         (modelA[modelAActionMethodName as keyof typeof modelA] as Function)(modelB);
         return;

@@ -200,11 +200,12 @@ export default class ASLevel extends Level
         
         const kernel = Kernel.getInstance();
         
-        const axisVanishPointPosition = kernel.unitsWithinCamera / 2;
-        kernel.helpers.zCalc.setVanishPoint(axisVanishPointPosition, axisVanishPointPosition);
+        const vanishPointPositionX = kernel.unitsWithinCameraX / 2;
+        const vanishPointPositionY = kernel.unitsWithinCameraY / 2;
+        kernel.helpers.zCalc.setVanishPoint(vanishPointPositionX, vanishPointPositionY);
         
         this.leftEdge = 0;
-        this.rightEdge = kernel.unitsWithinCamera;
+        this.rightEdge = kernel.unitsWithinCameraX;
         
         this.racerManager.prepare();
         

@@ -32,12 +32,11 @@ export default class LevelRoad
         const vanishPointX = camera.canvasPositionX + unitHelpers.xUnit(zCalc.vanishingPointX);
         const vanishPointY = camera.canvasPositionY + unitHelpers.yUnit(zCalc.vanishingPointY);
         
-        const unitsWithinCamera = kernel.unitsWithinCamera;
         const { x, y, width, height } = kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({
             x: 0,
             y: 0,
-            width: unitsWithinCamera,
-            height: unitsWithinCamera
+            width: kernel.unitsWithinCameraX,
+            height: kernel.unitsWithinCameraY
         });
         
         const leftEdge = x;

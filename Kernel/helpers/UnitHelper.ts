@@ -7,17 +7,20 @@ import IUnitHelper from './IUnitHelper';
  */
 export default class UnitHelper implements IUnitHelper
 {
-    private _unitsWithinCamera:number; // The amount of draw-space x/y units there are within the camera's size
+    private _unitsWithinCameraX:number; // The amount of draw-space x units there are within the camera's size
+    private _unitsWithinCameraY:number; // The amount of draw-space y units there are within the camera's size
     private _cameraWidth:number; // The height of the camera (not in units)
     private _cameraHeight:number; // The width of the camera (not in units)
     
     /**
      * Constructor
-     * @param unitsWithinCamera the amount of draw-space x/y units there are within the camera's size
+     * @param unitsWithinCameraX the amount of draw-space x units there are within the camera's size
+     * @param unitsWithinCameraY the amount of draw-space y units there are within the camera's size
      */
-    constructor(unitsWithinCamera:number)
+    constructor(unitsWithinCameraX:number, unitsWithinCameraY:number)
     {
-        this._unitsWithinCamera = unitsWithinCamera;
+        this._unitsWithinCameraX = unitsWithinCameraX;
+        this._unitsWithinCameraY = unitsWithinCameraY;
         this._cameraHeight = 0;
         this._cameraWidth = 0;
     }
@@ -40,7 +43,7 @@ export default class UnitHelper implements IUnitHelper
      */
     xUnit(unitValue:number):number
     {
-        return this._unitValueToPixelValue(unitValue, this._cameraWidth);
+        return this._unitValueToPixelValue(unitValue, this._unitsWithinCameraX, this._cameraWidth);
     }
     
     /**
@@ -50,18 +53,19 @@ export default class UnitHelper implements IUnitHelper
      */
     yUnit(unitValue:number):number
     {
-        return this._unitValueToPixelValue(unitValue, this._cameraHeight);
+        return this._unitValueToPixelValue(unitValue, this._unitsWithinCameraY, this._cameraHeight);
     }
     
     /**
      * Converts a "unit" position/dimension value into a pixel value, based on the size of the camera
      * @param unitValue the position/dimension value, in "units"
+     * @param unitsWithinCamera the total amount of units on the given axis
      * @param cameraAxisSize the size of the camera on the given axis (not in units)
      * @returns the actual value to use when drawing to the canvas
      */
-    private _unitValueToPixelValue(unitValue:number, cameraAxisSize:number):number
+    private _unitValueToPixelValue(unitValue:number, unitsWithinCamera:number, cameraAxisSize:number):number
     {
-        return (cameraAxisSize / this._unitsWithinCamera) * unitValue;
+        return (cameraAxisSize / unitsWithinCamera) * unitValue;
     }
     
     /**

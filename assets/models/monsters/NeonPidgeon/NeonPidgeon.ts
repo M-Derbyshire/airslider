@@ -382,10 +382,10 @@ export default class NeonPidgeon extends Monster {
     {
         const pidgeonBottomEdge = this.y + this.height;
         
-        const unitsWithinCamera = Kernel.getInstance().unitsWithinCamera;
+        const unitsWithinCameraY = Kernel.getInstance().unitsWithinCameraY;
         
         // Make sure the player doesn't lose extra health if they collide from the side
-        if((pidgeonBottomEdge > otherModel.y) && (pidgeonBottomEdge < unitsWithinCamera))
+        if((pidgeonBottomEdge > otherModel.y) && (pidgeonBottomEdge < unitsWithinCameraY))
             this.y = otherModel.y - this.height - 1;
         
         if(this.state == "falling")

@@ -110,9 +110,10 @@ export default class Kernel implements IKernel {
     
     /**
      * The amount of draw-space units there are within the camera's size.
-     * This is the amount for both the X and Y axis.
+     * There are seperate amounts for both the X and Y axis.
      */
-    unitsWithinCamera:number;
+    unitsWithinCameraX:number;
+    unitsWithinCameraY:number;
     
     
     
@@ -141,7 +142,7 @@ export default class Kernel implements IKernel {
         
         this._fps = 60;
         this._highestFpsReached = 0;
-        this._fpsLimit = (!isNaN(this._settings.fpsLimit)) ? this._settings.fpsLimit : 70;
+        this._fpsLimit = this._settings.fpsLimit ?? 70;
         this._lastTime = new Date();
         this._timeSinceLastFrameMS = 0;
         
@@ -159,7 +160,8 @@ export default class Kernel implements IKernel {
         this._currentLevelShouldBeUnloaded = false;
         
         this.fpsDisplayColor = this._settings.fpsDisplayColor;
-        this.unitsWithinCamera = this._settings.unitsWithinCamera;
+        this.unitsWithinCameraX = this._settings.unitsWithinCameraX;
+        this.unitsWithinCameraY = this._settings.unitsWithinCameraY;
     }
     
     
@@ -512,7 +514,7 @@ export default class Kernel implements IKernel {
         this._helpers = {
             zCalc: new ZCalc(),
             time: new TimeHelper(),
-            unit: new UnitHelper(this.unitsWithinCamera)
+            unit: new UnitHelper(this.unitsWithinCameraX, this.unitsWithinCameraY)
         };
         
         // Load the fonts from the "fonts" object

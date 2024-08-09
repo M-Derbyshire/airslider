@@ -47,12 +47,11 @@ export default class DamageFlash extends ASHUDComponent
             
             const kernel = Kernel.getInstance();
             
-            const unitsWithinCamera = kernel.unitsWithinCamera;
             const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
                 x: 0,
                 y: 0,
-                width: unitsWithinCamera,
-                height: unitsWithinCamera
+                width: kernel.unitsWithinCameraX,
+                height: kernel.unitsWithinCameraY
             });
             
             this.ctx.globalAlpha = this.opacity;

@@ -35,7 +35,7 @@ export default class RacerManager
         this._backLaunchSpeed = -15;
         
         this._leftEdge = 0;
-        this._rightEdge = Kernel.getInstance().unitsWithinCamera;
+        this._rightEdge = Kernel.getInstance().unitsWithinCameraX;
         this._levelWidth = this._rightEdge - this._leftEdge;
         
         this._overtakingInitialGap = 1000;

@@ -37,8 +37,9 @@ export default class LoadingScreen extends Level
 	{
 		super.load(frameManager, eventManager, pointerEventManager);
         
-        const unitsWithinCamera = Kernel.getInstance().unitsWithinCamera;
-        const frame = new Frame(0, 0, unitsWithinCamera, unitsWithinCamera);
+        const kernel = Kernel.getInstance();
+        
+        const frame = new Frame(0, 0, kernel.unitsWithinCameraX, kernel.unitsWithinCameraY);
         
         const backgroundIndex = frame.loadBackground(this.backgroundImagePath);
         frame.setBackgroundImage(backgroundIndex);
@@ -59,8 +60,9 @@ export default class LoadingScreen extends Level
         
         const kernel = Kernel.getInstance();
         
-        const axisVanishPointPosition = kernel.unitsWithinCamera / 2;
-        kernel.helpers.zCalc.setVanishPoint(axisVanishPointPosition, axisVanishPointPosition);
+        const vanishPointPositionX = kernel.unitsWithinCameraX / 2;
+        const vanishPointPositionY = kernel.unitsWithinCameraY / 2;
+        kernel.helpers.zCalc.setVanishPoint(vanishPointPositionX, vanishPointPositionY);
         
         kernel.loadLevel(new this.LevelToLoad());
     }

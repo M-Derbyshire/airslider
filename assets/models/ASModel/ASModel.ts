@@ -32,7 +32,7 @@ export default class ASModel extends Model
      */
     protected centerXPosition():void
     {
-        const unitsWithinCamera = Kernel.getInstance().unitsWithinCamera;
+        const unitsWithinCamera = Kernel.getInstance().unitsWithinCameraX;
         this.x = (unitsWithinCamera / 2) - (this.width / 2);
     }
     
@@ -42,7 +42,7 @@ export default class ASModel extends Model
      */
     protected setYPositionFromBottom(pos:number):void
     {
-        const unitsWithinCamera = Kernel.getInstance().unitsWithinCamera;
+        const unitsWithinCamera = Kernel.getInstance().unitsWithinCameraY;
         this.y = unitsWithinCamera - pos;
     }
     

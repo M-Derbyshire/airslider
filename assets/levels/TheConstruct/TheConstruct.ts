@@ -94,8 +94,7 @@ export default class TheConstruct extends ASLevel
         this.roadManager.load();
         
         //Setup the frame for the level
-        const unitsWithinCamera = kernel.unitsWithinCamera;
-        let frame = new Frame(0, 0, unitsWithinCamera, unitsWithinCamera);
+        let frame = new Frame(0, 0, kernel.unitsWithinCameraX, kernel.unitsWithinCameraY);
         
         const frameBackgroundIndex = frame.loadBackground("/assets/levels/TheConstruct/images/testBackground.png");
         frame.setBackgroundImage(frameBackgroundIndex);
