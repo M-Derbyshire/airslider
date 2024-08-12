@@ -75,7 +75,11 @@ export default class TarianExplosion extends ASModel {
             this._centreOnPlayer();
             this._setYPosition();
             this._setZPosition();
-        } 
+        }
+        else if (this._player.health <= 10)
+        {
+            this._forceLoadAlarm();
+        }
         
         if(!this._player.active)
             this.active = false;
@@ -133,5 +137,14 @@ export default class TarianExplosion extends ASModel {
     private _setZPosition():void
     {
         this.z = this._player.z - 1;
+    }
+    
+    /**
+     * Force the loading of the sound effect, in preperation for the explosion
+     */
+    private _forceLoadAlarm():void
+    {
+        if(this._alarmSound.currentTime === 0 || this._alarmSound.ended)
+            Kernel.getInstance().soundEngine.forceLoad(this._alarmSound);
     }
 }

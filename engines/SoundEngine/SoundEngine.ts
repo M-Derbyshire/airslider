@@ -156,10 +156,12 @@ export default class SoundEngine implements ISoundEngine {
             sound.muted = false;
             sound.removeEventListener(eventListenerType, unmute);
         };
+        sound.addEventListener(eventListenerType, unmute);
         
+        sound.currentTime = 0;
         sound.loop = false;
         sound.muted = true;
-        sound.addEventListener(eventListenerType, unmute);
+        
         sound.play();
     }
 }
