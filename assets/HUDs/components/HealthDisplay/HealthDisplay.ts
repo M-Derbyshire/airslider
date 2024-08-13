@@ -78,6 +78,7 @@ export default class HealthDisplay extends ASHUDComponent
     draw():void
     {
         const kernel = Kernel.getInstance();
+        const ctx = kernel.gameContext;
         
         const playerModelIndex = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
         const health = (kernel.loadedModels[playerModelIndex] as unknown as Tarian).health;
@@ -94,11 +95,11 @@ export default class HealthDisplay extends ASHUDComponent
         else
             color = this._lowHealthColor;
         
-        this.ctx.globalAlpha = 0.5;
-        this.ctx.fillStyle = color;
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = color;
         this._drawSpannerBackground(radiusModifierPixels);
         this._drawTextBackground(radiusModifierPixels);
-        this.ctx.globalAlpha = 1;
+        ctx.globalAlpha = 1;
         
         this._drawSpanner();
         this._drawBorder();
@@ -112,18 +113,21 @@ export default class HealthDisplay extends ASHUDComponent
      */
     private _drawSpannerBackground(radiusModifierPixels:number)
     {
+        const kernel = Kernel.getInstance();
+        const ctx = kernel.gameContext;
+        
         const unitWidth = this.width * 0.33;
         
-        const { x, y, width, height } = Kernel.getInstance().graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
             x: this.x, 
             y: this.y, 
             width: unitWidth, 
             height: this.height
         });
         
-        this.ctx.beginPath();
-        this.ctx.roundRect(x, y, width, height, radiusModifierPixels);
-        this.ctx.fill();
+        ctx.beginPath();
+        ctx.roundRect(x, y, width, height, radiusModifierPixels);
+        ctx.fill();
     }
     
     /**
@@ -132,13 +136,16 @@ export default class HealthDisplay extends ASHUDComponent
      */
     private _drawTextBackground(radiusModifierPixels:number)
     {
+        const kernel = Kernel.getInstance();
+        const ctx = kernel.gameContext;
+        
         const unitWidth = this.width * 0.66;
         const unitHeight = this.height * 0.5;
         
         const xPos = this.x + (this.width * 0.33);
         const yPos = this.y + (this.height * 0.25);
         
-        const { x, y, width, height } = Kernel.getInstance().graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
             x: xPos, 
             y: yPos, 
             width: unitWidth, 
@@ -153,9 +160,9 @@ export default class HealthDisplay extends ASHUDComponent
             0
         ];
         
-        this.ctx.beginPath();
-        this.ctx.roundRect(x, y, width, height, radiusModifiers);
-        this.ctx.fill();
+        ctx.beginPath();
+        ctx.roundRect(x, y, width, height, radiusModifiers);
+        ctx.fill();
     }
     
     /**
@@ -163,6 +170,9 @@ export default class HealthDisplay extends ASHUDComponent
      */
     private _drawSpanner()
     {
+        const kernel = Kernel.getInstance();
+        const ctx = kernel.gameContext;
+        
         const xPaddingUnits = 10; // Padding between the image and the border, on the x-axis
         const yPaddingUnits = 20; // Padding between the image and the border, on the y-axis
         
@@ -171,14 +181,14 @@ export default class HealthDisplay extends ASHUDComponent
         const unitWidth = (this.width * 0.33) - (xPaddingUnits * 2);
         const unitHeight = this.height - (yPaddingUnits * 2)
         
-        const { x, y, width, height } = Kernel.getInstance().graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
             x: xPos, 
             y: yPos, 
             width: unitWidth, 
             height: unitHeight
         });
         
-        this.ctx.drawImage(this._spannerImage, x, y, width, height);
+        ctx.drawImage(this._spannerImage, x, y, width, height);
     }
     
     /**
@@ -186,6 +196,9 @@ export default class HealthDisplay extends ASHUDComponent
      */
     private _drawBorder()
     {
+        const kernel = Kernel.getInstance();
+        const ctx = kernel.gameContext;
+        
         // Used to push the border in/out a bit
         const paddingUnitsX = 5;
         const paddingUnitsY = 10;
@@ -195,14 +208,14 @@ export default class HealthDisplay extends ASHUDComponent
         const unitWidth = this.width + (paddingUnitsX * 2);
         const unitHeight = this.height + (paddingUnitsY * 2);
         
-        const { x, y, width, height } = Kernel.getInstance().graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
             x: xPos, 
             y: yPos, 
             width: unitWidth,
             height: unitHeight
         });
         
-        this.ctx.drawImage(this._borderImage, x, y, width, height);
+        ctx.drawImage(this._borderImage, x, y, width, height);
     }
     
     /**

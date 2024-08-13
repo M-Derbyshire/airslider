@@ -61,7 +61,7 @@ export default class PauseButton extends ASHUDComponent {
             height: this.height
         });
         
-        this.ctx.drawImage(
+        kernel.gameContext.drawImage(
             this._imageSheet,
             0,
             sourceYPx,

@@ -7,7 +7,6 @@ import Kernel from '../../../../Kernel/Kernel';
  */
 export default class HUDComponent implements IHUDComponent
 {
-    protected ctx: CanvasRenderingContext2D;
     protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
     
     /**
@@ -43,8 +42,6 @@ export default class HUDComponent implements IHUDComponent
     
     constructor()
     {
-        this.ctx = Kernel.getInstance().gameContext;
-        
         this.assetsToUnload = [];
         
         this.active = true;
@@ -110,6 +107,9 @@ export default class HUDComponent implements IHUDComponent
      */
 	isPointerOverlapping(pointX:number, pointY:number):boolean
 	{
+        if(this.width === 0 || this.height === 0)
+            return false;
+        
         const { x, y, width, height } = Kernel.getInstance().graphicEngine.getStaticDrawPositionsAndDimensions({
             x: this.x,
             y: this.y,

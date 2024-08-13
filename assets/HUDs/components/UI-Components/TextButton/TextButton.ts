@@ -123,6 +123,8 @@ export default class TextButton extends TextOnlyButton
      */
     private _drawBorder()
     {
+        const ctx = Kernel.getInstance().gameContext;
+        
         // First, we need to set the coordinates of each "piece" of the border, on the loaded image
         const horizLineCoord = { x: 0, y: 0, width: 187, height: 14 };
         const vertLineCoord = { x: 1, y: 18, width: 14, height: 62 };
@@ -170,7 +172,7 @@ export default class TextButton extends TextOnlyButton
         // Top left corner
         const topLeftX = edgePixels.x - borderIndentPixels.xAxis;
         const topLeftY = edgePixels.y - borderIndentPixels.top;
-        this.ctx.drawImage(
+        ctx.drawImage(
             this._borderPiecesImage,
             topLeftCoord.x,
             topLeftCoord.y,
@@ -185,7 +187,7 @@ export default class TextButton extends TextOnlyButton
         // Top right corner
         const topRightX = edgePixels.x + edgePixels.width - cornerPixels.width + borderIndentPixels.xAxis;
         const topRightY = edgePixels.y - borderIndentPixels.top;
-        this.ctx.drawImage(
+        ctx.drawImage(
             this._borderPiecesImage,
             topRightCoord.x,
             topRightCoord.y,
@@ -200,7 +202,7 @@ export default class TextButton extends TextOnlyButton
         // Bottom left corner
         const bottomLeftX = edgePixels.x - borderIndentPixels.xAxis;
         const bottomLeftY = edgePixels.y + edgePixels.height - cornerPixels.height + borderIndentPixels.bottom;
-        this.ctx.drawImage(
+        ctx.drawImage(
             this._borderPiecesImage,
             bottomLeftCoord.x,
             bottomLeftCoord.y,
@@ -215,7 +217,7 @@ export default class TextButton extends TextOnlyButton
         // Bottom right corner
         const bottomRightX = edgePixels.x + edgePixels.width - cornerPixels.width + borderIndentPixels.xAxis;
         const bottomRightY = edgePixels.y + edgePixels.height - cornerPixels.height + borderIndentPixels.bottom;
-        this.ctx.drawImage(
+        ctx.drawImage(
             this._borderPiecesImage,
             bottomRightCoord.x,
             bottomRightCoord.y,
@@ -237,7 +239,7 @@ export default class TextButton extends TextOnlyButton
         const vertLineHeight = bottomLeftY - vertLineY + 1;
         
         // Top line
-        this.ctx.drawImage(
+        ctx.drawImage(
             this._borderPiecesImage,
             horizLineCoord.x,
             horizLineCoord.y,
@@ -250,7 +252,7 @@ export default class TextButton extends TextOnlyButton
         );
         
         // Bottom line
-        this.ctx.drawImage(
+        ctx.drawImage(
             this._borderPiecesImage,
             horizLineCoord.x,
             horizLineCoord.y,
@@ -263,7 +265,7 @@ export default class TextButton extends TextOnlyButton
         );
         
         // Left line
-        this.ctx.drawImage(
+        ctx.drawImage(
             this._borderPiecesImage,
             vertLineCoord.x,
             vertLineCoord.y,
@@ -276,7 +278,7 @@ export default class TextButton extends TextOnlyButton
         );
         
         // Right line
-        this.ctx.drawImage(
+        ctx.drawImage(
             this._borderPiecesImage,
             vertLineCoord.x,
             vertLineCoord.y,

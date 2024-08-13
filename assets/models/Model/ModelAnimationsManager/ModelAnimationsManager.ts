@@ -11,7 +11,6 @@ import Kernel from '../../../../Kernel/Kernel';
  */
 export default class ModelAnimationsManager implements IModelAnimationsManager {
     private _model:IModel; // A reference to the model
-    private _canvasCtx:CanvasRenderingContext2D; // The 2D context from the canvas element
     
     /**
      * The animations created for the model (each animation will be a property -- the property name is the model state for that animation)
@@ -29,10 +28,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     constructor(model:IModel)
     {
-        this._canvasCtx = Kernel.getInstance().gameContext;
-        
         this._model = model;
-        
         this.sheetMap = new Map<string, HTMLImageElement>();
     }
     
@@ -89,7 +85,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
 		const nextFrameCoordinates = this._getNextFrameCoordinates();
 		const drawPositions = this.getDrawPositionsAndDimensions(this._model);
 		
-        this._canvasCtx.drawImage(
+        Kernel.getInstance().gameContext.drawImage(
             this.animations[this._model.state].spritesheet, 
 			nextFrameCoordinates.x,
 			nextFrameCoordinates.y,
@@ -124,17 +120,19 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     drawHitBoxes():void
     {
+        const canvasCtx = Kernel.getInstance().gameContext;
+        
         const boxes = this._model.getHitBoxes();
         
-        const originalStrokeColor = this._canvasCtx.strokeStyle;
-        this._canvasCtx.strokeStyle = "red";
+        const originalStrokeColor = canvasCtx.strokeStyle;
+        canvasCtx.strokeStyle = "red";
         
         boxes.forEach(box => {
             const { x, y, width, height } = this.getDrawPositionsAndDimensions(box);
-            this._canvasCtx.strokeRect(x, y, width, height);
+            canvasCtx.strokeRect(x, y, width, height);
         });
         
-        this._canvasCtx.strokeStyle = originalStrokeColor;
+        canvasCtx.strokeStyle = originalStrokeColor;
     }
     
     /**
@@ -156,41 +154,44 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         const kernel = Kernel.getInstance();
         
         const animation = this.animations[this._model.state];
-		let currentFrameIndex = animation.currentFrameIndex;
-		
-        //First, we need to determine how many game-loop frames we need to wait before we move on to the next 
-        //frame of this sprite's animation. This is to ensure that the sprite's animation remains consistent
-        //if the game's fps changes (It also means that the sprite can have a different fps to the game-loop).
-        animation.nextCount = Math.floor(kernel.fps / animation.fps);
         
-        // Change the frame to the next one, if it is time to
-        if(animation.waitCount >= animation.nextCount)
-        {
-            if(animation.fps > kernel.fps)
-                //If the sprite has more frames per second than the current game fps,
-                //skip the necessary amount of frames to make up for that.
-                currentFrameIndex += Math.floor(animation.fps / kernel.fps);
-            else
-                //If the sprite has less or equal frames per second to the game-loop's fps,
-                //we can just move to the next frame now.
-                currentFrameIndex++;
+        if(animation.frameCoordinates.length > 1 || animation.nextAnimation) {
+            let currentFrameIndex = animation.currentFrameIndex;
             
-            animation.waitCount = 0;
+            //First, we need to determine how many game-loop frames we need to wait before we move on to the next 
+            //frame of this sprite's animation. This is to ensure that the sprite's animation remains consistent
+            //if the game's fps changes (It also means that the sprite can have a different fps to the game-loop).
+            animation.nextCount = Math.floor(kernel.fps / animation.fps);
+            
+            // Change the frame to the next one, if it is time to
+            if(animation.waitCount >= animation.nextCount)
+            {
+                if(animation.fps > kernel.fps)
+                    //If the sprite has more frames per second than the current game fps,
+                    //skip the necessary amount of frames to make up for that.
+                    currentFrameIndex += Math.floor(animation.fps / kernel.fps);
+                else
+                    //If the sprite has less or equal frames per second to the game-loop's fps,
+                    //we can just move to the next frame now.
+                    currentFrameIndex++;
+                
+                animation.waitCount = 0;
+            }
+            
+            animation.waitCount++;
+            animation.currentFrameIndex = currentFrameIndex;
+            
+            //Is this the last frame in this sprite animation?
+            if(currentFrameIndex > animation.frameCoordinates.length - 1)
+            {
+                //Reset the current animation
+                animation.currentFrameIndex = 0;
+                
+                //If this animation isn't looped, but has another animation to switch to, change the state
+                if(animation.nextAnimation)
+                    this._model.state = animation.nextAnimation;
+            }
         }
-        
-        animation.waitCount++;
-		animation.currentFrameIndex = currentFrameIndex;
-		
-		//Is this the last frame in this sprite animation?
-		if(currentFrameIndex > animation.frameCoordinates.length - 1)
-		{
-			//Reset the current animation
-			animation.currentFrameIndex = 0;
-			
-			//If this animation isn't looped, but has another animation to switch to, change the state
-			if(animation.nextAnimation != "")
-				this._model.state = animation.nextAnimation;
-		}
 		
         return animation.frameCoordinates[animation.currentFrameIndex];
     }

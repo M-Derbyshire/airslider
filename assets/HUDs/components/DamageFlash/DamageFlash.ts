@@ -46,6 +46,7 @@ export default class DamageFlash extends ASHUDComponent
             }
             
             const kernel = Kernel.getInstance();
+            const ctx = kernel.gameContext;
             
             const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
                 x: 0,
@@ -54,9 +55,9 @@ export default class DamageFlash extends ASHUDComponent
                 height: kernel.unitsWithinCameraY
             });
             
-            this.ctx.globalAlpha = this.opacity;
-            this.ctx.drawImage(this.image, x, y, width, height);
-            this.ctx.globalAlpha = 1;
+            ctx.globalAlpha = this.opacity;
+            ctx.drawImage(this.image, x, y, width, height);
+            ctx.globalAlpha = 1;
         }
     }
     

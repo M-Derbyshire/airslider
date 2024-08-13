@@ -67,7 +67,8 @@ export default class HUD implements IHUD
             if(component.active)
             {
                 component.draw();
-                if(component.text.content) component.drawText();
+                if(component.text.content)
+                    component.drawText();
             } 
         });
     }
