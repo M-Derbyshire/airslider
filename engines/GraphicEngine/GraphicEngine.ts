@@ -10,8 +10,6 @@ import Kernel from '../../Kernel/Kernel';
  * The engine that controls the drawing to the screen
  */
 export default class GraphicEngine implements IGraphicEngine {
-    private _gameCanvas:HTMLCanvasElement; // The canvas that we're drawing on
-    private _gameCtx:CanvasRenderingContext2D; // The 2D context for the canvas
     private _frameManager:IFrameManager; // Manages the level's frames
     
     private _lastFrameCanvasWidth:number; // The pixel width of the canvas element, during the last draw
@@ -29,10 +27,6 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     constructor(camera:ICamera, frameManager:IFrameManager)
     {
-        const kernel = Kernel.getInstance();
-		
-        this._gameCanvas = kernel.gameCanvas;
-        this._gameCtx = kernel.gameContext;
         this.camera = camera;
         this._frameManager = frameManager;
         
@@ -48,6 +42,7 @@ export default class GraphicEngine implements IGraphicEngine {
     run():void
     {
         const kernel = Kernel.getInstance();
+        const canvas = kernel.gameCanvas;
         
         // Need to do this, rather than using an event listener, as the onResize listener
         // doesn't react to a change of canvas size if the size is set in percentages.
@@ -55,7 +50,7 @@ export default class GraphicEngine implements IGraphicEngine {
             this._handleCanvasSizeChange();
         
         // Clear everything on the game canvas
-        this._gameCtx.clearRect(0, 0, this._gameCanvas.width, this._gameCanvas.height);
+        kernel.gameContext.clearRect(0, 0, canvas.width, canvas.height);
         
         // Prepare to draw
         this._frameManager.determineFramesToDraw();
@@ -119,16 +114,17 @@ export default class GraphicEngine implements IGraphicEngine {
         }
         
         // Setup style and alignment properties
-        this._gameCtx.font = `${textContent.style} ${height}px ${textContent.font}`;
-        this._gameCtx.fillStyle = textContent.color;
-        this._gameCtx.textAlign = textContent.alignment;
+        const ctx = Kernel.getInstance().gameContext;
+        ctx.font = `${textContent.style} ${height}px ${textContent.font}`;
+        ctx.fillStyle = textContent.color;
+        ctx.textAlign = textContent.alignment;
         
         // Split the text into the individual lines
         const lines = textContent.content.split("\n");
         
         // Draw the lines of text
         lines.forEach(line => {
-            this._gameCtx.fillText(line, x, y);
+            ctx.fillText(line, x, y);
             y += (height + lineGap);
         });
     }
@@ -227,10 +223,14 @@ export default class GraphicEngine implements IGraphicEngine {
         });
         
 		zSortedModels.forEach(model => {
-            const isOnCamera = this.camera.isOnCamera(model.x, model.y, model.width, model.height, model.z);
-            
-			if(isOnCamera && model.active && model.display)
+            if(
+                model.active && 
+                model.display && 
+                this.camera.isOnCamera(model.x, model.y, model.width, model.height, model.z)
+            )
+            {
                 model.draw();
+            }
 		});
     }
     
@@ -240,14 +240,15 @@ export default class GraphicEngine implements IGraphicEngine {
     private _fpsMeter():void
     {
         const kernel = Kernel.getInstance();
+        const ctx = kernel.gameContext;
         
         const fps = Math.round(kernel.fps * 100) / 100; // 2 decimal places
         
         const fontSize = 30;
-        this._gameCtx.font = fontSize + "px Arial";
-        this._gameCtx.fillStyle = kernel.fpsDisplayColor;
+        ctx.font = fontSize + "px Arial";
+        ctx.fillStyle = kernel.fpsDisplayColor;
         
-        this._gameCtx.fillText(`FPS: ${fps}`, 10, (10 + fontSize));
+        ctx.fillText(`FPS: ${fps}`, 10, (10 + fontSize));
     }
     
     /**
@@ -257,7 +258,7 @@ export default class GraphicEngine implements IGraphicEngine {
     private _canvasSizeHasChanged():boolean
     {
         //slice() is used here to remove the "px"
-        const computedStyles = window.getComputedStyle(this._gameCanvas);
+        const computedStyles = window.getComputedStyle(Kernel.getInstance().gameCanvas);
         const currentWidth = Number(computedStyles.width.slice(0, -2));
         const currentHeight = Number(computedStyles.height.slice(0, -2));
         

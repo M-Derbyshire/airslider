@@ -6,16 +6,6 @@ import { IErrorHandler } from "./IErrorHandler";
  */
 export default class ErrorHandler implements IErrorHandler {
     /**
-     * The game's canvas
-     */
-    private _canvas:HTMLCanvasElement;
-    
-    /**
-     * The context from the game's canvas
-     */
-    private _canvasCtx:CanvasRenderingContext2D;
-    
-    /**
      * The color of the background for the error display
      */
     private _backgroundColor:string;
@@ -36,10 +26,6 @@ export default class ErrorHandler implements IErrorHandler {
     private _fontFamily:string;
     
     constructor() {
-        const kernel = Kernel.getInstance();
-        this._canvas = kernel.gameCanvas;
-        this._canvasCtx = kernel.gameContext;
-        
         this._backgroundColor = "#330000";
         this._fontColor = "#fbb";
         
@@ -79,39 +65,48 @@ export default class ErrorHandler implements IErrorHandler {
      * Draws the background for the error display
      */
     private _drawBackground():void {
-        this._canvasCtx.fillStyle = this._backgroundColor;
-        this._canvasCtx.fillRect(0, 0, this._canvas.width, this._canvas.height);
+        const kernel = Kernel.getInstance();
+        const ctx = kernel.gameContext;
+        const canvas = kernel.gameCanvas;
+        
+        ctx.fillStyle = this._backgroundColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
     
     /**
      * Draws the text for the error display
      */
     private _drawText():void {
+        const kernel = Kernel.getInstance();
+        const ctx = kernel.gameContext;
+        const canvas = kernel.gameCanvas;
+        
         const titleText = "An Error has Occurred";
         const messageText = "Please see the developer console for more details";
         
         const baseFontSize = this._getRealFontSize();
         const titleFontSize = baseFontSize * 2;
         
-        const canvasXCenter = this._canvas.width / 2;
-        const canvasYCenter = this._canvas.height / 2;
+        const canvasXCenter = canvas.width / 2;
+        const canvasYCenter = canvas.height / 2;
         const titleYPos = canvasYCenter * 0.5;
         const messageYPos = canvasYCenter * 1.5;
         
-        this._canvasCtx.fillStyle = this._fontColor;
-        this._canvasCtx.textAlign = "center";
+        ctx.fillStyle = this._fontColor;
+        ctx.textAlign = "center";
         
-        this._canvasCtx.font = `bolder ${titleFontSize}px ${this._fontFamily}`;
-        this._canvasCtx.fillText(titleText, canvasXCenter, titleYPos);
+        ctx.font = `bolder ${titleFontSize}px ${this._fontFamily}`;
+        ctx.fillText(titleText, canvasXCenter, titleYPos);
         
-        this._canvasCtx.font = `normal ${baseFontSize}px ${this._fontFamily}`;
-        this._canvasCtx.fillText(messageText, canvasXCenter, messageYPos);
+        ctx.font = `normal ${baseFontSize}px ${this._fontFamily}`;
+        ctx.fillText(messageText, canvasXCenter, messageYPos);
     }
     
     /**
      * Calculates the desired font size, based on the canvas size
      */
     private _getRealFontSize():number {
-        return this._relativeFontSize * (this._canvas.width / 1000);
+        const canvas = Kernel.getInstance().gameCanvas;
+        return this._relativeFontSize * (canvas.width / 1000);
     }
 };

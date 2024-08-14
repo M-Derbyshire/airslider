@@ -6,8 +6,6 @@ import ILightMask from './ILightMask';
  * A single area of a level
  */
 export default class Frame implements IFrame {
-    private _canvasCtx:CanvasRenderingContext2D; // The 2D context from the canvas element
-    
     // These are the indexes of the currently selected background and lightmask in the 
     // _loadedBackgrounds and _loadedLightMasks arrays.
     private _backgroundIndex:number|null = null;
@@ -45,8 +43,6 @@ export default class Frame implements IFrame {
      */
     constructor(x:number, y:number, width:number, height:number)
     {
-        this._canvasCtx = Kernel.getInstance().gameContext;
-        
         this._loadedLightMasks = [];
         this._loadedBackgrounds = [];
         
@@ -125,9 +121,11 @@ export default class Frame implements IFrame {
             
             const lightMaskInfo = this._loadedLightMasks[this._lightMaskIndex];
 			
-            this._canvasCtx.globalAlpha = lightMaskInfo.luminosity;
-            this._canvasCtx.drawImage(lightMaskInfo.image, x, y, width, height);
-            this._canvasCtx.globalAlpha = 1;
+            const ctx = Kernel.getInstance().gameContext;
+            
+            ctx.globalAlpha = lightMaskInfo.luminosity;
+            ctx.drawImage(lightMaskInfo.image, x, y, width, height);
+            ctx.globalAlpha = 1;
         }
     }
     
@@ -149,7 +147,7 @@ export default class Frame implements IFrame {
             
             const backgroundImage = this._loadedBackgrounds[this._backgroundIndex];
             
-            this._canvasCtx.drawImage(backgroundImage, x, y, width, height);
+            Kernel.getInstance().gameContext.drawImage(backgroundImage, x, y, width, height);
         }
     }
 }

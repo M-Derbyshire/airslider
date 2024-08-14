@@ -22,9 +22,6 @@ export default class Level implements ILevel
     protected eventManager: IEventManager; // Manages the event monitoring for a level (not including mouse clicks or screen touches)
     protected pointerEventManager:IPointerEventManager; // Manages any events relating to mouse clicks or screen touches
     
-    protected gameCanvas: HTMLCanvasElement; // The canvas element that the game should be drawn on
-    protected gameContext: CanvasRenderingContext2D; // The 2D context from the HTML canvas element
-    
     protected controlsInitialiser: IControlsInitialiser; // Handles the initialising of the game's controls
     
     /**
@@ -56,12 +53,7 @@ export default class Level implements ILevel
         eventManager:EventManager,
         pointerEventManager:PointerEventManager
     ):void
-    {
-        const kernel = Kernel.getInstance();
-        
-        this.gameCanvas = kernel.gameCanvas;
-        this.gameContext = kernel.gameContext;
-        
+    {   
         this.frameManager = frameManager;
         
         this.eventManager = eventManager;

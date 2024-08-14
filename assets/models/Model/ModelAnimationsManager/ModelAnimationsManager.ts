@@ -82,9 +82,13 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     drawNextFrame():void
     {
-		const nextFrameCoordinates = this._getNextFrameCoordinates();
+        // We want to call this, even if we don't need to draw the model, so the frame number still gets changed
+        const nextFrameCoordinates = this._getNextFrameCoordinates();
+        
 		const drawPositions = this.getDrawPositionsAndDimensions(this._model);
-		
+        if(drawPositions.height === 0 || drawPositions.width === 0)
+            return;
+        
         Kernel.getInstance().gameContext.drawImage(
             this.animations[this._model.state].spritesheet, 
 			nextFrameCoordinates.x,

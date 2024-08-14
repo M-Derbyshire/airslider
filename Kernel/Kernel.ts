@@ -655,9 +655,9 @@ export default class Kernel implements IKernel {
      */
     private _updateTotalTime(currentDateTime:Date):void
     {
-        const timePassed = Math.floor(currentDateTime.getMilliseconds()) - Math.floor(this._lastTime.getMilliseconds());
+        const timePassed = currentDateTime.getMilliseconds() - this._lastTime.getMilliseconds();
         
-        if(this._status !== KernelStatus.Paused && timePassed >= 1)
+        if(this._status !== KernelStatus.Paused && timePassed > 0)
             this._totalLevelActiveMilliseconds += timePassed;
     }
 };

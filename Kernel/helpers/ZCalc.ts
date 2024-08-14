@@ -57,9 +57,12 @@ export default class ZCalc implements IZCalc
     {
         this._vanishingPointX = x;
         this._vanishingPointY = y;
-        this._vanishingPointDepth = depth;
-		
-		this._precalculateScalingMultipliers();
+        
+        if(depth !== this._vanishingPointDepth)
+        {
+            this._vanishingPointDepth = depth;
+            this._precalculateScalingMultipliers();
+        }
     }
     
     //-------------------------- Z Axis Speed ----------------------------------
@@ -176,8 +179,7 @@ export default class ZCalc implements IZCalc
         
         const vanishPointPixels = kernel.helpers.unit.xUnit(this._vanishingPointX);
         
-        const camera = kernel.graphicEngine.camera;
-        const positionedVanishPointPixels = camera.canvasPositionX + vanishPointPixels;
+        const positionedVanishPointPixels = kernel.graphicEngine.camera.canvasPositionX + vanishPointPixels;
         
         return this._position(zPosition, xPosition, positionedVanishPointPixels, showNegative);
     }
@@ -195,8 +197,7 @@ export default class ZCalc implements IZCalc
         
         const vanishPointPixels = kernel.helpers.unit.yUnit(this._vanishingPointY);
         
-        const camera = kernel.graphicEngine.camera;
-        const positionedVanishPointPixels = camera.canvasPositionY + vanishPointPixels;
+        const positionedVanishPointPixels = kernel.graphicEngine.camera.canvasPositionY + vanishPointPixels;
         
         return this._position(zPosition, yPosition, positionedVanishPointPixels, showNegative);
     }

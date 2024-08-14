@@ -7,8 +7,6 @@ import Kernel from '../../Kernel/Kernel';
  * A level's camera
  */
 export default class Camera implements ICamera {
-    private _canvas:HTMLCanvasElement;
-    private _canvasCtx:CanvasRenderingContext2D;
     private _aspectRatioHorizontal:number; // The horizontal aspect ratio value (e.g. the "16" in "16:9")
     private _aspectRatioVertical:number; // The vertical aspect ratio value (e.g. the "9" in "16:9")
     
@@ -27,10 +25,6 @@ export default class Camera implements ICamera {
      */
     constructor(aspectRatioHorizontal:number = 17, aspectRatioVertical:number = 9)
     {
-        const kernel = Kernel.getInstance();
-        
-        this._canvas = kernel.gameCanvas;
-        this._canvasCtx = kernel.gameContext;
         this._aspectRatioHorizontal = aspectRatioHorizontal;
         this._aspectRatioVertical = aspectRatioVertical;
         
@@ -107,17 +101,19 @@ export default class Camera implements ICamera {
         let height:number;
         let widthRatio = this._aspectRatioHorizontal / this._aspectRatioVertical;
         
-        if((this._canvas.width / widthRatio) > this._canvas.height)
+        const canvas = Kernel.getInstance().gameCanvas;
+        
+        if((canvas.width / widthRatio) > canvas.height)
         {
-            height = this._canvas.height
+            height = canvas.height
             width = height * widthRatio;
         } else {
-            height = this._canvas.width / widthRatio;
-            width = this._canvas.width;
+            height = canvas.width / widthRatio;
+            width = canvas.width;
         }
         
-        const x = (this._canvas.width - width) / 2;
-        const y = (this._canvas.height - height) / 2;
+        const x = (canvas.width - width) / 2;
+        const y = (canvas.height - height) / 2;
         
         this._positions.canvas = { x, y, width, height };
     }
@@ -186,9 +182,13 @@ export default class Camera implements ICamera {
      */
     drawEmptySpaceColor():void
     {
-        this._canvasCtx.fillStyle = this._emptySpaceColor;
-        this._canvasCtx.rect(0, 0, this._canvas.width, this._canvas.height);
-        this._canvasCtx.fill();
+        const kernel = Kernel.getInstance();
+        const ctx = kernel.gameContext;
+        const canvas = kernel.gameCanvas;
+        
+        ctx.fillStyle = this._emptySpaceColor;
+        ctx.rect(0, 0, canvas.width, canvas.height);
+        ctx.fill();
     }
     
     /**
@@ -196,37 +196,41 @@ export default class Camera implements ICamera {
      */
     drawLetterbox():void
     {
-        this._canvasCtx.fillStyle = this._letterBoxColor;
-        this._canvasCtx.beginPath();
+        const kernel = Kernel.getInstance();
+        const ctx = kernel.gameContext;
+        const canvas = kernel.gameCanvas;
+        
+        ctx.fillStyle = this._letterBoxColor;
+        ctx.beginPath();
         
         if(this._positions.canvas.y > 0) // Draw the letterboxes on top and bottom
         {
             //Top letterbox bar
-            this._canvasCtx.rect(0, 0, this._canvas.width, this._positions.canvas.y);
+            ctx.rect(0, 0, canvas.width, this._positions.canvas.y);
             
             //Bottom letterbox bar
-            this._canvasCtx.rect(
+            ctx.rect(
                 0, 
                 this._positions.canvas.y + this._positions.canvas.height,
-                this._canvas.width, 
+                canvas.width, 
                 this._positions.canvas.y
             );
         }
         else // Draw the letterboxes on left and right
         {
             //Left letterbox bar
-            this._canvasCtx.rect(0, 0, this._positions.canvas.x, this._canvas.height);
+            ctx.rect(0, 0, this._positions.canvas.x, canvas.height);
             
             //Right letterbox bar
-            this._canvasCtx.rect( 
+            ctx.rect( 
                 this._positions.canvas.x + this._positions.canvas.width,
                 0,
                 this._positions.canvas.x,
-                this._canvas.height
+                canvas.height
             );
         }
         
-        this._canvasCtx.fill();
+        ctx.fill();
     }
     
     /**
