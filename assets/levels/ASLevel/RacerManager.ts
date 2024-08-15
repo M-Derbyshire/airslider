@@ -1,6 +1,7 @@
 import Kernel from "../../../Kernel/Kernel";
 import Racer from "../../models/Racer/Racer";
 import { RacerColor } from "../../models/Racer/RacerColor";
+import ASLevel from "./ASLevel";
 
 /**
  * Manages the other racers on the track
@@ -105,13 +106,13 @@ export default class RacerManager
      */
     act()
     {
-        const kernel = Kernel.getInstance();
+        const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
         
         // Take any racers that have left the screen, and 
         // set them up to overtake the player on loss (or 
         // to follow behind the player on win)
         this._frontRacers.forEach(racer => {
-            if(!this._overtakingSequenceStarted && racer.z > kernel.helpers.zCalc.vanishingPointDepth)
+            if(!this._overtakingSequenceStarted && racer.z > vanishingPointDepth)
                 this._prepareRacerForOvertaking(racer);
         });
         
@@ -123,7 +124,7 @@ export default class RacerManager
         if(this._overtakingSequenceStarted)
         {
             [...this._frontRacers, ...this._backRacers].forEach(racer => {
-                if(racer.z > kernel.helpers.zCalc.vanishingPointDepth)
+                if(racer.z > vanishingPointDepth)
                     racer.active = false;
             });
         }

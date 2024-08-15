@@ -148,16 +148,18 @@ export default class Camera implements ICamera {
         const unscaledWidth = helpers.unit.xUnit(widthUnits);
         const unscaledHeight = helpers.unit.yUnit(heightUnits);
         
-        const scaledX = helpers.zCalc.x(unscaledX, zPosition);
-        const scaledY = helpers.zCalc.y(unscaledY, zPosition);
-        const scaledWidth = helpers.zCalc.width(unscaledWidth, zPosition);
-        const scaledHeight = helpers.zCalc.height(unscaledHeight, zPosition);
+        const scaledValues = helpers.zCalc.getDrawValues({
+            x: unscaledX,
+            y: unscaledY,
+            width: unscaledWidth,
+            height: unscaledHeight
+        }, zPosition);
         
         return (
-            (scaledX + scaledWidth >= this._positions.canvas.x &&
-                scaledX <= this._positions.canvas.x + this._positions.canvas.width) &&
-            (scaledY + scaledHeight >= this._positions.canvas.y &&
-                scaledY <= this._positions.canvas.y + this._positions.canvas.height)
+            (scaledValues.x + scaledValues.width >= this._positions.canvas.x &&
+                scaledValues.x <= this._positions.canvas.x + this._positions.canvas.width) &&
+            (scaledValues.y + scaledValues.height >= this._positions.canvas.y &&
+                scaledValues.y <= this._positions.canvas.y + this._positions.canvas.height)
         );
     }
     

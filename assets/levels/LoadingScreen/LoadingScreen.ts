@@ -58,13 +58,7 @@ export default class LoadingScreen extends Level
     {
         super.prepare();
         
-        const kernel = Kernel.getInstance();
-        
-        const vanishPointPositionX = kernel.unitsWithinCameraX / 2;
-        const vanishPointPositionY = kernel.unitsWithinCameraY / 2;
-        kernel.helpers.zCalc.setVanishPoint(vanishPointPositionX, vanishPointPositionY);
-        
-        kernel.loadLevel(new this.LevelToLoad());
+        Kernel.getInstance().loadLevel(new this.LevelToLoad());
     }
     
     /**

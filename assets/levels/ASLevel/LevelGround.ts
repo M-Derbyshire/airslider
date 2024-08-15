@@ -1,4 +1,5 @@
 import Kernel from "../../../Kernel/Kernel";
+import ASLevel from "./ASLevel";
 
 /**
  * Draws an image on the ground at each side of the road.
@@ -103,7 +104,7 @@ export default class LevelGround
 	 */
 	private _populateGroundZPositions():void
 	{
-		const vanishingPointDepth = Kernel.getInstance().helpers.zCalc.vanishingPointDepth;
+		const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
 		
 		this.groundZPositions = [];
 		

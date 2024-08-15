@@ -74,7 +74,7 @@ export default class Sign extends ASModel
     {
         super.prepare();
         
-        const vanishingPointDepth = Kernel.getInstance().helpers.zCalc.vanishingPointDepth;
+        const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
         if(this._startPosition === null)
             this._startPosition = vanishingPointDepth;
         

@@ -53,7 +53,7 @@ export default class ASModel extends Model
     protected getVolumeForDistance():number
     {
         // This is the point where the sound should be inaudible
-        const soundInaudiblePoint = Kernel.getInstance().helpers.zCalc.vanishingPointDepth / 2;
+        const soundInaudiblePoint = (Kernel.getInstance().level as ASLevel).vanishingPointDepth / 2;
         
         // First we figure out what the volume should change by if the model moved 1 unit on the z axis
         const singleUnitValue = 1 / soundInaudiblePoint;

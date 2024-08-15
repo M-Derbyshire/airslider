@@ -30,6 +30,8 @@ import ILevel from '../Level/ILevel';
 import RacerManager from './RacerManager';
 import Kernel from '../../../Kernel/Kernel';
 import ASControlsInitialiser from './ASControlsInitialiser';
+import IZCalcStrategy from '../../../Kernel/helpers/ZCalc/strategies/IZCalcStrategy';
+import LinearVanishingPointStrategy from '../../../Kernel/helpers/ZCalc/strategies/LinearVanishingPointStrategy';
 
 /**
  * The game's base Level class
@@ -38,9 +40,32 @@ export default class ASLevel extends Level
 {
     protected frameIndex: number; // The index of the level's current frame
     
-    //The edges of the playable area
+    // The edges of the playable area
     leftEdge:number;
     rightEdge:number;
+    
+    // The strategy for the ZCalc
+    protected zCalcStrategy: IZCalcStrategy & {
+        vanishingPointX:number,
+        vanishingPointY:number,
+        vanishingPointDepth:number,
+        setVanishPoint:(x:number, y:number, depth?:number)=>void
+    };
+    
+    get vanishingPointX()
+    {
+        return this.zCalcStrategy.vanishingPointX;
+    }
+    
+    get vanishingPointY()
+    {
+        return this.zCalcStrategy.vanishingPointY;
+    }
+    
+    get vanishingPointDepth()
+    {
+        return this.zCalcStrategy.vanishingPointDepth;
+    }
     
     // Environment management
     protected roadColor: string;
@@ -110,6 +135,8 @@ export default class ASLevel extends Level
 	constructor()
 	{
 		super();
+        
+        this.zCalcStrategy = new LinearVanishingPointStrategy();
         
         this.HUD = new MainHUD();
         
@@ -203,9 +230,12 @@ export default class ASLevel extends Level
         
         const kernel = Kernel.getInstance();
         
-        const vanishPointPositionX = kernel.unitsWithinCameraX / 2;
-        const vanishPointPositionY = kernel.unitsWithinCameraY / 2;
-        kernel.helpers.zCalc.setVanishPoint(vanishPointPositionX, vanishPointPositionY);
+        this.zCalcStrategy.setVanishPoint(
+            kernel.unitsWithinCameraX / 2, 
+            kernel.unitsWithinCameraY / 2
+        );
+        
+        kernel.helpers.zCalc.setStrategy(this.zCalcStrategy);
         
         this.leftEdge = 0;
         this.rightEdge = kernel.unitsWithinCameraX;
@@ -442,8 +472,7 @@ export default class ASLevel extends Level
      */
 	private _setupPatternManager():void
 	{
-        const vanishingPointDepth = Kernel.getInstance().helpers.zCalc.vanishingPointDepth;
-		this.patternManager.setStartingZPosition(vanishingPointDepth);
+		this.patternManager.setStartingZPosition(this.zCalcStrategy.vanishingPointDepth);
 	}
 	
     /**
@@ -543,9 +572,7 @@ export default class ASLevel extends Level
      */
     private _levelClosing(closingStartMS:number)
     {
-        const helpers = Kernel.getInstance().helpers;
-        
-        const currentMs = helpers.time.getTotalMilliseconds();
+        const currentMs = Kernel.getInstance().helpers.time.getTotalMilliseconds();
         
         if(!this._finishSign.active)
         {
@@ -566,7 +593,7 @@ export default class ASLevel extends Level
         }
         
         // Once the player has vanished into the distance, finish the level
-        if(this.player.z > helpers.zCalc.vanishingPointDepth && !this.completed)
+        if(this.player.z > this.zCalcStrategy.vanishingPointDepth && !this.completed)
         {
             this._stopLevel();
             this.levelCompletedAtMS = currentMs;

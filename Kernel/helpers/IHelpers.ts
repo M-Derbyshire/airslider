@@ -1,6 +1,6 @@
 import ITimeHelper from "./ITimeHelper";
 import IUnitHelper from "./IUnitHelper";
-import IZCalc from "./IZCalc";
+import IZCalc from "./ZCalc/IZCalc";
 
 /**
  * Provides a number of "helper" objects, that each calculate and/or provide useful values

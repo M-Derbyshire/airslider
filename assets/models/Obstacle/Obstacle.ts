@@ -55,7 +55,7 @@ export default class Obstacle extends ASModel
         super.prepare();
         
         this.setYPositionFromBottom(this.height);
-        this.z = Kernel.getInstance().helpers.zCalc.vanishingPointDepth;
+        this.z = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
         
         this.active = false;
         

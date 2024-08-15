@@ -1,4 +1,5 @@
 import Kernel from "../../../Kernel/Kernel";
+import ASLevel from "./ASLevel";
 
 /**
  * Draws the level's road
@@ -25,12 +26,12 @@ export default class LevelRoad
         this._canvasCtx.fillStyle = color;
         
         const kernel = Kernel.getInstance();
+        const level = kernel.level as ASLevel;
         const unitHelpers = kernel.helpers.unit;
-        const zCalc = kernel.helpers.zCalc;
         const camera = kernel.graphicEngine.camera;
         
-        const vanishPointX = camera.canvasPositionX + unitHelpers.xUnit(zCalc.vanishingPointX);
-        const vanishPointY = camera.canvasPositionY + unitHelpers.yUnit(zCalc.vanishingPointY);
+        const vanishPointX = camera.canvasPositionX + unitHelpers.xUnit(level.vanishingPointX);
+        const vanishPointY = camera.canvasPositionY + unitHelpers.yUnit(level.vanishingPointY);
         
         const { x, y, width, height } = kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({
             x: 0,

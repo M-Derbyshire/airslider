@@ -1,4 +1,5 @@
 import Kernel from "../../../Kernel/Kernel";
+import ASLevel from "./ASLevel";
 
 /**
  * Manages the level's tunnels
@@ -21,7 +22,7 @@ export default class LevelTunnel
     newTunnelPart(image:HTMLImageElement|null, length:number = 1):ITunnelPart
     {
         return {
-            z: Kernel.getInstance().helpers.zCalc.vanishingPointDepth,
+            z: (Kernel.getInstance().level as ASLevel).vanishingPointDepth,
             length: length,
             image,
             active: false
@@ -88,13 +89,12 @@ export default class LevelTunnel
      */
 	private _isTunnelPopulatedToVanishingPoint():boolean
 	{
-        const zCalc = Kernel.getInstance().helpers.zCalc;
-        
+        const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
         const closestPart = this.tunnel[0] ?? null;
         
         return (
             !!closestPart && // tunnel is populated
-            this._getLastTunnelPart().z >= zCalc.vanishingPointDepth && // furthest piece is at vanishing point
+            this._getLastTunnelPart().z >= vanishingPointDepth && // furthest piece is at vanishing point
             (closestPart.z + closestPart.length) <= 0 // nearest piece is behind camera
         );
 	}
@@ -166,14 +166,14 @@ export default class LevelTunnel
 		if(this.tunnel.length === (currentPartIndex + 1))
             return false;
         
-        const zCalc = Kernel.getInstance().helpers.zCalc;
+        const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
 		
 		const currentPart = this.tunnel[currentPartIndex];
 		const nextPart = this.tunnel[currentPartIndex + 1];
 		
 		return (
             !nextPart.active && 
-            (currentPart.z + currentPart.length) <= zCalc.vanishingPointDepth
+            (currentPart.z + currentPart.length) <= vanishingPointDepth
         );
 	}
 	

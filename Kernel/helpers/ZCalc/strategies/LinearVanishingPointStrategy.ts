@@ -1,12 +1,10 @@
-import Kernel from "../Kernel";
-import IZCalc from "./IZCalc";
+import IDrawDimensions from "../../../../engines/GraphicEngine/IDrawDimensions";
+import IDrawPositions from "../../../../engines/GraphicEngine/IDrawPositions";
+import Kernel from "../../../Kernel";
+import IZCalcStrategy from "./IZCalcStrategy";
 
-/**
- * Provides methods to calculate the correct positions/dimensions for drawing an element, based on its position on the z axis.
- * Also provides methods relating to keeping a consistent speed (regardless of a changing FPS) on the z axis.
- */
-export default class ZCalc implements IZCalc
-{
+
+export default class LinearVanishingPointStrategy implements IZCalcStrategy {
     private _vanishingPointX:number; // The x position (in units) of the vanishing point
     private _vanishingPointY:number; // The y position (in units) of the vanishing point
     private _vanishingPointDepth:number; // The amount of possible positions that there should be on the z axis
@@ -65,36 +63,43 @@ export default class ZCalc implements IZCalc
         }
     }
     
-    //-------------------------- Z Axis Speed ----------------------------------
     
-	/**
+    
+    //-------------------------- speed ----------------------------
+    
+    /**
      * Converts a speed on the z axis into a value that remains consistent, regardless of a changing FPS
      * @param speed the z speed
      * @param fps the game's current Frames Per Second
      * @returns a more consistent value to be used as the actual speed
      */
-    speed(speed:number, fps:number):number
-    {
+    speed(speed: number, fps: number):number {
         return speed / fps;
     }
     
-	/*
+    
+    
+    /*
 		------------------- Scaled Positions and Dimensions ---------------------
 		
-		This class gives us the ability to create sprite-scaling games,
+		This strategy gives us the ability to create simple sprite-scaling games,
 		by providing position/dimension values, based on a given z-axis position.
+        
+        The developer can set a vanishing point, with an X and Y position, and sprites 
+        can move towards that point (with a straight, direct path) by moving along the 
+        z-axis.
 		
-		If the z-axis position is greater than the vanishing point, or it is a negative 
-		number (and the developer doesn't want to display negative values), then the 
-		sprite doesn't need to be displayed. In these cases, the x, y, width and height 
-		methods will return 0.
+		If the z-axis position of the sprite is greater than the vanishing point, or it 
+        is a negative number (and the developer doesn't want to display negative values), 
+        then the sprite doesn't need to be displayed. In these cases, the x, y, width and height 
+		values will be 0.
 		
 		******************************
 		Problem: "The Oatmeal Effect":
 		******************************
 		
 		Originally, the solution for doing this was to create a single unit of change
-		for each position/dimension (a "depth unit"), and then multiply that by the z 
+		for each position/dimension (a "depth unit"), and then multiply that by the Z 
 		position:
 		
 		-------------------------------------------------------------------------
@@ -165,68 +170,8 @@ export default class ZCalc implements IZCalc
 			multiplier -= (multiplier / shrunkDepth);
 		}
 	}
-	
-	/**
-     * Takes an x position (not in units), and calculates the correct x position to draw with, based on the given z position
-     * @param xPosition the original x position (not in units)
-     * @param zPosition the z position of the element being drawn
-     * @param showNegative should the element still be drawn if the z position is negative?
-     * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected x position will be returned
-     */
-    x(xPosition:number, zPosition:number, showNegative:boolean = false):number
-    {
-        const kernel = Kernel.getInstance();
-        
-        const vanishPointPixels = kernel.helpers.unit.xUnit(this._vanishingPointX);
-        
-        const positionedVanishPointPixels = kernel.graphicEngine.camera.canvasPositionX + vanishPointPixels;
-        
-        return this._position(zPosition, xPosition, positionedVanishPointPixels, showNegative);
-    }
     
-	/**
-     * Takes an y position (not in units), and calculates the correct y position to draw with, based on the given z position
-     * @param yPosition the original y position (not in units)
-     * @param zPosition the z position of the element being drawn
-     * @param showNegative should the element still be drawn if the z position is negative?
-     * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected y position will be returned
-     */
-    y(yPosition:number, zPosition:number, showNegative:boolean = false):number
-    {
-        const kernel = Kernel.getInstance();
-        
-        const vanishPointPixels = kernel.helpers.unit.yUnit(this._vanishingPointY);
-        
-        const positionedVanishPointPixels = kernel.graphicEngine.camera.canvasPositionY + vanishPointPixels;
-        
-        return this._position(zPosition, yPosition, positionedVanishPointPixels, showNegative);
-    }
-    
-	/**
-     * Takes a width value (not in units) and calculates the correct value to draw with, based on the given z position
-     * @param width the original width (not in units)
-     * @param zPosition the z position of the element being drawn
-     * @param showNegative should the element still be drawn if the z position is negative?
-     * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected width will be returned
-     */
-    width(width:number, zPosition:number, showNegative:boolean = false):number
-    {
-        return this._dimension(zPosition, width, showNegative);
-    }
-    
-	/**
-     * Takes a height value (not in units) and calculates the correct value to draw with, based on the given z position
-     * @param height the original height (not in units)
-     * @param zPosition the z position of the element being drawn
-     * @param showNegative should the element still be drawn if the z position is negative?
-     * @returns If the z position is "out of view", 0 will be returned. Otherwise, the corrected height will be returned
-     */
-    height(height:number, zPosition:number, showNegative:boolean = false):number
-    {
-        return this._dimension(zPosition, height, showNegative);
-    }
-	
-	/**
+    /**
 	 * Takes a z position, an x/y position, and the vanishing point's position on the correct axis.
 	 * Returns the scaled value for the position on that axis.
 	 * @param zPosition the z position of the element being drawn
@@ -291,5 +236,34 @@ export default class ZCalc implements IZCalc
             zPosition > this._vanishingPointDepth || // Position is too far in the distance
             (!showNegative && zPosition < 0) // Position is negative, and that's not considered visible
         );
+    }
+    
+    /**
+     * Takes the given X/Y/Width/Height values (in pixels) and calculates the correct values to draw with, based on the 
+     * given Z position
+     * @param pixelValues the original X/Y positions and width/height (in pixels)
+     * @param zPosition the Z position of the element being drawn
+     * @param showNegative should the element still be drawn if the Z position is negative?
+     * @returns If the Z position is "out of view", 0 will be returned for all values. Otherwise, the scaled X/Y/Width/Height
+     */
+    getDrawValues(
+        pixelValues: IDrawPositions & IDrawDimensions, 
+        zPosition: number, 
+        showNegative?: boolean
+    ): IDrawPositions & IDrawDimensions {
+        const kernel = Kernel.getInstance();
+        
+        const vanishPointPixelsX = kernel.helpers.unit.xUnit(this._vanishingPointX);
+        const positionedVanishPointPixelsX = kernel.graphicEngine.camera.canvasPositionX + vanishPointPixelsX;
+        
+        const vanishPointPixelsY = kernel.helpers.unit.yUnit(this._vanishingPointY);
+        const positionedVanishPointPixelsY = kernel.graphicEngine.camera.canvasPositionY + vanishPointPixelsY;
+        
+        return {
+            x: this._position(zPosition, pixelValues.x, positionedVanishPointPixelsX, showNegative),
+            y: this._position(zPosition, pixelValues.y, positionedVanishPointPixelsY, showNegative),
+            width: this._dimension(zPosition, pixelValues.width, showNegative),
+            height: this._dimension(zPosition, pixelValues.height, showNegative)
+        };
     }
 }

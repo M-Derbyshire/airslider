@@ -1,4 +1,5 @@
 import Kernel from '../../../../Kernel/Kernel';
+import ASLevel from '../../../levels/ASLevel/ASLevel';
 import IModel from '../../Model/IModel';
 import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
@@ -84,7 +85,7 @@ export default class Ghost extends Monster {
         
         this.state = "normal";
         
-        this.startZ = Kernel.getInstance().helpers.zCalc.vanishingPointDepth;
+        this.startZ = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
         this.setYPositionFromBottom(this.height);
         this.startY = this.y;
         this.centerXPosition();

@@ -1,5 +1,6 @@
 import Kernel from '../../../Kernel/Kernel';
 import IModel from '../../models/Model/IModel';
+import ASLevel from './ASLevel';
 
 /**
  * Manages the level's "obstacle" models, setting their x positions and sending them down the road
@@ -118,7 +119,7 @@ export default class ObstacleManager
             if(this._isTimeToSendNextObstacle(i))
             {
 				currentObstacle.x = this._getObstacleXPosition(i);
-                currentObstacle.z = kernel.helpers.zCalc.vanishingPointDepth;
+                currentObstacle.z = (kernel.level as ASLevel).vanishingPointDepth;
                 currentObstacle.active = true;
             }
         }
@@ -141,7 +142,7 @@ export default class ObstacleManager
 				return true;
 			
 			const previousObstacle = kernel.loadedModels[currentModelIndex - 1];
-			const vanishingPointDepth = kernel.helpers.zCalc.vanishingPointDepth;
+			const vanishingPointDepth = (kernel.level as ASLevel).vanishingPointDepth;
 			
 			const previousObstacleHasMovedFarEnough = 
 				(previousObstacle.z + (vanishingPointDepth / this._obstacleCount) < vanishingPointDepth);

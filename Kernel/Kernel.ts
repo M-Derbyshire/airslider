@@ -4,7 +4,7 @@ import GraphicEngine from '../engines/GraphicEngine/GraphicEngine';
 import SoundEngine from '../engines/SoundEngine/SoundEngine';
 import TimeHelper from './helpers/TimeHelper';
 import UnitHelper from './helpers/UnitHelper';
-import ZCalc from './helpers/ZCalc';
+import ZCalc from './helpers/ZCalc/ZCalc';
 import Camera from '../engines/GraphicEngine/Camera';
 import FrameManager from '../engines/GraphicEngine/FrameManager';
 import devSettings from '../settings/settings.development';
@@ -26,6 +26,7 @@ import { KernelStatus } from './KernelStatus';
 import ModelAnimationsManager from '../assets/models/Model/ModelAnimationsManager/ModelAnimationsManager';
 import EventManager from '../assets/levels/Level/EventManager';
 import PointerEventManager from '../assets/levels/Level/PointerEventManager';
+import LinearVanishingPointStrategy from './helpers/ZCalc/strategies/LinearVanishingPointStrategy';
 
 /**
  * This will be a singleton that controls the entire game, and provides other entities with 
@@ -518,8 +519,14 @@ export default class Kernel implements IKernel {
     {
         this._setupAutoPause();
         
+        const defaultZCalcStrategy = new LinearVanishingPointStrategy();
+        defaultZCalcStrategy.setVanishPoint(
+            this.settings.unitsWithinCameraX / 2,
+            this.settings.unitsWithinCameraY / 2
+        );
+        
         this._helpers = {
-            zCalc: new ZCalc(),
+            zCalc: new ZCalc(defaultZCalcStrategy),
             time: new TimeHelper(),
             unit: new UnitHelper(this.unitsWithinCameraX, this.unitsWithinCameraY)
         };

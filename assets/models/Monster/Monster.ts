@@ -116,9 +116,7 @@ export default class Monster extends ASModel {
      */
 	private _handlePlayerLoss():void
 	{
-        const kernel = Kernel.getInstance();
-        
-        const level = kernel.level as ASLevel;
+        const level = Kernel.getInstance().level as ASLevel;
         
 		if(!level.levelMoving && this.active)
         {
@@ -126,7 +124,7 @@ export default class Monster extends ASModel {
             this.moveIn(level.maxLevelSpeedRaw);
             this.fireWeapon = false;
             
-            if(this.z >= kernel.helpers.zCalc.vanishingPointDepth)
+            if(this.z >= level.vanishingPointDepth)
                 this.active = false;
         }
 	}

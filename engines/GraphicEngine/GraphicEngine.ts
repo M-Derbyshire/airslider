@@ -187,14 +187,8 @@ export default class GraphicEngine implements IGraphicEngine {
         const zCalc = Kernel.getInstance().helpers.zCalc;
         
         const unscaledValues = this.getUnscaledDrawPositionsAndDimensions(unitValues);
-        const scaledValues = { x: 0, y: 0, width: 0, height: 0 };
         
-        if(this._isSetNumber(unitValues.x)) scaledValues.x = zCalc.x(unscaledValues.x, unitValues.z, showNegative);
-        if(this._isSetNumber(unitValues.y)) scaledValues.y = zCalc.y(unscaledValues.y, unitValues.z, showNegative);
-        if(this._isSetNumber(unitValues.width)) scaledValues.width = zCalc.width(unscaledValues.width, unitValues.z, showNegative);
-        if(this._isSetNumber(unitValues.height)) scaledValues.height = zCalc.height(unscaledValues.height, unitValues.z, showNegative);
-        
-        return scaledValues;
+        return zCalc.getDrawValues(unscaledValues, unitValues.z, showNegative);;
     }
     
     /**
