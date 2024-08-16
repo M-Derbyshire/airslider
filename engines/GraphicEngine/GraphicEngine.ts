@@ -241,6 +241,7 @@ export default class GraphicEngine implements IGraphicEngine {
         const fontSize = 30;
         ctx.font = fontSize + "px Arial";
         ctx.fillStyle = kernel.fpsDisplayColor;
+        ctx.textAlign = "left";
         
         ctx.fillText(`FPS: ${fps}`, 10, (10 + fontSize));
     }
