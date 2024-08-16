@@ -182,9 +182,6 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
 	 */
     private _position(zPosition:number, axisPosition:number, axisVanishPoint:number, showNegative:boolean):number
     {
-        if(this._isOutOfView(zPosition, showNegative))
-            return 0;
-		
         // We need a positive z-index to get the scaler, so if it's negative we'll 
         // flip it, then flip the multiplier later to get a negative position again.
         const positiveZPosition = Math.abs(zPosition);
@@ -207,9 +204,6 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
 	 */
     private _dimension(zPosition:number, dimension:number, showNegative:boolean):number
     {
-        if(this._isOutOfView(zPosition, showNegative))
-            return 0;
-		
         // We need a positive z-index to get the scaler, so if it's negative we'll flip it 
         // now, then correct the result later.
         const positiveZPosition = Math.abs(zPosition);
@@ -251,6 +245,9 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
         zPosition: number, 
         showNegative?: boolean
     ): IDrawPositions & IDrawDimensions {
+        if(this._isOutOfView(zPosition, showNegative))
+            return { x: 0, y: 0, width: 0, height: 0 };
+        
         const kernel = Kernel.getInstance();
         
         const vanishPointPixelsX = kernel.helpers.unit.xUnit(this._vanishingPointX);
