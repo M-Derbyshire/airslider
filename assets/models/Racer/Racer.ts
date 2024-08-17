@@ -2,8 +2,6 @@ import ASModel from '../ASModel/ASModel';
 import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
 import { RacerColor } from './RacerColor';
 
-let lastColorChosen:RacerColor; // The last color used when setting the Racer's color
-
 /**
  * A racer on the track
  */
