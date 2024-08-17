@@ -3,7 +3,9 @@ import IDrawPositions from "../../../../engines/GraphicEngine/IDrawPositions";
 import Kernel from "../../../Kernel";
 import IZCalcStrategy from "./IZCalcStrategy";
 
-
+/**
+ * Strategy for the ZCalc. Scales sprites in a direct, straight path towards a set vanishing point
+ */
 export default class LinearVanishingPointStrategy implements IZCalcStrategy {
     private _vanishingPointX:number; // The x position (in units) of the vanishing point
     private _vanishingPointY:number; // The y position (in units) of the vanishing point

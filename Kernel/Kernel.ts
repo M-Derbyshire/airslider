@@ -26,7 +26,7 @@ import { KernelStatus } from './KernelStatus';
 import ModelAnimationsManager from '../assets/models/Model/ModelAnimationsManager/ModelAnimationsManager';
 import EventManager from '../assets/levels/Level/EventManager';
 import PointerEventManager from '../assets/levels/Level/PointerEventManager';
-import LinearVanishingPointStrategy from './helpers/ZCalc/strategies/LinearVanishingPointStrategy';
+import NoScalingStrategy from './helpers/ZCalc/strategies/NoScalingStrategy';
 
 /**
  * This will be a singleton that controls the entire game, and provides other entities with 
@@ -519,14 +519,8 @@ export default class Kernel implements IKernel {
     {
         this._setupAutoPause();
         
-        const defaultZCalcStrategy = new LinearVanishingPointStrategy();
-        defaultZCalcStrategy.setVanishPoint(
-            this.settings.unitsWithinCameraX / 2,
-            this.settings.unitsWithinCameraY / 2
-        );
-        
         this._helpers = {
-            zCalc: new ZCalc(defaultZCalcStrategy),
+            zCalc: new ZCalc(new NoScalingStrategy()),
             time: new TimeHelper(),
             unit: new UnitHelper(this.unitsWithinCameraX, this.unitsWithinCameraY)
         };
