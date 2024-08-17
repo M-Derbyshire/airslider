@@ -31,7 +31,7 @@ export default class ZCalc implements IZCalc
      * @returns a more consistent value to be used as the actual speed
      */
     speed(speed:number, fps:number):number {
-        return this._strategy.speed(speed, fps);
+        return speed / fps;
     }
     
     /**

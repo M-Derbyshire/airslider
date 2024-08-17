@@ -6,14 +6,6 @@ import IDrawPositions from "../../../../engines/GraphicEngine/IDrawPositions";
  */
 export default interface IZCalcStrategy {
     /**
-     * Converts a speed on the z axis into a value that remains consistent, regardless of a changing FPS
-     * @param speed the z speed
-     * @param fps the game's current Frames Per Second
-     * @returns a more consistent value to be used as the actual speed
-     */
-    speed(speed:number, fps:number):number;
-    
-    /**
      * Takes the given X/Y/Width/Height values (in pixels) and calculates the correct values to draw with, based on the 
      * given Z position
      * @param pixelValues the original X/Y positions and width/height (in pixels)

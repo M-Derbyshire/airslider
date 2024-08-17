@@ -67,20 +67,6 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
     
     
     
-    //-------------------------- speed ----------------------------
-    
-    /**
-     * Converts a speed on the z axis into a value that remains consistent, regardless of a changing FPS
-     * @param speed the z speed
-     * @param fps the game's current Frames Per Second
-     * @returns a more consistent value to be used as the actual speed
-     */
-    speed(speed: number, fps: number):number {
-        return speed / fps;
-    }
-    
-    
-    
     /*
 		------------------- Scaled Positions and Dimensions ---------------------
 		
