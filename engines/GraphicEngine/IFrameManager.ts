@@ -5,6 +5,11 @@ import IFrame from "./IFrame";
  */
 export default interface IFrameManager {
     /**
+     * Resets the frame manager, removing all the frames currently held
+     */
+    reset():void;
+    
+    /**
      * Adds a frame to the level
      * @param frame The frame to add
      * @returns The index of the frame, in the manager's internal array

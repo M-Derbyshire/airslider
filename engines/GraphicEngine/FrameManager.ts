@@ -19,6 +19,14 @@ export default class FrameManager implements IFrameManager {
     constructor(camera:ICamera)
     {
         this._camera = camera;
+        this.reset();
+    }
+    
+    /**
+     * Resets the frame manager, removing all the frames currently held
+     */
+    reset():void
+    {
         this._frames = [];
         this._framesToBeDrawn = [];
     }

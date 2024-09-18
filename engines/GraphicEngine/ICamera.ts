@@ -12,22 +12,22 @@ export default interface ICamera {
      */
     
     /**
-     * The x position of the camera on the canvas
+     * The x position (in pixels) of the camera on the canvas
      */
     readonly canvasPositionX:number;
     
     /**
-     * The y position of the camera on the canvas
+     * The y position (in pixels) of the camera on the canvas
      */
     readonly canvasPositionY:number;
     
     /**
-     * The width of the camera on the canvas
+     * The width (in pixels) of the camera on the canvas
      */
     readonly canvasPositionWidth:number;
     
     /**
-     * The height of the camera on the canvas
+     * The height (in pixels) of the camera on the canvas
      */
     readonly canvasPositionHeight:number;
     
@@ -100,6 +100,12 @@ export default interface ICamera {
     drawLetterbox():void;
     
     
+    /**
+     * Sets the camera's position within the level's available space
+     * @param x The position (in units) on the X axis
+     * @param y The position (in units) on the Y axis
+     */
+    setCameraPosition(x:number, y:number):void;
     
     /**
      * Moves the camera's position to the left, within the level's space

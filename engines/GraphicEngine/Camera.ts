@@ -236,6 +236,17 @@ export default class Camera implements ICamera {
     }
     
     /**
+     * Sets the camera's position within the level's available space
+     * @param x The position (in units) on the X axis
+     * @param y The position (in units) on the Y axis
+     */
+    setCameraPosition(x:number, y:number):void
+    {
+        this._positions.drawSpace.x = x;
+        this._positions.drawSpace.y = y;
+    }
+    
+    /**
      * Moves the camera's position to the left, within the level's space
      * @param speed the speed of the movement
      */
