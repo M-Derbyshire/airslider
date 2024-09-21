@@ -93,19 +93,10 @@ export default class TheConstruct extends ASLevel
         
         this.roadManager.load();
         
-        //Setup the frame for the level
-        let frame = new Frame(0, 0, kernel.unitsWithinCameraX, kernel.unitsWithinCameraY);
-        
-        const frameBackgroundIndex = frame.loadBackground("/levels/TheConstruct/images/testBackground.png");
-        frame.setBackgroundImage(frameBackgroundIndex);
-        
-        this.outsideLightMaskIndex = frame.loadLightMask(
+        this.setupFrame(
+            "/levels/TheConstruct/images/testBackground.png",
             "/levels/TheConstruct/images/testBackgroundMask.png",
-            0
-        );
-        this.tunnelLightMaskIndex = frame.loadLightMask(
-            "/levels/TheConstruct/images/tunnelLightMask.png",
-            0.25
+            "/levels/TheConstruct/images/tunnelLightMask.png"
         );
         
         this.assetsToUnload.push(
@@ -115,8 +106,6 @@ export default class TheConstruct extends ASLevel
             "/levels/TheConstruct/images/tunnelLightMask.png",
             "/levels/TheConstruct/images/ground.png"
         );
-        
-        this.frameIndex = this.frameManager.addFrame(frame);
     }
     
     prepare():void

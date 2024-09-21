@@ -32,6 +32,7 @@ import Kernel from '../../../Kernel/Kernel';
 import ASControlsInitialiser from './ASControlsInitialiser';
 import IZCalcStrategy from '../../../Kernel/helpers/ZCalc/strategies/IZCalcStrategy';
 import LinearVanishingPointStrategy from '../../../Kernel/helpers/ZCalc/strategies/LinearVanishingPointStrategy';
+import Frame from '../../../engines/GraphicEngine/Frame';
 
 /**
  * The game's base Level class
@@ -325,7 +326,27 @@ export default class ASLevel extends Level
     }
     
     
-    
+    /**
+     * Setup the frame for the level (call this during the loading of your level)
+     * @param backgroundPath The asset path to the background image for the frame
+     * @param outsideLightMaskPath The asset path to the light mask image (for outside spaces) for the frame
+     * @param tunnelLightMaskPath The asset path to the light mask image (for inside a tunnel) for the frame
+     */
+    protected setupFrame(backgroundPath:string, outsideLightMaskPath:string, tunnelLightMaskPath:string):void
+    {
+        const kernel = Kernel.getInstance();
+        
+        //Setup the frame for the level
+        let frame = new Frame(0, 0, kernel.unitsWithinCameraX, kernel.unitsWithinCameraY);
+        
+        const frameBackgroundIndex = frame.loadBackground(backgroundPath);
+        frame.setBackgroundImage(frameBackgroundIndex);
+        
+        this.outsideLightMaskIndex = frame.loadLightMask(outsideLightMaskPath, 0);
+        this.tunnelLightMaskIndex = frame.loadLightMask(tunnelLightMaskPath, 0.25);
+        
+        this.frameIndex = this.frameManager.addFrame(frame);
+    }
     
     /**
      * Registers all model events for the level
