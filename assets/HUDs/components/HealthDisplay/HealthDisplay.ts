@@ -53,7 +53,7 @@ export default class HealthDisplay extends ASHUDComponent
         
         const kernel = Kernel.getInstance();
         
-        const imagesDirPath = "/assets/HUDs/components/HealthDisplay/images";
+        const imagesDirPath = "/HUDs/components/HealthDisplay/images";
         this._borderImage = kernel.loadImage(`${imagesDirPath}/lightning-border.png`);
         this._spannerImage = kernel.loadImage(`${imagesDirPath}/spanner.png`);
     }

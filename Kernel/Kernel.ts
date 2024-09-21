@@ -154,8 +154,9 @@ export default class Kernel implements IKernel {
         this._lastTime = new Date();
         this._timeSinceLastFrameMS = 0;
         
-        const filePath = window.location.pathname;
-        this._rootPath = filePath.substring(0, filePath.lastIndexOf('/'));
+        this._rootPath = window.location.pathname;
+        if(this._rootPath.endsWith("/"))
+            this._rootPath = this._rootPath.slice(0, -1); // Remove trailing slash
         
         this._assetHandler = new AssetHandler();
         

@@ -59,7 +59,7 @@ export default class Sign extends ASModel
         // Not adding spritesheet to assetsToUnload, as this is used by all levels
         this.animationManager.registerAnimations({
             sign: this.animationManager.createAnimation({
-                sheetPath: "/assets/models/Sign/anim/sign_spritesheet.png",
+                sheetPath: "/models/Sign/anim/sign_spritesheet.png",
                 frameCoordinates: [
                     { x: 0, y: 0, width: 1356, height: 676 }
                 ],

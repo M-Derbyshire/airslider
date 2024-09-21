@@ -82,11 +82,11 @@ export default class TheConstruct extends ASLevel
         
         const kernel = Kernel.getInstance();
         
-        this.tunnelSprite = kernel.loadImage("/assets/levels/TheConstruct/images/theConstructTunnel.png");
+        this.tunnelSprite = kernel.loadImage("/levels/TheConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
         
         this.groundManager.load(
-            "/assets/levels/TheConstruct/images/ground.png",
+            "/levels/TheConstruct/images/ground.png",
             50,
             50
         );
@@ -96,24 +96,24 @@ export default class TheConstruct extends ASLevel
         //Setup the frame for the level
         let frame = new Frame(0, 0, kernel.unitsWithinCameraX, kernel.unitsWithinCameraY);
         
-        const frameBackgroundIndex = frame.loadBackground("/assets/levels/TheConstruct/images/testBackground.png");
+        const frameBackgroundIndex = frame.loadBackground("/levels/TheConstruct/images/testBackground.png");
         frame.setBackgroundImage(frameBackgroundIndex);
         
         this.outsideLightMaskIndex = frame.loadLightMask(
-            "/assets/levels/TheConstruct/images/testBackgroundMask.png",
+            "/levels/TheConstruct/images/testBackgroundMask.png",
             0
         );
         this.tunnelLightMaskIndex = frame.loadLightMask(
-            "/assets/levels/TheConstruct/images/tunnelLightMask.png",
+            "/levels/TheConstruct/images/tunnelLightMask.png",
             0.25
         );
         
         this.assetsToUnload.push(
-            "/assets/levels/TheConstruct/images/theConstructTunnel.png",
-            "/assets/levels/TheConstruct/images/testBackground.png",
-            "/assets/levels/TheConstruct/images/testBackgroundMask.png",
-            "/assets/levels/TheConstruct/images/tunnelLightMask.png",
-            "/assets/levels/TheConstruct/images/ground.png"
+            "/levels/TheConstruct/images/theConstructTunnel.png",
+            "/levels/TheConstruct/images/testBackground.png",
+            "/levels/TheConstruct/images/testBackgroundMask.png",
+            "/levels/TheConstruct/images/tunnelLightMask.png",
+            "/levels/TheConstruct/images/ground.png"
         );
         
         this.frameIndex = this.frameManager.addFrame(frame);

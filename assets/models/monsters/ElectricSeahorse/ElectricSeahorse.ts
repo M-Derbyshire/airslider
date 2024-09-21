@@ -35,11 +35,11 @@ export default class ElectricSeahorse extends Monster {
     {
         super.load(animationManager);
         
-        const wingSoundPath = "/assets/models/monsters/ElectricSeahorse/sounds/flap.mp3";
+        const wingSoundPath = "/models/monsters/ElectricSeahorse/sounds/flap.mp3";
         this._wingSound = Kernel.getInstance().loadAudio(wingSoundPath);
         this.assetsToUnload.push(wingSoundPath);
         
-        const spritesheetPath = "/assets/models/monsters/ElectricSeahorse/anim/electricSeahorse-spritesheet.png";
+        const spritesheetPath = "/models/monsters/ElectricSeahorse/anim/electricSeahorse-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({

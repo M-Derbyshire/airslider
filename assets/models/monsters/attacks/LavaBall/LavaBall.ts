@@ -31,7 +31,7 @@ export default class LavaBall extends ASModel {
         const ballWidth = 30;
         const ballHeight = 40;
         
-        const spritesheetPath = "/assets/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png";
+        const spritesheetPath = "/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
@@ -68,7 +68,7 @@ export default class LavaBall extends ASModel {
             }),
         });
         
-        const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/fire.png";
+        const damageFlashSpritesheet = "/HUDs/components/DamageFlash/images/fire.png";
         this.damageFlashImage = Kernel.getInstance().loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
     }

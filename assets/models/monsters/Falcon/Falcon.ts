@@ -65,11 +65,11 @@ export default class Falcon extends Monster {
         
         const kernel = Kernel.getInstance();
         
-        const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/none.png";
+        const damageFlashSpritesheet = "/HUDs/components/DamageFlash/images/none.png";
         this.damageFlashImage = kernel.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
         
-        const spritesheet = "/assets/models/monsters/Falcon/anim/falcon-spritesheet.png";
+        const spritesheet = "/models/monsters/Falcon/anim/falcon-spritesheet.png";
         this.assetsToUnload.push(spritesheet);
         
         this.animationManager.registerAnimations({

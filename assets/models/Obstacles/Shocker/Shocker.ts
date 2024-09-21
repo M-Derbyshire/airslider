@@ -34,7 +34,7 @@ export default class Shocker extends Obstacle
     {
         super.load(animationManager);
 		
-        const spritesheetPath = "/assets/models/Obstacles/Shocker/anim/shocker-" + this.color + "-spritesheet.png";
+        const spritesheetPath = "/models/Obstacles/Shocker/anim/shocker-" + this.color + "-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         
 		let width;
@@ -69,7 +69,7 @@ export default class Shocker extends Obstacle
             })
         });
         
-        const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/yellow.png";
+        const damageFlashSpritesheet = "/HUDs/components/DamageFlash/images/yellow.png";
         this.damageFlashImage = Kernel.getInstance().loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
     }

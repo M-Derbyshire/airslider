@@ -49,11 +49,11 @@ export default class BabyDragon extends Monster
         
         const kernel = Kernel.getInstance();
         
-        const wingSoundPath = "/assets/models/monsters/BabyDragon/sounds/flap.mp3";
+        const wingSoundPath = "/models/monsters/BabyDragon/sounds/flap.mp3";
         this._wingSound = kernel.loadAudio(wingSoundPath);
         this.assetsToUnload.push(wingSoundPath);
         
-        const spritesheetPath = "/assets/models/monsters/BabyDragon/anim/babyDragon-spritesheet.png";
+        const spritesheetPath = "/models/monsters/BabyDragon/anim/babyDragon-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({

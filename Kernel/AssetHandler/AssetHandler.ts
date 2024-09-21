@@ -7,6 +7,8 @@ import ILoadedAssetData from "./ILoadedAssetData";
  */
 export default class AssetHandler implements IAssetHandler
 {
+    private _assetsDirName:string; // The name of the base assets directory
+    
     private _assetsStillLoading:number; // The number of assets that are still loading
     private _loadedAssets:Map<string, ILoadedAssetData>; // The loaded image/audio assets
     private _loadedFontPaths:string[]; // Asset paths for loaded (or currently loading) fonts
@@ -21,6 +23,8 @@ export default class AssetHandler implements IAssetHandler
     
     constructor()
     {
+        this._assetsDirName = "assets";
+        
         this._assetsStillLoading = 0;
         
         this._loadedAssets = new Map<string, ILoadedAssetData>();
@@ -125,7 +129,10 @@ export default class AssetHandler implements IAssetHandler
      */
     private _prepareAssetPath(path:string):string
     {
-        const relativePath = path.startsWith("/") ? path : `/${path}`;
-        return Kernel.getInstance().rootPath + relativePath;
+        // Remove leading slash from path
+        if(path.startsWith("/"))
+            path = path.substring(1);
+        
+        return `${Kernel.getInstance().rootPath}/${this._assetsDirName}/${path}`;
     }
 }

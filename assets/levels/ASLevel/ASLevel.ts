@@ -154,7 +154,7 @@ export default class ASLevel extends Level
         
         this._signStartingZPosition = 90;
         
-        const musicDir = "/assets/levels/ASLevel/music";
+        const musicDir = "/levels/ASLevel/music";
         this._musicFilePaths = [];
         
         this._nextLevelDialogDelayMS = 2000;
@@ -207,7 +207,7 @@ export default class ASLevel extends Level
         this._finishFlagsManager = new LevelGround(false); 
         
         this._finishFlagsManager.load(
-            "/assets/levels/ASLevel/images/finish_flag.png",
+            "/levels/ASLevel/images/finish_flag.png",
             312,
             50,
             312

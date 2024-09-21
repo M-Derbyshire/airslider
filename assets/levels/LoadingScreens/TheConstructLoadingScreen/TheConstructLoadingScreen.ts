@@ -11,6 +11,6 @@ export default class TheConstructLoadingScreen extends LoadingScreen
 		super();
         
         this.LevelToLoad = TheConstruct;
-        this.backgroundImagePath = "/assets/levels/LoadingScreens/TheConstructLoadingScreen/images/background.png";
+        this.backgroundImagePath = "/levels/LoadingScreens/TheConstructLoadingScreen/images/background.png";
 	}
 };

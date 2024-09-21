@@ -37,11 +37,11 @@ export default class ElectricHornet extends Monster {
         
         const kernel = Kernel.getInstance();        
         
-        const buzzSoundPath = "/assets/models/monsters/ElectricHornet/sounds/buzz.mp3";
+        const buzzSoundPath = "/models/monsters/ElectricHornet/sounds/buzz.mp3";
         this._buzzSound = kernel.loadAudio(buzzSoundPath);
         this.assetsToUnload.push(buzzSoundPath);
         
-        const spritesheetPath = "/assets/models/monsters/ElectricHornet/anim/electricHornet_spritesheet.png";
+        const spritesheetPath = "/models/monsters/ElectricHornet/anim/electricHornet_spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
@@ -57,7 +57,7 @@ export default class ElectricHornet extends Monster {
             })
         });
         
-        const damageFlashImagePath = "/assets/HUDs/components/DamageFlash/images/yellow.png";
+        const damageFlashImagePath = "/HUDs/components/DamageFlash/images/yellow.png";
         this.damageFlashImage = kernel.loadImage(damageFlashImagePath);
         this.assetsToUnload.push(damageFlashImagePath);
     }

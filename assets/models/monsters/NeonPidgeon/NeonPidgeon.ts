@@ -69,15 +69,15 @@ export default class NeonPidgeon extends Monster {
         const fullModelWidth = 337;
         this._edgeOverflow = fullModelWidth / 2;
         
-        const damageFlashSpritesheet = "/assets/HUDs/components/DamageFlash/images/none.png";
+        const damageFlashSpritesheet = "/HUDs/components/DamageFlash/images/none.png";
         this.damageFlashImage = kernel.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
         
-        const flapSoundPath = "/assets/models/monsters/NeonPidgeon/sounds/flap.mp3";
+        const flapSoundPath = "/models/monsters/NeonPidgeon/sounds/flap.mp3";
         this._flapSound = kernel.loadAudio(flapSoundPath);
         this.assetsToUnload.push(flapSoundPath);
         
-        const spritesheetPath = "/assets/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png";
+        const spritesheetPath = "/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         
         this.animationManager.registerAnimations({
