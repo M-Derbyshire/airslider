@@ -41,7 +41,7 @@ export default class Model implements IModel
      */
     get width() 
     {
-        return this.animationManager.animations[this._state].width;
+        return this.animationManager.animations[this._state]?.width ?? 0;
     }
     
     /**
@@ -49,7 +49,7 @@ export default class Model implements IModel
      */
     get height() 
     {
-        return this.animationManager.animations[this._state].height;
+        return this.animationManager.animations[this._state]?.height ?? 0;
     }
     
     /**
@@ -81,7 +81,7 @@ export default class Model implements IModel
      */
     get x()
     {
-        return this._x;
+        return this._x ?? 0;
     }
     set x(newValue)
     {
@@ -93,7 +93,7 @@ export default class Model implements IModel
      */
     get y()
     {
-        return this._y;
+        return this._y ?? 0;
     }
     set y(newValue)
     {
