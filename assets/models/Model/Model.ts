@@ -105,7 +105,7 @@ export default class Model implements IModel
      */
     get z()
     {
-        return this._z;
+        return this._z ?? 0;
     }
     set z(newValue)
     {
@@ -117,7 +117,7 @@ export default class Model implements IModel
      */
     get xSpeed()
     {
-        return this._xSpeed;
+        return this._xSpeed ?? 0;
     }
     set xSpeed(newValue)
     {
@@ -129,7 +129,7 @@ export default class Model implements IModel
      */
     get ySpeed()
     {
-        return this._ySpeed;
+        return this._ySpeed ?? 0;
     }
     set ySpeed(newValue)
     {
@@ -141,7 +141,7 @@ export default class Model implements IModel
      */
     get zSpeed()
     {
-        return this._zSpeed;
+        return this._zSpeed ?? 0;
     }
     set zSpeed(newValue)
     {
@@ -165,7 +165,7 @@ export default class Model implements IModel
      */
     get state() 
     {
-        return this._state;
+        return this._state ?? "";
     }
     set state(newValue)
     {
@@ -198,6 +198,7 @@ export default class Model implements IModel
     prepare():void
     {
         this._display = true;
+        this._active = false;
         this.drawHitBoxes = false;
         
         this.text = {
