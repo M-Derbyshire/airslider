@@ -77,7 +77,7 @@ export default class Camera implements ICamera {
     }
     
     /**
-     * The x position of the camera in the level's draw space
+     * The x position of the camera in the level's draw space (in units)
      */
     get drawSpacePositionX()
     {
@@ -85,7 +85,7 @@ export default class Camera implements ICamera {
     }
     
     /**
-     * The y position of the camera in the level's draw space
+     * The y position of the camera in the level's draw space (in units)
      */
     get drawSpacePositionY()
     {
@@ -236,53 +236,53 @@ export default class Camera implements ICamera {
     }
     
     /**
-     * Sets the camera's position within the level's available space
+     * Sets the camera's position within the level's available space (centered on the given X/Y)
      * @param x The position (in units) on the X axis
      * @param y The position (in units) on the Y axis
      */
     setCameraPosition(x:number, y:number):void
     {
-        this._positions.drawSpace.x = x;
-        this._positions.drawSpace.y = y;
+        const kernel = Kernel.getInstance();
+        const centerX = kernel.unitsWithinCameraX / 2;
+        const centerY = kernel.unitsWithinCameraY / 2;
+        
+        this._positions.drawSpace.x = x - centerX;
+        this._positions.drawSpace.y = y - centerY;
     }
     
     /**
      * Moves the camera's position to the left, within the level's space
-     * @param speed the speed of the movement
+     * @param speed the speed of the movement (in units)
      */
     moveLeft(speed:number):void
     {
-        const unitHelper = Kernel.getInstance().helpers.unit;
-        this._positions.drawSpace.x -= unitHelper.xSpeed(speed);
+        this._positions.drawSpace.x -= speed;
     }
     
     /**
      * Moves the camera's position to the right, within the level's space
-     * @param speed the speed of the movement
+     * @param speed the speed of the movement (in units)
      */
     moveRight(speed:number):void
     {
-        const unitHelper = Kernel.getInstance().helpers.unit;
-        this._positions.drawSpace.x += unitHelper.xSpeed(speed);
+        this._positions.drawSpace.x += speed;
     }
     
     /**
      * Moves the camera's position up, within the level's space
-     * @param speed the speed of the movement
+     * @param speed the speed of the movement (in units)
      */
     moveUp(speed:number):void
     {
-        const unitHelper = Kernel.getInstance().helpers.unit;
-        this._positions.drawSpace.y -= unitHelper.ySpeed(speed);
+        this._positions.drawSpace.y -= speed;
     }
     
     /**
      * Moves the camera's position down, within the level's space
-     * @param speed the speed of the movement
+     * @param speed the speed of the movement (in units)
      */
     moveDown(speed:number):void
     {
-        const unitHelper = Kernel.getInstance().helpers.unit;
-        this._positions.drawSpace.y += unitHelper.ySpeed(speed);
+        this._positions.drawSpace.y += speed;
     }
 };

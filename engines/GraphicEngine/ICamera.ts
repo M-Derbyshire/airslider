@@ -101,7 +101,7 @@ export default interface ICamera {
     
     
     /**
-     * Sets the camera's position within the level's available space
+     * Sets the camera's position within the level's available space (centered on the given X/Y)
      * @param x The position (in units) on the X axis
      * @param y The position (in units) on the Y axis
      */
@@ -109,25 +109,25 @@ export default interface ICamera {
     
     /**
      * Moves the camera's position to the left, within the level's space
-     * @param speed the speed of the movement
+     * @param speed the speed of the movement (in units)
      */
     moveLeft(speed:number):void;
     
     /**
      * Moves the camera's position to the right, within the level's space
-     * @param speed the speed of the movement
+     * @param speed the speed of the movement (in units)
      */
     moveRight(speed:number):void;
     
     /**
      * Moves the camera's position up, within the level's space
-     * @param speed the speed of the movement
+     * @param speed the speed of the movement (in units)
      */
     moveUp(speed:number):void;
     
     /**
      * Moves the camera's position down, within the level's space
-     * @param speed the speed of the movement
+     * @param speed the speed of the movement (in units)
      */
     moveDown(speed:number):void;
 };
