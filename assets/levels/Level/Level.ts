@@ -80,11 +80,16 @@ export default class Level implements ILevel
      */
     prepare():void
     {
+        const kernel = Kernel.getInstance();
+        
         this.HUD.prepare();
         
         this.eventManager.clearEvents();
         this.registerLevelEvents();
-        Kernel.getInstance().loadedModels.forEach(model => this.pointerEventManager.addPointerEventSubject(model));
+        kernel.loadedModels.forEach(model => this.pointerEventManager.addPointerEventSubject(model));
+        
+        
+        this._resetCameraPosition();
     }
     
     /**
@@ -134,5 +139,18 @@ export default class Level implements ILevel
     {
         this.HUD.load(this.pointerEventManager);
         this.HUD.loadComponents();
+    }
+    
+    /**
+     * Places the top-left of the camera at the top-left of the level's space
+     */
+    private _resetCameraPosition():void
+    {
+        const kernel = Kernel.getInstance();
+        
+        kernel.graphicEngine.camera.setCameraPosition(
+            kernel.unitsWithinCameraX / 2,
+            kernel.unitsWithinCameraY / 2
+        );
     }
 }
