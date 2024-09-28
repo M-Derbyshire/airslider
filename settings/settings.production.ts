@@ -1,11 +1,7 @@
-import EpilepsyWarning from '../assets/levels/EpilepsyWarning/EpilepsyWarning';
 import ISettings from './ISettings';
+import devSettings from "./settings.development";
 
 export default {
-	fpsDisplayColor: "blue",
-	unitsWithinCameraX: 1000,
-	unitsWithinCameraY: 1000,
-	aspectRatioHorizontal: 17,
-	aspectRatioVertical: 9,
-	InitialLevelClass: EpilepsyWarning
+	...devSettings,
+	fpsDisplayColor: undefined
 } as ISettings;

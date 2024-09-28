@@ -7,8 +7,6 @@ import UnitHelper from './helpers/UnitHelper';
 import ZCalc from './helpers/ZCalc/ZCalc';
 import Camera from '../engines/GraphicEngine/Camera';
 import FrameManager from '../engines/GraphicEngine/FrameManager';
-import devSettings from '../settings/settings.development';
-import prodSettings from '../settings/settings.production';
 import fonts from '../assets/fonts/fonts';
 import IKernel from './IKernel';
 import ISettings from '../settings/ISettings';
@@ -40,10 +38,10 @@ export default class Kernel implements IKernel {
     /**
      * Gets the singleton instance of the kernel
      * @param canvas The Canvas element that the game should be drawn onto
-     * @param settingsOverrides An object that contains overrides for some of the game's settings
+     * @param settings The game's settings
      * @returns the singleton instance of the kernel
      */
-    static getInstance(canvas?:HTMLCanvasElement, settingsOverrides?:any):Kernel
+    static getInstance(canvas?:HTMLCanvasElement, settings?:any):Kernel
     {
         // The Kernel constructor will return the singleton instance
         // if it has already been created, and if not then it will create
@@ -51,17 +49,17 @@ export default class Kernel implements IKernel {
         // actual reason for this method is language -- it's better
         // that people know you're "getting" the "instance", then thinking
         // you are truly making something "new".
-        return new Kernel(canvas, settingsOverrides);
+        return new Kernel(canvas, settings);
     }
     
     /**
      * Triggers the starting of the game
      * @param canvas The Canvas element that the game should be drawn onto
-     * @param settingsOverrides An object that contains overrides for some of the game's settings
+     * @param settings The game's settings
      */
-    static init(canvas:HTMLCanvasElement, settingsOverrides?:any)
+    static init(canvas:HTMLCanvasElement, settings:any)
     {
-        const instance = this.getInstance(canvas, settingsOverrides);
+        const instance = this.getInstance(canvas, settings);
         
         if(instance.level) // If we've already initiated the game
             return;
@@ -124,10 +122,10 @@ export default class Kernel implements IKernel {
     /**
      * Constructor
      * @param canvas The Canvas element that the game should be drawn onto
-     * @param settingsOverrides An object that contains overrides for some of the game's settings
+     * @param settings The game's settings
      * @returns The singleton instance of the kernel
      */
-    private constructor(canvas?:HTMLCanvasElement, settingsOverrides:any = {})
+    private constructor(canvas?:HTMLCanvasElement, settings?:ISettings)
     {
         if(Kernel._instance)
         {
@@ -135,18 +133,16 @@ export default class Kernel implements IKernel {
         }
         Kernel._instance = this;
         
-        // While we want the canvas parameter to be optional for the constructor/getInstance() methods (so it's 
-        // not needed when we're getting the pre-existing kernel instance), it is still a requirement when 
-        // initially constructing the singleton instance.
+        // While we want the canvas/settings parameters to be optional for the constructor/getInstance() methods (so they're 
+        // not needed when we're getting the pre-existing kernel instance), they are still a requirement when initially 
+        // constructing the singleton instance.
         if(!canvas)
             throw new Error("Cannot initialise the game's Kernel without a canvas element");
+        if(!settings)
+            throw new Error("Cannot initialise the game's Kernel without a settings object");
         
         this.gameCanvas = canvas;
-        
-        this._settings = {
-            ...(process.env.GAME_ENV === "development" ? devSettings : prodSettings),
-            ...settingsOverrides
-        };
+        this._settings = settings;
         
         this._fps = 60;
         this._highestFpsReached = 0;
