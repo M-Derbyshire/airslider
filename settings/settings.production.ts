@@ -1,7 +1,6 @@
 import ISettings from './ISettings';
-import devSettings from "./settings.development";
+import baseSettings from './settings.base';
 
 export default {
-	...devSettings,
-	fpsDisplayColor: undefined
+	...baseSettings
 } as ISettings;
