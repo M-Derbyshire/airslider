@@ -44,11 +44,7 @@ export default class Kernel implements IKernel {
     static getInstance(canvas?:HTMLCanvasElement, settings?:any):Kernel
     {
         // The Kernel constructor will return the singleton instance
-        // if it has already been created, and if not then it will create
-        // it. We want the same behaviour for this method. The only
-        // actual reason for this method is language -- it's better
-        // that people know you're "getting" the "instance", then thinking
-        // you are truly making something "new".
+        // if it has already been created, and if not then it will create it.
         return new Kernel(canvas, settings);
     }
     
