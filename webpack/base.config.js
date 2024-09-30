@@ -17,7 +17,7 @@ module.exports = {
 			directory: "."
 		},
 		historyApiFallback: {
-			index: './dist/index.html'
+			index: './scripts/assets/index.html'
 		}
 	}
 };
