@@ -13,6 +13,10 @@
   },
   "scripts": {
     "serve:dev": "npx webpack serve --config webpack/dev.config.js --mode=development",
+    "deploy:prod": "npm run destroy:deploy && npm run deploy:assets && npm run build:prod",
+    "deploy:assets": "node scripts/deployAssets.js",
+    "destroy:deploy": "node scripts/removeDeployDir.js",
+    "build:prod": "npx webpack --config webpack/prod.config.js --mode=production",
     "make:controlsInitialiser": "cd ./settings/ControlsInitialiser && scaff controlsInitialiser",
     "make:hud": "cd ./assets/HUDs && scaff HUD",
     "make:hudComponent": "cd ./assets/HUDs/components && scaff HUDComponent",
@@ -32,5 +36,6 @@
   "bugs": {
     "url": "https://github.com/M-Derbyshire/airslider/issues"
   },
-  "homepage": "https://github.com/M-Derbyshire/airslider#readme"
+  "homepage": "https://github.com/M-Derbyshire/airslider#readme",
+  "type": "module"
 }

@@ -1,11 +1,11 @@
-const { merge } = require('webpack-merge');
-const baseConfig = require('./base.config');
+import { merge } from "webpack-merge";
+import baseConfig from "./base.config.js";
 
-module.exports = merge(baseConfig, {
+export default merge(baseConfig, {
     entry: {
 		entry: `./init.dev.ts`
 	},
     output: {
-		filename: './game.bundle.js',
+		filename: 'game.bundle.js'
 	}
 });

@@ -92,7 +92,6 @@ export default class Kernel implements IKernel {
     
     private _centralState:Map<string, any>; // A map to store any state that needs to be accessible to all levels.
     
-    private _rootPath:string; // The root directory/path, added to the beginning of all file paths when loading assets
     private _assetHandler:IAssetHandler; // Loads and manages assets
     
     private _helpers:IHelpers; // Provides a number of "helper" objects, that each calculate and/or provide useful values
@@ -145,10 +144,6 @@ export default class Kernel implements IKernel {
         this._fpsLimit = this._settings.fpsLimit ?? 70;
         this._lastTime = new Date();
         this._timeSinceLastFrameMS = 0;
-        
-        this._rootPath = window.location.pathname;
-        if(this._rootPath.endsWith("/"))
-            this._rootPath = this._rootPath.slice(0, -1); // Remove trailing slash
         
         this._assetHandler = new AssetHandler();
         
@@ -220,14 +215,6 @@ export default class Kernel implements IKernel {
     get timeSinceLastFrameMS()
     {
         return this._timeSinceLastFrameMS;
-    }
-    
-    /**
-     * The root directory/path, added to the beginning of all file paths when loading assets
-     */
-    get rootPath()
-    {
-        return this._rootPath;
     }
     
     /**

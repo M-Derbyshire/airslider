@@ -17,6 +17,12 @@ export default interface ISettings {
 	fpsDisplayColor?:string;
     
     /**
+     * The URL of the assets directory.
+     * If the game is being hosted locally, then this should be left undefined
+     */
+    assetsDirUrl?:string;
+    
+    /**
      * How many draw-space units are there within the camera's size (on the x axis)?
      * So, if this value was 1000, then a model with a width of 1000 would take up the entire 
      * screen (assuming its z position was 0)

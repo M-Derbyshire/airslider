@@ -61,11 +61,6 @@ export default interface IKernel {
     readonly timeSinceLastFrameMS:number;
     
     /**
-     * The root directory/path, added to the beginning of all file paths when loading assets
-     */
-    readonly rootPath:string;
-    
-    /**
      * Provides a number of "helper" objects, that each calculate and/or provide useful values
      */
     readonly helpers:IHelpers;

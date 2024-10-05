@@ -1,4 +1,5 @@
 import Kernel from "../Kernel";
+import { pathToUniqueFilename } from "./deployedFilename";
 import IAssetHandler from "./IAssetHandler";
 import ILoadedAssetData from "./ILoadedAssetData";
 
@@ -7,7 +8,8 @@ import ILoadedAssetData from "./ILoadedAssetData";
  */
 export default class AssetHandler implements IAssetHandler
 {
-    private _assetsDirName:string; // The name of the base assets directory
+    private _assetsDirPath:string; // The path of the assets directory
+    private _isHostedLocally:boolean; // Is the game being hosted locally?
     
     private _assetsStillLoading:number; // The number of assets that are still loading
     private _loadedAssets:Map<string, ILoadedAssetData>; // The loaded image/audio assets
@@ -23,7 +25,10 @@ export default class AssetHandler implements IAssetHandler
     
     constructor()
     {
-        this._assetsDirName = "assets";
+        const assetsDirUrl = Kernel.getInstance().settings.assetsDirUrl;
+        this._assetsDirPath = assetsDirUrl ?? this._getLocalAssetsDirPath();
+        
+        this._isHostedLocally = !assetsDirUrl;
         
         this._assetsStillLoading = 0;
         
@@ -115,6 +120,21 @@ export default class AssetHandler implements IAssetHandler
     }
     
     /**
+     * Constructs the path to the assets directory, when the game is being hosted locally
+     * @returns The local assets directory path
+     */
+    private _getLocalAssetsDirPath():string
+    {
+        let root = window.location.pathname;
+        if(root.endsWith("/"))
+            root = root.slice(0, -1); // Remove trailing slash
+        
+        const assetsDirName = "assets";
+        
+        return `${root}/${assetsDirName}`;
+    }
+    
+    /**
      * This will be called when an asset has finished loading
      */
     private _defaultAssetCallback():void
@@ -133,6 +153,9 @@ export default class AssetHandler implements IAssetHandler
         if(path.startsWith("/"))
             path = path.substring(1);
         
-        return `${Kernel.getInstance().rootPath}/${this._assetsDirName}/${path}`;
+        if(!this._isHostedLocally)
+            path = pathToUniqueFilename(path);
+        
+        return `${this._assetsDirPath}/${path}`;
     }
 }
