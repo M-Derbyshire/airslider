@@ -129,7 +129,7 @@ export default class AssetHandler implements IAssetHandler
         if(root.endsWith("/"))
             root = root.slice(0, -1); // Remove trailing slash
         
-        const assetsDirName = "assets";
+        const assetsDirName = "src";
         
         return `${root}/${assetsDirName}`;
     }

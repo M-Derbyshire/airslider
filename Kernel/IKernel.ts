@@ -1,5 +1,5 @@
-import ILevel from "../assets/levels/Level/ILevel";
-import IModel from "../assets/models/Model/IModel";
+import ILevel from "../src/levels/Level/ILevel";
+import IModel from "../src/models/Model/IModel";
 import IGameEngine from "../engines/GameEngine/IGameEngine";
 import IGraphicEngine from "../engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "../engines/SoundEngine/ISoundEngine";

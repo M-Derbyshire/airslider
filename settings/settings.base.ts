@@ -1,4 +1,4 @@
-import EpilepsyWarning from '../assets/levels/EpilepsyWarning/EpilepsyWarning';
+import EpilepsyWarning from '../src/levels/EpilepsyWarning/EpilepsyWarning';
 import ISettings from './ISettings';
 
 export default {
