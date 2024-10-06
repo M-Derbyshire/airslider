@@ -1,5 +1,5 @@
-import Model from '../Model/Model';
-import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
+import Model from '../../../Kernel/entities/Model/Model';
+import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 
 /**
  * A base Model class

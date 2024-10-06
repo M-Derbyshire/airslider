@@ -1,4 +1,4 @@
-import HUDComponent from '../HUDComponent/HUDComponent';
+import HUDComponent from '../../../../Kernel/entities/HUDComponent/HUDComponent';
 
 /**
  * The game's base HUDComponent class

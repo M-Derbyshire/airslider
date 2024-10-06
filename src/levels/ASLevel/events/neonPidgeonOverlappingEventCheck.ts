@@ -1,4 +1,4 @@
-import IModel from "../../../models/Model/IModel";
+import IModel from "../../../../Kernel/entities/Model/IModel";
 
 /**
  * This is used to test if 2 NeonPidgeon monsters are currently overlapping on the X-axis.

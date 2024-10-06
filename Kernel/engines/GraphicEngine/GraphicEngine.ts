@@ -4,7 +4,7 @@ import IFrameManager from './IFrameManager';
 import IDrawPositions from './IDrawPositions';
 import IDrawDimensions from './IDrawDimensions';
 import ITextContent from './ITextContent';
-import Kernel from '../../Kernel/Kernel';
+import Kernel from '../../Kernel';
 
 /**
  * The engine that controls the drawing to the screen

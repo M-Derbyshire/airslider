@@ -1,12 +1,12 @@
-import Level from '../Level/Level';
-import IFrameManager from '../../../engines/GraphicEngine/IFrameManager';
-import EventManager from '../Level/EventManager';
-import PointerEventManager from '../Level/PointerEventManager';
-import ILevel from '../Level/ILevel';
-import Frame from '../../../engines/GraphicEngine/Frame';
+import Level from '../../../Kernel/entities/Level/Level';
+import EventManager from '../../../Kernel/entities/Level/EventManager';
+import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
+import ILevel from '../../../Kernel/entities/Level/ILevel';
 import LoadingScreenHUD from '../../HUDs/LoadingScreenHUD/LoadingScreenHUD';
-import { KernelStatus } from '../../../Kernel/KernelStatus';
 import Kernel from '../../../Kernel/Kernel';
+import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
+import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
+import { KernelStatus } from '../../../Kernel/IKernel';
 
 /**
  * A base class for loading screens

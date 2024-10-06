@@ -1,4 +1,4 @@
-import Model from '../Model/Model';
+import Model from '../../../Kernel/entities/Model/Model';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import Kernel from '../../../Kernel/Kernel';
 

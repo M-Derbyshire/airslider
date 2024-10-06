@@ -1,4 +1,4 @@
-import IModel from "../../../models/Model/IModel";
+import IModel from "../../../../Kernel/entities/Model/IModel";
 
 /**
  * Tests for a collision event on every axis (x, y, and z) at the same time

@@ -1,7 +1,7 @@
 import Kernel from '../../../Kernel/Kernel';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
-import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
+import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 
 /**
  * A sign on the track (e.g. the start or finish sign)

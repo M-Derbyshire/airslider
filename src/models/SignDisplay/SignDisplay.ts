@@ -1,6 +1,6 @@
 import Kernel from '../../../Kernel/Kernel';
 import ASModel from '../ASModel/ASModel';
-import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
+import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Sign from '../Sign/Sign';
 
 /**

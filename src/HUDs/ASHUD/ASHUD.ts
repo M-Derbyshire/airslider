@@ -1,4 +1,4 @@
-import HUD from '../HUD/HUD';
+import HUD from "../../../Kernel/entities/HUD/HUD";
 
 /**
  * The game's base HUD class

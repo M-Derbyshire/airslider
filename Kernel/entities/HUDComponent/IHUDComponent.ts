@@ -1,4 +1,4 @@
-import ITextContent from "../../../../engines/GraphicEngine/ITextContent";
+import ITextContent from "../../engines/GraphicEngine/ITextContent";
 
 /**
  * A component to be displayed by the Heads Up Display

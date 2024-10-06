@@ -1,5 +1,5 @@
-import Kernel from '../../Kernel/Kernel';
-import { KernelStatus } from '../../Kernel/KernelStatus';
+import { KernelStatus } from '../../IKernel';
+import Kernel from '../../Kernel';
 import ISoundEngine from './ISoundEngine';
 
 /**

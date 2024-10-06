@@ -1,7 +1,7 @@
 import Kernel from '../../../../Kernel/Kernel';
 import ASLevel from '../../../levels/ASLevel/ASLevel';
-import IModel from '../../Model/IModel';
-import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
+import IModel from '../../../../Kernel/entities/Model/IModel';
+import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 

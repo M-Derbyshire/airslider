@@ -2,9 +2,9 @@ import IModel from '../IModel';
 import IAnimation from './IAnimation';
 import IAnimationDetails from './IAnimationDetails';
 import IModelAnimationsManager, { AnimationsObject } from './IModelAnimationsManager';
-import IDrawDimensions from '../../../../engines/GraphicEngine/IDrawDimensions';
-import IDrawPositions from '../../../../engines/GraphicEngine/IDrawPositions';
-import Kernel from '../../../../Kernel/Kernel';
+import Kernel from '../../../Kernel';
+import IDrawPositions from '../../../engines/GraphicEngine/IDrawPositions';
+import IDrawDimensions from '../../../engines/GraphicEngine/IDrawDimensions';
 
 /**
  * Manages a model's animations

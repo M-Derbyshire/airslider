@@ -1,8 +1,8 @@
-import IHUD from "../../HUDs/HUD/IHUD";
-import IModel from "../../models/Model/IModel";
-import IFrameManager from "../../../engines/GraphicEngine/IFrameManager";
+import IModel from "../Model/IModel";
 import PointerEventManager from "./PointerEventManager";
 import EventManager from "./EventManager";
+import IHUD from "../HUD/IHUD";
+import IFrameManager from "../../engines/GraphicEngine/IFrameManager";
 
 /**
  * A level of the game

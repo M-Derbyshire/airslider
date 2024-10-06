@@ -17,15 +17,14 @@
     "deploy:assets": "node scripts/deployAssets.js",
     "destroy:deploy": "node scripts/removeDeployDir.js",
     "build:prod": "npx webpack --config webpack/prod.config.js --mode=production",
-    "make:controlsInitialiser": "cd ./settings/ControlsInitialiser && scaff controlsInitialiser",
-    "make:hud": "cd ./assets/HUDs && scaff HUD",
-    "make:hudComponent": "cd ./assets/HUDs/components && scaff HUDComponent",
-    "make:level": "cd ./assets/levels && scaff level",
-    "make:model": "cd ./assets/models && scaff model",
-    "make:hud:base": "cd ./assets/HUDs && scaff baseHUD",
-    "make:hudComponent:base": "cd ./assets/HUDs/components && scaff baseHUDComponent",
-    "make:level:base": "cd ./assets/levels && scaff baseLevel",
-    "make:model:base": "cd ./assets/models && scaff baseModel"
+    "make:hud": "cd ./src/HUDs && scaff HUD",
+    "make:hudComponent": "cd ./src/HUDs/components && scaff HUDComponent",
+    "make:level": "cd ./src/levels && scaff level",
+    "make:model": "cd ./src/models && scaff model",
+    "make:hud:base": "cd ./src/HUDs && scaff baseHUD",
+    "make:hudComponent:base": "cd ./src/HUDs/components && scaff baseHUDComponent",
+    "make:level:base": "cd ./src/levels && scaff baseLevel",
+    "make:model:base": "cd ./src/models && scaff baseModel"
   },
   "repository": {
     "type": "git",

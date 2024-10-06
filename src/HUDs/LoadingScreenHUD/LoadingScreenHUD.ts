@@ -1,8 +1,7 @@
 import ASHUD from "../ASHUD/ASHUD";
-import IPointerEventManager from '../../levels/Level/IPointerEventManager';
 import TextOnly from "../components/UI-Components/TextOnly/TextOnly";
 import TextButton from "../components/UI-Components/TextButton/TextButton";
-import IHUDComponent from "../components/HUDComponent/IHUDComponent";
+import IHUDComponent from "../../../Kernel/entities/HUDComponent/IHUDComponent";
 import Kernel from "../../../Kernel/Kernel";
 
 /**

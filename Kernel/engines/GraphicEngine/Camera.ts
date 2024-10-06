@@ -1,7 +1,7 @@
 import ICamera from './ICamera';
 import ICameraPositions from './ICameraPositions';
 import ICameraDrawPositionsCalc from './ICameraDrawPositionsCalc';
-import Kernel from '../../Kernel/Kernel';
+import Kernel from '../../Kernel';
 
 /**
  * A level's camera

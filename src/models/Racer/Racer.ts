@@ -1,5 +1,5 @@
 import ASModel from '../ASModel/ASModel';
-import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
+import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import { RacerColor } from './RacerColor';
 
 /**

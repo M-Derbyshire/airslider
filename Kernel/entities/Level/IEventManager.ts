@@ -1,4 +1,4 @@
-import IModel from "../../models/Model/IModel";
+import IModel from "../Model/IModel";
 
 /**
  * Manages the event monitoring for a level (doesn't include touch/mouse events)

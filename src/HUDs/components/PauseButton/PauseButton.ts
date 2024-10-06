@@ -1,5 +1,5 @@
+import { KernelStatus } from "../../../../Kernel/IKernel";
 import Kernel from "../../../../Kernel/Kernel";
-import { KernelStatus } from "../../../../Kernel/KernelStatus";
 import ASHUDComponent from "../ASHUDComponent/ASHUDComponent"
 
 /**

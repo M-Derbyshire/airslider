@@ -1,14 +1,14 @@
 import EventManager from './EventManager';
 import PointerEventManager from './PointerEventManager';
 import IEventManager from './IEventManager';
-import IHUD from '../../HUDs/HUD/IHUD';
 import IPointerEventManager from './IPointerEventManager';
-import IFrameManager from '../../../engines/GraphicEngine/IFrameManager';
-import IModel from '../../models/Model/IModel';
+import IModel from '../Model/IModel';
 import ILevel from './ILevel';
-import Kernel from '../../../Kernel/Kernel';
+import Kernel from '../../Kernel';
 import IControlsInitialiser from './IControlsInitialiser';
 import ControlsInitialiser from './ControlsInitialiser';
+import IFrameManager from '../../engines/GraphicEngine/IFrameManager';
+import IHUD from '../HUD/IHUD';
 
 /**
  * A level of the game

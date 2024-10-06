@@ -1,7 +1,7 @@
 import Kernel from '../../../../Kernel/Kernel';
-import IHitBox from '../../Model/IHitBox';
-import IModel from '../../Model/IModel';
-import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
+import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
+import IModel from '../../../../Kernel/entities/Model/IModel';
+import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 

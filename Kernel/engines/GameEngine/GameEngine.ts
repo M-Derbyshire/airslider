@@ -1,4 +1,4 @@
-import Kernel from '../../Kernel/Kernel';
+import Kernel from '../../Kernel';
 import IGameEngine from './IGameEngine';
 
 /**

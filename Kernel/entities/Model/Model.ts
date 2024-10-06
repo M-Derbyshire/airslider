@@ -1,8 +1,8 @@
 import IModel from './IModel';
 import IModelAnimationsManager from './ModelAnimationsManager/IModelAnimationsManager';
-import ITextContent from '../../../engines/GraphicEngine/ITextContent';
 import IHitBox from './IHitBox';
-import Kernel from '../../../Kernel/Kernel';
+import Kernel from '../../Kernel';
+import ITextContent from '../../engines/GraphicEngine/ITextContent';
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)

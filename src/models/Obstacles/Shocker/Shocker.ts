@@ -1,5 +1,5 @@
 import Kernel from '../../../../Kernel/Kernel';
-import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
+import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Obstacle, { obstacleModes } from '../../Obstacle/Obstacle';
 import Tarian from '../../Tarian/Tarian';
 

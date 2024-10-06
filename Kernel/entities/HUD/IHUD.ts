@@ -1,4 +1,4 @@
-import IPointerEventManager from "../../levels/Level/IPointerEventManager";
+import IPointerEventManager from "../Level/IPointerEventManager";
 
 /**
  * A level's Heads Up Display

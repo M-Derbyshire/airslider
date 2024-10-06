@@ -1,6 +1,6 @@
 import IHUDComponent from './IHUDComponent';
-import ITextContent from '../../../../engines/GraphicEngine/ITextContent';
-import Kernel from '../../../../Kernel/Kernel';
+import Kernel from '../../Kernel';
+import ITextContent from '../../engines/GraphicEngine/ITextContent';
 
 /**
  * A component to be displayed by the Heads Up Display

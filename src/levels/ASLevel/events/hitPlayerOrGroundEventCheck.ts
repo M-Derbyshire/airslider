@@ -1,5 +1,5 @@
 import Kernel from "../../../../Kernel/Kernel";
-import IModel from "../../../models/Model/IModel";
+import IModel from "../../../../Kernel/entities/Model/IModel";
 
 /**
  * This will first test if modelA has hit the ground. If that is not the case, it will test is modelA has hit 

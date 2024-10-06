@@ -1,7 +1,7 @@
 import Kernel from "../../../Kernel/Kernel";
 import ASLevel from "../../levels/ASLevel/ASLevel";
 import ASModel from "../ASModel/ASModel";
-import IModel from "../Model/IModel";
+import IModel from "../../../Kernel/entities/Model/IModel";
 import Tarian from "../Tarian/Tarian";
 
 /**

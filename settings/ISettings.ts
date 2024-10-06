@@ -1,4 +1,4 @@
-import ILevel from "../src/levels/Level/ILevel";
+import ILevel from "../Kernel/entities/Level/ILevel";
 
 /**
  * The settings for the game

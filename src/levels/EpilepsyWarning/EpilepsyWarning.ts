@@ -1,8 +1,8 @@
-import Level from '../Level/Level';
+import Level from '../../../Kernel/entities/Level/Level';
 import WarningScreenTexts from '../../HUDs/WarningScreenTexts/WarningScreenTexts';
-import { KernelStatus } from '../../../Kernel/KernelStatus';
 import TheConstructLoadingScreen from '../LoadingScreens/TheConstructLoadingScreen/TheConstructLoadingScreen';
 import Kernel from '../../../Kernel/Kernel';
+import { KernelStatus } from '../../../Kernel/IKernel';
 
 /**
  * A level that acts as a neurosensitivity warning

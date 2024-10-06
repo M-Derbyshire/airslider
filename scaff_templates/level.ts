@@ -1,8 +1,8 @@
 import {: baseClass :} from '../{: baseClass :}/{: baseClass :}';
-import IFrameManager from '../../../engines/GraphicEngine/IFrameManager';
-import EventManager from '../Level/EventManager';
-import PointerEventManager from '../Level/PointerEventManager';
-import IModel from '../../models/Model/IModel';
+import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
+import EventManager from '../../../Kernel/entities/Level/EventManager';
+import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
+import IModel from '../../../Kernel/entities/Model/IModel';
 
 /**
  * A class for a Level

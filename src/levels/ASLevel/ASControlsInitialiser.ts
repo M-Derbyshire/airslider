@@ -1,7 +1,7 @@
 import ASModel from '../../models/ASModel/ASModel';
 import { CentralStateKey } from '../CentralStateKey';
 import Kernel from '../../../Kernel/Kernel';
-import ControlsInitialiser from '../Level/ControlsInitialiser';
+import ControlsInitialiser from '../../../Kernel/entities/Level/ControlsInitialiser';
 
 /**
  * The game control's initialiser class

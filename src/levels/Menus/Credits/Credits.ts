@@ -1,4 +1,4 @@
-import Level from '../../Level/Level';
+import Level from '../../../../Kernel/entities/Level/Level';
 import CreditsHUD from '../../../HUDs/CreditsHUD/CreditsHUD';
 
 /**

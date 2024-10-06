@@ -1,5 +1,5 @@
 import {: baseClass :} from "../{: baseClass :}/{: baseClass :}";
-import IPointerEventManager from '../../levels/Level/IPointerEventManager';
+import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
 
 /**
  * A class for a Heads Up Display

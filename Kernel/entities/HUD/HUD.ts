@@ -1,7 +1,7 @@
-import IHUDComponent from '../components/HUDComponent/IHUDComponent';
-import IPointerEventManager from '../../levels/Level/IPointerEventManager';
+import IHUDComponent from '../../../Kernel/entities/HUDComponent/IHUDComponent';
 import IHUD from './IHUD';
 import Kernel from '../../../Kernel/Kernel';
+import IPointerEventManager from '../Level/IPointerEventManager';
 
 /**
  * A level's Heads Up Display

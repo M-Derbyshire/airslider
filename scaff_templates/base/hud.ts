@@ -1,5 +1,5 @@
-import HUD from "../HUD/HUD";
-import IPointerEventManager from '../../levels/Level/IPointerEventManager';
+import HUD from "../../../Kernel/entities/HUD/HUD";
+import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
 
 /**
  * A base class for a Heads Up Display

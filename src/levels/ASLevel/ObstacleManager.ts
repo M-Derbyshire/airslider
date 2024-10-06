@@ -1,5 +1,5 @@
 import Kernel from '../../../Kernel/Kernel';
-import IModel from '../../models/Model/IModel';
+import IModel from '../../../Kernel/entities/Model/IModel';
 import ASLevel from './ASLevel';
 
 /**

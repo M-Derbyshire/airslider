@@ -1,5 +1,5 @@
 import ASHUD from "../ASHUD/ASHUD";
-import IPointerEventManager from '../../levels/Level/IPointerEventManager';
+import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import TextOnly from "../components/UI-Components/TextOnly/TextOnly";
 
 /**

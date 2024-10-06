@@ -1,7 +1,7 @@
 import Kernel from '../../../Kernel/Kernel';
 import ASModel from '../ASModel/ASModel';
-import IAnimation from '../Model/ModelAnimationsManager/IAnimation';
-import IModelAnimationsManager from '../Model/ModelAnimationsManager/IModelAnimationsManager';
+import IAnimation from '../../../Kernel/entities/Model/ModelAnimationsManager/IAnimation';
+import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Tarian from '../Tarian/Tarian';
 
 /**

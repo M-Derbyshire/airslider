@@ -1,4 +1,4 @@
-import Level from '../Level/Level';
+import Level from '../../../Kernel/entities/Level/Level';
 import MainHUD from '../../HUDs/MainHUD/MainHUD';
 import LevelRoad from './LevelRoad';
 import ObstacleManager from './ObstacleManager';
@@ -16,23 +16,23 @@ import Falcon from '../../models/Monsters/Falcon/Falcon';
 import Ghost from '../../models/Monsters/Ghost/Ghost';
 import ElectricHornet from '../../models/Monsters/ElectricHornet/ElectricHornet';
 import Monster from '../../models/Monster/Monster';
-import IModel from '../../models/Model/IModel';
+import IModel from '../../../Kernel/entities/Model/IModel';
 import ASModel from '../../models/ASModel/ASModel';
-import IFrameManager from '../../../engines/GraphicEngine/IFrameManager';
-import EventManager from '../Level/EventManager';
-import PointerEventManager from '../Level/PointerEventManager';
+import EventManager from '../../../Kernel/entities/Level/EventManager';
+import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import TarianExplosion from '../../models/TarianExplosion/TarianExplosion';
 import zCollisionEventCheck from './events/zCollisionEventCheck';
 import hitPlayerOrGroundEventCheck from './events/hitPlayerOrGroundEventCheck';
 import neonPidgeonOverlappingEventCheck from './events/neonPidgeonOverlappingEventCheck';
 import { CentralStateKey } from '../CentralStateKey';
-import ILevel from '../Level/ILevel';
+import ILevel from '../../../Kernel/entities/Level/ILevel';
 import RacerManager from './RacerManager';
 import Kernel from '../../../Kernel/Kernel';
 import ASControlsInitialiser from './ASControlsInitialiser';
 import IZCalcStrategy from '../../../Kernel/helpers/ZCalc/strategies/IZCalcStrategy';
 import LinearVanishingPointStrategy from '../../../Kernel/helpers/ZCalc/strategies/LinearVanishingPointStrategy';
-import Frame from '../../../engines/GraphicEngine/Frame';
+import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
+import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
 
 /**
  * The game's base Level class

@@ -1,5 +1,5 @@
-import IDrawDimensions from "../../../../engines/GraphicEngine/IDrawDimensions";
-import IDrawPositions from "../../../../engines/GraphicEngine/IDrawPositions";
+import IDrawDimensions from "../../../engines/GraphicEngine/IDrawDimensions";
+import IDrawPositions from "../../../engines/GraphicEngine/IDrawPositions";
 import IAnimation from "./IAnimation";
 import IAnimationDetails from "./IAnimationDetails";
 

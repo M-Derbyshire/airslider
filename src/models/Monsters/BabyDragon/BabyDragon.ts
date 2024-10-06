@@ -1,5 +1,5 @@
 import Kernel from '../../../../Kernel/Kernel';
-import IModelAnimationsManager from '../../Model/ModelAnimationsManager/IModelAnimationsManager';
+import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 import LavaBall from '../attacks/LavaBall/LavaBall';

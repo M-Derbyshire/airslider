@@ -1,6 +1,6 @@
 import IEventManager, { IEvent, IEventDetails } from './IEventManager';
-import IModel from '../../models/Model/IModel';
-import Kernel from '../../../Kernel/Kernel';
+import IModel from '../Model/IModel';
+import Kernel from '../../Kernel';
 
 /**
  * Manages the event monitoring for a level (doesn't include touch/mouse events)
