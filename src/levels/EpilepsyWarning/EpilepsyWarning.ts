@@ -5,13 +5,13 @@ import Kernel from '../../../Kernel/Kernel';
 import { KernelStatus } from '../../../Kernel/IKernel';
 
 /**
- * A level that acts as a neurosensitivity warning
+ * A level that acts as a photosensitivity warning
  */
 export default class EpilepsyWarning extends Level
 {
     private _backgroundColor:string = "#ffffaa";
     private _textColor:string = "#dd0000";
-    private _titleText:string = "WARNING: Neurosensitivity/Epilepsy";
+    private _titleText:string = "WARNING: Photosensitivity/Epilepsy";
     private _bodyText:string = `This game contains flashing images.
 It may potentially trigger seizures in people with photosensitive epilepsy.
 Player discretion is advised.`;
