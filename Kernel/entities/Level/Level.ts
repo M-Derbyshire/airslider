@@ -65,7 +65,7 @@ export default class Level implements ILevel
     }
     
     /**
-     * Unloads any assets used by the level
+     * Unloads any assets used by the level, and clears up anything else
      */
     unload():void
     {
