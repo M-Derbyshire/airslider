@@ -587,7 +587,8 @@ export default class Kernel implements IKernel {
 	}
     
     /**
-     * Unloads the current level, triggering the release of any assets that need releasing
+     * Unloads the current level, triggering the release of any assets that need releasing, and
+     * clears up anything else
      */
     private _unloadCurrentLevel():void
     {
