@@ -57,7 +57,7 @@ export default class ElectricHornet extends Monster {
             })
         });
         
-        const damageFlashImagePath = "/HUDs/components/DamageFlash/images/yellow.png";
+        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/yellow.png";
         this.damageFlashImage = kernel.loadImage(damageFlashImagePath);
         this.assetsToUnload.push(damageFlashImagePath);
     }

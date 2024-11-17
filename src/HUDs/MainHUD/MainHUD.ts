@@ -1,11 +1,11 @@
 import ASHUD from '../ASHUD/ASHUD';
-import HealthDisplay from '../components/HealthDisplay/HealthDisplay';
-import DamageFlash from '../components/DamageFlash/DamageFlash';
-import LowHealthFlash from '../components/LowHealthFlash/LowHealthFlash';
+import HealthDisplay from '../../HUDComponents/HealthDisplay/HealthDisplay';
+import DamageFlash from '../../HUDComponents/DamageFlash/DamageFlash';
+import LowHealthFlash from '../../HUDComponents/LowHealthFlash/LowHealthFlash';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
-import PauseButton from '../components/PauseButton/PauseButton';
-import Dialog from '../components/UI-Components/Dialog/Dialog';
-import TextButton from '../components/UI-Components/TextButton/TextButton';
+import PauseButton from '../../HUDComponents/PauseButton/PauseButton';
+import Dialog from '../../HUDComponents/UI-Components/Dialog/Dialog';
+import TextButton from '../../HUDComponents/UI-Components/TextButton/TextButton';
 import Kernel from '../../../Kernel/Kernel';
 
 export default class MainHUD extends ASHUD

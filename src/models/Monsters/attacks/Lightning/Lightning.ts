@@ -33,7 +33,7 @@ export default class Lightning extends ASModel {
             })
         });
         
-        const damageFlashImagePath = "/HUDs/components/DamageFlash/images/yellow.png";
+        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/yellow.png";
         this.damageFlashImage = Kernel.getInstance().loadImage(damageFlashImagePath);
         this.assetsToUnload.push(damageFlashImagePath);
     }

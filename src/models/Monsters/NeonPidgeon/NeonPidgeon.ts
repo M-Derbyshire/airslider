@@ -69,7 +69,7 @@ export default class NeonPidgeon extends Monster {
         const fullModelWidth = 337;
         this._edgeOverflow = fullModelWidth / 2;
         
-        const damageFlashSpritesheet = "/HUDs/components/DamageFlash/images/none.png";
+        const damageFlashSpritesheet = "/HUDComponents/DamageFlash/images/none.png";
         this.damageFlashImage = kernel.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
         

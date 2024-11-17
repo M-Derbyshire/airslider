@@ -69,7 +69,7 @@ export default class Shocker extends Obstacle
             })
         });
         
-        const damageFlashSpritesheet = "/HUDs/components/DamageFlash/images/yellow.png";
+        const damageFlashSpritesheet = "/HUDComponents/DamageFlash/images/yellow.png";
         this.damageFlashImage = Kernel.getInstance().loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
     }

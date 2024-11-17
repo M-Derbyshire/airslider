@@ -1,4 +1,4 @@
-import Kernel from '../../../../Kernel/Kernel';
+import Kernel from '../../../Kernel/Kernel';
 import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
 
 /**

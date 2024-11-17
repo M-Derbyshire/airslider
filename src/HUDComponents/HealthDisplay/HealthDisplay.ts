@@ -1,6 +1,6 @@
-import Kernel from '../../../../Kernel/Kernel';
-import { CentralStateKey } from '../../../levels/CentralStateKey';
-import Tarian from '../../../models/Tarian/Tarian';
+import Kernel from '../../../Kernel/Kernel';
+import { CentralStateKey } from '../../levels/CentralStateKey';
+import Tarian from '../../models/Tarian/Tarian';
 import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
 
 /**
@@ -53,7 +53,7 @@ export default class HealthDisplay extends ASHUDComponent
         
         const kernel = Kernel.getInstance();
         
-        const imagesDirPath = "/HUDs/components/HealthDisplay/images";
+        const imagesDirPath = "/HUDComponents/HealthDisplay/images";
         this._borderImage = kernel.loadImage(`${imagesDirPath}/lightning-border.png`);
         this._spannerImage = kernel.loadImage(`${imagesDirPath}/spanner.png`);
     }

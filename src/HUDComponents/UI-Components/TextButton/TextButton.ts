@@ -1,4 +1,4 @@
-import Kernel from '../../../../../Kernel/Kernel';
+import Kernel from '../../../../Kernel/Kernel';
 import TextOnlyButton from '../TextOnlyButton/TextOnlyButton';
 
 /**
@@ -65,7 +65,7 @@ export default class TextButton extends TextOnlyButton
     {
         super.load();
         
-        this._borderPiecesImage = Kernel.getInstance().loadImage("/HUDs/components/UI-Components/TextButton/images/borderPieces.png");
+        this._borderPiecesImage = Kernel.getInstance().loadImage("/HUDComponents/UI-Components/TextButton/images/borderPieces.png");
     }
     
     /**

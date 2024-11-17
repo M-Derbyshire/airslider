@@ -6,7 +6,7 @@
  */
 const assetsDirsAbbreviations = [
     { directory: "fonts", abbreviation: "f" },
-    { directory: "huds/components", abbreviation: "hc" },
+    { directory: "hudcomponents", abbreviation: "hc" },
     { directory: "huds", abbreviation: "h" },
     { directory: "levels", abbreviation: "l" },
     { directory: "models", abbreviation: "m" }

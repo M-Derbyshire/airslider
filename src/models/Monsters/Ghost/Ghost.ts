@@ -51,7 +51,7 @@ export default class Ghost extends Monster {
         
         const kernel = Kernel.getInstance();
         
-        const damageFlashSpritesheet = "/HUDs/components/DamageFlash/images/ghost.png";
+        const damageFlashSpritesheet = "/HUDComponents/DamageFlash/images/ghost.png";
         this.damageFlashImage = kernel.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
         

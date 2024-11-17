@@ -1,5 +1,5 @@
-import { KernelStatus } from "../../../../Kernel/IKernel";
-import Kernel from "../../../../Kernel/Kernel";
+import { KernelStatus } from "../../../Kernel/IKernel";
+import Kernel from "../../../Kernel/Kernel";
 import ASHUDComponent from "../ASHUDComponent/ASHUDComponent"
 
 /**
@@ -34,7 +34,7 @@ export default class PauseButton extends ASHUDComponent {
     load():void 
     {
         super.load();
-        this._imageSheet = Kernel.getInstance().loadImage("/HUDs/components/PauseButton/images/button_sheet.png");
+        this._imageSheet = Kernel.getInstance().loadImage("/HUDComponents/PauseButton/images/button_sheet.png");
     }
     
     draw()

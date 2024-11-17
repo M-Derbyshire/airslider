@@ -1,6 +1,6 @@
 import ASHUD from "../ASHUD/ASHUD";
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
-import TextOnly from "../components/UI-Components/TextOnly/TextOnly";
+import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 
 /**
  * A HUD for the credits screen

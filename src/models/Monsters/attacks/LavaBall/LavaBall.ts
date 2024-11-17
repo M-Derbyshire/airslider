@@ -68,7 +68,7 @@ export default class LavaBall extends ASModel {
             }),
         });
         
-        const damageFlashSpritesheet = "/HUDs/components/DamageFlash/images/fire.png";
+        const damageFlashSpritesheet = "/HUDComponents/DamageFlash/images/fire.png";
         this.damageFlashImage = Kernel.getInstance().loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
     }
