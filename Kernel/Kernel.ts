@@ -445,11 +445,15 @@ export default class Kernel implements IKernel {
         {
             if(this._status === KernelStatus.Active)
             {
-                this.soundEngine.pauseMusic();
+                if(this.soundEngine.musicIsPlaying)
+                    this.soundEngine.pauseMusic();
+                
                 this.soundEngine.pauseAllSounds();
                 this._status = KernelStatus.PrePaused;
             } else {
-                this.soundEngine.playMusic();
+                if(this.soundEngine.musicIsPaused)
+                    this.soundEngine.playMusic();
+                
                 this.soundEngine.unpauseAllSounds();
                 this._status = KernelStatus.Active
             }

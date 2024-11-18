@@ -7,6 +7,7 @@ import ISoundEngine from './ISoundEngine';
  */
 export default class SoundEngine implements ISoundEngine {
     private _music:HTMLAudioElement; // The level's music
+    private _musicIsPaused:boolean; // Has the level's music been explictly paused (not true if it has been stopped)
     
     // The sounds we're currently playing (not including music, or sounds that are force-loading)
     private _currentSounds:Map<string, HTMLAudioElement>;
@@ -50,7 +51,15 @@ export default class SoundEngine implements ISoundEngine {
      */
     get musicIsPlaying()
     {
-        return !this._music.paused && !this._music.muted;
+        return !!this._music && !this._music.paused && !this._music.muted;
+    }
+    
+    /**
+     * Has the level's music been explictly paused (not true if it has been stopped)
+     */
+    get musicIsPaused()
+    {
+        return this._musicIsPaused;
     }
     
     /**
@@ -71,7 +80,10 @@ export default class SoundEngine implements ISoundEngine {
     playMusic():void
     {
         if(this._music)
+        {
             this._music.play();
+            this._musicIsPaused = false;
+        }
     }
     
     /**
@@ -80,7 +92,10 @@ export default class SoundEngine implements ISoundEngine {
     pauseMusic():void
     {
         if(this._music)
+        {
             this._music.pause();
+            this._musicIsPaused = true;
+        }
     }
     
     /**
@@ -92,6 +107,7 @@ export default class SoundEngine implements ISoundEngine {
         {
             this._music.pause();
             this._music.currentTime = 0;
+            this._musicIsPaused = false;
         }
     }
     

@@ -14,6 +14,11 @@ export default interface ISoundEngine {
     musicRepeat:boolean;
     
     /**
+     * Has the level's music been explictly paused (not true if it has been stopped)
+     */
+    readonly musicIsPaused:boolean;
+    
+    /**
      * Is the level's music currently playing?
      */
     readonly musicIsPlaying:boolean;
