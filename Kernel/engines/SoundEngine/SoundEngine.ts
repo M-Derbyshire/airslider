@@ -115,7 +115,7 @@ export default class SoundEngine implements ISoundEngine {
     }
     
     /**
-     * Stops the playing of the given sound
+     * Stops the playing of the given sound (and sets it back to the start of the audio track)
      * @param sound The sound effect to be stopped
      */
     stopSound(sound:HTMLAudioElement):void
@@ -142,6 +142,14 @@ export default class SoundEngine implements ISoundEngine {
             if(!sound.ended || sound.loop)
                 sound.play();
         });
+    }
+    
+    /**
+     * Stops all sounds, and resets their current time back to 0
+     */
+    stopAllSounds():void
+    {
+        this._currentSounds.forEach(sound => this.stopSound(sound));
     }
     
     /**

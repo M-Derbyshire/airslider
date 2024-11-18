@@ -73,6 +73,7 @@ export default class Level implements ILevel
         this.pointerEventManager.removeEventHandlers();
         this.controlsInitialiser.unregisterEventListeners();
         this.HUD.unload();
+        this._resetAudio();
     }
     
     /**
@@ -88,8 +89,8 @@ export default class Level implements ILevel
         this.registerLevelEvents();
         kernel.loadedModels.forEach(model => this.pointerEventManager.addPointerEventSubject(model));
         
-        
         this._resetCameraPosition();
+        this._resetAudio();
     }
     
     /**
@@ -152,5 +153,16 @@ export default class Level implements ILevel
             kernel.unitsWithinCameraX / 2,
             kernel.unitsWithinCameraY / 2
         );
+    }
+    
+    /**
+     * Stops and resets all sound effects/music
+     */
+    private _resetAudio():void
+    {
+        const kernel = Kernel.getInstance();
+        
+        kernel.soundEngine.stopAllSounds();
+        kernel.soundEngine.stopMusic();
     }
 }

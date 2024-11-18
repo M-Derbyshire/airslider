@@ -47,7 +47,7 @@ export default interface ISoundEngine {
     playSound(sound:HTMLAudioElement, loop?:boolean):void;
     
     /**
-     * Stops the playing of the given sound
+     * Stops the playing of the given sound (and sets it back to the start of the audio track)
      * @param sound The sound effect to be stopped
      */
     stopSound(sound:HTMLAudioElement):void;
@@ -61,6 +61,11 @@ export default interface ISoundEngine {
      * Continues playing (after pausing) all sounds the engine has triggered
      */
     unpauseAllSounds():void;
+    
+    /**
+     * Stops all sounds, and resets their current time back to 0
+     */
+    stopAllSounds():void;
     
     /**
      * Forces a sound to be loaded by playing it while muted
