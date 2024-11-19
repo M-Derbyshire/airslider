@@ -8,8 +8,7 @@ export default interface ISoundEngine {
     music:HTMLAudioElement;
     
     /**
-     * Should the music be played on repeat? (The music must be set before this can be set, and 
-     * this will need to be set again whenever changing the music)
+     * Should the music be played on repeat?
      */
     musicRepeat:boolean;
     

@@ -8,6 +8,7 @@ import ISoundEngine from './ISoundEngine';
 export default class SoundEngine implements ISoundEngine {
     private _music:HTMLAudioElement; // The level's music
     private _musicIsPaused:boolean; // Has the level's music been explictly paused (not true if it has been stopped)
+    private _musicIsLooped:boolean; // Is the level's music being looped?
     
     // The sounds we're currently playing (not including music, or sounds that are force-loading)
     private _currentSounds:Map<string, HTMLAudioElement>;
@@ -19,6 +20,7 @@ export default class SoundEngine implements ISoundEngine {
     {
         this._currentSounds = new Map<string, HTMLAudioElement>();
         this._musicIsPaused = false;
+        this._musicIsLooped = false;
     }
     
     /**
@@ -31,19 +33,21 @@ export default class SoundEngine implements ISoundEngine {
     set music(newValue:HTMLAudioElement)
     {
         this._music = newValue;
+        this._music.loop = this._musicIsLooped;
         this._musicIsPaused = false;
     }
     
     /**
-     * Should the music be played on repeat? (The music must be set before this can be set, and 
-     * this will need to be set again whenever changing the music)
+     * Should the music be played on repeat?
      */
     get musicRepeat()
     {
-        return (this._music) ? this._music.loop : false 
+        return this._musicIsLooped;
     }
     set musicRepeat(newValue:boolean)
     {
+        this._musicIsLooped = newValue;
+        
         if(this._music)
             this._music.loop = newValue;
     }
@@ -109,8 +113,9 @@ export default class SoundEngine implements ISoundEngine {
         {
             this._music.pause();
             this._music.currentTime = 0;
-            this._musicIsPaused = false;
         }
+        
+        this._musicIsPaused = false;
     }
     
     /**
