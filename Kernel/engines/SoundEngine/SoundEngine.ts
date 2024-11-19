@@ -18,6 +18,7 @@ export default class SoundEngine implements ISoundEngine {
     constructor()
     {
         this._currentSounds = new Map<string, HTMLAudioElement>();
+        this._musicIsPaused = false;
     }
     
     /**
@@ -30,6 +31,7 @@ export default class SoundEngine implements ISoundEngine {
     set music(newValue:HTMLAudioElement)
     {
         this._music = newValue;
+        this._musicIsPaused = false;
     }
     
     /**
