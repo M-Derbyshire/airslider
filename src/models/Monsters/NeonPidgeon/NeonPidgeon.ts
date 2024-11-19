@@ -221,7 +221,7 @@ export default class NeonPidgeon extends Monster {
     
     start(): void {
         super.start();
-        Kernel.getInstance().soundEngine.forceLoad(this._flapSound);
+        Kernel.getInstance().soundEngine.forceSoundLoad(this._flapSound);
     }
     
     enter():void

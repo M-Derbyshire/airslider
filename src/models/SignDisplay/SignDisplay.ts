@@ -119,8 +119,8 @@ export default class SignDisplay extends ASModel
         this.state = "off";
         this.active = true;
         
-        kernel.soundEngine.forceLoad(this._countdownBeep);
-        kernel.soundEngine.forceLoad(this._startBeep);
+        kernel.soundEngine.forceSoundLoad(this._countdownBeep);
+        kernel.soundEngine.forceSoundLoad(this._startBeep);
         
         this._lastLightChangeMS = 0;
         this._lightChangeWaitMS = 1500;

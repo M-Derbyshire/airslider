@@ -145,6 +145,6 @@ export default class TarianExplosion extends ASModel {
     private _forceLoadAlarm():void
     {
         if(this._alarmSound.currentTime === 0 || this._alarmSound.ended)
-            Kernel.getInstance().soundEngine.forceLoad(this._alarmSound);
+            Kernel.getInstance().soundEngine.forceSoundLoad(this._alarmSound);
     }
 }

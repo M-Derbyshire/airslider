@@ -87,8 +87,13 @@ export default class SoundEngine implements ISoundEngine {
     {
         if(this._music)
         {
-            this._music.play();
+            if(!this._musicIsPaused)
+                this._music.currentTime = 0;
+            
+            this._music.muted = false; // The music may have been muted by the forceMusicLoad method
             this._musicIsPaused = false;
+            
+            this._music.play();
         }
     }
     
@@ -179,7 +184,7 @@ export default class SoundEngine implements ISoundEngine {
      * Forces a sound to be loaded by playing it while muted
      * @param sound The sound to be forced to load
      */
-    forceLoad(sound:HTMLAudioElement):void
+    forceSoundLoad(sound:HTMLAudioElement):void
     {
         const eventListenerType = "ended";
         
@@ -194,5 +199,19 @@ export default class SoundEngine implements ISoundEngine {
         sound.muted = true;
         
         sound.play();
+    }
+    
+    /**
+     * Forces the music to be loaded by playing it while muted
+     */
+    forceMusicLoad():void
+    {
+        if(this._music)
+        {
+            this._music.currentTime = 0;
+            this._music.muted = true;
+            this._musicIsPaused = false;
+            this._music.play();
+        }
     }
 }

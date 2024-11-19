@@ -152,7 +152,7 @@ export default class BabyDragon extends Monster
     
     start(): void {
         super.start();
-        Kernel.getInstance().soundEngine.forceLoad(this._wingSound);
+        Kernel.getInstance().soundEngine.forceSoundLoad(this._wingSound);
     }
     
     enter():void

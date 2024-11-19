@@ -254,6 +254,7 @@ export default class ASLevel extends Level
         this.music.volume = 0;
         kernel.soundEngine.music = this.music;
         kernel.soundEngine.musicRepeat = true;
+        kernel.soundEngine.forceMusicLoad();
         
         this.racerManager.prepare();
         

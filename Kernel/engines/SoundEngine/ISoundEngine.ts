@@ -75,5 +75,10 @@ export default interface ISoundEngine {
      * Forces a sound to be loaded by playing it while muted
      * @param sound The sound to be forced to load
      */
-    forceLoad(sound:HTMLAudioElement):void;
+    forceSoundLoad(sound:HTMLAudioElement):void;
+    
+    /**
+     * Forces the music to be loaded by playing it while muted
+     */
+    forceMusicLoad():void;
 };
