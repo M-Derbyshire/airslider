@@ -1,4 +1,4 @@
-import HUDComponent from '../../../../Kernel/entities/HUDComponent/HUDComponent';
+import HUDComponent from '../../../Kernel/entities/HUDComponent/HUDComponent';
 
 /**
  * A base HUDComponent class
