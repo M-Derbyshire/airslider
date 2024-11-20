@@ -160,9 +160,7 @@ export default class ASLevel extends Level
         this._signStartingZPosition = 90;
         
         const musicDir = "/levels/ASLevel/music";
-        this._musicFilePaths = [
-            `${musicDir}/speechless.wav`
-        ];
+        this._musicFilePaths = [];
         
         this._nextLevelDialogDelayMS = 2000;
         this._retryLevelDialogDelayMS = 2000;
@@ -248,13 +246,16 @@ export default class ASLevel extends Level
         this.rightEdge = kernel.unitsWithinCameraX;
         
         this.levelMovementStartAtMS = -1;
-        this._musicFadeSpeedSeconds = 2.5;
-        this._musicStartDelayMS = 1500;
-        this._musicMaxVolume = 1;
-        this.music.volume = 0;
-        kernel.soundEngine.music = this.music;
-        kernel.soundEngine.musicRepeat = true;
-        kernel.soundEngine.forceMusicLoad();
+        if(this.music)
+        {
+            this._musicFadeSpeedSeconds = 2.5;
+            this._musicStartDelayMS = 1500;
+            this._musicMaxVolume = 1;
+            this.music.volume = 0;
+            kernel.soundEngine.music = this.music;
+            kernel.soundEngine.musicRepeat = true;
+            kernel.soundEngine.forceMusicLoad();
+        }
         
         this.racerManager.prepare();
         
@@ -685,7 +686,7 @@ export default class ASLevel extends Level
     private _fadeMusic():void
     {
         // If the level hasn't started moving, we don't need to do anything
-        if(this.levelMovementStartAtMS < 0)
+        if(!this.music || this.levelMovementStartAtMS < 0)
             return;
         
         const kernel = Kernel.getInstance();
