@@ -33,6 +33,7 @@ import IZCalcStrategy from '../../../Kernel/helpers/ZCalc/strategies/IZCalcStrat
 import LinearVanishingPointStrategy from '../../../Kernel/helpers/ZCalc/strategies/LinearVanishingPointStrategy';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
+import MusicManager from './MusicManager';
 
 /**
  * The game's base Level class
@@ -96,7 +97,6 @@ export default class ASLevel extends Level
     maxLevelSpeedRaw:number; // The maximum speed (before being calculated by the zCalc)
     levelSpeed:number; // The level speed (after being calculated by the zCalc)
     protected levelSpeedAccl:number; // How quickly does the speed accelerate at the start?
-    protected levelMovementStartAtMS:number; // The time (in milliseconds) that the level started moving (negative number if it hasn't started)
     
     // Level ending
     
@@ -118,11 +118,9 @@ export default class ASLevel extends Level
     protected NextLevelLoadingScreen:new()=>ILevel; // The class of the loading screen for the next level
     
     // Music management
-    protected music:HTMLAudioElement; // The chosen music for the level
-    private _musicFilePaths:string[]; // File paths to the music that a level could choose to load
-    private _musicMaxVolume:number; // The volume of the music, when it's not fading in/out
-    private _musicStartDelayMS:number; // The delay between the level's movement starting, and the music fading in (in milliseconds)
-    private _musicFadeSpeedSeconds:number; // The duration of the music's fade in/out (in seconds)
+    protected musicFilePaths:string[]; // File paths to the music a level can load (one will be picked by the MusicManager)
+    protected musicVolume:number; // The maximum volume of the music
+    private _musicManager:MusicManager; // Manages the level's music
     
     // Level section management 
     private _activeSections: string[]; // The IDs of the level sections that are currently active
@@ -160,7 +158,9 @@ export default class ASLevel extends Level
         this._signStartingZPosition = 90;
         
         const musicDir = "/levels/ASLevel/music";
-        this._musicFilePaths = [];
+        this.musicFilePaths = [];
+        this.musicVolume = 1;
+        this._musicManager = new MusicManager();
         
         this._nextLevelDialogDelayMS = 2000;
         this._retryLevelDialogDelayMS = 2000;
@@ -218,12 +218,9 @@ export default class ASLevel extends Level
             312
         );
         
-        const chosenMusicFilePath = this._chooseMusicPath();
+        const chosenMusicFilePath = this._musicManager.load(this.musicFilePaths);
         if(chosenMusicFilePath)
-        {
-            this.music = Kernel.getInstance().loadAudio(chosenMusicFilePath);
             this.assetsToUnload.push(chosenMusicFilePath);
-        }
 	}
     
     /**
@@ -245,17 +242,7 @@ export default class ASLevel extends Level
         this.leftEdge = 0;
         this.rightEdge = kernel.unitsWithinCameraX;
         
-        this.levelMovementStartAtMS = -1;
-        if(this.music)
-        {
-            this._musicFadeSpeedSeconds = 2.5;
-            this._musicStartDelayMS = 1500;
-            this._musicMaxVolume = 1;
-            this.music.volume = 0;
-            kernel.soundEngine.music = this.music;
-            kernel.soundEngine.musicRepeat = true;
-            kernel.soundEngine.forceMusicLoad();
-        }
+        this._musicManager.prepare(this.musicVolume);
         
         this.racerManager.prepare();
         
@@ -292,8 +279,8 @@ export default class ASLevel extends Level
         // If we move outside/inside a tunnel, change the light mask
         this._setLightMask();
         
-        // Fades the music in/out, if required
-        this._fadeMusic();
+        // Let the MusicManager do what it needs to do each frame
+        this._musicManager.act();
         
         // Run the opening section, if required
         this._levelOpening();
@@ -301,7 +288,10 @@ export default class ASLevel extends Level
         // Display the retry-level dialog, if required
         const currentMs = timeHelpers.getTotalMilliseconds();
         if(this.lost && currentMs > this.stoppedForlossAtMS + this._retryLevelDialogDelayMS)
+        {
             (this.HUD as MainHUD).displayRetryLevelDialog();
+            this._musicManager.startFadeOutProcess();
+        }    
         
         // Let the RacerManager do what it needs to do each frame
         this.racerManager.act();
@@ -602,11 +592,9 @@ export default class ASLevel extends Level
      */
     private _levelMovementStart():void
     {
-        const kernel = Kernel.getInstance();
-        
         this.levelMoving = true;
-        this.levelMovementStartAtMS = kernel.totalLevelActiveMilliseconds;
         this.player.canBeControlled = true;
+        this._musicManager.startFadeInProcess();
     }
     
     /**
@@ -643,98 +631,9 @@ export default class ASLevel extends Level
         }
         
         if(this.completed && currentMs > this.levelCompletedAtMS + this._nextLevelDialogDelayMS)
+        {
             (this.HUD as MainHUD).displayNextLevelDialog();
-    }
-    
-    /**
-     * Chooses the music filepath from the array of music filepaths, and returns it.
-     * This will set the music filepath in the Kernel's centralState map, so it 
-     * can ensure that the next level doesn't select the same music (if 
-     * multiple paths are available).
-     * If no filepaths are availble, this will return null.
-     */
-    private _chooseMusicPath():string|null
-    {
-        if(!this._musicFilePaths.length)
-            return null;
-        
-        if(this._musicFilePaths.length === 1)
-            return this._musicFilePaths[0];
-        
-        const kernel = Kernel.getInstance();
-        
-        // We want to filter out the filepath used by the previous level
-        const selectableFilePaths = this._musicFilePaths.filter(
-            filepath => filepath !== kernel.centralState.get(CentralStateKey.LastMusicSelectedPath)
-        );
-        
-        // Now choose a random path
-        const lastIndex = selectableFilePaths.length - 1;
-        const indexToSelect = Math.round(
-            Math.random() * lastIndex
-        );
-        
-        const chosenPath = selectableFilePaths[indexToSelect];
-        
-        kernel.centralState.set(CentralStateKey.LastMusicSelectedPath, chosenPath);
-        return chosenPath;
-    }
-    
-    /**
-     * Fades the music in/out, depending on the status of the level
-     */
-    private _fadeMusic():void
-    {
-        // If the level hasn't started moving, we don't need to do anything
-        if(!this.music || this.levelMovementStartAtMS < 0)
-            return;
-        
-        const kernel = Kernel.getInstance();
-        const soundEngine = kernel.soundEngine;
-        const hud = this.HUD as MainHUD;
-        
-        // Determine what action we need to take (if any)
-        const finishedDialogDisplayed = (
-            hud.isNextLevelDialogDisplayed() ||
-            hud.isRetryLevelDialogDisplayed()
-        );
-        
-        const shouldFadeIn = (
-            !finishedDialogDisplayed &&
-            this.music.volume < this._musicMaxVolume &&
-            kernel.totalLevelActiveMilliseconds > this.levelMovementStartAtMS + this._musicStartDelayMS
-        );
-        
-        const shouldFadeOut = (finishedDialogDisplayed && soundEngine.musicIsPlaying);
-        
-        if(!shouldFadeIn && !shouldFadeOut)
-            return;
-        
-        // We need to figure out how much to fade the volume by, based on the FPS, to 
-        // make sure it's done at the speed we want (we recalculate this every frame, in
-        // case the FPS changes).
-        const frameCount = kernel.helpers.time.secondsToFrames(this._musicFadeSpeedSeconds);
-        const volumeChange = this._musicMaxVolume / frameCount;
-        
-        // Fade in after the opening + delay
-        if(shouldFadeIn)
-        {
-            if(!soundEngine.musicIsPlaying)
-                soundEngine.playMusic();
-            
-            if(this.music.volume + volumeChange > this._musicMaxVolume)
-                this.music.volume = this._musicMaxVolume;
-            else
-                this.music.volume += volumeChange;
-        }
-        
-        // Fade out on player loss/win
-        if(shouldFadeOut)
-        {
-            if(this.music.volume - volumeChange < 0)
-                soundEngine.stopMusic();
-            else
-                this.music.volume -= volumeChange;
+            this._musicManager.startFadeOutProcess();
         }
     }
 }
