@@ -120,11 +120,29 @@ export default class MainHUD extends ASHUD
     }
     
     /**
+     * Is the next-level dialog displayed?
+     * @returns true if the dialog is displayed, false if not
+     */
+    isNextLevelDialogDisplayed():boolean
+    {
+        return this._nextLevelDialog.active;
+    }
+    
+    /**
      * Displays the retry-level dialog
      */
     displayRetryLevelDialog():void
     {
         this._retryLevelDialog.setDisplay(true);
+    }
+    
+    /**
+     * Is the retry-level dialog displayed?
+     * @returns true if the dialog is displayed, false if not
+     */
+    isRetryLevelDialogDisplayed():boolean
+    {
+        return this._retryLevelDialog.active;
     }
     
     /**

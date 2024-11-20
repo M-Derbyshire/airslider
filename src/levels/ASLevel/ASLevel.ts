@@ -689,14 +689,24 @@ export default class ASLevel extends Level
             return;
         
         const kernel = Kernel.getInstance();
+        const soundEngine = kernel.soundEngine;
+        const hud = this.HUD as MainHUD;
         
         // Determine what action we need to take (if any)
+        const finishedDialogDisplayed = (
+            hud.isNextLevelDialogDisplayed() ||
+            hud.isRetryLevelDialogDisplayed()
+        );
+        
         const shouldFadeIn = (
+            !finishedDialogDisplayed &&
             this.music.volume < this._musicMaxVolume &&
             kernel.totalLevelActiveMilliseconds > this.levelMovementStartAtMS + this._musicStartDelayMS
         );
         
-        if(!shouldFadeIn)
+        const shouldFadeOut = (finishedDialogDisplayed && soundEngine.musicIsPlaying);
+        
+        if(!shouldFadeIn && !shouldFadeOut)
             return;
         
         // We need to figure out how much to fade the volume by, based on the FPS, to 
@@ -708,13 +718,22 @@ export default class ASLevel extends Level
         // Fade in after the opening + delay
         if(shouldFadeIn)
         {
-            if(!kernel.soundEngine.musicIsPlaying)
-                kernel.soundEngine.playMusic();
+            if(!soundEngine.musicIsPlaying)
+                soundEngine.playMusic();
             
             if(this.music.volume + volumeChange > this._musicMaxVolume)
                 this.music.volume = this._musicMaxVolume;
             else
                 this.music.volume += volumeChange;
+        }
+        
+        // Fade out on player loss/win
+        if(shouldFadeOut)
+        {
+            if(this.music.volume - volumeChange < 0)
+                soundEngine.stopMusic();
+            else
+                this.music.volume -= volumeChange;
         }
     }
 }
