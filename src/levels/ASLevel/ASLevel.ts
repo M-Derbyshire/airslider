@@ -354,8 +354,6 @@ export default class ASLevel extends Level
 	protected registerLevelEvents():void
 	{
         super.registerLevelEvents();
-        
-		//These are the events that are valid across all levels
         this.eventManager.registerEventsArray(standardModelEvents);
 	}
     
