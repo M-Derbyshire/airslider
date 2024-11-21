@@ -8,22 +8,12 @@ import LevelTunnel from './LevelTunnel';
 import Sign from '../../models/Sign/Sign';
 import SignDisplay from '../../models/SignDisplay/SignDisplay';
 import Tarian from '../../models/Tarian/Tarian';
-import Shocker from '../../models/Obstacles/Shocker/Shocker';
-import NeonPidgeon from '../../models/Monsters/NeonPidgeon/NeonPidgeon';
-import LavaBall from '../../models/Monsters/attacks/LavaBall/LavaBall';
-import Lightning from '../../models/Monsters/attacks/Lightning/Lightning';
-import Falcon from '../../models/Monsters/Falcon/Falcon';
-import Ghost from '../../models/Monsters/Ghost/Ghost';
-import ElectricHornet from '../../models/Monsters/ElectricHornet/ElectricHornet';
 import Monster from '../../models/Monster/Monster';
 import IModel from '../../../Kernel/entities/Model/IModel';
 import ASModel from '../../models/ASModel/ASModel';
 import EventManager from '../../../Kernel/entities/Level/EventManager';
 import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import TarianExplosion from '../../models/TarianExplosion/TarianExplosion';
-import zCollisionEventCheck from './events/zCollisionEventCheck';
-import hitPlayerOrGroundEventCheck from './events/hitPlayerOrGroundEventCheck';
-import neonPidgeonOverlappingEventCheck from './events/neonPidgeonOverlappingEventCheck';
 import { CentralStateKey } from '../CentralStateKey';
 import ILevel from '../../../Kernel/entities/Level/ILevel';
 import RacerManager from './RacerManager';
@@ -34,6 +24,7 @@ import LinearVanishingPointStrategy from '../../../Kernel/helpers/ZCalc/strategi
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
 import MusicManager from './MusicManager';
+import standardModelEvents from './events/standardModelEvents';
 
 /**
  * The game's base Level class
@@ -365,64 +356,7 @@ export default class ASLevel extends Level
         super.registerLevelEvents();
         
 		//These are the events that are valid across all levels
-        this.eventManager.registerEventsArray([
-            { 
-                eventCheck: zCollisionEventCheck,
-                class1: Tarian,
-                class1EventActionName: "zCollisionEventAction",
-                class2: Shocker,
-                class2EventActionName: "zCollisionEventAction"
-            },
-            { 
-                eventCheck: zCollisionEventCheck,
-                class1: ElectricHornet,
-                class1EventActionName: "zCollisionEventAction",
-                class2: Tarian,
-                class2EventActionName: "zCollisionEventAction"
-            },
-            { 
-                eventCheck: hitPlayerOrGroundEventCheck,
-                class1: NeonPidgeon,
-                class1EventActionName: "hitPlayerOrGroundEventAction",
-                class2: Tarian,
-                class2EventActionName: "zCollisionEventAction"
-            },
-            { 
-                eventCheck: neonPidgeonOverlappingEventCheck,
-                class1: NeonPidgeon,
-                class1EventActionName: "neonPidgeonOverlappingEventAction",
-                class2: Tarian,
-                class2EventActionName: "" //Doesn't have one, and doesn't try to call one
-            },
-            { 
-                eventCheck: hitPlayerOrGroundEventCheck,
-                class1: LavaBall,
-                class1EventActionName: "hitPlayerOrGroundEventAction",
-                class2: Tarian,
-                class2EventActionName: "zCollisionEventAction"
-            },
-            { 
-                eventCheck: hitPlayerOrGroundEventCheck,
-                class1: Falcon,
-                class1EventActionName: "hitPlayerOrGroundEventAction",
-                class2: Tarian,
-                class2EventActionName: "zCollisionEventAction"
-            },
-            { 
-                eventCheck: zCollisionEventCheck,
-                class1: Tarian,
-                class1EventActionName: "zCollisionEventAction",
-                class2: Ghost,
-                class2EventActionName: "zCollisionEventAction"
-            },
-            {
-                eventCheck: zCollisionEventCheck,
-                class1: Tarian,
-                class1EventActionName: "zCollisionEventAction",
-                class2: Lightning,
-                class2EventActionName: "hitPlayerEventAction"
-            },
-        ]);
+        this.eventManager.registerEventsArray(standardModelEvents);
 	}
     
     /**
