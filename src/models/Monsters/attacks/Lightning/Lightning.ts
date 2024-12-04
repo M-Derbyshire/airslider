@@ -1,6 +1,5 @@
 import Kernel from '../../../../../Kernel/Kernel';
 import ASModel from '../../../ASModel/ASModel';
-import IModel from '../../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 
 /**
@@ -58,6 +57,4 @@ export default class Lightning extends ASModel {
         //Therefore, during the gameplay, the actual damage dealt will be the _damageValue, modified with the frame rate.
         this.damageDealt = this._damageValue / Kernel.getInstance().fps;
     }
-    
-    hitPlayerEventAction(otherModel:IModel):void {} // no action actually required
 }

@@ -366,32 +366,30 @@ export default class NeonPidgeon extends Monster {
     // Events------------------------------------------------------------
     
     /**
-     * Handles the pidgeon's x position overlapping the player's x position
-     * @param otherModel the player model
+     * Any extra event checks specific to this model
      */
-    neonPidgeonOverlappingEventAction(otherModel:IModel):void
+    protected extraEvents():void
+    {
+        super.extraEvents();
+        
+        if(this.hasHitGround() && this.state === "falling")
+            this.hitEventAction();
+    }
+    
+    /**
+     * Handles the pidgeon's x position overlapping the player's x position
+     */
+    overlappingPlayerXEventAction():void
     {
         this.overlapping = true;
     }
     
     /**
-     * Handles collision with the player
-     * @param otherModel the player model
+     * Handles collision with the player or the ground while falling
      */
-    hitPlayerOrGroundEventAction(otherModel:IModel):void
+    hitEventAction():void
     {
-        const pidgeonBottomEdge = this.y + this.height;
-        
-        const unitsWithinCameraY = Kernel.getInstance().unitsWithinCameraY;
-        
-        // Make sure the player doesn't lose extra health if they collide from the side
-        if((pidgeonBottomEdge > otherModel.y) && (pidgeonBottomEdge < unitsWithinCameraY))
-            this.y = otherModel.y - this.height - 1;
-        
-        if(this.state == "falling")
-        {
-            this.state = "rising";
-            this.nextAction();
-        }
+        this.state = "rising";
+        this.nextAction();
     }
 }

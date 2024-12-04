@@ -64,6 +64,15 @@ export default class ASModel extends Model
         return (vol >= 0) ? vol : 0;
     }
     
+    /**
+     * Checks to see if the model is on/below the ground
+     * @returns true if the model is on/below the ground, false if not
+     */
+    protected hasHitGround():boolean
+    {
+        return (this.y + this.height) >= Kernel.getInstance().unitsWithinCameraY;
+    }
+    
     prepare():void
     {
         super.prepare();

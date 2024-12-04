@@ -118,9 +118,23 @@ export default class LavaBall extends ASModel {
             this.xSpeed = (this.xSpeed > 0) ? xSpeedLimit : -xSpeedLimit;
     }
     
-    hitPlayerOrGroundEventAction(otherModel:IModel):void
+    /**
+     * Handles collision with the player or the ground
+     */
+    hitEventAction():void
     {
         if(this.state === "drop")
             this.state = "break";
+    }
+    
+    /**
+     * Any extra event checks specific to this model
+     */
+    protected extraEvents():void
+    {
+        super.extraEvents();
+        
+        if(this.hasHitGround())
+            this.hitEventAction();
     }
 }

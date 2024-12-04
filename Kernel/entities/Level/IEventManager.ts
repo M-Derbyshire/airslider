@@ -10,13 +10,13 @@ export default interface IEventManager {
      * if the event has occurred between them.
      * @param event The details of an event to be registered
      */
-    registerEvent(event:IEventDetails):void;
+    registerEvent(event:IEventRegistrationDetails):void;
     
     /**
      * Registers multiple event checks. See registerEvent method for more details
      * @param events The details of the events to be registered
      */
-    registerEventsArray(events:IEventDetails[]):void;
+    registerEventsArray(events:IEventRegistrationDetails[]):void;
     
     /**
      * Removes all the registered event checks
@@ -30,15 +30,16 @@ export default interface IEventManager {
 };
 
 
-
+/**
+ * Represents a "reaction" callback that should be called when an event has occured
+ */
+export type eventReactionCallback = (model1:IModel, model2:IModel)=>void;
 
 /**
- * Represents a function that tests for the occurence of an event between 2 models, and then may call the required 
- * response methods on those models.
- * 
- * The "ActionMethodName" parameters are names of methods on each class. Those methods can be called if the event occurs.
+ * Represents a function that tests for the occurence of an event, and then calls the "reaction" callback if the event 
+ * has occured.
  */
-export type eventCheck = (modelA:IModel, modelAActionMethodName:string, modelB:IModel, modelBActionMethodName:string)=>void;
+export type eventCheck = (modelA:IModel, modelB:IModel, reactionCallback:eventReactionCallback)=>void;
 
 
 
@@ -46,11 +47,11 @@ export type eventCheck = (modelA:IModel, modelAActionMethodName:string, modelB:I
 /**
  * The details that are needed to register an event with an IEventManager
  */
-export interface IEventDetails {
+export interface IEventRegistrationDetails {
     /**
      * The function that checks for this event (and then may call the action methods on the models involved)
      */
-    eventCheck:eventCheck;
+    check:eventCheck;
     
     /**
      * The first model class that is involved in this type of event
@@ -58,19 +59,14 @@ export interface IEventDetails {
     class1:new(...args:any[])=>IModel;
     
     /**
-     * The name of the method (on the first model type) that should be triggered when this event occurs
-     */
-    class1EventActionName:string;
-    
-    /**
      * The second model class that is involved in this type of event
      */
     class2:new(...args:any[])=>IModel;
     
     /**
-     * The name of the method (on the second model type) that should be triggered when this event occurs
+     * A callback that should be triggered when this event occurs
      */
-    class2EventActionName:string;
+    reactionCallback:eventReactionCallback;
 };
 
 
@@ -81,14 +77,13 @@ export interface IEventDetails {
  */
 export interface IEvent {
     /**
-     * The function that checks for this event (and then may call the action methods on the models involved)
+     * The function that checks for this event (and then may call the "reaction" callback, if the event occurs)
      */
-    eventCheck:eventCheck;
+    check:eventCheck;
     
     // ---------------------------------------------------------------------------
-    // Events happen between 2 types of model (E.g. a Ball class and a Bat class).
+    // Events can happen between 2 types of model (E.g. a Ball class and a Bat class).
     // You would want all balls to react to collisions with all bats.
-    // Certain methods will then be called on all models involved.
     // ---------------------------------------------------------------------------
     
     /**
@@ -97,17 +92,12 @@ export interface IEvent {
     class1Models:IModel[];
     
     /**
-     * The name of the method (on the first model type) that should be triggered when this event occurs
-     */
-    class1EventActionName:string;
-    
-    /**
      * All of the models that are instances of the second class involved in this type of event
      */
     class2Models:IModel[];
     
     /**
-     * The name of the method (on the second model type) that should be triggered when this event occurs
+     * A callback that should be triggered when this event occurs
      */
-    class2EventActionName:string;   
+    reactionCallback:eventReactionCallback;
 };

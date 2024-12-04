@@ -124,12 +124,6 @@ export default class Obstacle extends ASModel
     
     // Events -------------------------------------------------------------------
     
-    zCollisionEventAction(otherModel:IModel):void
-    {
-        //This method doesn't need to do anything.
-        //However, in order to register the event, this needs to exist
-    }
-    
     extraEvents():void
     {
         // Check for leaving the game area

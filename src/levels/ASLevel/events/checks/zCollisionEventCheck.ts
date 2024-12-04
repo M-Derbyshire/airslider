@@ -1,13 +1,13 @@
+import { eventCheck, eventReactionCallback } from "../../../../../Kernel/entities/Level/IEventManager";
 import IModel from "../../../../../Kernel/entities/Model/IModel";
 
 /**
  * Tests for a collision event on every axis (x, y, and z) at the same time
  * @param modelA The first model
- * @param modelAActionMethodName The name of the method that should be called on modelA, in response to this event
  * @param modelB The second model
- * @param modelBActionMethodName The name of the method that should be called on modelB, in response to this event
+ * @param reactionCallback callback that will be called if the event occurs
 */
-const zCollisionEventCheck = (modelA:IModel, modelAActionMethodName:string, modelB:IModel, modelBActionMethodName:string):void =>
+const zCollisionEventCheck:eventCheck = (modelA:IModel, modelB:IModel, reactionCallback:eventReactionCallback):void =>
 {
     const boxesA = modelA.getHitBoxes();
     const boxesB = modelB.getHitBoxes();
@@ -32,8 +32,7 @@ const zCollisionEventCheck = (modelA:IModel, modelAActionMethodName:string, mode
                 (boxA.y + boxA.height >= boxB.y) && (boxA.y <= boxB.y + boxB.height) // Y collision
             )
             {
-                (modelA[modelAActionMethodName as keyof typeof modelA] as Function)(modelB);
-                (modelB[modelBActionMethodName as keyof typeof modelB] as Function)(modelA);
+                reactionCallback(modelA, modelB);
                 return;
             }
         };

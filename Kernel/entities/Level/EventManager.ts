@@ -1,4 +1,4 @@
-import IEventManager, { IEvent, IEventDetails } from './IEventManager';
+import IEventManager, { IEvent, IEventRegistrationDetails } from './IEventManager';
 import IModel from '../Model/IModel';
 import Kernel from '../../Kernel';
 
@@ -20,7 +20,7 @@ export default class EventManager implements IEventManager
      * if the event has occurred between them.
      * @param event The details of an event to be registered
      */
-    registerEvent(event:IEventDetails):void
+    registerEvent(event:IEventRegistrationDetails):void
     {
         const class1Models:IModel[] = [];
         const class2Models:IModel[] = [];
@@ -31,11 +31,10 @@ export default class EventManager implements IEventManager
         });
         
         this._events.push({ 
-            eventCheck: event.eventCheck, 
-            class1Models, 
-            class1EventActionName: event.class1EventActionName, 
-            class2Models, 
-            class2EventActionName: event.class2EventActionName 
+            check: event.check, 
+            class1Models,
+            class2Models,
+            reactionCallback: event.reactionCallback
         });
     }
     
@@ -43,7 +42,7 @@ export default class EventManager implements IEventManager
      * Registers multiple event checks. See registerEvent method for more details
      * @param events The details of the events to be registered
      */
-    registerEventsArray(events:IEventDetails[]):void
+    registerEventsArray(events:IEventRegistrationDetails[]):void
     {
         events.forEach(e => this.registerEvent(e));
     }
@@ -69,7 +68,7 @@ export default class EventManager implements IEventManager
                 
                 event.class2Models.forEach((model2) => {
                     if(model1.active && model2.active)
-                        event.eventCheck(model1, event.class1EventActionName, model2, event.class2EventActionName);
+                        event.check(model1, model2, event.reactionCallback);
                 });
                 
             });
