@@ -26,8 +26,8 @@ export default class EventManager implements IEventManager
         const class2Models:IModel[] = [];
         
         Kernel.getInstance().loadedModels.forEach(model => {
-            if(model.constructor.name === event.class1.name) class1Models.push(model);
-            if(model.constructor.name === event.class2.name) class2Models.push(model);
+            if(model.constructor === event.class1) class1Models.push(model);
+            if(model.constructor === event.class2) class2Models.push(model);
         });
         
         this._events.push({ 
