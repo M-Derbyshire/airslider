@@ -25,8 +25,10 @@ const standardModelEvents:IEventRegistrationDetails[] = [
         class1: ElectricHornet,
         class2: Tarian,
         reactionCallback: (eh:ElectricHornet, t:Tarian) => {
-            eh.zCollisionEventAction(t);
-            t.zCollisionEventAction(eh);
+            if(eh.isAttacking) {
+                eh.zCollisionEventAction();
+                t.zCollisionEventAction(eh);
+            }
         }
     },
     { 
@@ -34,7 +36,7 @@ const standardModelEvents:IEventRegistrationDetails[] = [
         class1: NeonPidgeon,
         class2: Tarian,
         reactionCallback: (np:NeonPidgeon, t:Tarian) => {
-            if(np.state === "falling") {
+            if(np.isAttacking()) {
                 np.hitEventAction();
                 t.zCollisionEventAction(np);
             }

@@ -49,12 +49,20 @@ export default class Monster extends ASModel {
     /**
      * Moves on to the next action, or loops back round to the first
      */
-    nextAction():void
+    protected nextAction():void
     {
         if(this.currentAction === this.actions.length - 1)
             this.currentAction = 0;
         else
             this.currentAction++;
+    }
+    
+    /**
+     * Is this monster currently attacking?
+     */
+    isAttacking():boolean
+    {
+        return false;
     }
     
     act():void

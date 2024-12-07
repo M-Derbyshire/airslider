@@ -179,6 +179,13 @@ export default class NeonPidgeon extends Monster {
     }
     
     /**
+     * Is this monster currently attacking?
+     */
+    isAttacking():boolean {
+        return (this.state === "falling");
+    }
+    
+    /**
      * Gets the current frame index of the flapping animation. 
      * This is used by the PidgeonSoundController to time the flapping sound effect.
      * @returns the current frame index of this pidgeon's flapping animation

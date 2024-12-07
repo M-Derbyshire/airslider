@@ -151,6 +151,13 @@ export default class ElectricHornet extends Monster {
     }
     
     /**
+     * Is this monster currently attacking?
+     */
+    isAttacking():boolean {
+        return this.currentAction === 1;
+    }
+    
+    /**
      * Should be called once the monster has left the screen on exiting
      */
     private _handleMonsterExitingScreen():void
@@ -247,11 +254,9 @@ export default class ElectricHornet extends Monster {
     
     // Events------------------------------------------------------
 
-    zCollisionEventAction(otherModel:IModel):void
+    zCollisionEventAction():void
     {
-        // If we're dropping, start rising back up
-        if(this.currentAction === 1)
-            this.nextAction();
+        this.nextAction();
     }
     
     extraEvents():void
