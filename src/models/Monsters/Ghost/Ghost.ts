@@ -109,6 +109,13 @@ export default class Ghost extends Monster {
         this.damageDealt = this.damageDealtOrig;
     }
     
+    /**
+     * Is this monster currently attacking?
+     */
+    isAttacking():boolean {
+        return true;
+    }
+    
     //Entering, Exiting and reseting-----------------------------------------
     
     enter():void
