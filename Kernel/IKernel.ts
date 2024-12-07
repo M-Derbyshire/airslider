@@ -4,7 +4,7 @@ import IGameEngine from "./engines/GameEngine/IGameEngine";
 import IGraphicEngine from "./engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "./engines/SoundEngine/ISoundEngine";
 import ISettings from "../settings/ISettings";
-import IHelpers from "./helpers/IHelpers";
+import IUtilContainer from "./utils/IUtilContainer";
 
 /**
  * This will be a singleton that controls the entire game, and provides other entities with 
@@ -60,9 +60,9 @@ export default interface IKernel {
     readonly timeSinceLastFrameMS:number;
     
     /**
-     * Provides a number of "helper" objects, that each calculate and/or provide useful values
+     * Provides a number of utility objects
      */
-    readonly helpers:IHelpers;
+    readonly utils:IUtilContainer;
     
     /**
      * The current level that is being ran

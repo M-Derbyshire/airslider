@@ -141,14 +141,14 @@ export default class Camera implements ICamera {
      */
     isOnCamera(drawSpaceX:number, drawSpaceY:number, widthUnits:number, heightUnits:number, zPosition:number = 0):boolean
     {
-        const helpers = Kernel.getInstance().helpers;
+        const utils = Kernel.getInstance().utils;
         
-        const unscaledX = helpers.unit.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this._positions.canvas.x;
-        const unscaledY = helpers.unit.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this._positions.canvas.y;
-        const unscaledWidth = helpers.unit.xUnit(widthUnits);
-        const unscaledHeight = helpers.unit.yUnit(heightUnits);
+        const unscaledX = utils.unit.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this._positions.canvas.x;
+        const unscaledY = utils.unit.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this._positions.canvas.y;
+        const unscaledWidth = utils.unit.xUnit(widthUnits);
+        const unscaledHeight = utils.unit.yUnit(heightUnits);
         
-        const scaledValues = helpers.zCalc.getDrawValues({
+        const scaledValues = utils.zCalc.getDrawValues({
             x: unscaledX,
             y: unscaledY,
             width: unscaledWidth,

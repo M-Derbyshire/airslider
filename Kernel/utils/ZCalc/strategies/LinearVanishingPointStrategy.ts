@@ -238,10 +238,10 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
         
         const kernel = Kernel.getInstance();
         
-        const vanishPointPixelsX = kernel.helpers.unit.xUnit(this._vanishingPointX);
+        const vanishPointPixelsX = kernel.utils.unit.xUnit(this._vanishingPointX);
         const positionedVanishPointPixelsX = kernel.graphicEngine.camera.canvasPositionX + vanishPointPixelsX;
         
-        const vanishPointPixelsY = kernel.helpers.unit.yUnit(this._vanishingPointY);
+        const vanishPointPixelsY = kernel.utils.unit.yUnit(this._vanishingPointY);
         const positionedVanishPointPixelsY = kernel.graphicEngine.camera.canvasPositionY + vanishPointPixelsY;
         
         return {

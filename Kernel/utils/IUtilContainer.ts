@@ -3,9 +3,9 @@ import IUnitHelper from "./IUnitHelper";
 import IZCalc from "./ZCalc/IZCalc";
 
 /**
- * Provides a number of "helper" objects, that each calculate and/or provide useful values
+ * Provides a number of utility objects
  */
-export default interface IHelpers {
+export default interface IUtilContainer {
     time:ITimeHelper;
     unit:IUnitHelper;
     zCalc:IZCalc;

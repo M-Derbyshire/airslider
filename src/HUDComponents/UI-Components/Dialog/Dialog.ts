@@ -126,7 +126,7 @@ export default class Dialog extends ASHUDComponent
             height: this.height + (this._borderY * 2)
         });
         
-        const cornerRadius = kernel.helpers.unit.xUnit(this._cornerRadiusModifier);
+        const cornerRadius = kernel.utils.unit.xUnit(this._cornerRadiusModifier);
         
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, cornerRadius);
@@ -150,7 +150,7 @@ export default class Dialog extends ASHUDComponent
             height: this.height
         });
         
-        const cornerRadius = kernel.helpers.unit.xUnit(this._cornerRadiusModifier);
+        const cornerRadius = kernel.utils.unit.xUnit(this._cornerRadiusModifier);
         
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, cornerRadius);

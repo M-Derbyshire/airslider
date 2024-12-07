@@ -83,7 +83,7 @@ export default class HealthDisplay extends ASHUDComponent
         const playerModelIndex = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
         const health = (kernel.loadedModels[playerModelIndex] as unknown as Tarian).health;
         
-		const radiusModifierPixels = kernel.helpers.unit.xUnit(this._cornerRadiusModifier);
+		const radiusModifierPixels = kernel.utils.unit.xUnit(this._cornerRadiusModifier);
         
         // Determine the background color, based on the health
         let color:string;

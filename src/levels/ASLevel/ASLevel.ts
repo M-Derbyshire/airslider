@@ -19,8 +19,8 @@ import ILevel from '../../../Kernel/entities/Level/ILevel';
 import RacerManager from './RacerManager';
 import Kernel from '../../../Kernel/Kernel';
 import ASControlsInitialiser from './ASControlsInitialiser';
-import IZCalcStrategy from '../../../Kernel/helpers/ZCalc/strategies/IZCalcStrategy';
-import LinearVanishingPointStrategy from '../../../Kernel/helpers/ZCalc/strategies/LinearVanishingPointStrategy';
+import IZCalcStrategy from '../../../Kernel/utils/ZCalc/strategies/IZCalcStrategy';
+import LinearVanishingPointStrategy from '../../../Kernel/utils/ZCalc/strategies/LinearVanishingPointStrategy';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
 import MusicManager from './MusicManager';
@@ -228,7 +228,7 @@ export default class ASLevel extends Level
             kernel.unitsWithinCameraY / 2
         );
         
-        kernel.helpers.zCalc.setStrategy(this.zCalcStrategy);
+        kernel.utils.zCalc.setStrategy(this.zCalcStrategy);
         
         this.leftEdge = 0;
         this.rightEdge = kernel.unitsWithinCameraX;
@@ -262,7 +262,7 @@ export default class ASLevel extends Level
     {
         super.act();
         
-        const timeHelpers = Kernel.getInstance().helpers.time;
+        const timeHelper = Kernel.getInstance().utils.time;
         
         // Keeps level speed consistent, via the fps
         this._updateLevelSpeed();
@@ -277,7 +277,7 @@ export default class ASLevel extends Level
         this._levelOpening();
         
         // Display the retry-level dialog, if required
-        const currentMs = timeHelpers.getTotalMilliseconds();
+        const currentMs = timeHelper.getTotalMilliseconds();
         if(this.lost && currentMs > this.stoppedForlossAtMS + this._retryLevelDialogDelayMS)
         {
             (this.HUD as MainHUD).displayRetryLevelDialog();
@@ -308,9 +308,9 @@ export default class ASLevel extends Level
      */
     handlePlayerLoss():void
     {
-        const timeHelpers = Kernel.getInstance().helpers.time;
+        const timeHelper = Kernel.getInstance().utils.time;
         
-        this.stoppedForlossAtMS = timeHelpers.getTotalMilliseconds();
+        this.stoppedForlossAtMS = timeHelper.getTotalMilliseconds();
         this._stopLevel();
     }
     
@@ -377,7 +377,7 @@ export default class ASLevel extends Level
         endCallback?:()=>void
     ) {
         if(this.levelMoving) {
-            const currentMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+            const currentMS = Kernel.getInstance().utils.time.getTotalMilliseconds();
         
             if(currentMS >= msStart && currentMS <= msEnd) 
             {
@@ -411,7 +411,7 @@ export default class ASLevel extends Level
     {
         const kernel = Kernel.getInstance();
         
-        if(kernel.helpers.time.getTotalMilliseconds() >= msStart) {
+        if(kernel.utils.time.getTotalMilliseconds() >= msStart) {
             if(!this._activeSections.includes(this._closingSectionId)) {
                 this._activeSections.push(this._closingSectionId);
                 
@@ -472,12 +472,12 @@ export default class ASLevel extends Level
             
             if(this.levelSpeedRaw < this.maxLevelSpeedRaw)
             {
-                this.levelSpeedRaw += kernel.helpers.zCalc.speed(this.levelSpeedAccl, kernel.fps);
+                this.levelSpeedRaw += kernel.utils.zCalc.speed(this.levelSpeedAccl, kernel.fps);
             } else {
                 this.levelSpeedRaw = this.maxLevelSpeedRaw;
             }
             
-            this.levelSpeed = kernel.helpers.zCalc.speed(this.levelSpeedRaw, kernel.fps);
+            this.levelSpeed = kernel.utils.zCalc.speed(this.levelSpeedRaw, kernel.fps);
         }
         else
         {
@@ -537,7 +537,7 @@ export default class ASLevel extends Level
      */
     private _levelClosing(closingStartMS:number)
     {
-        const currentMs = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+        const currentMs = Kernel.getInstance().utils.time.getTotalMilliseconds();
         
         if(!this._finishSign.active)
         {

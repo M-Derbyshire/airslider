@@ -160,7 +160,7 @@ export default class SignDisplay extends ASModel
         else
             changeWaitMS = this._lightChangeWaitMS;
         
-        const totalActiveMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+        const totalActiveMS = Kernel.getInstance().utils.time.getTotalMilliseconds();
         
         return (
             this.state !== "finish" && 
@@ -175,7 +175,7 @@ export default class SignDisplay extends ASModel
     {
         const kernel = Kernel.getInstance();
         
-        this._lastLightChangeMS = kernel.helpers.time.getTotalMilliseconds();
+        this._lastLightChangeMS = kernel.utils.time.getTotalMilliseconds();
         
         switch(this.state)
         {

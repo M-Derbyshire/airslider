@@ -137,7 +137,7 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     getStaticDrawPositionsAndDimensions(unitValues:Partial<IDrawPositions&IDrawDimensions>):IDrawPositions&IDrawDimensions
     {
-        const helpers = Kernel.getInstance().helpers;
+        const unitHelper = Kernel.getInstance().utils.unit;
         
         const { x, y, width, height } = unitValues;
         
@@ -146,10 +146,10 @@ export default class GraphicEngine implements IGraphicEngine {
         
         const pixelValues = { x: 0, y: 0, width: 0, height: 0 };
         
-        if(this._isSetNumber(x)) pixelValues.x = cameraX + helpers.unit.xUnit(x);
-        if(this._isSetNumber(y)) pixelValues.y = cameraY + helpers.unit.yUnit(y);
-        if(this._isSetNumber(width)) pixelValues.width = helpers.unit.xUnit(width);
-        if(this._isSetNumber(height)) pixelValues.height = helpers.unit.yUnit(height)
+        if(this._isSetNumber(x)) pixelValues.x = cameraX + unitHelper.xUnit(x);
+        if(this._isSetNumber(y)) pixelValues.y = cameraY + unitHelper.yUnit(y);
+        if(this._isSetNumber(width)) pixelValues.width = unitHelper.xUnit(width);
+        if(this._isSetNumber(height)) pixelValues.height = unitHelper.yUnit(height)
         
         return pixelValues;
     }
@@ -184,7 +184,7 @@ export default class GraphicEngine implements IGraphicEngine {
         showNegative = false
     ):IDrawPositions&IDrawDimensions
     {
-        const zCalc = Kernel.getInstance().helpers.zCalc;
+        const zCalc = Kernel.getInstance().utils.zCalc;
         
         const unscaledValues = this.getUnscaledDrawPositionsAndDimensions(unitValues);
         
@@ -273,9 +273,9 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     private _handleCanvasSizeChange():void
     {
-        const unitHelpers = Kernel.getInstance().helpers.unit;
+        const unitHelper = Kernel.getInstance().utils.unit;
         
         this.camera.setCameraSize();
-        unitHelpers.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
+        unitHelper.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
     }
 }

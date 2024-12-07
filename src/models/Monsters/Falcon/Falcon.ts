@@ -151,7 +151,7 @@ export default class Falcon extends Monster {
     {
         super.prepare();
         
-        const timeHelpers = Kernel.getInstance().helpers.time;
+        const timeHelper = Kernel.getInstance().utils.time;
         
         this.actions = [
             this.stalking,
@@ -166,8 +166,8 @@ export default class Falcon extends Monster {
         this.startY = 75;
         this.startX = this.levelLeftEdge - this.offScreenUnits;
         this.startZ = this.playerModel.z;
-        this.dropWaitOffset = timeHelpers.secondsToFrames(5);
-        this.dropWaitRange = timeHelpers.secondsToFrames(5);
+        this.dropWaitOffset = timeHelper.secondsToFrames(5);
+        this.dropWaitRange = timeHelper.secondsToFrames(5);
         
         this.overlapping = false;
         this.lastSwoop = -1;
@@ -194,8 +194,8 @@ export default class Falcon extends Monster {
         {
             this.moveRight(this.enterXSpeed);
         } else {
-            const timeHelpers = Kernel.getInstance().helpers.time;
-            this.lastSwoop = timeHelpers.getTotalMilliseconds();
+            const timeHelper = Kernel.getInstance().utils.time;
+            this.lastSwoop = timeHelper.getTotalMilliseconds();
             this.entering = false;
         }
     }
@@ -228,8 +228,8 @@ export default class Falcon extends Monster {
         //keep monster centered above player
         this.x = this.playerModel.x + (this.playerModel.width / 2) - (this.width / 2);
         
-        const timeHelpers = Kernel.getInstance().helpers.time;
-        if(timeHelpers.getTotalMilliseconds() - this.lastSwoop >= this.swoopWait)
+        const timeHelper = Kernel.getInstance().utils.time;
+        if(timeHelper.getTotalMilliseconds() - this.lastSwoop >= this.swoopWait)
         {
             this.swoopWait = (Math.random() * 2000) + 500; //between 0.5 and 2 seconds
             // will set the lastSwoop time after swooping has finished (see reposition())
@@ -328,16 +328,16 @@ export default class Falcon extends Monster {
 	
     reposition():void
     {
-        const helpers = Kernel.getInstance().helpers;
+        const utils = Kernel.getInstance().utils;
         
         //get player center and monster center; also pre-calculate the real speed of the monster
         const playerCenter = this.playerModel.x + (this.playerModel.width / 2)
         const monsterCenter = this.x + (this.width / 2);
-        const preCalculatedMonsterSpeed = helpers.unit.xSpeed(this.xSpeed);
+        const preCalculatedMonsterSpeed = utils.unit.xSpeed(this.xSpeed);
         
         if(this._isFalconCenteredAbovePlayer(playerCenter, monsterCenter, preCalculatedMonsterSpeed))
         {
-            this.lastSwoop = helpers.time.getTotalMilliseconds();
+            this.lastSwoop = utils.time.getTotalMilliseconds();
             this.nextAction();
         } else {
             this._moveFalconToCenterAbovePlayer(playerCenter, monsterCenter);

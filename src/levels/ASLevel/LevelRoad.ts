@@ -27,11 +27,11 @@ export default class LevelRoad
         
         const kernel = Kernel.getInstance();
         const level = kernel.level as ASLevel;
-        const unitHelpers = kernel.helpers.unit;
+        const unitHelper = kernel.utils.unit;
         const camera = kernel.graphicEngine.camera;
         
-        const vanishPointX = camera.canvasPositionX + unitHelpers.xUnit(level.vanishingPointX);
-        const vanishPointY = camera.canvasPositionY + unitHelpers.yUnit(level.vanishingPointY);
+        const vanishPointX = camera.canvasPositionX + unitHelper.xUnit(level.vanishingPointX);
+        const vanishPointY = camera.canvasPositionY + unitHelper.yUnit(level.vanishingPointY);
         
         const { x, y, width, height } = kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({
             x: 0,

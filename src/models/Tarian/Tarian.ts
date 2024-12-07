@@ -279,7 +279,7 @@ export default class Tarian extends ASModel {
         if(this.lost)
         {
             if(!this._lostAtTimeMS)
-                this._lostAtTimeMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+                this._lostAtTimeMS = Kernel.getInstance().utils.time.getTotalMilliseconds();
             
             this._handleOnScreenAfterLoss();
             this._handleLeavingScreenAfterLoss();
@@ -291,7 +291,7 @@ export default class Tarian extends ASModel {
      */
 	private _handleOnScreenAfterLoss():void
 	{
-        const totalActiveMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+        const totalActiveMS = Kernel.getInstance().utils.time.getTotalMilliseconds();
         
         if(
             this.z >= -5 && 
@@ -330,7 +330,7 @@ export default class Tarian extends ASModel {
      */
 	private _setXSpeedBasedOnAcceleration():void
 	{
-        const totalActiveMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+        const totalActiveMS = Kernel.getInstance().utils.time.getTotalMilliseconds();
         
 		if(totalActiveMS - this._lastSpeedChange >= 100) //1 tenth of a second
         {

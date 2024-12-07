@@ -288,8 +288,8 @@ export default class Model implements IModel
      */
     moveLeft(speed:number):void
     {
-        const unitHelpers = Kernel.getInstance().helpers.unit;
-        this.x -= unitHelpers.xSpeed(speed);
+        const unitHelper = Kernel.getInstance().utils.unit;
+        this.x -= unitHelper.xSpeed(speed);
     }
     
     /**
@@ -298,8 +298,8 @@ export default class Model implements IModel
      */
     moveRight(speed:number):void
     {
-        const unitHelpers = Kernel.getInstance().helpers.unit;
-        this.x += unitHelpers.xSpeed(speed);
+        const unitHelper = Kernel.getInstance().utils.unit;
+        this.x += unitHelper.xSpeed(speed);
     }
     
     /**
@@ -308,8 +308,8 @@ export default class Model implements IModel
      */
     moveUp(speed:number):void
     {
-        const unitHelpers = Kernel.getInstance().helpers.unit;
-        this.y -= unitHelpers.ySpeed(speed);
+        const unitHelper = Kernel.getInstance().utils.unit;
+        this.y -= unitHelper.ySpeed(speed);
     }
     
     /**
@@ -318,8 +318,8 @@ export default class Model implements IModel
      */
     moveDown(speed:number):void
     {
-        const unitHelpers = Kernel.getInstance().helpers.unit;
-        this.y += unitHelpers.ySpeed(speed);
+        const unitHelper = Kernel.getInstance().utils.unit;
+        this.y += unitHelper.ySpeed(speed);
     }
     
     /**
@@ -329,7 +329,7 @@ export default class Model implements IModel
     moveIn(speed:number):void
     {
         const kernel = Kernel.getInstance();
-        const zCalc = kernel.helpers.zCalc;
+        const zCalc = kernel.utils.zCalc;
         
         this.z += zCalc.speed(speed, kernel.fps);
     }
@@ -341,7 +341,7 @@ export default class Model implements IModel
     moveOut(speed:number):void
     {
         const kernel = Kernel.getInstance();
-        const zCalc = kernel.helpers.zCalc;
+        const zCalc = kernel.utils.zCalc;
         
         this.z -= zCalc.speed(speed, kernel.fps);
     }

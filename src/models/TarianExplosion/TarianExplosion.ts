@@ -101,8 +101,8 @@ export default class TarianExplosion extends ASModel {
     {
         const kernel = Kernel.getInstance();
         
-        this._animFrame.width += kernel.helpers.unit.xSpeed(this._resizeSpeedX);
-        this._animFrame.height += kernel.helpers.unit.ySpeed(this._resizeSpeedY);
+        this._animFrame.width += kernel.utils.unit.xSpeed(this._resizeSpeedX);
+        this._animFrame.height += kernel.utils.unit.ySpeed(this._resizeSpeedY);
         
         if(this._animFrame.width > this._maxWidth || this._animFrame.height > this._maxHeight)
         {

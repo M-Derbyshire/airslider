@@ -230,10 +230,10 @@ export default class NeonPidgeon extends Monster {
         {
             this.moveLeft(this.enterXSpeed);
         } else {
-            const timeHelpers = Kernel.getInstance().helpers.time;
+            const timeHelper = Kernel.getInstance().utils.time;
             
             this.entering = false;
-            this._nextDrop = timeHelpers.getTotalMilliseconds() + this.initialDropWait;
+            this._nextDrop = timeHelper.getTotalMilliseconds() + this.initialDropWait;
         }
     }
     
@@ -329,7 +329,7 @@ export default class NeonPidgeon extends Monster {
      */
 	private _getNextDropTime():number
 	{
-        const totalActiveMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+        const totalActiveMS = Kernel.getInstance().utils.time.getTotalMilliseconds();
         
 		return totalActiveMS + this.dropWaitOffset + Math.floor(Math.random() * this.dropWaitRange);
 	}
@@ -340,7 +340,7 @@ export default class NeonPidgeon extends Monster {
      */
 	private _monsterShouldDrop():boolean
 	{
-        const totalActiveMS = Kernel.getInstance().helpers.time.getTotalMilliseconds();
+        const totalActiveMS = Kernel.getInstance().utils.time.getTotalMilliseconds();
         
 		return (totalActiveMS >= this._nextDrop && this.overlapping);
 	}

@@ -2,16 +2,16 @@ import AssetHandler from './AssetHandler/AssetHandler';
 import GameEngine from './engines/GameEngine/GameEngine';
 import GraphicEngine from './engines/GraphicEngine/GraphicEngine';
 import SoundEngine from './engines/SoundEngine/SoundEngine';
-import TimeHelper from './helpers/TimeHelper';
-import UnitHelper from './helpers/UnitHelper';
-import ZCalc from './helpers/ZCalc/ZCalc';
+import TimeHelper from './utils/TimeHelper';
+import UnitHelper from './utils/UnitHelper';
+import ZCalc from './utils/ZCalc/ZCalc';
 import Camera from './engines/GraphicEngine/Camera';
 import FrameManager from './engines/GraphicEngine/FrameManager';
 import fonts from '../src/fonts/fonts';
 import IKernel, { KernelStatus, ILoadedLevel, ILevelEngines } from './IKernel';
 import ISettings from '../settings/ISettings';
 import IAssetHandler from './AssetHandler/IAssetHandler';
-import IHelpers from './helpers/IHelpers';
+import IUtilContainer from './utils/IUtilContainer';
 import ILevel from './entities/Level/ILevel';
 import IModel from './entities/Model/IModel';
 import ICamera from './engines/GraphicEngine/ICamera';
@@ -21,7 +21,7 @@ import ErrorHandler from './ErrorHandler/ErrorHandler';
 import ModelAnimationsManager from './entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 import EventManager from './entities/Level/EventManager';
 import PointerEventManager from './entities/Level/PointerEventManager';
-import NoScalingStrategy from './helpers/ZCalc/strategies/NoScalingStrategy';
+import NoScalingStrategy from './utils/ZCalc/strategies/NoScalingStrategy';
 
 /**
  * This will be a singleton that controls the entire game, and provides other entities with 
@@ -91,7 +91,7 @@ export default class Kernel implements IKernel {
     
     private _assetHandler:IAssetHandler; // Loads and manages assets
     
-    private _helpers:IHelpers; // Provides a number of "helper" objects, that each calculate and/or provide useful values
+    private _utils:IUtilContainer; // Provides a number of utility objects
     
     private _currentLevelShouldBeUnloaded:boolean; // If this is true, the current level will get unloaded after the current frame has been drawn
     
@@ -215,11 +215,11 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Provides a number of "helper" objects, that each calculate and/or provide useful values
+     * Provides a number of utility objects
      */
-    get helpers() 
+    get utils() 
     {
-        return this._helpers;
+        return this._utils;
     }
     
     /**
@@ -500,7 +500,7 @@ export default class Kernel implements IKernel {
     {
         this._setupAutoPause();
         
-        this._helpers = {
+        this._utils = {
             zCalc: new ZCalc(new NoScalingStrategy()),
             time: new TimeHelper(),
             unit: new UnitHelper(this.unitsWithinCameraX, this.unitsWithinCameraY)
