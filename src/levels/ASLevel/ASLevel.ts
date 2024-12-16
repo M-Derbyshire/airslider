@@ -149,8 +149,10 @@ export default class ASLevel extends Level
         this._signStartingZPosition = 90;
         
         const musicDir = "/levels/ASLevel/music";
-        this.musicFilePaths = [];
-        this.musicVolume = 1;
+        this.musicFilePaths = [
+            `${musicDir}/airslider_track_1.mp3`
+        ];
+        this.musicVolume = 0.5;
         this._musicManager = new MusicManager();
         
         this._nextLevelDialogDelayMS = 2000;
