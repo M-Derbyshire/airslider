@@ -25,7 +25,7 @@ const standardModelEvents:IEventRegistrationDetails[] = [
         class1: ElectricHornet,
         class2: Tarian,
         reactionCallback: (eh:ElectricHornet, t:Tarian) => {
-            if(eh.isAttacking) {
+            if(eh.isAttacking()) {
                 eh.zCollisionEventAction();
                 t.zCollisionEventAction(eh);
             }

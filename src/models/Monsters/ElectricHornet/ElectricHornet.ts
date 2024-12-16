@@ -262,7 +262,7 @@ export default class ElectricHornet extends Monster {
     extraEvents():void
     {
         // Check for missing the player on an attack
-        if(this.currentAction === 1 && (this.y + this.height) > (this.playerModel.y + 100))
+        if(this.isAttacking() && (this.y + this.height) > (this.playerModel.y + 100))
             this.nextAction();
     }
 }
