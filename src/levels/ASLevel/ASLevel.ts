@@ -150,7 +150,8 @@ export default class ASLevel extends Level
         
         const musicDir = "/levels/ASLevel/music";
         this.musicFilePaths = [
-            `${musicDir}/airslider_track_1.mp3`
+            `${musicDir}/airslider_track_1.mp3`,
+            `${musicDir}/airslider_track_2.mp3`
         ];
         this.musicVolume = 0.5;
         this._musicManager = new MusicManager();
