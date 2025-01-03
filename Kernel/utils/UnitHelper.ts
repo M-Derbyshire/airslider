@@ -89,6 +89,16 @@ export default class UnitHelper implements IUnitHelper
     }
     
     /**
+     * Converts a speed on the z axis into a value that remains consistent, regardless of a changing FPS
+     * @param speed the z speed
+     * @returns a more consistent value to be used as the actual speed
+     */
+    zSpeed(speed:number):number
+    {
+        return this._consistentSpeed(speed);
+    }
+    
+    /**
      * Converts a given speed value into a value that will remain consistent, regardless of changes in the FPS
      * @param speed the speed to convert into a consistent value
      * @returns the consistent speed value

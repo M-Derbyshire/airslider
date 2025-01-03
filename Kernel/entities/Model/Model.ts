@@ -329,9 +329,8 @@ export default class Model implements IModel
     moveIn(speed:number):void
     {
         const kernel = Kernel.getInstance();
-        const zCalc = kernel.utils.zCalc;
         
-        this.z += zCalc.speed(speed, kernel.fps);
+        this.z += kernel.utils.unit.zSpeed(speed);
     }
     
     /**
@@ -341,8 +340,7 @@ export default class Model implements IModel
     moveOut(speed:number):void
     {
         const kernel = Kernel.getInstance();
-        const zCalc = kernel.utils.zCalc;
         
-        this.z -= zCalc.speed(speed, kernel.fps);
+        this.z -= kernel.utils.unit.zSpeed(speed);
     }
 }
