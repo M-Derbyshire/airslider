@@ -69,42 +69,12 @@ export default class UnitHelper implements IUnitHelper
     }
     
     /**
-     * Converts a speed on the x axis into a value that remains consistent, regardless of a changing FPS
-     * @param speed the speed to convert into a consistent value
+     * Converts a speed value into another value that remains consistent, regardless of a changing FPS
+     * @param speed the original speed
      * @returns a more consistent value to be used as the actual speed
      */
-    xSpeed(speed:number):number
+    speed(speed:number):number
     {
-        return this._consistentSpeed(speed);
-    }
-
-    /**
-     * Converts a speed on the y axis into a value that remains consistent, regardless of a changing FPS
-     * @param speed the speed to convert into a consistent value
-     * @returns a more consistent value to be used as the actual speed
-     */
-    ySpeed(speed:number):number
-    {
-        return this._consistentSpeed(speed);
-    }
-    
-    /**
-     * Converts a speed on the z axis into a value that remains consistent, regardless of a changing FPS
-     * @param speed the z speed
-     * @returns a more consistent value to be used as the actual speed
-     */
-    zSpeed(speed:number):number
-    {
-        return this._consistentSpeed(speed);
-    }
-    
-    /**
-     * Converts a given speed value into a value that will remain consistent, regardless of changes in the FPS
-     * @param speed the speed to convert into a consistent value
-     * @returns the consistent speed value
-     */
-    private _consistentSpeed(speed:number):number
-    {
-        return speed / Kernel.getInstance().fps; 
+        return speed / Kernel.getInstance().fps;
     }
 };

@@ -333,7 +333,7 @@ export default class Falcon extends Monster {
         //get player center and monster center; also pre-calculate the real speed of the monster
         const playerCenter = this.playerModel.x + (this.playerModel.width / 2)
         const monsterCenter = this.x + (this.width / 2);
-        const preCalculatedMonsterSpeed = utils.unit.xSpeed(this.xSpeed);
+        const preCalculatedMonsterSpeed = utils.unit.speed(this.xSpeed);
         
         if(this._isFalconCenteredAbovePlayer(playerCenter, monsterCenter, preCalculatedMonsterSpeed))
         {

@@ -476,12 +476,12 @@ export default class ASLevel extends Level
             
             if(this.levelSpeedRaw < this.maxLevelSpeedRaw)
             {
-                this.levelSpeedRaw += kernel.utils.unit.zSpeed(this.levelSpeedAccl);
+                this.levelSpeedRaw += kernel.utils.unit.speed(this.levelSpeedAccl);
             } else {
                 this.levelSpeedRaw = this.maxLevelSpeedRaw;
             }
             
-            this.levelSpeed = kernel.utils.unit.zSpeed(this.levelSpeedRaw);
+            this.levelSpeed = kernel.utils.unit.speed(this.levelSpeedRaw);
         }
         else
         {

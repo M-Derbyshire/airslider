@@ -98,7 +98,7 @@ export default class Obstacle extends ASModel
         const level = kernel.level as ASLevel;
         
 		if(!level.levelMoving)
-            this.zSpeed = -(kernel.utils.unit.zSpeed(level.maxLevelSpeedRaw) / 1.5);
+            this.zSpeed = -(kernel.utils.unit.speed(level.maxLevelSpeedRaw) / 1.5);
         else
             this.zSpeed = level.levelSpeed / 1.5;
 	}

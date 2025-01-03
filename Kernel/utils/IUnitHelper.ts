@@ -25,23 +25,9 @@ export default interface IUnitHelper {
     yUnit(unitVal:number):number;
     
     /**
-     * Converts a speed on the x axis into a value that remains consistent, regardless of a changing FPS
-     * @param speed the x speed
+     * Converts a speed value into another value that remains consistent, regardless of a changing FPS
+     * @param speed the original speed
      * @returns a more consistent value to be used as the actual speed
      */
-    xSpeed(speed:number):number;
-    
-    /**
-     * Converts a speed on the y axis into a value that remains consistent, regardless of a changing FPS
-     * @param speed the y speed
-     * @returns a more consistent value to be used as the actual speed
-     */
-    ySpeed(speed:number):number;
-    
-    /**
-     * Converts a speed on the z axis into a value that remains consistent, regardless of a changing FPS
-     * @param speed the z speed
-     * @returns a more consistent value to be used as the actual speed
-     */
-    zSpeed(speed:number):number;
+    speed(speed:number):number;
 };
