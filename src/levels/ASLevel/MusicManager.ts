@@ -1,4 +1,5 @@
 import Kernel from "../../../Kernel/Kernel";
+import TimeHelper from "../../../Kernel/utils/TimeHelper";
 import { CentralStateKey } from "../CentralStateKey";
 
 /**
@@ -143,7 +144,7 @@ export default class MusicManager
         // We need to figure out how much to fade the volume by, based on the FPS, to 
         // make sure it's done at the speed we want (we recalculate this every frame, in
         // case the FPS changes).
-        const frameCount = kernel.utils.time.secondsToFrames(this._musicFadeSpeedSeconds);
+        const frameCount = TimeHelper.secondsToFrames(this._musicFadeSpeedSeconds);
         const volumeChange = this._musicMaxVolume / frameCount;
         
         // Fade in after the opening + delay

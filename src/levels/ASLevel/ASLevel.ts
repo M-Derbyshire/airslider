@@ -267,8 +267,6 @@ export default class ASLevel extends Level
     {
         super.act();
         
-        const timeHelper = Kernel.getInstance().utils.time;
-        
         // Keeps level speed consistent, via the fps
         this._updateLevelSpeed();
         
@@ -282,7 +280,7 @@ export default class ASLevel extends Level
         this._levelOpening();
         
         // Display the retry-level dialog, if required
-        const currentMs = timeHelper.getTotalMilliseconds();
+        const currentMs = Kernel.getInstance().totalLevelActiveMilliseconds;
         if(this.lost && currentMs > this.stoppedForlossAtMS + this._retryLevelDialogDelayMS)
         {
             (this.HUD as MainHUD).displayRetryLevelDialog();
@@ -313,9 +311,7 @@ export default class ASLevel extends Level
      */
     handlePlayerLoss():void
     {
-        const timeHelper = Kernel.getInstance().utils.time;
-        
-        this.stoppedForlossAtMS = timeHelper.getTotalMilliseconds();
+        this.stoppedForlossAtMS = Kernel.getInstance().totalLevelActiveMilliseconds;
         this._stopLevel();
     }
     
@@ -382,7 +378,7 @@ export default class ASLevel extends Level
         endCallback?:()=>void
     ) {
         if(this.levelMoving) {
-            const currentMS = Kernel.getInstance().utils.time.getTotalMilliseconds();
+            const currentMS = Kernel.getInstance().totalLevelActiveMilliseconds;
         
             if(currentMS >= msStart && currentMS <= msEnd) 
             {
@@ -416,7 +412,7 @@ export default class ASLevel extends Level
     {
         const kernel = Kernel.getInstance();
         
-        if(kernel.utils.time.getTotalMilliseconds() >= msStart) {
+        if(kernel.totalLevelActiveMilliseconds >= msStart) {
             if(!this._activeSections.includes(this._closingSectionId)) {
                 this._activeSections.push(this._closingSectionId);
                 
@@ -540,7 +536,7 @@ export default class ASLevel extends Level
      */
     private _levelClosing(closingStartMS:number)
     {
-        const currentMs = Kernel.getInstance().utils.time.getTotalMilliseconds();
+        const currentMs = Kernel.getInstance().totalLevelActiveMilliseconds;
         
         if(!this._finishSign.active)
         {

@@ -1,6 +1,5 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
-import IModel from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
@@ -130,10 +129,8 @@ export default class ElectricHornet extends Monster {
         {
             this.moveLeft(this.enterXSpeed);
         } else {
-            const timeHelper = Kernel.getInstance().utils.time;
-            
             this.entering = false;
-            this._nextDropTime = timeHelper.getTotalMilliseconds() + this._initialDropWait;
+            this._nextDropTime = Kernel.getInstance().totalLevelActiveMilliseconds + this._initialDropWait;
         }
     }
     
@@ -174,8 +171,6 @@ export default class ElectricHornet extends Monster {
      */
     private _fly():void
     {
-        const timeHelper = Kernel.getInstance().utils.time;
-        
         // Handle collision with level edges (if the model is over an edge, and still moving in that direction)
         if((this.x <= this.levelLeftEdge && this.xSpeed < 0) || 
             ((this.x + this.width) >= this.levelRightEdge && this.xSpeed > 0))
@@ -190,7 +185,7 @@ export default class ElectricHornet extends Monster {
         {
             this._nextDropTime = this._getNextDropTime();
         } 
-        else if(timeHelper.getTotalMilliseconds() >= this._nextDropTime)
+        else if(Kernel.getInstance().totalLevelActiveMilliseconds >= this._nextDropTime)
         {
             this._triggerDrop();
         }
@@ -202,7 +197,7 @@ export default class ElectricHornet extends Monster {
      */
     private _getNextDropTime():number
 	{
-        const currentTime = Kernel.getInstance().utils.time.getTotalMilliseconds();
+        const currentTime = Kernel.getInstance().totalLevelActiveMilliseconds;
 		return currentTime + this._dropWaitOffset + Math.floor(Math.random() * this._dropWaitRange);
 	}
     

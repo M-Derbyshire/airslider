@@ -126,7 +126,8 @@ export default class TheConstruct extends ASLevel
     {
         super.act();
         
-        // if(this.utils.time.getTotalSeconds() < 30)
+        // const levelActiveSeconds = Kernel.getInstance().totalLevelActiveMilliseconds / 1000;
+        // if(levelActiveSeconds < 30)
         // {
         //     this.tunnelManager.continueTunnel([
         //         this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength),

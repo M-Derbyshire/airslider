@@ -1,6 +1,5 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
-import IModel from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
@@ -237,10 +236,8 @@ export default class NeonPidgeon extends Monster {
         {
             this.moveLeft(this.enterXSpeed);
         } else {
-            const timeHelper = Kernel.getInstance().utils.time;
-            
             this.entering = false;
-            this._nextDrop = timeHelper.getTotalMilliseconds() + this.initialDropWait;
+            this._nextDrop = Kernel.getInstance().totalLevelActiveMilliseconds + this.initialDropWait;
         }
     }
     
@@ -336,7 +333,7 @@ export default class NeonPidgeon extends Monster {
      */
 	private _getNextDropTime():number
 	{
-        const totalActiveMS = Kernel.getInstance().utils.time.getTotalMilliseconds();
+        const totalActiveMS = Kernel.getInstance().totalLevelActiveMilliseconds;
         
 		return totalActiveMS + this.dropWaitOffset + Math.floor(Math.random() * this.dropWaitRange);
 	}
@@ -347,7 +344,7 @@ export default class NeonPidgeon extends Monster {
      */
 	private _monsterShouldDrop():boolean
 	{
-        const totalActiveMS = Kernel.getInstance().utils.time.getTotalMilliseconds();
+        const totalActiveMS = Kernel.getInstance().totalLevelActiveMilliseconds;
         
 		return (totalActiveMS >= this._nextDrop && this.overlapping);
 	}

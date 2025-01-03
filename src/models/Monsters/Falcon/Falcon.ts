@@ -1,6 +1,7 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IModel from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
+import TimeHelper from '../../../../Kernel/utils/TimeHelper';
 import UnitHelper from '../../../../Kernel/utils/UnitHelper';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
@@ -152,8 +153,6 @@ export default class Falcon extends Monster {
     {
         super.prepare();
         
-        const timeHelper = Kernel.getInstance().utils.time;
-        
         this.actions = [
             this.stalking,
             this.strafe,
@@ -167,8 +166,8 @@ export default class Falcon extends Monster {
         this.startY = 75;
         this.startX = this.levelLeftEdge - this.offScreenUnits;
         this.startZ = this.playerModel.z;
-        this.dropWaitOffset = timeHelper.secondsToFrames(5);
-        this.dropWaitRange = timeHelper.secondsToFrames(5);
+        this.dropWaitOffset = TimeHelper.secondsToFrames(5);
+        this.dropWaitRange = TimeHelper.secondsToFrames(5);
         
         this.overlapping = false;
         this.lastSwoop = -1;
@@ -195,8 +194,7 @@ export default class Falcon extends Monster {
         {
             this.moveRight(this.enterXSpeed);
         } else {
-            const timeHelper = Kernel.getInstance().utils.time;
-            this.lastSwoop = timeHelper.getTotalMilliseconds();
+            this.lastSwoop = Kernel.getInstance().totalLevelActiveMilliseconds
             this.entering = false;
         }
     }
@@ -229,8 +227,8 @@ export default class Falcon extends Monster {
         //keep monster centered above player
         this.x = this.playerModel.x + (this.playerModel.width / 2) - (this.width / 2);
         
-        const timeHelper = Kernel.getInstance().utils.time;
-        if(timeHelper.getTotalMilliseconds() - this.lastSwoop >= this.swoopWait)
+        const levelActiveMS = Kernel.getInstance().totalLevelActiveMilliseconds;
+        if(levelActiveMS - this.lastSwoop >= this.swoopWait)
         {
             this.swoopWait = (Math.random() * 2000) + 500; //between 0.5 and 2 seconds
             // will set the lastSwoop time after swooping has finished (see reposition())
@@ -329,7 +327,7 @@ export default class Falcon extends Monster {
 	
     reposition():void
     {
-        const utils = Kernel.getInstance().utils;
+        const kernel = Kernel.getInstance();
         
         //get player center and monster center; also pre-calculate the real speed of the monster
         const playerCenter = this.playerModel.x + (this.playerModel.width / 2)
@@ -338,7 +336,7 @@ export default class Falcon extends Monster {
         
         if(this._isFalconCenteredAbovePlayer(playerCenter, monsterCenter, preCalculatedMonsterSpeed))
         {
-            this.lastSwoop = utils.time.getTotalMilliseconds();
+            this.lastSwoop = kernel.totalLevelActiveMilliseconds;
             this.nextAction();
         } else {
             this._moveFalconToCenterAbovePlayer(playerCenter, monsterCenter);

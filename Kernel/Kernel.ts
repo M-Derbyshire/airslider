@@ -2,8 +2,6 @@ import AssetHandler from './AssetHandler/AssetHandler';
 import GameEngine from './engines/GameEngine/GameEngine';
 import GraphicEngine from './engines/GraphicEngine/GraphicEngine';
 import SoundEngine from './engines/SoundEngine/SoundEngine';
-import TimeHelper from './utils/TimeHelper';
-import UnitHelper from './utils/UnitHelper';
 import ZCalc from './utils/ZCalc/ZCalc';
 import Camera from './engines/GraphicEngine/Camera';
 import FrameManager from './engines/GraphicEngine/FrameManager';
@@ -501,8 +499,7 @@ export default class Kernel implements IKernel {
         this._setupAutoPause();
         
         this._utils = {
-            zCalc: new ZCalc(new NoScalingStrategy()),
-            time: new TimeHelper()
+            zCalc: new ZCalc(new NoScalingStrategy())
         };
         
         // Load the fonts from the "fonts" object
