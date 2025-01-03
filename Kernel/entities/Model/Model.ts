@@ -3,6 +3,7 @@ import IModelAnimationsManager from './ModelAnimationsManager/IModelAnimationsMa
 import IHitBox from './IHitBox';
 import Kernel from '../../Kernel';
 import ITextContent from '../../engines/GraphicEngine/ITextContent';
+import UnitHelper from '../../utils/UnitHelper';
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)
@@ -288,8 +289,7 @@ export default class Model implements IModel
      */
     moveLeft(speed:number):void
     {
-        const unitHelper = Kernel.getInstance().utils.unit;
-        this.x -= unitHelper.speed(speed);
+        this.x -= UnitHelper.speed(speed);
     }
     
     /**
@@ -298,8 +298,7 @@ export default class Model implements IModel
      */
     moveRight(speed:number):void
     {
-        const unitHelper = Kernel.getInstance().utils.unit;
-        this.x += unitHelper.speed(speed);
+        this.x += UnitHelper.speed(speed);
     }
     
     /**
@@ -308,8 +307,7 @@ export default class Model implements IModel
      */
     moveUp(speed:number):void
     {
-        const unitHelper = Kernel.getInstance().utils.unit;
-        this.y -= unitHelper.speed(speed);
+        this.y -= UnitHelper.speed(speed);
     }
     
     /**
@@ -318,8 +316,7 @@ export default class Model implements IModel
      */
     moveDown(speed:number):void
     {
-        const unitHelper = Kernel.getInstance().utils.unit;
-        this.y += unitHelper.speed(speed);
+        this.y += UnitHelper.speed(speed);
     }
     
     /**
@@ -328,9 +325,7 @@ export default class Model implements IModel
      */
     moveIn(speed:number):void
     {
-        const kernel = Kernel.getInstance();
-        
-        this.z += kernel.utils.unit.speed(speed);
+        this.z += UnitHelper.speed(speed);
     }
     
     /**
@@ -339,8 +334,6 @@ export default class Model implements IModel
      */
     moveOut(speed:number):void
     {
-        const kernel = Kernel.getInstance();
-        
-        this.z -= kernel.utils.unit.speed(speed);
+        this.z -= UnitHelper.speed(speed);
     }
 }

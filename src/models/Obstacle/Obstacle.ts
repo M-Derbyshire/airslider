@@ -3,6 +3,7 @@ import ASLevel from "../../levels/ASLevel/ASLevel";
 import ASModel from "../ASModel/ASModel";
 import IModel from "../../../Kernel/entities/Model/IModel";
 import Tarian from "../Tarian/Tarian";
+import UnitHelper from "../../../Kernel/utils/UnitHelper";
 
 /**
  * Base class for obstacles, that move down the track to hit the player
@@ -94,11 +95,10 @@ export default class Obstacle extends ASModel
      */
 	private _setZSpeedBasedOnLevelSpeed():void
 	{
-        const kernel = Kernel.getInstance();
-        const level = kernel.level as ASLevel;
+        const level = Kernel.getInstance().level as ASLevel;
         
 		if(!level.levelMoving)
-            this.zSpeed = -(kernel.utils.unit.speed(level.maxLevelSpeedRaw) / 1.5);
+            this.zSpeed = -(UnitHelper.speed(level.maxLevelSpeedRaw) / 1.5);
         else
             this.zSpeed = level.levelSpeed / 1.5;
 	}

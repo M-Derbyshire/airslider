@@ -25,6 +25,7 @@ import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
 import MusicManager from './MusicManager';
 import standardModelEvents from './events/standardModelEvents';
+import UnitHelper from '../../../Kernel/utils/UnitHelper';
 
 /**
  * The game's base Level class
@@ -472,16 +473,14 @@ export default class ASLevel extends Level
     {
         if(this.levelMoving)
         {
-            const kernel = Kernel.getInstance();
-            
             if(this.levelSpeedRaw < this.maxLevelSpeedRaw)
             {
-                this.levelSpeedRaw += kernel.utils.unit.speed(this.levelSpeedAccl);
+                this.levelSpeedRaw += UnitHelper.speed(this.levelSpeedAccl);
             } else {
                 this.levelSpeedRaw = this.maxLevelSpeedRaw;
             }
             
-            this.levelSpeed = kernel.utils.unit.speed(this.levelSpeedRaw);
+            this.levelSpeed = UnitHelper.speed(this.levelSpeedRaw);
         }
         else
         {

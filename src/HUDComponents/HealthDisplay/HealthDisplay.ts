@@ -1,4 +1,5 @@
 import Kernel from '../../../Kernel/Kernel';
+import UnitHelper from '../../../Kernel/utils/UnitHelper';
 import { CentralStateKey } from '../../levels/CentralStateKey';
 import Tarian from '../../models/Tarian/Tarian';
 import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
@@ -83,7 +84,7 @@ export default class HealthDisplay extends ASHUDComponent
         const playerModelIndex = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
         const health = (kernel.loadedModels[playerModelIndex] as unknown as Tarian).health;
         
-		const radiusModifierPixels = kernel.utils.unit.xUnit(this._cornerRadiusModifier);
+		const radiusModifierPixels = UnitHelper.xUnit(this._cornerRadiusModifier);
         
         // Determine the background color, based on the health
         let color:string;

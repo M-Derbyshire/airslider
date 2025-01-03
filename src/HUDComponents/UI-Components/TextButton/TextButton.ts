@@ -1,4 +1,5 @@
 import Kernel from '../../../../Kernel/Kernel';
+import UnitHelper from '../../../../Kernel/utils/UnitHelper';
 import TextOnlyButton from '../TextOnlyButton/TextOnlyButton';
 
 /**
@@ -109,7 +110,7 @@ export default class TextButton extends TextOnlyButton
             height: this.height
         });
         
-        const cornerRadius = kernel.utils.unit.xUnit(this._cornerRadiusModifier);
+        const cornerRadius = UnitHelper.xUnit(this._cornerRadiusModifier);
         
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, cornerRadius);

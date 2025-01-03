@@ -1,6 +1,7 @@
 import IDrawDimensions from "../../../engines/GraphicEngine/IDrawDimensions";
 import IDrawPositions from "../../../engines/GraphicEngine/IDrawPositions";
 import Kernel from "../../../Kernel";
+import UnitHelper from "../../UnitHelper";
 import IZCalcStrategy from "./IZCalcStrategy";
 
 /**
@@ -238,10 +239,10 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
         
         const kernel = Kernel.getInstance();
         
-        const vanishPointPixelsX = kernel.utils.unit.xUnit(this._vanishingPointX);
+        const vanishPointPixelsX = UnitHelper.xUnit(this._vanishingPointX);
         const positionedVanishPointPixelsX = kernel.graphicEngine.camera.canvasPositionX + vanishPointPixelsX;
         
-        const vanishPointPixelsY = kernel.utils.unit.yUnit(this._vanishingPointY);
+        const vanishPointPixelsY = UnitHelper.yUnit(this._vanishingPointY);
         const positionedVanishPointPixelsY = kernel.graphicEngine.camera.canvasPositionY + vanishPointPixelsY;
         
         return {

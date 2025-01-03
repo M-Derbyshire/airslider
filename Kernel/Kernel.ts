@@ -30,7 +30,7 @@ import NoScalingStrategy from './utils/ZCalc/strategies/NoScalingStrategy';
 export default class Kernel implements IKernel {
 
     // *********************** Static Methods/Properties **********************************
-    static _instance:Kernel; // The singleton instance of Kernel
+    private static _instance:Kernel; // The singleton instance of Kernel
     
     /**
      * Gets the singleton instance of the kernel
@@ -502,8 +502,7 @@ export default class Kernel implements IKernel {
         
         this._utils = {
             zCalc: new ZCalc(new NoScalingStrategy()),
-            time: new TimeHelper(),
-            unit: new UnitHelper(this.unitsWithinCameraX, this.unitsWithinCameraY)
+            time: new TimeHelper()
         };
         
         // Load the fonts from the "fonts" object

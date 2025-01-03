@@ -3,6 +3,7 @@ import ASModel from '../ASModel/ASModel';
 import IAnimation from '../../../Kernel/entities/Model/ModelAnimationsManager/IAnimation';
 import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Tarian from '../Tarian/Tarian';
+import UnitHelper from '../../../Kernel/utils/UnitHelper';
 
 /**
  * Explosion effect, to be used during Tarian's loss sequence
@@ -99,10 +100,8 @@ export default class TarianExplosion extends ASModel {
      */
     private _resize():void
     {
-        const kernel = Kernel.getInstance();
-        
-        this._animFrame.width += kernel.utils.unit.speed(this._resizeSpeedX);
-        this._animFrame.height += kernel.utils.unit.speed(this._resizeSpeedY);
+        this._animFrame.width += UnitHelper.speed(this._resizeSpeedX);
+        this._animFrame.height += UnitHelper.speed(this._resizeSpeedY);
         
         if(this._animFrame.width > this._maxWidth || this._animFrame.height > this._maxHeight)
         {

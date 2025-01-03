@@ -1,4 +1,5 @@
 import Kernel from "../../../Kernel/Kernel";
+import UnitHelper from "../../../Kernel/utils/UnitHelper";
 import ASLevel from "./ASLevel";
 
 /**
@@ -27,11 +28,10 @@ export default class LevelRoad
         
         const kernel = Kernel.getInstance();
         const level = kernel.level as ASLevel;
-        const unitHelper = kernel.utils.unit;
         const camera = kernel.graphicEngine.camera;
         
-        const vanishPointX = camera.canvasPositionX + unitHelper.xUnit(level.vanishingPointX);
-        const vanishPointY = camera.canvasPositionY + unitHelper.yUnit(level.vanishingPointY);
+        const vanishPointX = camera.canvasPositionX + UnitHelper.xUnit(level.vanishingPointX);
+        const vanishPointY = camera.canvasPositionY + UnitHelper.yUnit(level.vanishingPointY);
         
         const { x, y, width, height } = kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({
             x: 0,

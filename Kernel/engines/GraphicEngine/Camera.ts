@@ -2,6 +2,7 @@ import ICamera from './ICamera';
 import ICameraPositions from './ICameraPositions';
 import ICameraDrawPositionsCalc from './ICameraDrawPositionsCalc';
 import Kernel from '../../Kernel';
+import UnitHelper from '../../utils/UnitHelper';
 
 /**
  * A level's camera
@@ -143,10 +144,10 @@ export default class Camera implements ICamera {
     {
         const utils = Kernel.getInstance().utils;
         
-        const unscaledX = utils.unit.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this._positions.canvas.x;
-        const unscaledY = utils.unit.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this._positions.canvas.y;
-        const unscaledWidth = utils.unit.xUnit(widthUnits);
-        const unscaledHeight = utils.unit.yUnit(heightUnits);
+        const unscaledX = UnitHelper.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this._positions.canvas.x;
+        const unscaledY = UnitHelper.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this._positions.canvas.y;
+        const unscaledWidth = UnitHelper.xUnit(widthUnits);
+        const unscaledHeight = UnitHelper.yUnit(heightUnits);
         
         const scaledValues = utils.zCalc.getDrawValues({
             x: unscaledX,

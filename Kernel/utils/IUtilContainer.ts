@@ -1,5 +1,4 @@
 import ITimeHelper from "./ITimeHelper";
-import IUnitHelper from "./IUnitHelper";
 import IZCalc from "./ZCalc/IZCalc";
 
 /**
@@ -7,6 +6,5 @@ import IZCalc from "./ZCalc/IZCalc";
  */
 export default interface IUtilContainer {
     time:ITimeHelper;
-    unit:IUnitHelper;
     zCalc:IZCalc;
 };

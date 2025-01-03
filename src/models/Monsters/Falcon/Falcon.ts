@@ -1,6 +1,7 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IModel from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
+import UnitHelper from '../../../../Kernel/utils/UnitHelper';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 
@@ -333,7 +334,7 @@ export default class Falcon extends Monster {
         //get player center and monster center; also pre-calculate the real speed of the monster
         const playerCenter = this.playerModel.x + (this.playerModel.width / 2)
         const monsterCenter = this.x + (this.width / 2);
-        const preCalculatedMonsterSpeed = utils.unit.speed(this.xSpeed);
+        const preCalculatedMonsterSpeed = UnitHelper.speed(this.xSpeed);
         
         if(this._isFalconCenteredAbovePlayer(playerCenter, monsterCenter, preCalculatedMonsterSpeed))
         {

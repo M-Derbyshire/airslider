@@ -5,6 +5,7 @@ import IDrawPositions from './IDrawPositions';
 import IDrawDimensions from './IDrawDimensions';
 import ITextContent from './ITextContent';
 import Kernel from '../../Kernel';
+import UnitHelper from '../../utils/UnitHelper';
 
 /**
  * The engine that controls the drawing to the screen
@@ -137,8 +138,6 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     getStaticDrawPositionsAndDimensions(unitValues:Partial<IDrawPositions&IDrawDimensions>):IDrawPositions&IDrawDimensions
     {
-        const unitHelper = Kernel.getInstance().utils.unit;
-        
         const { x, y, width, height } = unitValues;
         
         const cameraX = this.camera.canvasPositionX;
@@ -146,10 +145,10 @@ export default class GraphicEngine implements IGraphicEngine {
         
         const pixelValues = { x: 0, y: 0, width: 0, height: 0 };
         
-        if(this._isSetNumber(x)) pixelValues.x = cameraX + unitHelper.xUnit(x);
-        if(this._isSetNumber(y)) pixelValues.y = cameraY + unitHelper.yUnit(y);
-        if(this._isSetNumber(width)) pixelValues.width = unitHelper.xUnit(width);
-        if(this._isSetNumber(height)) pixelValues.height = unitHelper.yUnit(height)
+        if(this._isSetNumber(x)) pixelValues.x = cameraX + UnitHelper.xUnit(x);
+        if(this._isSetNumber(y)) pixelValues.y = cameraY + UnitHelper.yUnit(y);
+        if(this._isSetNumber(width)) pixelValues.width = UnitHelper.xUnit(width);
+        if(this._isSetNumber(height)) pixelValues.height = UnitHelper.yUnit(height)
         
         return pixelValues;
     }
@@ -273,9 +272,6 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     private _handleCanvasSizeChange():void
     {
-        const unitHelper = Kernel.getInstance().utils.unit;
-        
         this.camera.setCameraSize();
-        unitHelper.setDimensions(this.camera.canvasPositionWidth, this.camera.canvasPositionHeight);
     }
 }
