@@ -171,14 +171,6 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * The amount of milliseconds that passed between the last frame, and this one
-     */
-    get timeSinceLastFrameMS()
-    {
-        return this._timeSinceLastFrameMS;
-    }
-    
-    /**
      * The current level that is being ran
      * @returns the currently running level, or undefined
      */

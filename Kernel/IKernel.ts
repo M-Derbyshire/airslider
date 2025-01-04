@@ -37,11 +37,6 @@ export default interface IKernel {
     readonly totalLevelActiveMilliseconds:number;
     
     /**
-     * The amount of milliseconds that passed between the last frame, and this one
-     */
-    readonly timeSinceLastFrameMS:number;
-    
-    /**
      * The current level that is being ran
      */
     readonly level?:ILevel;
