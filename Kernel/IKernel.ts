@@ -147,11 +147,6 @@ export default interface IKernel {
     releaseAsset(path:string):void;
     
     /**
-     * Runs the game loop
-     */
-    run():void;
-    
-    /**
      * Pauses/unpauses the game (if the current level is pauseable)
      */
     toggleGamePause():void;

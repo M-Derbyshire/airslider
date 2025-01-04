@@ -60,7 +60,7 @@ export default class Kernel implements IKernel {
         }
         
         if(!instance._hasError)
-            instance.run(); // Runs the first frame. This is then re-called by the browser for every other frame
+            instance._run(); // Runs the first frame. This is then re-called by the browser for every other frame
     }
     // ************************************************************************************
     
@@ -366,61 +366,6 @@ export default class Kernel implements IKernel {
     }
     
     
-    
-    /**
-     * Runs the game loop
-     */
-    run():void
-    {
-        // Request that the browser re-runs this method for the next frame
-        requestAnimationFrame(this.run.bind(this));
-        
-        // Don't run if there was an error
-        if(this._hasError) 
-            return;
-        
-        // Don't run unless it's time for the next frame
-        const currentDateTime = new Date();
-        const timeSinceLastFrame = currentDateTime.getTime() - this._lastTime.getTime();
-        if (
-            timeSinceLastFrame < (1000 / this._fpsLimit) || // Are we over the max FPS limit? OR
-            (this.assetsStillLoading > 0 && !this.levelHasBeenPrepared) // Is the current level still loading assets?
-        )
-        {
-            return;
-        }
-        
-        this._timeSinceLastFrameMS = timeSinceLastFrame;
-        
-        try {
-            if(!this.levelHasBeenPrepared)
-                this._prepareCurrentLevelAndModels();
-            
-            this._fps = this._getNewFps(currentDateTime);
-            this._updateTotalTime(currentDateTime);
-            
-            if(this._status !== KernelStatus.Paused)
-            {
-                this.gameEngine.run();
-                this.graphicEngine.run();
-                this.soundEngine.run();
-            }
-            
-            if(this._status === KernelStatus.PrePaused)
-                this._status = KernelStatus.Paused;
-            
-            if(this._currentLevelShouldBeUnloaded)
-            {
-                this._unloadCurrentLevel();
-                this._currentLevelShouldBeUnloaded = false;
-            }
-            
-            this._lastTime = currentDateTime;
-        } catch (err:any) {
-            this.handleError(err);
-        }
-    }
-    
     /**
      * Pauses/unpauses the game (if the current level is pauseable)
      */
@@ -477,6 +422,60 @@ export default class Kernel implements IKernel {
     
     
     
+    
+    /**
+     * Runs the game loop
+     */
+    private _run():void
+    {
+        // Request that the browser re-runs this method for the next frame
+        requestAnimationFrame(this._run.bind(this));
+        
+        // Don't run if there was an error
+        if(this._hasError) 
+            return;
+        
+        // Don't run unless it's time for the next frame
+        const currentDateTime = new Date();
+        const timeSinceLastFrame = currentDateTime.getTime() - this._lastTime.getTime();
+        if (
+            timeSinceLastFrame < (1000 / this._fpsLimit) || // Are we over the max FPS limit? OR
+            (this.assetsStillLoading > 0 && !this.levelHasBeenPrepared) // Is the current level still loading assets?
+        )
+        {
+            return;
+        }
+        
+        this._timeSinceLastFrameMS = timeSinceLastFrame;
+        
+        try {
+            if(!this.levelHasBeenPrepared)
+                this._prepareCurrentLevelAndModels();
+            
+            this._fps = this._getNewFps(currentDateTime);
+            this._updateTotalTime(currentDateTime);
+            
+            if(this._status !== KernelStatus.Paused)
+            {
+                this.gameEngine.run();
+                this.graphicEngine.run();
+                this.soundEngine.run();
+            }
+            
+            if(this._status === KernelStatus.PrePaused)
+                this._status = KernelStatus.Paused;
+            
+            if(this._currentLevelShouldBeUnloaded)
+            {
+                this._unloadCurrentLevel();
+                this._currentLevelShouldBeUnloaded = false;
+            }
+            
+            this._lastTime = currentDateTime;
+        } catch (err:any) {
+            this.handleError(err);
+        }
+    }
     
     /**
      * Loads the elements needed for the kernel, and the initial level
