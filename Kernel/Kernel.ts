@@ -299,7 +299,7 @@ export default class Kernel implements IKernel {
 		const camera = new Camera(aspectRatioHorizontal, aspectRatioVertical);
 		const frameManager = new FrameManager(camera);
 		
-        const engines = this._initialiseAllEngines(camera, frameManager); // New engines, setup for this level
+        const engines = this._initialiseAllEngines(camera, frameManager); // New engines, set up for this level
         
         level.load(
             frameManager, 
