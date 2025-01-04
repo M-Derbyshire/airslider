@@ -33,7 +33,7 @@ export default class Kernel implements IKernel {
      * @param settings The game's settings
      * @returns the singleton instance of the kernel
      */
-    static getInstance(canvas?:HTMLCanvasElement, settings?:any):Kernel
+    static getInstance(canvas?:HTMLCanvasElement, settings?:any):IKernel
     {
         // The Kernel constructor will return the singleton instance
         // if it has already been created, and if not then it will create it.
@@ -47,7 +47,7 @@ export default class Kernel implements IKernel {
      */
     static init(canvas:HTMLCanvasElement, settings:any)
     {
-        const instance = this.getInstance(canvas, settings);
+        const instance = this.getInstance(canvas, settings) as Kernel;
         
         if(instance.level) // If we've already initiated the game
             return;
