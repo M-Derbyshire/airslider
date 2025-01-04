@@ -12,19 +12,6 @@ import IAssetHandler from "./AssetHandler/IAssetHandler";
  */
 export default interface IKernel {
     /**
-     * If we want to display the FPS counter, this is the color the text should be.
-     * The FPS counter is only drawn if this value is truthy.
-     */
-    fpsDisplayColor:string;
-    
-    /**
-     * The amount of draw-space units there are within the camera's size.
-     * There are seperate amounts for both the X and Y axis.
-     */
-    unitsWithinCameraX:number;
-    unitsWithinCameraY:number;
-    
-    /**
      * A map to store any state that needs to be accessible to all levels.
      */
     readonly centralState:Map<string, any>;
@@ -43,11 +30,6 @@ export default interface IKernel {
      * The current Frames Per Second of the game
      */
     readonly fps:number;
-    
-    /**
-     * The maximum FPS that the game should be allowed to run at
-     */
-    readonly fpsLimit:number;
     
     /**
      * The total amount of milliseconds that the level has not been paused or stopped for any reason

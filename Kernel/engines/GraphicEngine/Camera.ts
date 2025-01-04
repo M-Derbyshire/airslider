@@ -242,9 +242,9 @@ export default class Camera implements ICamera {
      */
     setCameraPosition(x:number, y:number):void
     {
-        const kernel = Kernel.getInstance();
-        const centerX = kernel.unitsWithinCameraX / 2;
-        const centerY = kernel.unitsWithinCameraY / 2;
+        const settings = Kernel.getInstance().settings;
+        const centerX = settings.unitsWithinCameraX / 2;
+        const centerY = settings.unitsWithinCameraY / 2;
         
         this._positions.drawSpace.x = x - centerX;
         this._positions.drawSpace.y = y - centerY;

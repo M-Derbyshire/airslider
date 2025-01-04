@@ -130,8 +130,8 @@ export default class LevelTunnel
             const { x, y, width, height } = kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
                 x: 0,
                 y: 0,
-                width: kernel.unitsWithinCameraX,
-                height: kernel.unitsWithinCameraY,
+                width: kernel.settings.unitsWithinCameraX,
+                height: kernel.settings.unitsWithinCameraY,
                 z: tunnelPart.z
             }, true);
             

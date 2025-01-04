@@ -17,7 +17,7 @@ export default class UnitHelper
         
         return this._unitValueToPixelValue(
             unitValue,
-            kernel.unitsWithinCameraX,
+            kernel.settings.unitsWithinCameraX,
             kernel.graphicEngine.camera.canvasPositionWidth
         );
     }
@@ -33,7 +33,7 @@ export default class UnitHelper
         
         return this._unitValueToPixelValue(
             unitValue,
-            kernel.unitsWithinCameraY,
+            kernel.settings.unitsWithinCameraY,
             kernel.graphicEngine.camera.canvasPositionHeight
         );
     }

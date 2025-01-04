@@ -221,17 +221,17 @@ export default class ASLevel extends Level
     {
         super.prepare();
         
-        const kernel = Kernel.getInstance();
+        const settings = Kernel.getInstance().settings;
         
         this.zCalcStrategy.setVanishPoint(
-            kernel.unitsWithinCameraX / 2, 
-            kernel.unitsWithinCameraY / 2
+            settings.unitsWithinCameraX / 2, 
+            settings.unitsWithinCameraY / 2
         );
         
         ZCalc.setStrategy(this.zCalcStrategy);
         
         this.leftEdge = 0;
-        this.rightEdge = kernel.unitsWithinCameraX;
+        this.rightEdge = settings.unitsWithinCameraX;
         
         this._musicManager.prepare(this.musicVolume);
         
@@ -330,10 +330,10 @@ export default class ASLevel extends Level
      */
     protected setupFrame(backgroundPath:string, outsideLightMaskPath:string, tunnelLightMaskPath:string):void
     {
-        const kernel = Kernel.getInstance();
+        const settings = Kernel.getInstance().settings;
         
         //Setup the frame for the level
-        let frame = new Frame(0, 0, kernel.unitsWithinCameraX, kernel.unitsWithinCameraY);
+        let frame = new Frame(0, 0, settings.unitsWithinCameraX, settings.unitsWithinCameraY);
         
         const frameBackgroundIndex = frame.loadBackground(backgroundPath);
         frame.setBackgroundImage(frameBackgroundIndex);

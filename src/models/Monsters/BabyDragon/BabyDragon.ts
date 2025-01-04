@@ -266,11 +266,13 @@ export default class BabyDragon extends Monster
         const nextLavaBall = this._lavaBalls[this._nextLavaBallIndex];
         const altLavaBall = this._lavaBalls[this._altLavaBallIndex];
         
+        const unitsWithinCameraY = Kernel.getInstance().settings.unitsWithinCameraY;
+        
         if ((!altLavaBall.active && !nextLavaBall.active && this.fireWeapon) || //This will trigger the first drop
             //After the first drop, the below triggers any further drops
             (this.fireWeapon &&
             nextLavaBall.state !== "drop" && //When we check for this with .active, there's a bug where it can stop dropping balls
-            (altLavaBall.y > Kernel.getInstance().unitsWithinCameraY / 1.5)))
+            (altLavaBall.y > unitsWithinCameraY / 1.5)))
         {
             this._dropBall();
             this._nextLavaBallIndex = this._altLavaBallIndex;

@@ -71,7 +71,7 @@ export default class GraphicEngine implements IGraphicEngine {
         kernel.level.HUD.draw();
         this.camera.drawFront();
         
-        if(kernel.fpsDisplayColor)
+        if(kernel.settings.fpsDisplayColor)
             this._fpsMeter();
     }
     
@@ -238,7 +238,7 @@ export default class GraphicEngine implements IGraphicEngine {
         
         const fontSize = 30;
         ctx.font = fontSize + "px Arial";
-        ctx.fillStyle = kernel.fpsDisplayColor;
+        ctx.fillStyle = kernel.settings.fpsDisplayColor;
         ctx.textAlign = "left";
         
         ctx.fillText(`FPS: ${fps}`, 10, (10 + fontSize));

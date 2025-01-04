@@ -52,13 +52,11 @@ export default class Dialog extends ASHUDComponent
     {
         super.prepare();
         
-        const kernel = Kernel.getInstance();
+        const settings = Kernel.getInstance().settings;
         
         // We determine the x/y using the width/height (to ensure it's always centered)
-        const unitsWithinCameraX = kernel.unitsWithinCameraX;
-        const unitsWithinCameraY = kernel.unitsWithinCameraY;
-        this.x = (unitsWithinCameraX / 2) - (this.width / 2);
-        this.y = (unitsWithinCameraY / 2) - (this.height / 2);
+        this.x = (settings.unitsWithinCameraX / 2) - (this.width / 2);
+        this.y = (settings.unitsWithinCameraY / 2) - (this.height / 2);
         
         this.text = {
             x: this.width / 2,

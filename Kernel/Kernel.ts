@@ -71,7 +71,6 @@ export default class Kernel implements IKernel {
     
     private _fps:number; // The current Frames Per Second of the game
     private _highestFpsReached:number; // The highest FPS the game has reached
-    private _fpsLimit:number; // The maximum FPS that the game should be allowed to run at
     private _lastTime:Date; // The date/time that the last frame ran
     
     private _levelQueue:ILoadedLevel[]; // The queue of levels that have been loaded (or are currently loading)
@@ -87,19 +86,6 @@ export default class Kernel implements IKernel {
     private _assetHandler:IAssetHandler; // Loads and manages assets
     
     private _currentLevelShouldBeUnloaded:boolean; // If this is true, the current level will get unloaded after the current frame has been drawn
-    
-    /**
-     * If we want to display the FPS counter, this is the color the text should be.
-     * The FPS counter is only drawn if this value is truthy.
-     */
-    fpsDisplayColor:string;
-    
-    /**
-     * The amount of draw-space units there are within the camera's size.
-     * There are seperate amounts for both the X and Y axis.
-     */
-    unitsWithinCameraX:number;
-    unitsWithinCameraY:number;
     
     
     
@@ -131,7 +117,6 @@ export default class Kernel implements IKernel {
         
         this._fps = 60;
         this._highestFpsReached = 0;
-        this._fpsLimit = this._settings.fpsLimit ?? 70;
         this._lastTime = new Date();
         this._timeSinceLastFrameMS = 0;
         
@@ -144,10 +129,6 @@ export default class Kernel implements IKernel {
         this._centralState = new Map<string, any>();
         
         this._currentLevelShouldBeUnloaded = false;
-        
-        this.fpsDisplayColor = this._settings.fpsDisplayColor;
-        this.unitsWithinCameraX = this._settings.unitsWithinCameraX;
-        this.unitsWithinCameraY = this._settings.unitsWithinCameraY;
     }
     
     
@@ -181,14 +162,6 @@ export default class Kernel implements IKernel {
     get fps()
     {
         return this._fps;
-    }
-    
-    /**
-     * The maximum FPS that the game should be allowed to run at
-     */
-    get fpsLimit()
-    {
-        return this._fpsLimit;
     }
     
     /**
@@ -397,8 +370,9 @@ export default class Kernel implements IKernel {
         // Don't run unless it's time for the next frame
         const currentDateTime = new Date();
         const timeSinceLastFrame = currentDateTime.getTime() - this._lastTime.getTime();
+        const fpsLimit = this.settings.fpsLimit ?? 70;
         if (
-            timeSinceLastFrame < (1000 / this._fpsLimit) || // Are we over the max FPS limit? OR
+            timeSinceLastFrame < (1000 / fpsLimit) || // Are we over the max FPS limit? OR
             (this._assetHandler.assetsStillLoading > 0 && !this.levelHasBeenPrepared) // Is the current level still loading assets?
         )
         {

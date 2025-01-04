@@ -36,8 +36,8 @@ export default class LevelRoad
         const { x, y, width, height } = kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({
             x: 0,
             y: 0,
-            width: kernel.unitsWithinCameraX,
-            height: kernel.unitsWithinCameraY
+            width: kernel.settings.unitsWithinCameraX,
+            height: kernel.settings.unitsWithinCameraY
         });
         
         const leftEdge = x;

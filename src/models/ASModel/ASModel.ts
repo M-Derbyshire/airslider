@@ -32,7 +32,7 @@ export default class ASModel extends Model
      */
     protected centerXPosition():void
     {
-        const unitsWithinCamera = Kernel.getInstance().unitsWithinCameraX;
+        const unitsWithinCamera = Kernel.getInstance().settings.unitsWithinCameraX;
         this.x = (unitsWithinCamera / 2) - (this.width / 2);
     }
     
@@ -42,7 +42,7 @@ export default class ASModel extends Model
      */
     protected setYPositionFromBottom(pos:number):void
     {
-        const unitsWithinCamera = Kernel.getInstance().unitsWithinCameraY;
+        const unitsWithinCamera = Kernel.getInstance().settings.unitsWithinCameraY;
         this.y = unitsWithinCamera - pos;
     }
     
@@ -70,7 +70,7 @@ export default class ASModel extends Model
      */
     protected hasHitGround():boolean
     {
-        return (this.y + this.height) >= Kernel.getInstance().unitsWithinCameraY;
+        return (this.y + this.height) >= Kernel.getInstance().settings.unitsWithinCameraY;
     }
     
     prepare():void

@@ -152,8 +152,8 @@ export default class Level implements ILevel
         const kernel = Kernel.getInstance();
         
         kernel.graphicEngine.camera.setCameraPosition(
-            kernel.unitsWithinCameraX / 2,
-            kernel.unitsWithinCameraY / 2
+            kernel.settings.unitsWithinCameraX / 2,
+            kernel.settings.unitsWithinCameraY / 2
         );
     }
     
