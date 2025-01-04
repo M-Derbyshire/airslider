@@ -65,21 +65,17 @@ export default class ErrorHandler implements IErrorHandler {
      * Draws the background for the error display
      */
     private _drawBackground():void {
-        const kernel = Kernel.getInstance();
-        const ctx = kernel.gameContext;
-        const canvas = kernel.gameCanvas;
+        const ctx = Kernel.getInstance().canvasContext;
         
         ctx.fillStyle = this._backgroundColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
     
     /**
      * Draws the text for the error display
      */
     private _drawText():void {
-        const kernel = Kernel.getInstance();
-        const ctx = kernel.gameContext;
-        const canvas = kernel.gameCanvas;
+        const ctx = Kernel.getInstance().canvasContext;
         
         const titleText = "An Error has Occurred";
         const messageText = "Please see the developer console for more details";
@@ -87,8 +83,8 @@ export default class ErrorHandler implements IErrorHandler {
         const baseFontSize = this._getRealFontSize();
         const titleFontSize = baseFontSize * 2;
         
-        const canvasXCenter = canvas.width / 2;
-        const canvasYCenter = canvas.height / 2;
+        const canvasXCenter = ctx.canvas.width / 2;
+        const canvasYCenter = ctx.canvas.height / 2;
         const titleYPos = canvasYCenter * 0.5;
         const messageYPos = canvasYCenter * 1.5;
         
@@ -106,7 +102,7 @@ export default class ErrorHandler implements IErrorHandler {
      * Calculates the desired font size, based on the canvas size
      */
     private _getRealFontSize():number {
-        const canvas = Kernel.getInstance().gameCanvas;
+        const canvas = Kernel.getInstance().canvasContext.canvas;
         return this._relativeFontSize * (canvas.width / 1000);
     }
 };

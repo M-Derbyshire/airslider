@@ -91,7 +91,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         if(drawPositions.height === 0 || drawPositions.width === 0)
             return;
         
-        Kernel.getInstance().gameContext.drawImage(
+        Kernel.getInstance().canvasContext.drawImage(
             this.animations[this._model.state].spritesheet, 
 			nextFrameCoordinates.x,
 			nextFrameCoordinates.y,
@@ -126,7 +126,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     drawHitBoxes():void
     {
-        const canvasCtx = Kernel.getInstance().gameContext;
+        const canvasCtx = Kernel.getInstance().canvasContext;
         
         const boxes = this._model.getHitBoxes();
         

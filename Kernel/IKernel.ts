@@ -77,14 +77,9 @@ export default interface IKernel {
     readonly soundEngine?:ISoundEngine;
     
     /**
-     * The HTML canvas element that the game should be drawn on
-     */
-    readonly gameCanvas:HTMLCanvasElement;
-    
-    /**
      * The 2D context from the HTML canvas element
      */
-    readonly gameContext:CanvasRenderingContext2D;
+    readonly canvasContext:CanvasRenderingContext2D;
     
     /**
      * Loads the given level, and adds it to the kernel's internal level queue

@@ -46,7 +46,7 @@ export default class DamageFlash extends ASHUDComponent
             }
             
             const kernel = Kernel.getInstance();
-            const ctx = kernel.gameContext;
+            const ctx = kernel.canvasContext;
             
             const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
                 x: 0,

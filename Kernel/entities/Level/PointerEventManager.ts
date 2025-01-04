@@ -48,7 +48,7 @@ export default class PointerEventManager implements IPointerEventManager {
 			this._canvasPointerY = pointerY;
 		};
 		
-		const canvas = Kernel.getInstance().gameCanvas;
+		const canvas = Kernel.getInstance().canvasContext.canvas;
 		canvas.addEventListener("click", this._clickEventCallback);
 		canvas.addEventListener("touchStart", this._clickEventCallback);
 		canvas.addEventListener("mousemove", this._moveEventCallback);
@@ -80,7 +80,7 @@ export default class PointerEventManager implements IPointerEventManager {
 	 * Removes the event listeners from the canvas
 	 */
 	removeEventHandlers():void {
-		const canvas = Kernel.getInstance().gameCanvas;
+		const canvas = Kernel.getInstance().canvasContext.canvas;
 		canvas.removeEventListener("click", this._clickEventCallback);
 		canvas.removeEventListener("touchStart", this._clickEventCallback);
 		canvas.removeEventListener("mousemove", this._moveEventCallback);

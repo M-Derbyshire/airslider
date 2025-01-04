@@ -23,7 +23,7 @@ export default class LevelGround
 	 */
     constructor(groundPopulatedInitially:boolean = true)
     {
-        this._canvasCtx = Kernel.getInstance().gameContext;
+        this._canvasCtx = Kernel.getInstance().canvasContext;
 		this._groundPopulatedInitially = groundPopulatedInitially;
 		
 		this._removeGround = false;

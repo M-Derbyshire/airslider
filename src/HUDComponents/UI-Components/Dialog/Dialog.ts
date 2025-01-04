@@ -90,7 +90,7 @@ export default class Dialog extends ASHUDComponent
     {
         super.draw();
         
-        const ctx = Kernel.getInstance().gameContext;
+        const ctx = Kernel.getInstance().canvasContext;
         const originalFillColor = ctx.fillStyle;
         
         this._drawBorder(ctx);

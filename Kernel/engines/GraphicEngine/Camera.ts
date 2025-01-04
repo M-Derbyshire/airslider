@@ -103,7 +103,7 @@ export default class Camera implements ICamera {
         let height:number;
         let widthRatio = this._aspectRatioHorizontal / this._aspectRatioVertical;
         
-        const canvas = Kernel.getInstance().gameCanvas;
+        const canvas = Kernel.getInstance().canvasContext.canvas;
         
         if((canvas.width / widthRatio) > canvas.height)
         {
@@ -184,12 +184,10 @@ export default class Camera implements ICamera {
      */
     drawEmptySpaceColor():void
     {
-        const kernel = Kernel.getInstance();
-        const ctx = kernel.gameContext;
-        const canvas = kernel.gameCanvas;
+        const ctx = Kernel.getInstance().canvasContext;
         
         ctx.fillStyle = this._emptySpaceColor;
-        ctx.rect(0, 0, canvas.width, canvas.height);
+        ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
         ctx.fill();
     }
     
@@ -198,9 +196,7 @@ export default class Camera implements ICamera {
      */
     drawLetterbox():void
     {
-        const kernel = Kernel.getInstance();
-        const ctx = kernel.gameContext;
-        const canvas = kernel.gameCanvas;
+        const ctx = Kernel.getInstance().canvasContext;
         
         ctx.fillStyle = this._letterBoxColor;
         ctx.beginPath();
@@ -208,27 +204,27 @@ export default class Camera implements ICamera {
         if(this._positions.canvas.y > 0) // Draw the letterboxes on top and bottom
         {
             //Top letterbox bar
-            ctx.rect(0, 0, canvas.width, this._positions.canvas.y);
+            ctx.rect(0, 0, ctx.canvas.width, this._positions.canvas.y);
             
             //Bottom letterbox bar
             ctx.rect(
                 0, 
                 this._positions.canvas.y + this._positions.canvas.height,
-                canvas.width, 
+                ctx.canvas.width, 
                 this._positions.canvas.y
             );
         }
         else // Draw the letterboxes on left and right
         {
             //Left letterbox bar
-            ctx.rect(0, 0, this._positions.canvas.x, canvas.height);
+            ctx.rect(0, 0, this._positions.canvas.x, ctx.canvas.height);
             
             //Right letterbox bar
             ctx.rect( 
                 this._positions.canvas.x + this._positions.canvas.width,
                 0,
                 this._positions.canvas.x,
-                canvas.height
+                ctx.canvas.height
             );
         }
         

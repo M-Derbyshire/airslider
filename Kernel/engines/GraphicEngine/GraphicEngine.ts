@@ -44,7 +44,7 @@ export default class GraphicEngine implements IGraphicEngine {
     run():void
     {
         const kernel = Kernel.getInstance();
-        const canvas = kernel.gameCanvas;
+        const canvas = kernel.canvasContext.canvas;
         
         // Need to do this, rather than using an event listener, as the onResize listener
         // doesn't react to a change of canvas size if the size is set in percentages.
@@ -52,7 +52,7 @@ export default class GraphicEngine implements IGraphicEngine {
             this._handleCanvasSizeChange();
         
         // Clear everything on the game canvas
-        kernel.gameContext.clearRect(0, 0, canvas.width, canvas.height);
+        kernel.canvasContext.clearRect(0, 0, canvas.width, canvas.height);
         
         // Prepare to draw
         this._frameManager.determineFramesToDraw();
@@ -116,7 +116,7 @@ export default class GraphicEngine implements IGraphicEngine {
         }
         
         // Setup style and alignment properties
-        const ctx = Kernel.getInstance().gameContext;
+        const ctx = Kernel.getInstance().canvasContext;
         ctx.font = `${textContent.style} ${height}px ${textContent.font}`;
         ctx.fillStyle = textContent.color;
         ctx.textAlign = textContent.alignment;
@@ -232,7 +232,7 @@ export default class GraphicEngine implements IGraphicEngine {
     private _fpsMeter():void
     {
         const kernel = Kernel.getInstance();
-        const ctx = kernel.gameContext;
+        const ctx = kernel.canvasContext;
         
         const fps = Math.round(kernel.fps * 100) / 100; // 2 decimal places
         
@@ -250,8 +250,10 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     private _canvasSizeHasChanged():boolean
     {
+        const canvas = Kernel.getInstance().canvasContext.canvas;
+        const computedStyles = window.getComputedStyle(canvas);
+        
         //slice() is used here to remove the "px"
-        const computedStyles = window.getComputedStyle(Kernel.getInstance().gameCanvas);
         const currentWidth = Number(computedStyles.width.slice(0, -2));
         const currentHeight = Number(computedStyles.height.slice(0, -2));
         

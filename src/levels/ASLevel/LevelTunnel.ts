@@ -135,7 +135,7 @@ export default class LevelTunnel
                 z: tunnelPart.z
             }, true);
             
-			kernel.gameContext.drawImage(tunnelPart.image, x, y, width, height);
+			kernel.canvasContext.drawImage(tunnelPart.image, x, y, width, height);
 		}
 	}
 	

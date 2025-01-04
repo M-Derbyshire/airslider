@@ -53,7 +53,6 @@ export default class Kernel implements IKernel {
             return;
         
         try {
-            instance.gameCanvas = canvas;
             instance._load();
         } catch (err:any) {
             instance.handleError(err);
@@ -66,8 +65,7 @@ export default class Kernel implements IKernel {
     
     
     private _settings:ISettings; // The settings for the game
-    private _gameCanvas:HTMLCanvasElement; // The HTML canvas element that the game should be drawn on
-    private _gameContext:CanvasRenderingContext2D; // The 2D context from the HTML canvas element
+    private _canvasContext:CanvasRenderingContext2D; // The 2D context from the HTML canvas element
     
     private _fps:number; // The current Frames Per Second of the game
     private _highestFpsReached:number; // The highest FPS the game has reached
@@ -112,7 +110,7 @@ export default class Kernel implements IKernel {
         if(!settings)
             throw new Error("Cannot initialise the game's Kernel without a settings object");
         
-        this.gameCanvas = canvas;
+        this._canvasContext = canvas.getContext("2d");
         this._settings = settings;
         
         this._fps = 60;
@@ -241,25 +239,11 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * The HTML canvas element that the game should be drawn on
-     */
-	get gameCanvas()
-    {
-        return this._gameCanvas;
-    }
-    
-    private set gameCanvas(c:HTMLCanvasElement)
-    {
-        this._gameCanvas = c;
-        this._gameContext = c.getContext("2d")!;
-    }
-    
-    /**
      * The 2D context from the HTML canvas element
      */
-	get gameContext()
+	get canvasContext()
     {
-        return this._gameContext;
+        return this._canvasContext;
     }
     
     

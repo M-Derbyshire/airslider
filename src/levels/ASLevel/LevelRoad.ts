@@ -14,7 +14,7 @@ export default class LevelRoad
      */
     load():void
     {
-        this._canvasCtx = Kernel.getInstance().gameContext;
+        this._canvasCtx = Kernel.getInstance().canvasContext;
     }
     
     /**

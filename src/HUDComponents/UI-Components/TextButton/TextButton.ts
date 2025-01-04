@@ -99,7 +99,7 @@ export default class TextButton extends TextOnlyButton
     private _drawBackground()
     {
         const kernel = Kernel.getInstance();
-        const ctx = kernel.gameContext;
+        const ctx = kernel.canvasContext;
         
         const originalFillColor = ctx.fillStyle;
         ctx.fillStyle = (this._isHovering) ? this._hoverBackgroundColor : this._backgroundColor;
@@ -125,7 +125,7 @@ export default class TextButton extends TextOnlyButton
      */
     private _drawBorder()
     {
-        const ctx = Kernel.getInstance().gameContext;
+        const ctx = Kernel.getInstance().canvasContext;
         
         // First, we need to set the coordinates of each "piece" of the border, on the loaded image
         const horizLineCoord = { x: 0, y: 0, width: 187, height: 14 };

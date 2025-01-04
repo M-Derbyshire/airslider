@@ -90,7 +90,7 @@ export default class TextOnlyButton extends ASHUDComponent
         if(this._drawBoundaryBox)
         {
             const kernel = Kernel.getInstance();
-            const ctx = kernel.gameContext;
+            const ctx = kernel.canvasContext;
             
             const originalStrokeColor = ctx.strokeStyle;
             ctx.strokeStyle = "red";

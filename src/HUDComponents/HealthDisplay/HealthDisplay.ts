@@ -79,7 +79,7 @@ export default class HealthDisplay extends ASHUDComponent
     draw():void
     {
         const kernel = Kernel.getInstance();
-        const ctx = kernel.gameContext;
+        const ctx = kernel.canvasContext;
         
         const playerModelIndex = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
         const health = (kernel.loadedModels[playerModelIndex] as unknown as Tarian).health;
@@ -115,7 +115,7 @@ export default class HealthDisplay extends ASHUDComponent
     private _drawSpannerBackground(radiusModifierPixels:number)
     {
         const kernel = Kernel.getInstance();
-        const ctx = kernel.gameContext;
+        const ctx = kernel.canvasContext;
         
         const unitWidth = this.width * 0.33;
         
@@ -138,7 +138,7 @@ export default class HealthDisplay extends ASHUDComponent
     private _drawTextBackground(radiusModifierPixels:number)
     {
         const kernel = Kernel.getInstance();
-        const ctx = kernel.gameContext;
+        const ctx = kernel.canvasContext;
         
         const unitWidth = this.width * 0.66;
         const unitHeight = this.height * 0.5;
@@ -172,7 +172,7 @@ export default class HealthDisplay extends ASHUDComponent
     private _drawSpanner()
     {
         const kernel = Kernel.getInstance();
-        const ctx = kernel.gameContext;
+        const ctx = kernel.canvasContext;
         
         const xPaddingUnits = 10; // Padding between the image and the border, on the x-axis
         const yPaddingUnits = 20; // Padding between the image and the border, on the y-axis
@@ -198,7 +198,7 @@ export default class HealthDisplay extends ASHUDComponent
     private _drawBorder()
     {
         const kernel = Kernel.getInstance();
-        const ctx = kernel.gameContext;
+        const ctx = kernel.canvasContext;
         
         // Used to push the border in/out a bit
         const paddingUnitsX = 5;

@@ -121,7 +121,7 @@ export default class Frame implements IFrame {
             
             const lightMaskInfo = this._loadedLightMasks[this._lightMaskIndex];
 			
-            const ctx = Kernel.getInstance().gameContext;
+            const ctx = Kernel.getInstance().canvasContext;
             
             ctx.globalAlpha = lightMaskInfo.luminosity;
             ctx.drawImage(lightMaskInfo.image, x, y, width, height);
@@ -147,7 +147,7 @@ export default class Frame implements IFrame {
             
             const backgroundImage = this._loadedBackgrounds[this._backgroundIndex];
             
-            Kernel.getInstance().gameContext.drawImage(backgroundImage, x, y, width, height);
+            Kernel.getInstance().canvasContext.drawImage(backgroundImage, x, y, width, height);
         }
     }
 }
