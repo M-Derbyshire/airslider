@@ -37,8 +37,10 @@ export default class TarianExplosion extends ASModel {
     {
         super.load(animationManager);
         
+        const assetHandler = Kernel.getInstance().assetHandler;
+        
         // Not adding this to assetsToUnload, as every level needs this
-        this._alarmSound = Kernel.getInstance().loadAudio("/models/TarianExplosion/sounds/alarm.mp3");
+        this._alarmSound = assetHandler.loadAudio("/models/TarianExplosion/sounds/alarm.mp3");
         
         this.animationManager.registerAnimations({
             standard: this.animationManager.createAnimation({

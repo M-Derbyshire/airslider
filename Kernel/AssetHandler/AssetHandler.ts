@@ -37,49 +37,25 @@ export default class AssetHandler implements IAssetHandler
     }
     
     /**
-     * Starts the loading of an asset into the asset handler, and returns a reference to it. If the asset has already been 
-     * loaded, the reference to it will be returned, and the handler's internal usage count for that asset will be incremented
-     * @param obj an object of the correct asset type (this will be used as the asset object, if the asset hasn't already been loaded)
-     * @param path the path to the asset file
-     * @returns the asset object
+     * Loads an image with the asset handler. If the asset has already been loaded, the 
+     * reference to it will be returned
+     * @param path the file path to the image
+     * @returns the image object
      */
-    loadAsset(obj:HTMLImageElement|HTMLAudioElement, path:string):HTMLImageElement|HTMLAudioElement
+    loadImage(path:string):HTMLImageElement
     {
-        const preparedPath = this._prepareAssetPath(path);
-        const currentlyHeldAsset = this._loadedAssets.get(preparedPath);
-        
-		if(currentlyHeldAsset)
-            return currentlyHeldAsset.asset;
-        
-        const newLoadedAsset:ILoadedAssetData = {
-            path: preparedPath,
-            asset: obj,
-            loaded: false
-        }; 
-        
-        const kernel = Kernel.getInstance();
-        newLoadedAsset.asset.onerror = (err:any) => {
-            kernel.handleError(err);
-        };
-        
-        const afterLoadCallback = () => {
-            if(!newLoadedAsset.loaded)
-            {
-                newLoadedAsset.loaded = true;
-                this._defaultAssetCallback();
-            }
-        };
-		
-        if(obj instanceof Image)
-            newLoadedAsset.asset.onload = afterLoadCallback;
-        else if(obj instanceof Audio)
-            newLoadedAsset.asset.addEventListener("canplaythrough", afterLoadCallback);
-        
-        this._assetsStillLoading++;
-        newLoadedAsset.asset.src = preparedPath;
-        
-        this._loadedAssets.set(preparedPath, newLoadedAsset);
-        return newLoadedAsset.asset;
+        return this._loadAsset(new Image, path) as HTMLImageElement;
+    }
+    
+    /**
+     * Loads an audio file with the asset handler. If the asset has already been loaded, the 
+     * reference to it will be returned
+     * @param path the file path to the audio file
+     * @returns the audio object
+     */
+    loadAudio(path:string):HTMLAudioElement
+    {
+        return this._loadAsset(new Audio, path) as HTMLAudioElement;
     }
     
     /**
@@ -117,6 +93,52 @@ export default class AssetHandler implements IAssetHandler
     {
         const preparedPath = this._prepareAssetPath(path);
         this._loadedAssets.delete(preparedPath);
+    }
+    
+    /**
+     * Starts the loading of an asset into the asset handler, and returns a reference to it. If the asset has already been 
+     * loaded, the reference to it will be returned, and the handler's internal usage count for that asset will be incremented
+     * @param obj an object of the correct asset type (this will be used as the asset object, if the asset hasn't already been loaded)
+     * @param path the path to the asset file
+     * @returns the asset object
+     */
+    private _loadAsset(obj:HTMLImageElement|HTMLAudioElement, path:string):HTMLImageElement|HTMLAudioElement
+    {
+        const preparedPath = this._prepareAssetPath(path);
+        const currentlyHeldAsset = this._loadedAssets.get(preparedPath);
+        
+		if(currentlyHeldAsset)
+            return currentlyHeldAsset.asset;
+        
+        const newLoadedAsset:ILoadedAssetData = {
+            path: preparedPath,
+            asset: obj,
+            loaded: false
+        }; 
+        
+        const kernel = Kernel.getInstance();
+        newLoadedAsset.asset.onerror = (err:any) => {
+            kernel.handleError(err);
+        };
+        
+        const afterLoadCallback = () => {
+            if(!newLoadedAsset.loaded)
+            {
+                newLoadedAsset.loaded = true;
+                this._defaultAssetCallback();
+            }
+        };
+		
+        if(obj instanceof Image)
+            newLoadedAsset.asset.onload = afterLoadCallback;
+        else if(obj instanceof Audio)
+            newLoadedAsset.asset.addEventListener("canplaythrough", afterLoadCallback);
+        
+        this._assetsStillLoading++;
+        newLoadedAsset.asset.src = preparedPath;
+        
+        this._loadedAssets.set(preparedPath, newLoadedAsset);
+        return newLoadedAsset.asset;
     }
     
     /**

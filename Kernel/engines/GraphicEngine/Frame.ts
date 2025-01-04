@@ -60,9 +60,9 @@ export default class Frame implements IFrame {
      */
     loadBackground(path:string):number
     {
-        const kernel = Kernel.getInstance();
+        const assetHandler = Kernel.getInstance().assetHandler;
         
-        this._loadedBackgrounds.push(kernel.loadImage(path));
+        this._loadedBackgrounds.push(assetHandler.loadImage(path));
         return this._loadedBackgrounds.length - 1;
     }
     
@@ -75,10 +75,10 @@ export default class Frame implements IFrame {
      */
     loadLightMask(path:string, luminosity:number):number
     {
-        const kernel = Kernel.getInstance();
+        const assetHandler = Kernel.getInstance().assetHandler;
         
         this._loadedLightMasks.push({
-            image: kernel.loadImage(path),
+            image: assetHandler.loadImage(path),
             luminosity: 1 - luminosity
         });
         

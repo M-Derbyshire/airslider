@@ -69,7 +69,9 @@ export default class Level implements ILevel
      */
     unload():void
     {
-        this.assetsToUnload.forEach(asset => Kernel.getInstance().releaseAsset(asset));
+        const assetHandler = Kernel.getInstance().assetHandler;
+        
+        this.assetsToUnload.forEach(asset => assetHandler.releaseAsset(asset));
         this.pointerEventManager.removeEventHandlers();
         this.controlsInitialiser.unregisterEventListeners();
         this.HUD.unload();

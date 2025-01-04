@@ -49,10 +49,10 @@ export default class Ghost extends Monster {
     {
         super.load(animationManager);
         
-        const kernel = Kernel.getInstance();
+        const assetHandler = Kernel.getInstance().assetHandler;
         
         const damageFlashSpritesheet = "/HUDComponents/DamageFlash/images/ghost.png";
-        this.damageFlashImage = kernel.loadImage(damageFlashSpritesheet);
+        this.damageFlashImage = assetHandler.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
         
         const spritesheetPath = "/models/monsters/Ghost/anim/ghost-spritesheet.png";

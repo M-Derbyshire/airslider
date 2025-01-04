@@ -90,8 +90,10 @@ export default class LevelGround
 	 */
 	private _getPopulatedGroundObject(path:string, height:number, width:number|null):IGround
 	{
+		const assetHandler = Kernel.getInstance().assetHandler;
+		
 		return {
-            image: Kernel.getInstance().loadImage(path),
+            image: assetHandler.loadImage(path),
             height, //Height to draw the image
 			width,
             offset: 0 //The amount the images have all moved along the z-axis

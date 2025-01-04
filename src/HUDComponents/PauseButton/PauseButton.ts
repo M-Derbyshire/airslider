@@ -34,7 +34,9 @@ export default class PauseButton extends ASHUDComponent {
     load():void 
     {
         super.load();
-        this._imageSheet = Kernel.getInstance().loadImage("/HUDComponents/PauseButton/images/button_sheet.png");
+        
+        const assetHandler = Kernel.getInstance().assetHandler;
+        this._imageSheet = assetHandler.loadImage("/HUDComponents/PauseButton/images/button_sheet.png");
     }
     
     draw()

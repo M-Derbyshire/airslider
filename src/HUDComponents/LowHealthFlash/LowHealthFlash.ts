@@ -15,7 +15,8 @@ export default class LowHealthFlash extends DamageFlash
     {
         super.load();
         
-        this.image = Kernel.getInstance().loadImage("/HUDComponents/LowHealthFlash/images/damage.png");
+        const assetHandler = Kernel.getInstance().assetHandler;
+        this.image = assetHandler.loadImage("/HUDComponents/LowHealthFlash/images/damage.png");
     }
     
     prepare():void 

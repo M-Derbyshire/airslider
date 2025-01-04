@@ -48,8 +48,10 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         nextAnimation = ""
     }:IAnimationDetails):IAnimation
     {
+        const assetHandler = Kernel.getInstance().assetHandler;
+        
         if(!this.sheetMap.has(sheetPath))
-            this.sheetMap.set(sheetPath, Kernel.getInstance().loadImage(sheetPath));
+            this.sheetMap.set(sheetPath, assetHandler.loadImage(sheetPath));
         
         let anim:IAnimation = {
 			spritesheet: this.sheetMap.get(sheetPath)!,

@@ -8,13 +8,20 @@ export default interface IAssetHandler {
     readonly assetsStillLoading:number;
     
     /**
-     * Starts the loading of an asset into the asset handler, and returns a reference to it. If the asset has already been 
-     * loaded, the reference to it will be returned, and the handler's internal usage count for that asset will be incremented
-     * @param obj an object of the correct asset type (this will be used as the asset object, if the asset hasn't already been loaded)
-     * @param path the path to the asset file
-     * @returns the asset object
+     * Loads an image with the asset handler. If the asset has already been loaded, the 
+     * reference to it will be returned
+     * @param path the file path to the image
+     * @returns the image object
      */
-    loadAsset(obj:HTMLImageElement|HTMLAudioElement, path:string):HTMLImageElement|HTMLAudioElement;
+    loadImage(path:string):HTMLImageElement;
+    
+    /**
+     * Loads an audio file with the asset handler. If the asset has already been loaded, the 
+     * reference to it will be returned
+     * @param path the file path to the audio file
+     * @returns the audio object
+     */
+    loadAudio(path:string):HTMLAudioElement;
     
     /**
      * Starts the loading of a font file into the HTML document

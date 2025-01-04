@@ -43,7 +43,9 @@ export default class HUD implements IHUD
      */
     unload():void
     {
-        this.assetsToUnload.forEach(asset => Kernel.getInstance().releaseAsset(asset));
+        const assetHandler = Kernel.getInstance().assetHandler;
+        
+        this.assetsToUnload.forEach(asset => assetHandler.releaseAsset(asset));
         this.components.forEach(component => component.unload());
     }
     

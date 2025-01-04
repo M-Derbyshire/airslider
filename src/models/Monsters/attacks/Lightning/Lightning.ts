@@ -15,6 +15,8 @@ export default class Lightning extends ASModel {
     {
         super.load(animationManager);
         
+        const assetHandler = Kernel.getInstance().assetHandler;
+        
         const spritesheetPath = "/models/monsters/attacks/Lightning/anim/lightning-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         
@@ -33,7 +35,7 @@ export default class Lightning extends ASModel {
         });
         
         const damageFlashImagePath = "/HUDComponents/DamageFlash/images/yellow.png";
-        this.damageFlashImage = Kernel.getInstance().loadImage(damageFlashImagePath);
+        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
         this.assetsToUnload.push(damageFlashImagePath);
     }
     

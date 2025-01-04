@@ -4,6 +4,7 @@ import IGameEngine from "./engines/GameEngine/IGameEngine";
 import IGraphicEngine from "./engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "./engines/SoundEngine/ISoundEngine";
 import ISettings from "../settings/ISettings";
+import IAssetHandler from "./AssetHandler/IAssetHandler";
 
 /**
  * This will be a singleton that controls the entire game, and provides other entities with 
@@ -74,9 +75,9 @@ export default interface IKernel {
     readonly levelHasBeenPrepared:boolean;
     
     /**
-     * The amount of assets that are still loading
+     * Loads and manages assets
      */
-    readonly assetsStillLoading:number;
+    readonly assetHandler:IAssetHandler
     
     /**
      * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
@@ -118,33 +119,6 @@ export default interface IKernel {
      * Restarts the current level
      */
     restartCurrentLevel():void;
-    
-    /**
-     * Loads an image with the asset handler
-     * @param path the file path to the image
-     * @returns the image object
-     */
-    loadImage(path:string):HTMLImageElement;
-    
-    /**
-     * Loads an audio file with the asset handler
-     * @param path the file path to the audio file
-     * @returns the audio object
-     */
-    loadAudio(path:string):HTMLAudioElement;
-    
-    /**
-     * Starts the loading of a font file into the HTML document
-     * @param name the name of the font
-     * @param path the path to the font file
-     */
-    loadFont(name:string, path:string):void;
-    
-    /**
-     * Deletes the asset with the given file path (fonts cannot be released).
-     * @param path the file path of the asset
-     */
-    releaseAsset(path:string):void;
     
     /**
      * Pauses/unpauses the game (if the current level is pauseable)

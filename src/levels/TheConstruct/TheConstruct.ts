@@ -77,9 +77,9 @@ export default class TheConstruct extends ASLevel
     {
         super.load(frameManager, eventManager, pointerEventManager);
         
-        const kernel = Kernel.getInstance();
+        const assetHandler = Kernel.getInstance().assetHandler;
         
-        this.tunnelSprite = kernel.loadImage("/levels/TheConstruct/images/theConstructTunnel.png");
+        this.tunnelSprite = assetHandler.loadImage("/levels/TheConstruct/images/theConstructTunnel.png");
         this.tunnelSpriteLength = 60;
         
         this.groundManager.load(

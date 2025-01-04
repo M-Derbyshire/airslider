@@ -233,11 +233,11 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * The amount of assets that are still loading
+     * Loads and manages assets
      */
-    get assetsStillLoading()
+    get assetHandler():IAssetHandler
     {
-        return this._assetHandler.assetsStillLoading;
+        return this._assetHandler;
     }
     
     /**
@@ -310,47 +310,6 @@ export default class Kernel implements IKernel {
         this._levelQueue[0].hasBeenPrepared = false;
     }
     
-    
-    
-    
-    /**
-     * Loads an image with the asset handler
-     * @param path the file path to the image
-     * @returns the image object
-     */
-    loadImage(path:string):HTMLImageElement
-    {
-        return this._assetHandler.loadAsset(new Image, path) as HTMLImageElement;
-    }
-    
-    /**
-     * Loads an audio file with the asset handler
-     * @param path the file path to the audio file
-     * @returns the audio object
-     */
-    loadAudio(path:string):HTMLAudioElement
-    {
-        return this._assetHandler.loadAsset(new Audio, path) as HTMLAudioElement;
-    }
-    
-    /**
-     * Starts the loading of a font file into the HTML document
-     * @param name the name of the font
-     * @param path the path to the font file
-     */
-    loadFont(name:string, path:string):void
-    {
-        this._assetHandler.loadFont(name, path);
-    }
-    
-    /**
-     * Deletes the asset with the given file path (fonts cannot be released).
-     * @param path the file path of the asset
-     */
-    releaseAsset(path:string):void
-    {
-        this._assetHandler.releaseAsset(path);
-    }
     
     
     
@@ -440,7 +399,7 @@ export default class Kernel implements IKernel {
         const timeSinceLastFrame = currentDateTime.getTime() - this._lastTime.getTime();
         if (
             timeSinceLastFrame < (1000 / this._fpsLimit) || // Are we over the max FPS limit? OR
-            (this.assetsStillLoading > 0 && !this.levelHasBeenPrepared) // Is the current level still loading assets?
+            (this._assetHandler.assetsStillLoading > 0 && !this.levelHasBeenPrepared) // Is the current level still loading assets?
         )
         {
             return;
@@ -487,7 +446,7 @@ export default class Kernel implements IKernel {
         // Load the fonts from the "fonts" object
         Object.keys(fonts).forEach((key:string) => {
             const fontPath = fonts[key as keyof typeof fonts];
-            this.loadFont(key, fontPath);
+            this._assetHandler.loadFont(key, fontPath);
         });
         
         const InitialLevelClass = this.settings.InitialLevelClass;

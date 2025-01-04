@@ -66,7 +66,8 @@ export default class TextButton extends TextOnlyButton
     {
         super.load();
         
-        this._borderPiecesImage = Kernel.getInstance().loadImage("/HUDComponents/UI-Components/TextButton/images/borderPieces.png");
+        const assetHandler = Kernel.getInstance().assetHandler;
+        this._borderPiecesImage = assetHandler.loadImage("/HUDComponents/UI-Components/TextButton/images/borderPieces.png");
     }
     
     /**

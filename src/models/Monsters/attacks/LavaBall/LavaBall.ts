@@ -28,6 +28,8 @@ export default class LavaBall extends ASModel {
     {
         super.load(animationManager);
         
+        const assetHandler = Kernel.getInstance().assetHandler;
+        
         const ballWidth = 30;
         const ballHeight = 40;
         
@@ -69,7 +71,7 @@ export default class LavaBall extends ASModel {
         });
         
         const damageFlashSpritesheet = "/HUDComponents/DamageFlash/images/fire.png";
-        this.damageFlashImage = Kernel.getInstance().loadImage(damageFlashSpritesheet);
+        this.damageFlashImage = assetHandler.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
     }
     

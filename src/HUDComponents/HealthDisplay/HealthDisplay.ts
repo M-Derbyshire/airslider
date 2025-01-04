@@ -52,11 +52,11 @@ export default class HealthDisplay extends ASHUDComponent
     {
         super.load();
         
-        const kernel = Kernel.getInstance();
+        const assetHandler = Kernel.getInstance().assetHandler;
         
         const imagesDirPath = "/HUDComponents/HealthDisplay/images";
-        this._borderImage = kernel.loadImage(`${imagesDirPath}/lightning-border.png`);
-        this._spannerImage = kernel.loadImage(`${imagesDirPath}/spanner.png`);
+        this._borderImage = assetHandler.loadImage(`${imagesDirPath}/lightning-border.png`);
+        this._spannerImage = assetHandler.loadImage(`${imagesDirPath}/spanner.png`);
     }
     
     prepare():void {

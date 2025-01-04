@@ -74,6 +74,6 @@ export default class LoadingScreen extends Level
         if(kernel.status === KernelStatus.PrePaused)
             kernel.toggleGamePause();
         
-        (this.HUD as LoadingScreenHUD).setLevelHasLoaded(kernel.assetsStillLoading === 0);
+        (this.HUD as LoadingScreenHUD).setLevelHasLoaded(kernel.assetHandler.assetsStillLoading === 0);
     }
 };

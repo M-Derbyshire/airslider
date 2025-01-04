@@ -27,9 +27,11 @@ export default class MusicManager
      */
     load(musicFilePaths:string[]):string|null
     {
+        const assetHandler = Kernel.getInstance().assetHandler;
+        
         const chosenMusicFilePath = this._chooseMusicPath(musicFilePaths);
         if(chosenMusicFilePath)
-            this._music = Kernel.getInstance().loadAudio(chosenMusicFilePath);
+            this._music = assetHandler.loadAudio(chosenMusicFilePath);
         
         return chosenMusicFilePath;
     }

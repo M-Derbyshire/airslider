@@ -36,11 +36,11 @@ export default class SignDisplay extends ASModel
     {
         super.load(animationManager);
         
-        const kernel = Kernel.getInstance();
+        const assetHandler = Kernel.getInstance().assetHandler;
         
         // Not adding these to assetsToUnload, as every level needs this
-        this._countdownBeep = kernel.loadAudio("/models/SignDisplay/sounds/countdown_beep.mp3");
-        this._startBeep = kernel.loadAudio("/models/SignDisplay/sounds/countdown_go.mp3");
+        this._countdownBeep = assetHandler.loadAudio("/models/SignDisplay/sounds/countdown_beep.mp3");
+        this._startBeep = assetHandler.loadAudio("/models/SignDisplay/sounds/countdown_go.mp3");
         
         const sheetPath = "/models/SignDisplay/anim/display_open_spritesheet.png";
         

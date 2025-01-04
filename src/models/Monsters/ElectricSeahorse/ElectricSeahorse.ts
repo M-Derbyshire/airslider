@@ -35,8 +35,10 @@ export default class ElectricSeahorse extends Monster {
     {
         super.load(animationManager);
         
+        const assetHandler = Kernel.getInstance().assetHandler;
+        
         const wingSoundPath = "/models/monsters/ElectricSeahorse/sounds/flap.mp3";
-        this._wingSound = Kernel.getInstance().loadAudio(wingSoundPath);
+        this._wingSound = assetHandler.loadAudio(wingSoundPath);
         this.assetsToUnload.push(wingSoundPath);
         
         const spritesheetPath = "/models/monsters/ElectricSeahorse/anim/electricSeahorse-spritesheet.png";
