@@ -88,8 +88,6 @@ export default class TheConstruct extends ASLevel
             50
         );
         
-        this.roadManager.load();
-        
         this.setupFrame(
             "/levels/TheConstruct/images/testBackground.png",
             "/levels/TheConstruct/images/testBackgroundMask.png",

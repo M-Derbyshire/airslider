@@ -7,26 +7,14 @@ import ASLevel from "./ASLevel";
  */
 export default class LevelRoad
 {
-    private _canvasCtx:CanvasRenderingContext2D;
-    
-    /**
-     * Loads the LevelRoad
-     */
-    load():void
-    {
-        this._canvasCtx = Kernel.getInstance().canvasContext;
-    }
-    
     /**
      * Draws the road
      * @param color the color of the road
      */
     draw(color:string):void
     {
-        this._canvasCtx.lineWidth = 1;
-        this._canvasCtx.fillStyle = color;
-        
         const kernel = Kernel.getInstance();
+        const ctx = kernel.canvasContext;
         const level = kernel.level as ASLevel;
         const camera = kernel.graphicEngine.camera;
         
@@ -44,10 +32,13 @@ export default class LevelRoad
         const rightEdge = x + width;
         const bottomEdge = y + height;
         
-        this._canvasCtx.beginPath();
-        this._canvasCtx.moveTo(leftEdge, bottomEdge);
-        this._canvasCtx.lineTo(vanishPointX, vanishPointY);
-        this._canvasCtx.lineTo(rightEdge, bottomEdge);
-        this._canvasCtx.fill();
+        ctx.lineWidth = 1;
+        ctx.fillStyle = color;
+        
+        ctx.beginPath();
+        ctx.moveTo(leftEdge, bottomEdge);
+        ctx.lineTo(vanishPointX, vanishPointY);
+        ctx.lineTo(rightEdge, bottomEdge);
+        ctx.fill();
     }
 }
