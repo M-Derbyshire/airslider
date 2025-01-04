@@ -2,7 +2,7 @@ import Kernel from '../Kernel';
 
 /**
  * Contains methods that perform calculations to convert "unit" values into actual canvas positions/dimensions. Also provides 
- * methods for keeping speeds consistent when the FPS changes
+ * a method for keeping speeds consistent when the FPS changes
  */
 export default class UnitHelper
 {

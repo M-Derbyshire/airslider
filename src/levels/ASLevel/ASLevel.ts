@@ -19,13 +19,13 @@ import ILevel from '../../../Kernel/entities/Level/ILevel';
 import RacerManager from './RacerManager';
 import Kernel from '../../../Kernel/Kernel';
 import ASControlsInitialiser from './ASControlsInitialiser';
-import IZCalcStrategy from '../../../Kernel/utils/ZCalc/strategies/IZCalcStrategy';
 import LinearVanishingPointStrategy from '../../../Kernel/utils/ZCalc/strategies/LinearVanishingPointStrategy';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
 import MusicManager from './MusicManager';
 import standardModelEvents from './events/standardModelEvents';
 import UnitHelper from '../../../Kernel/utils/UnitHelper';
+import ZCalc from '../../../Kernel/utils/ZCalc/ZCalc';
 
 /**
  * The game's base Level class
@@ -39,12 +39,7 @@ export default class ASLevel extends Level
     rightEdge:number;
     
     // The strategy for the ZCalc
-    protected zCalcStrategy: IZCalcStrategy & {
-        vanishingPointX:number,
-        vanishingPointY:number,
-        vanishingPointDepth:number,
-        setVanishPoint:(x:number, y:number, depth?:number)=>void
-    };
+    protected zCalcStrategy: LinearVanishingPointStrategy;
     
     get vanishingPointX()
     {
@@ -233,7 +228,7 @@ export default class ASLevel extends Level
             kernel.unitsWithinCameraY / 2
         );
         
-        kernel.utils.zCalc.setStrategy(this.zCalcStrategy);
+        ZCalc.setStrategy(this.zCalcStrategy);
         
         this.leftEdge = 0;
         this.rightEdge = kernel.unitsWithinCameraX;

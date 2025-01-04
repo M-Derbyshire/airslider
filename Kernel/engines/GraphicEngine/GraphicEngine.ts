@@ -6,6 +6,7 @@ import IDrawDimensions from './IDrawDimensions';
 import ITextContent from './ITextContent';
 import Kernel from '../../Kernel';
 import UnitHelper from '../../utils/UnitHelper';
+import ZCalc from '../../utils/ZCalc/ZCalc';
 
 /**
  * The engine that controls the drawing to the screen
@@ -183,11 +184,9 @@ export default class GraphicEngine implements IGraphicEngine {
         showNegative = false
     ):IDrawPositions&IDrawDimensions
     {
-        const zCalc = Kernel.getInstance().utils.zCalc;
-        
         const unscaledValues = this.getUnscaledDrawPositionsAndDimensions(unitValues);
         
-        return zCalc.getDrawValues(unscaledValues, unitValues.z, showNegative);;
+        return ZCalc.getDrawValues(unscaledValues, unitValues.z, showNegative);;
     }
     
     /**

@@ -4,7 +4,6 @@ import IGameEngine from "./engines/GameEngine/IGameEngine";
 import IGraphicEngine from "./engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "./engines/SoundEngine/ISoundEngine";
 import ISettings from "../settings/ISettings";
-import IUtilContainer from "./utils/IUtilContainer";
 
 /**
  * This will be a singleton that controls the entire game, and provides other entities with 
@@ -58,11 +57,6 @@ export default interface IKernel {
      * The amount of milliseconds that passed between the last frame, and this one
      */
     readonly timeSinceLastFrameMS:number;
-    
-    /**
-     * Provides a number of utility objects
-     */
-    readonly utils:IUtilContainer;
     
     /**
      * The current level that is being ran

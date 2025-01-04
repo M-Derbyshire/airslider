@@ -2,14 +2,12 @@ import AssetHandler from './AssetHandler/AssetHandler';
 import GameEngine from './engines/GameEngine/GameEngine';
 import GraphicEngine from './engines/GraphicEngine/GraphicEngine';
 import SoundEngine from './engines/SoundEngine/SoundEngine';
-import ZCalc from './utils/ZCalc/ZCalc';
 import Camera from './engines/GraphicEngine/Camera';
 import FrameManager from './engines/GraphicEngine/FrameManager';
 import fonts from '../src/fonts/fonts';
 import IKernel, { KernelStatus, ILoadedLevel, ILevelEngines } from './IKernel';
 import ISettings from '../settings/ISettings';
 import IAssetHandler from './AssetHandler/IAssetHandler';
-import IUtilContainer from './utils/IUtilContainer';
 import ILevel from './entities/Level/ILevel';
 import IModel from './entities/Model/IModel';
 import ICamera from './engines/GraphicEngine/ICamera';
@@ -19,7 +17,6 @@ import ErrorHandler from './ErrorHandler/ErrorHandler';
 import ModelAnimationsManager from './entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 import EventManager from './entities/Level/EventManager';
 import PointerEventManager from './entities/Level/PointerEventManager';
-import NoScalingStrategy from './utils/ZCalc/strategies/NoScalingStrategy';
 
 /**
  * This will be a singleton that controls the entire game, and provides other entities with 
@@ -88,8 +85,6 @@ export default class Kernel implements IKernel {
     private _centralState:Map<string, any>; // A map to store any state that needs to be accessible to all levels.
     
     private _assetHandler:IAssetHandler; // Loads and manages assets
-    
-    private _utils:IUtilContainer; // Provides a number of utility objects
     
     private _currentLevelShouldBeUnloaded:boolean; // If this is true, the current level will get unloaded after the current frame has been drawn
     
@@ -210,14 +205,6 @@ export default class Kernel implements IKernel {
     get timeSinceLastFrameMS()
     {
         return this._timeSinceLastFrameMS;
-    }
-    
-    /**
-     * Provides a number of utility objects
-     */
-    get utils() 
-    {
-        return this._utils;
     }
     
     /**
@@ -497,10 +484,6 @@ export default class Kernel implements IKernel {
     private _load():void
     {
         this._setupAutoPause();
-        
-        this._utils = {
-            zCalc: new ZCalc(new NoScalingStrategy())
-        };
         
         // Load the fonts from the "fonts" object
         Object.keys(fonts).forEach((key:string) => {

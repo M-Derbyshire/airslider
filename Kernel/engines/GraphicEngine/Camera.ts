@@ -3,6 +3,7 @@ import ICameraPositions from './ICameraPositions';
 import ICameraDrawPositionsCalc from './ICameraDrawPositionsCalc';
 import Kernel from '../../Kernel';
 import UnitHelper from '../../utils/UnitHelper';
+import ZCalc from '../../utils/ZCalc/ZCalc';
 
 /**
  * A level's camera
@@ -142,14 +143,12 @@ export default class Camera implements ICamera {
      */
     isOnCamera(drawSpaceX:number, drawSpaceY:number, widthUnits:number, heightUnits:number, zPosition:number = 0):boolean
     {
-        const utils = Kernel.getInstance().utils;
-        
         const unscaledX = UnitHelper.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this._positions.canvas.x;
         const unscaledY = UnitHelper.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this._positions.canvas.y;
         const unscaledWidth = UnitHelper.xUnit(widthUnits);
         const unscaledHeight = UnitHelper.yUnit(heightUnits);
         
-        const scaledValues = utils.zCalc.getDrawValues({
+        const scaledValues = ZCalc.getDrawValues({
             x: unscaledX,
             y: unscaledY,
             width: unscaledWidth,
