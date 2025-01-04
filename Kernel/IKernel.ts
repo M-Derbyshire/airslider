@@ -47,11 +47,6 @@ export default interface IKernel {
     readonly loadedModels:IModel[];
     
     /**
-     * Has the current level been prepared? (using the Level.prepare method)
-     */
-    readonly levelHasBeenPrepared:boolean;
-    
-    /**
      * Loads and manages assets
      */
     readonly assetHandler:IAssetHandler

@@ -188,14 +188,6 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Has the current level been prepared? (using the Level.prepare method)
-     */
-    get levelHasBeenPrepared()
-    {
-        return (this._levelQueue.length > 0) ? this._levelQueue[0].hasBeenPrepared : false;
-    }
-    
-    /**
      * Loads and manages assets
      */
     get assetHandler():IAssetHandler
@@ -347,9 +339,10 @@ export default class Kernel implements IKernel {
         const currentDateTime = new Date();
         const timeSinceLastFrame = currentDateTime.getTime() - this._lastTime.getTime();
         const fpsLimit = this.settings.fpsLimit ?? 70;
+        const levelHasBeenPrepared = (this._levelQueue.length > 0) ? this._levelQueue[0].hasBeenPrepared : false;
         if (
             timeSinceLastFrame < (1000 / fpsLimit) || // Are we over the max FPS limit? OR
-            (this._assetHandler.assetsStillLoading > 0 && !this.levelHasBeenPrepared) // Is the current level still loading assets?
+            (this._assetHandler.assetsStillLoading > 0 && !levelHasBeenPrepared) // Is the current level still loading assets?
         )
         {
             return;
@@ -358,7 +351,7 @@ export default class Kernel implements IKernel {
         this._timeSinceLastFrameMS = timeSinceLastFrame;
         
         try {
-            if(!this.levelHasBeenPrepared)
+            if(!levelHasBeenPrepared)
                 this._prepareCurrentLevelAndModels();
             
             this._fps = this._getNewFps(currentDateTime);
