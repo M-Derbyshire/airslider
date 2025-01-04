@@ -188,7 +188,7 @@ export default class Kernel implements IKernel {
     /**
      * Loads and manages assets
      */
-    get assetHandler():IAssetHandler
+    get assetHandler()
     {
         return this._assetHandler;
     }
