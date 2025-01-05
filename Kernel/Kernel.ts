@@ -19,7 +19,7 @@ import EventManager from './entities/Level/EventManager';
 import PointerEventManager from './entities/Level/PointerEventManager';
 
 /**
- * This will be a singleton that controls the entire game, and provides other entities with 
+ * This is a singleton that controls the running of the game, and provides other entities with 
  * access to certain functionality and data.
  */
 export default class Kernel implements IKernel {
