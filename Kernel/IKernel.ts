@@ -54,17 +54,17 @@ export default interface IKernel {
     /**
      * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
      */
-    readonly gameEngine?:IGameEngine;
+    readonly gameEngine?:Omit<IGameEngine, "run">;
     
     /**
      * The engine that controls the drawing to the screen
      */
-    readonly graphicEngine?:IGraphicEngine;
+    readonly graphicEngine?:Omit<IGraphicEngine, "run">;
     
     /**
      * The engine that controls the sound/music of the game
      */
-    readonly soundEngine?:ISoundEngine;
+    readonly soundEngine?:Omit<ISoundEngine, "run">;
     
     /**
      * The 2D context from the HTML canvas element
