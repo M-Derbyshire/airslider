@@ -6,6 +6,7 @@ import ILightMask from './ILightMask';
  * A single area of a level
  */
 export default class Frame implements IFrame {
+    private _backgroundColor:string|null = null;
     private _background:HTMLImageElement|null = null;
     private _lightMask:HTMLImageElement|null = null;
     private _lightMaskLuminosity:number = 1; // the light mask's luminosity (1 is the lightest, 0 is the darkest)
@@ -43,6 +44,16 @@ export default class Frame implements IFrame {
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+    
+    /**
+     * Sets the background color for the frame
+     * @param color the color (e.g. "red"/"#ff0000") to use as the background of the frame (this will be drawn 
+     * underneath the background image, if an image is set)
+     */
+    setBackgroundColor(color:string):void
+    {
+        this._backgroundColor = color;
     }
     
     /**
@@ -93,18 +104,27 @@ export default class Frame implements IFrame {
      */
     drawBack():void
     {
+        if(!this._background && !this._backgroundColor) return;
+        
+        const graphicEngine = Kernel.getInstance().graphicEngine;
+        const ctx = Kernel.getInstance().canvasContext;
+        
+        const { x, y, width, height } = graphicEngine.getUnscaledDrawPositionsAndDimensions({
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height
+        });
+        
+        if(this._backgroundColor != null)
+        {
+            ctx.fillStyle = this._backgroundColor;
+            ctx.fillRect(x, y, width, height);
+        }
+        
         if(this._background !== null)
         {
-            const graphicEngine = Kernel.getInstance().graphicEngine;
-            
-            const { x, y, width, height } = graphicEngine.getUnscaledDrawPositionsAndDimensions({
-                x: this.x,
-                y: this.y,
-                width: this.width,
-                height: this.height
-            });
-            
-            Kernel.getInstance().canvasContext.drawImage(this._background, x, y, width, height);
+            ctx.drawImage(this._background, x, y, width, height);
         }
     }
 }

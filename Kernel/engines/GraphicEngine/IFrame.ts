@@ -23,6 +23,13 @@ export default interface IFrame {
     height:number;
     
     /**
+     * Sets the background color for the frame
+     * @param color the color (e.g. "red"/"#ff0000") to use as the background of the frame (this will be drawn 
+     * underneath the background image, if an image is set)
+     */
+    setBackgroundColor(color:string):void;
+    
+    /**
      * Sets the background image for the frame
      * @param image the image to use as the background of the frame
      */

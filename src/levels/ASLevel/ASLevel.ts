@@ -238,7 +238,7 @@ export default class ASLevel extends Level
         this.leftEdge = 0;
         this.rightEdge = settings.unitsWithinCameraX;
         
-        this.prepareFrame();
+        this._prepareFrame();
         
         this._musicManager.prepare(this.musicVolume);
         
@@ -332,7 +332,7 @@ export default class ASLevel extends Level
     /**
      * Setup the frame for the level
      */
-    protected prepareFrame():void
+    private _prepareFrame():void
     {
         const settings = Kernel.getInstance().settings;
         
