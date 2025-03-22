@@ -56,14 +56,19 @@ export default class ASLevel extends Level
         return this.zCalcStrategy.vanishingPointDepth;
     }
     
+    // Frame management
+    protected backgroundImage: HTMLImageElement;
+    protected outsideLightMaskImage: HTMLImageElement;
+    protected outsideLightMaskLuminosity: number;
+    protected insideLightMaskImage: HTMLImageElement;
+    protected insideLightMaskLuminosity: number;
+    
     // Environment management
     protected roadColor: string;
     protected roadManager: LevelRoad;
     protected groundManager: LevelGround;
     protected tunnelManager: LevelTunnel;
     protected outsideVisible: boolean;
-    protected tunnelLightMaskIndex:number;
-    protected outsideLightMaskIndex: number;
     protected tunnelSprite: HTMLImageElement;
     protected tunnelSpriteLength: number;
     
@@ -233,6 +238,8 @@ export default class ASLevel extends Level
         this.leftEdge = 0;
         this.rightEdge = settings.unitsWithinCameraX;
         
+        this.prepareFrame();
+        
         this._musicManager.prepare(this.musicVolume);
         
         this.racerManager.prepare();
@@ -323,23 +330,18 @@ export default class ASLevel extends Level
     
     
     /**
-     * Setup the frame for the level (call this during the loading of your level)
-     * @param backgroundPath The asset path to the background image for the frame
-     * @param outsideLightMaskPath The asset path to the light mask image (for outside spaces) for the frame
-     * @param tunnelLightMaskPath The asset path to the light mask image (for inside a tunnel) for the frame
+     * Setup the frame for the level
      */
-    protected setupFrame(backgroundPath:string, outsideLightMaskPath:string, tunnelLightMaskPath:string):void
+    protected prepareFrame():void
     {
         const settings = Kernel.getInstance().settings;
         
         //Setup the frame for the level
         let frame = new Frame(0, 0, settings.unitsWithinCameraX, settings.unitsWithinCameraY);
         
-        const frameBackgroundIndex = frame.loadBackground(backgroundPath);
-        frame.setBackgroundImage(frameBackgroundIndex);
-        
-        this.outsideLightMaskIndex = frame.loadLightMask(outsideLightMaskPath, 0);
-        this.tunnelLightMaskIndex = frame.loadLightMask(tunnelLightMaskPath, 0.25);
+        // The light mask will be set during the gameplay (based on whether we're inside or outside a tunnel)
+        // However, the background should be consistent, so we set it here.
+        frame.setBackgroundImage(this.backgroundImage);
         
         this.frameIndex = this.frameManager.addFrame(frame);
     }
@@ -493,7 +495,14 @@ export default class ASLevel extends Level
             this.tunnelManager.tunnel[tunnelLength - 2].image
         );
         
-        frame.setLightMaskImage(isInside ? this.tunnelLightMaskIndex : this.outsideLightMaskIndex);
+        if(isInside)
+        {
+            frame.setLightMaskImage(this.insideLightMaskImage, this.insideLightMaskLuminosity);
+        }
+        else
+        {
+            frame.setLightMaskImage(this.outsideLightMaskImage, this.outsideLightMaskLuminosity);
+        }
     }    
     
     

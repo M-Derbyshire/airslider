@@ -38,11 +38,12 @@ export default class LoadingScreen extends Level
 		super.load(frameManager, eventManager, pointerEventManager);
         
         const settings = Kernel.getInstance().settings;
+        const assetHandler = Kernel.getInstance().assetHandler;
         
         const frame = new Frame(0, 0, settings.unitsWithinCameraX, settings.unitsWithinCameraY);
         
-        const backgroundIndex = frame.loadBackground(this.backgroundImagePath);
-        frame.setBackgroundImage(backgroundIndex);
+        const backgroundImage = assetHandler.loadImage(this.backgroundImagePath);
+        frame.setBackgroundImage(backgroundImage);
         
         this.frameManager.addFrame(frame);
         

@@ -6,13 +6,9 @@ import ILightMask from './ILightMask';
  * A single area of a level
  */
 export default class Frame implements IFrame {
-    // These are the indexes of the currently selected background and lightmask in the 
-    // _loadedBackgrounds and _loadedLightMasks arrays.
-    private _backgroundIndex:number|null = null;
-    private _lightMaskIndex:number|null = null;
-    
-    private _loadedLightMasks:ILightMask[]; // The currently loaded light masks for the frame
-    private _loadedBackgrounds:HTMLImageElement[]; // The currently loaded backgrounds for the frame
+    private _background:HTMLImageElement|null = null;
+    private _lightMask:HTMLImageElement|null = null;
+    private _lightMaskLuminosity:number = 1; // the light mask's luminosity (1 is the lightest, 0 is the darkest)
     
     /**
      * The x position (in units) of the frame in the level
@@ -43,9 +39,6 @@ export default class Frame implements IFrame {
      */
     constructor(x:number, y:number, width:number, height:number)
     {
-        this._loadedLightMasks = [];
-        this._loadedBackgrounds = [];
-        
         this.x = x;
         this.y = y;
         this.width = width;
@@ -53,54 +46,23 @@ export default class Frame implements IFrame {
     }
     
     /**
-     * Loads a background image, and returns the index to that image in the Frame's 
-     * internal state.
-     * @param path the path of the background image file
-     * @returns the index number of the image in the Frame's internal array
-     */
-    loadBackground(path:string):number
-    {
-        const assetHandler = Kernel.getInstance().assetHandler;
-        
-        this._loadedBackgrounds.push(assetHandler.loadImage(path));
-        return this._loadedBackgrounds.length - 1;
-    }
-    
-    /**
-     * Loads a light mask image, and returns the index to that image in the Frame's 
-     * internal state
-     * @param path the path of the light mask's image file
-     * @param luminosity a number that represents the light mask's luminosity (1 is the lightest, 0 is the darkest)
-     * @returns the index number of the image in the Frame's internal array
-     */
-    loadLightMask(path:string, luminosity:number):number
-    {
-        const assetHandler = Kernel.getInstance().assetHandler;
-        
-        this._loadedLightMasks.push({
-            image: assetHandler.loadImage(path),
-            luminosity: 1 - luminosity
-        });
-        
-        return this._loadedLightMasks.length - 1;
-    }
-    
-    /**
      * Sets the background image for the frame
-     * @param index the index number (returned from the loadBackground method) for the required image
+     * @param image the image to use as the background of the frame
      */
-    setBackgroundImage(index:number):void
+    setBackgroundImage(image:HTMLImageElement):void
     {
-        this._backgroundIndex = index;
+        this._background = image;
     }
     
     /**
      * Sets the light mask image for the frame
-     * @param index the index number (returned from the loadLightMask method) for the required image
+     * @param image the image to use as the light mask of the frame
+     * @param luminosity a number that represents the light mask's luminosity (1 is the lightest, 0 is the darkest)
      */
-    setLightMaskImage(index:number):void
+    setLightMaskImage(image:HTMLImageElement, luminosity:number):void
     {
-        this._lightMaskIndex = index;
+        this._lightMask = image;
+        this._lightMaskLuminosity = luminosity;
     }
     
     /**
@@ -108,7 +70,7 @@ export default class Frame implements IFrame {
      */
     drawFront():void
     {
-        if(this._lightMaskIndex !== null)
+        if(this._lightMask !== null)
         {
             const graphicEngine = Kernel.getInstance().graphicEngine;
             
@@ -118,13 +80,10 @@ export default class Frame implements IFrame {
                 width: this.width,
                 height: this.height
             });
-            
-            const lightMaskInfo = this._loadedLightMasks[this._lightMaskIndex];
-			
             const ctx = Kernel.getInstance().canvasContext;
             
-            ctx.globalAlpha = lightMaskInfo.luminosity;
-            ctx.drawImage(lightMaskInfo.image, x, y, width, height);
+            ctx.globalAlpha = 1 - this._lightMaskLuminosity;
+            ctx.drawImage(this._lightMask, x, y, width, height);
             ctx.globalAlpha = 1;
         }
     }
@@ -134,7 +93,7 @@ export default class Frame implements IFrame {
      */
     drawBack():void
     {
-        if(this._backgroundIndex !== null)
+        if(this._background !== null)
         {
             const graphicEngine = Kernel.getInstance().graphicEngine;
             
@@ -145,9 +104,7 @@ export default class Frame implements IFrame {
                 height: this.height
             });
             
-            const backgroundImage = this._loadedBackgrounds[this._backgroundIndex];
-            
-            Kernel.getInstance().canvasContext.drawImage(backgroundImage, x, y, width, height);
+            Kernel.getInstance().canvasContext.drawImage(this._background, x, y, width, height);
         }
     }
 }

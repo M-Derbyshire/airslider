@@ -88,11 +88,11 @@ export default class TheConstruct extends ASLevel
             50
         );
         
-        this.setupFrame(
-            "/levels/TheConstruct/images/testBackground.png",
-            "/levels/TheConstruct/images/testBackgroundMask.png",
-            "/levels/TheConstruct/images/tunnelLightMask.png"
-        );
+        this.backgroundImage = assetHandler.loadImage("/levels/TheConstruct/images/testBackground.png");
+        this.insideLightMaskImage = assetHandler.loadImage("/levels/TheConstruct/images/tunnelLightMask.png");
+        this.insideLightMaskLuminosity = 0.25;
+        this.outsideLightMaskImage = assetHandler.loadImage("/levels/TheConstruct/images/testBackgroundMask.png");
+        this.outsideLightMaskLuminosity = 0;
         
         this.assetsToUnload.push(
             "/levels/TheConstruct/images/theConstructTunnel.png",
@@ -106,8 +106,6 @@ export default class TheConstruct extends ASLevel
     prepare():void
     {
         super.prepare();
-        
-        const kernel = Kernel.getInstance();
         
         this.outsideVisible = true;
         
