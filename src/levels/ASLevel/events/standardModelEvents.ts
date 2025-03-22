@@ -18,6 +18,7 @@ const standardModelEvents:IEventRegistrationDetails[] = [
         class2: Shocker,
         reactionCallback: (t:Tarian, s:Shocker) => {
             t.zCollisionEventAction(s);
+            s.hitEventAction();
         }
     },
     { 

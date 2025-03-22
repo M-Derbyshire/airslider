@@ -1,5 +1,6 @@
 import Kernel from '../../../Kernel/Kernel';
 import IModel from '../../../Kernel/entities/Model/IModel';
+import Obstacle from '../../models/Obstacle/Obstacle';
 import ASLevel from './ASLevel';
 
 /**
@@ -114,14 +115,10 @@ export default class ObstacleManager
 		
         for(let i = this._fromIndex; i <= lastAvailableObstacleIndex; i++)
         {
-			const currentObstacle = kernel.loadedModels[i];
+			const currentObstacle = (kernel.loadedModels[i] as Obstacle);
 			
             if(this._isTimeToSendNextObstacle(i))
-            {
-				currentObstacle.x = this._getObstacleXPosition(i);
-                currentObstacle.z = (kernel.level as ASLevel).vanishingPointDepth;
-                currentObstacle.active = true;
-            }
+				currentObstacle.resetToStart(this._getObstacleXPosition(i));
         }
     }
 	

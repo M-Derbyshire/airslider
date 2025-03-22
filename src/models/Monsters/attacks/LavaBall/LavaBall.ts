@@ -3,6 +3,7 @@ import ASModel from '../../../ASModel/ASModel';
 import IModel from '../../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Tarian from '../../../Tarian/Tarian';
+import IHitBox from '../../../../../Kernel/entities/Model/IHitBox';
 
 /**
  * The Dragon's lava ball attack
@@ -118,6 +119,19 @@ export default class LavaBall extends ASModel {
         // We want to limit the x speed (regardless of the direction)
         if(Math.abs(this.xSpeed) > xSpeedLimit)
             this.xSpeed = (this.xSpeed > 0) ? xSpeedLimit : -xSpeedLimit;
+    }
+    
+    /**
+     * Creates and returns the current array of hit boxes for the model.
+     * @returns An array of box's that can be used for events (e.g. boxes covering a character, for use by collision events)
+     */
+    getHitBoxes():IHitBox[]
+    {
+        if(this.state === "drop")
+            return super.getHitBoxes();
+        
+        // If the ball has collided with the player (or the ground), we no longer want to trigger collision events
+        return [];
     }
     
     /**

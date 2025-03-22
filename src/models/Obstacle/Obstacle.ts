@@ -4,6 +4,7 @@ import ASModel from "../ASModel/ASModel";
 import IModel from "../../../Kernel/entities/Model/IModel";
 import Tarian from "../Tarian/Tarian";
 import UnitHelper from "../../../Kernel/utils/UnitHelper";
+import IHitBox from "../../../Kernel/entities/Model/IHitBox";
 
 /**
  * Base class for obstacles, that move down the track to hit the player
@@ -34,6 +35,11 @@ export default class Obstacle extends ASModel
     private _homingZStart:number;
     
     /**
+     * Has this obstacle had a collision with the player (on this run down the track)?
+     */
+    private _hasCollidedWithPlayer:boolean;
+    
+    /**
      * Constructor
      * @param mode The obstacle's mode
      * @param homingZStart At what z position should the homing movement begin (in "home" mode)?
@@ -49,6 +55,7 @@ export default class Obstacle extends ASModel
         this._homingZStart = homingZStart;
         this.xSpeed = speedX;
         this._homingTarget = playerModel;
+        this._hasCollidedWithPlayer = false;
     }
     
     prepare():void
@@ -77,6 +84,32 @@ export default class Obstacle extends ASModel
 		
         const currentXSpeed = (this._mode == "home") ? this._getHomingMovementXSpeed() : this.xSpeed;
 		this.moveRight(currentXSpeed); // This may be negative (which would be left movement)
+    }
+    
+    /**
+     * Resets the Obstacle back to its starting Z position, and makes any other required
+     * changes to reset
+     * @param xPosition The new X position for the model
+     */
+    resetToStart(xPosition:number):void
+    {
+        this.z = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
+        this.x = xPosition;
+        
+        this.active = true;
+        this._hasCollidedWithPlayer = false;
+    }
+    
+    /**
+     * Creates and returns the current array of hit boxes for the model.
+     * @returns An array of box's that can be used for events (e.g. boxes covering a character, for use by collision events)
+     */
+    getHitBoxes():IHitBox[]
+    {
+        if(this._hasCollidedWithPlayer)
+            return [];
+        
+        return super.getHitBoxes();
     }
     
     /**
@@ -123,6 +156,11 @@ export default class Obstacle extends ASModel
 	}
     
     // Events -------------------------------------------------------------------
+    
+    hitEventAction():void
+    {
+        this._hasCollidedWithPlayer = true;
+    }
     
     extraEvents():void
     {
