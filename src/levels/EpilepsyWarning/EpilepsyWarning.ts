@@ -1,8 +1,8 @@
 import Level from '../../../Kernel/entities/Level/Level';
 import WarningScreenTexts from '../../HUDs/WarningScreenTexts/WarningScreenTexts';
-import TheConstructLoadingScreen from '../LoadingScreens/TheConstructLoadingScreen/TheConstructLoadingScreen';
 import Kernel from '../../../Kernel/Kernel';
 import { KernelStatus } from '../../../Kernel/IKernel';
+import ForurnLoadingScreen from '../LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen';
 
 /**
  * A level that acts as a photosensitivity warning
@@ -40,7 +40,7 @@ Player discretion is advised.`;
         const kernel = Kernel.getInstance();
         
         kernel.graphicEngine.camera.setColors(this._backgroundColor, "#000000");
-        kernel.loadLevel(new TheConstructLoadingScreen());
+        kernel.loadLevel(new ForurnLoadingScreen());
     }
     
     /**
