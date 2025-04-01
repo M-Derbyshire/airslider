@@ -1,7 +1,7 @@
 import {: baseClass :} from '../{: baseClass :}/{: baseClass :}';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
-import EventManager from '../../../Kernel/entities/Level/EventManager';
-import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
+import IEventManager from '../../../Kernel/entities/Level/IEventManager';
+import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
 
 /**
@@ -40,8 +40,8 @@ export default class {: name :} extends {: baseClass :}
      */
 	load(
         frameManager:IFrameManager,
-        eventManager:EventManager,
-        pointerEventManager:PointerEventManager
+        eventManager:IEventManager,
+        pointerEventManager:IPointerEventManager
     ):void
 	{
 		super.load(frameManager, eventManager, pointerEventManager);

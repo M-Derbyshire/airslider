@@ -1,7 +1,5 @@
 import ASLevel from '../ASLevel/ASLevel';
 import IModel from '../../../Kernel/entities/Model/IModel';
-import EventManager from '../../../Kernel/entities/Level/EventManager';
-import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import TheConstructLoadingScreen from '../LoadingScreens/TheConstructLoadingScreen/TheConstructLoadingScreen';
 import Kernel from '../../../Kernel/Kernel';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
@@ -16,6 +14,8 @@ import ElectricSeahorse from '../../models/Monsters/ElectricSeahorse/ElectricSea
 import ElectricHornet from '../../models/Monsters/ElectricHornet/ElectricHornet';
 import Monster from '../../models/Monster/Monster';
 import Shocker from '../../models/Obstacles/Shocker/Shocker';
+import IEventManager from '../../../Kernel/entities/Level/IEventManager';
+import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 
 /**
  * Testing/development level
@@ -71,8 +71,8 @@ export default class TheConstruct extends ASLevel
     
     load(
         frameManager:IFrameManager,
-        eventManager:EventManager,
-        pointerEventManager:PointerEventManager
+        eventManager:IEventManager,
+        pointerEventManager:IPointerEventManager
     ):void
     {
         super.load(frameManager, eventManager, pointerEventManager);

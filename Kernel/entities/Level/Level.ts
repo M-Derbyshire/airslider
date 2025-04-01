@@ -1,5 +1,3 @@
-import EventManager from './EventManager';
-import PointerEventManager from './PointerEventManager';
 import IEventManager from './IEventManager';
 import IPointerEventManager from './IPointerEventManager';
 import IModel from '../Model/IModel';
@@ -50,8 +48,8 @@ export default class Level implements ILevel
      */
     load(
         frameManager:IFrameManager,
-        eventManager:EventManager,
-        pointerEventManager:PointerEventManager
+        eventManager:IEventManager,
+        pointerEventManager:IPointerEventManager
     ):void
     {   
         this.frameManager = frameManager;

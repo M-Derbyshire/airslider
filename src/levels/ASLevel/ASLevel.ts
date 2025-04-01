@@ -11,8 +11,6 @@ import Tarian from '../../models/Tarian/Tarian';
 import Monster from '../../models/Monster/Monster';
 import IModel from '../../../Kernel/entities/Model/IModel';
 import ASModel from '../../models/ASModel/ASModel';
-import EventManager from '../../../Kernel/entities/Level/EventManager';
-import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import TarianExplosion from '../../models/TarianExplosion/TarianExplosion';
 import { CentralStateKey } from '../CentralStateKey';
 import ILevel from '../../../Kernel/entities/Level/ILevel';
@@ -26,6 +24,8 @@ import MusicManager from './MusicManager';
 import standardModelEvents from './events/standardModelEvents';
 import UnitHelper from '../../../Kernel/utils/UnitHelper';
 import ZCalc from '../../../Kernel/utils/ZCalc/ZCalc';
+import IEventManager from '../../../Kernel/entities/Level/IEventManager';
+import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 
 /**
  * The game's base Level class
@@ -198,8 +198,8 @@ export default class ASLevel extends Level
      */
 	load(
         frameManager:IFrameManager,
-        eventManager:EventManager,
-        pointerEventManager:PointerEventManager
+        eventManager:IEventManager,
+        pointerEventManager:IPointerEventManager
     ):void
 	{
 		super.load(frameManager, eventManager, pointerEventManager);
