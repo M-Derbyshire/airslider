@@ -1,5 +1,5 @@
+import Forurn from '../../Forurn/Forurn';
 import LoadingScreen from '../../LoadingScreen/LoadingScreen';
-import TheConstruct from '../../TheConstruct/TheConstruct';
 
 /**
  * The loading screen for Forurn
@@ -10,7 +10,7 @@ export default class ForurnLoadingScreen extends LoadingScreen
 	{
 		super();
         
-        this.LevelToLoad = TheConstruct;
+        this.LevelToLoad = Forurn;
         this.backgroundImagePath = "/levels/LoadingScreens/ForurnLoadingScreen/images/background.png";
 	}
 };
