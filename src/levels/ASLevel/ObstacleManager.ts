@@ -91,7 +91,7 @@ export default class ObstacleManager
     /**
 	 * Sends another obstacle (if one is needed) at a random(ish) position
 	 */
-    sendObstacle():void
+    sendObstacleIfReady():void
     {
 		if(this._obstacleCount === 0) return;
 		

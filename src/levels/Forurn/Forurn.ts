@@ -116,7 +116,7 @@ export default class Forurn extends ASLevel
             15000,
             90000,
             null,
-            () => this.obstacleManager.sendObstacle()
+            () => this.obstacleManager.sendObstacleIfReady()
         );
         
         // this.levelSection(
