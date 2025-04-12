@@ -22,7 +22,7 @@ export default class Forurn extends ASLevel
         // We only want the first track as the music for this level
         this.musicFilePaths = this.musicFilePaths.filter(path => path.endsWith("airslider_track_1.mp3"));
         
-        this.roadColor = "#8A9952";
+        this.roadColor = "#8EA08E";
 	}
     
     /**
@@ -65,7 +65,7 @@ export default class Forurn extends ASLevel
         
         this.backgroundImage = assetHandler.loadImage(backgroundImagePath);
         this.outsideLightMaskImage = assetHandler.loadImage(outsideLightMaskImagePath);
-        this.outsideLightMaskLuminosity = 0.05;
+        this.outsideLightMaskLuminosity = 0.2;
         
         this.groundManager.load(groundImagePath, 150, 100);
         

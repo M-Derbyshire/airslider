@@ -138,7 +138,7 @@ export default class ASLevel extends Level
         this.controlsInitialiser = new ASControlsInitialiser();
 		
 		this.roadManager = new LevelRoad();
-        this.roadColor = "#999999";
+        this.roadColor = "#A5A5A5";
         
         this.obstacleManager = new ObstacleManager();
 		this.patternManager = new ModelXPositionPatternManager();
