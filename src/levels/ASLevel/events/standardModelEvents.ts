@@ -6,6 +6,7 @@ import ElectricHornet from "../../../models/Monsters/ElectricHornet/ElectricHorn
 import Ghost from "../../../models/Monsters/Ghost/Ghost";
 import NeonPidgeon from "../../../models/Monsters/NeonPidgeon/NeonPidgeon";
 import Shocker from "../../../models/Obstacles/Shocker/Shocker";
+import Snake from "../../../models/Obstacles/Snake/Snake";
 import Tarian from "../../../models/Tarian/Tarian";
 import neonPidgeonOverlappingEventCheck from "./checks/neonPidgeonOverlappingEventCheck";
 import zCollisionEventCheck from "./checks/zCollisionEventCheck";
@@ -17,6 +18,15 @@ const standardModelEvents:IEventRegistrationDetails[] = [
         class1: Tarian,
         class2: Shocker,
         reactionCallback: (t:Tarian, s:Shocker) => {
+            t.zCollisionEventAction(s);
+            s.hitEventAction();
+        }
+    },
+    {
+        check: zCollisionEventCheck,
+        class1: Tarian,
+        class2: Snake,
+        reactionCallback: (t:Tarian, s:Snake) => {
             t.zCollisionEventAction(s);
             s.hitEventAction();
         }

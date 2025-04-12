@@ -7,6 +7,8 @@ import ElectricHornet from '../../models/Monsters/ElectricHornet/ElectricHornet'
 import IEventManager from '../../../Kernel/entities/Level/IEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import Kernel from '../../../Kernel/Kernel';
+import Snake from '../../models/Obstacles/Snake/Snake';
+import Obstacle from '../../models/Obstacle/Obstacle';
 
 /**
  * A class for a Level
@@ -39,6 +41,19 @@ export default class Forurn extends ASLevel
         const monster = new ElectricHornet(this.player);
         this.monsters = [monster];
         models.push(monster);
+        
+        // Setup the Snake obstacles
+        const totalSnakeCount = 20;
+        const initialActiveSnakeCount = 5;
+        
+        const snakes:Obstacle[] = [];
+        for(let i = 0; i < totalSnakeCount; i++)
+            snakes.push(new Snake());
+        
+        this.obstacleManager.setObstacleModels(snakes);
+        this.obstacleManager.setCurrentObstacleCount(initialActiveSnakeCount);
+        
+        models.push(...snakes);
         
         return models;
     }
@@ -97,12 +112,23 @@ export default class Forurn extends ASLevel
         super.act();
         
         this.levelSection(
-            "monster", 
-            15000, 
-            90000, 
-            () => this.monsters.forEach(monster => monster.start()),
+            "randomSnakes",
+            15000,
+            90000,
             null,
-            () => this.monsters.forEach(monster => monster.stop())
+            () => this.obstacleManager.sendObstacle()
         );
+        
+        // this.levelSection(
+        //     "monster", 
+        //     15000, 
+        //     90000, 
+        //     () => this.monsters.forEach(monster => monster.start()),
+        //     null,
+        //     () => this.monsters.forEach(monster => monster.stop())
+        // );
+        
+        // Run the closing sequence
+        this.levelEndSection(95000);
     }
 };
