@@ -37,7 +37,7 @@ export default class Obstacle extends ASModel
     /**
      * Has this obstacle had a collision with the player (on this run down the track)?
      */
-    private _hasCollidedWithPlayer:boolean;
+    protected hasCollidedWithPlayer:boolean;
     
     /**
      * Constructor
@@ -55,7 +55,7 @@ export default class Obstacle extends ASModel
         this._homingZStart = homingZStart;
         this.xSpeed = speedX;
         this._homingTarget = playerModel;
-        this._hasCollidedWithPlayer = false;
+        this.hasCollidedWithPlayer = false;
     }
     
     prepare():void
@@ -66,6 +66,7 @@ export default class Obstacle extends ASModel
         this.z = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
         
         this.active = false;
+        this.hasCollidedWithPlayer = false;
         
         if(this._mode == "sweep")
             this._setRandomXDirection();
@@ -97,7 +98,7 @@ export default class Obstacle extends ASModel
         this.x = xPosition;
         
         this.active = true;
-        this._hasCollidedWithPlayer = false;
+        this.hasCollidedWithPlayer = false;
     }
     
     /**
@@ -106,7 +107,7 @@ export default class Obstacle extends ASModel
      */
     getHitBoxes():IHitBox[]
     {
-        if(this._hasCollidedWithPlayer)
+        if(this.hasCollidedWithPlayer)
             return [];
         
         return super.getHitBoxes();
@@ -159,7 +160,7 @@ export default class Obstacle extends ASModel
     
     hitEventAction():void
     {
-        this._hasCollidedWithPlayer = true;
+        this.hasCollidedWithPlayer = true;
     }
     
     extraEvents():void
