@@ -54,17 +54,17 @@ export default class TheConstruct extends ASLevel
             // models[models.length - 2] as Monster
         ];
 
-        this.obstacleManager.setPlayerModel(this.player);
-        this.obstacleManager.setObstacleModelRange(models.length, models.length + 100);
-        this.obstacleManager.setCurrentObstacleCount(5);
+        // this.obstacleManager.setPlayerModel(this.player);
+        // this.obstacleManager.setObstacleModelRange(models.length, models.length + 100);
+        // this.obstacleManager.setCurrentObstacleCount(5);
         
-        let obstacleRange = this.obstacleManager.obstacleModelRange;
-        for(let i = obstacleRange.from; i <= obstacleRange.to; i++)
-        {
-			models.push(new Shocker("yellow", "static"));
-        }
+        // let obstacleRange = this.obstacleManager.obstacleModelRange;
+        // for(let i = obstacleRange.from; i <= obstacleRange.to; i++)
+        // {
+		// 	models.push(new Shocker("yellow", "static"));
+        // }
 		
-		this.patternManager.setPatternDefaults(obstacleRange.from, obstacleRange.to);
+		// this.patternManager.setPatternDefaults(obstacleRange.from, obstacleRange.to);
         
         return models;
     }

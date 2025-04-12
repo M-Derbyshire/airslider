@@ -15,9 +15,8 @@ export default class ObstacleManager
 	private _leftEdge:number;
 	private _rightEdge:number;
 	
-	// The span of indexes in the loadedModels array that contains the level's obstacles.
-	private _fromIndex:number;
-	private _toIndex:number;
+	// The level's obstacles.
+	private _obstacles:Obstacle[];
 	
 	//The ObstacleManager will only use this amount of the available obstacles
 	private _obstacleCount:number;
@@ -38,11 +37,6 @@ export default class ObstacleManager
 	 */
 	get currentObstacleCount() { return this._obstacleCount }
 	
-	/**
-	 * The range of indexes (in the loadedModels array) for the obstacles
-	 */
-	get obstacleModelRange():{from:number, to:number} { return { from: this._fromIndex, to: this._toIndex }; }
-	
 	
 	
     constructor()
@@ -50,8 +44,7 @@ export default class ObstacleManager
         this._leftEdge = 0;
         this._rightEdge = 0;
         
-        this._fromIndex = 0;
-        this._toIndex = 0;
+		this._obstacles = [];
         
         this._obstacleCount = 0;
     }
@@ -68,19 +61,17 @@ export default class ObstacleManager
     }
     
 	/**
-	 * Set the range of indexes in the kernel's loadedModels array that contains the level's obstacles
-	 * @param fromModelIndex the first model index
-	 * @param toModelIndex the last model index
+	 * Give the manager the obstacles for the level
+	 * @param obstacles the obstacles
 	 */
-    setObstacleModelRange(fromModelIndex:number, toModelIndex:number):void
+    setObstacleModels(obstacles:Obstacle[]):void
     {
-        this._fromIndex = fromModelIndex;
-        this._toIndex = toModelIndex;
+        this._obstacles = obstacles;
     }
     
 	/**
 	 * How many obstacles should be in play at this time?
-	 * (This will affect the difficulty.)
+	 * (This will affect the difficulty)
 	 * @param num the amount of obstacles
 	 */
     setCurrentObstacleCount(num:number):void
@@ -104,41 +95,35 @@ export default class ObstacleManager
     {
 		if(this._obstacleCount === 0) return;
 		
-		const totalObstacleCount = (this._toIndex - this._fromIndex);
+		const lastAvailableObstacleIndex = (this._obstacles.length <= this._obstacleCount) 
+			? this._obstacles.length - 1
+			: this._obstacleCount - 1;
 		
-		const lastAvailableObstacleIndex = (totalObstacleCount <= this._obstacleCount) 
-			? this._toIndex 
-			: (this._fromIndex + this._obstacleCount) - 1;
-		
-		
-		const kernel = Kernel.getInstance();
-		
-        for(let i = this._fromIndex; i <= lastAvailableObstacleIndex; i++)
+        for(let i = 0; i <= lastAvailableObstacleIndex; i++)
         {
-			const currentObstacle = (kernel.loadedModels[i] as Obstacle);
+			const obstacle = (this._obstacles[i]);
 			
-            if(this._isTimeToSendNextObstacle(i))
-				currentObstacle.resetToStart(this._getObstacleXPosition(i));
+            if(this._isTimeToSendNextObstacle(obstacle, i))
+				obstacle.resetToStart(this._getObstacleXPosition(obstacle, i));
         }
     }
 	
 	/**
 	 * Should a given obstacle be sent down the road?
-	 * @param currentModelIndex the model index of the obstacle
+	 * @param obstacle the obstacle
+	 * @param obstacleIndex the index of the obstacle in the _obstacles array
 	 * @returns true if we should send this obstacle, or false if not
 	 */
-	private _isTimeToSendNextObstacle(currentModelIndex:number):boolean
+	private _isTimeToSendNextObstacle(obstacle:Obstacle, obstacleIndex:number):boolean
 	{
-		const kernel = Kernel.getInstance();
-		
-		const currentObstacle = kernel.loadedModels[currentModelIndex];
-		
-		if(!currentObstacle.active)
+		if(!obstacle.active)
 		{
-			if (currentModelIndex === this._fromIndex) 
+			const kernel = Kernel.getInstance();
+			
+			if (obstacleIndex === 0) 
 				return true;
 			
-			const previousObstacle = kernel.loadedModels[currentModelIndex - 1];
+			const previousObstacle = this._obstacles[obstacleIndex - 1];
 			const vanishingPointDepth = (kernel.level as ASLevel).vanishingPointDepth;
 			
 			const previousObstacleHasMovedFarEnough = 
@@ -152,28 +137,27 @@ export default class ObstacleManager
 	
 	/**
 	 * Get a random(ish) x position for an obstacle
-	 * @param currentObstacleIndex the index of the obstacle in question
+	 * @param obstacle the obstacle
+	 * @param obstacleIndex the index of the obstacle in the _obstacles array
 	 * @returns the x position (in units) that this obstacle should be placed at
 	 */
-	private _getObstacleXPosition(currentObstacleIndex:number):number
+	private _getObstacleXPosition(obstacle:Obstacle, obstacleIndex:number):number
 	{
-		const currentObstacle = Kernel.getInstance().loadedModels[currentObstacleIndex];
-		
-		if((currentObstacleIndex + 1) % 3 == 0) //the third of every 3 obstacles
+		if((obstacleIndex + 1) % 3 == 0) //the third of every 3 obstacles
 		{
 			// put somewhere on left side of level
-			return this._getRandomXPosInFirstHalfOfArea(currentObstacle.width);
+			return this._getRandomXPosInFirstHalfOfArea(obstacle.width);
 		
-		} else if((currentObstacleIndex + 2) % 3 == 0) //the second of every 3 obstacles
+		} else if((obstacleIndex + 2) % 3 == 0) //the second of every 3 obstacles
 		{
 			// now on the right side
 			const halfOfAreaWidth = ((this._rightEdge - this._leftEdge) / 2);
-			return this._getRandomXPosInFirstHalfOfArea(currentObstacle.width) + halfOfAreaWidth;
+			return this._getRandomXPosInFirstHalfOfArea(obstacle.width) + halfOfAreaWidth;
 		
 		} else //the first of every 3 obstacles
 		{
 			// put where player is
-			return this._getObstacleXPositionCenteredOnPlayer(currentObstacle.width, this.playerModel);
+			return this._getObstacleXPositionCenteredOnPlayer(obstacle.width, this.playerModel);
 		}
 	}
 	
