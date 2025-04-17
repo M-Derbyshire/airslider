@@ -42,20 +42,20 @@ export default class TarianExplosion extends ASModel {
         // Not adding this to assetsToUnload, as every level needs this
         this._alarmSound = assetHandler.loadAudio("/models/TarianExplosion/sounds/alarm.mp3");
         
-        this.animationManager.registerAnimations({
-            standard: this.animationManager.createAnimation({
-                sheetPath: "/models/TarianExplosion/anim/TarianExplosion.png", 
-                fps: 24,
-                drawWidth: 0,
-                drawHeight: 0,
-                frameCoordinates: [
-                    { x: 0, y: 0, width: 1333, height: 753 }
-                ]
-            })
+        // Keeping a reference to this, as we want to change the draw width/height dynamically
+        this._animFrame = this.animationManager.createAnimation({
+            sheetPath: "/models/TarianExplosion/anim/TarianExplosion.png", 
+            fps: 24,
+            drawWidth: 0,
+            drawHeight: 0,
+            frameCoordinates: [
+                { x: 0, y: 0, width: 1333, height: 753 }
+            ]
         });
         
-        // Keeping a reference to this, as we want to change the draw width/height dynamically
-        this._animFrame = this.animationManager.animations.standard;
+        this.animationManager.registerAnimations({
+            standard: this._animFrame
+        });
     }
     
     prepare():void

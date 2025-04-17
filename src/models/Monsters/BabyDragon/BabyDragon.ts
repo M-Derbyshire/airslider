@@ -210,7 +210,7 @@ export default class BabyDragon extends Monster
                 ((this.levelLeftEdge - (this.width / 2)) + 1) :
                 ((this.levelRightEdge - (this.width / 2)) - 1);
             
-            this.animationManager.resetCurrentFrameNumber();
+            this.animationManager.animations[this.state].currentFrameIndex = 0;
         }
 	}
     

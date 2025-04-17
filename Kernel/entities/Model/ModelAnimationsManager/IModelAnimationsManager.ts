@@ -13,11 +13,6 @@ export default interface IModelAnimationsManager {
     animations:AnimationsObject;
     
     /**
-     * A map of spritesheets, used by the animations. The asset filepath is the key
-     */
-    sheetMap:Map<string, HTMLImageElement>;
-    
-    /**
      * Creates and returns a new animation (which will then need to be registered with the registerAnimations method)
      * @param animationDetails The details needed to create this animation
      * @returns The newly created animation
@@ -51,11 +46,6 @@ export default interface IModelAnimationsManager {
      * @returns The correct positions/dimensions to draw the sprite at
      */
 	getDrawPositionsAndDimensions(originalValues:IDrawPositions&IDrawDimensions&{ z:number }):IDrawPositions&IDrawDimensions
-    
-    /**
-     * Resets the currently active animation back to the first frame
-     */
-    resetCurrentFrameNumber():void;
 };
 
 /**

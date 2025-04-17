@@ -13,14 +13,10 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     private _model:IModel; // A reference to the model
     
     /**
-     * The animations created for the model (each animation will be a property -- the property name is the model state for that animation)
+     * The animations created for the model (each animation will be a property -- the property name 
+     * is the model state for that animation)
      */
     animations:AnimationsObject;
-    
-    /**
-     * A map of spritesheets, used by the animations. The asset filepath is the key
-     */
-    sheetMap:Map<string, HTMLImageElement>;
     
     /**
      * Constructor
@@ -29,7 +25,6 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     constructor(model:IModel)
     {
         this._model = model;
-        this.sheetMap = new Map<string, HTMLImageElement>();
     }
     
     /**
@@ -50,11 +45,8 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     {
         const assetHandler = Kernel.getInstance().assetHandler;
         
-        if(!this.sheetMap.has(sheetPath))
-            this.sheetMap.set(sheetPath, assetHandler.loadImage(sheetPath));
-        
         let anim:IAnimation = {
-			spritesheet: this.sheetMap.get(sheetPath)!,
+			spritesheet: assetHandler.loadImage(sheetPath),
 			frameCoordinates,
             fps,
             waitCount: 0, // increased when waiting to move to the next frame
@@ -102,11 +94,6 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
 			drawPositions.width,
 			drawPositions.height
         );
-    }
-    
-    resetCurrentFrameNumber():void
-    {
-        this.animations[this._model.state].currentFrameIndex = 0;
     }
     
     /**
