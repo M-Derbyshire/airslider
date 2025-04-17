@@ -1,3 +1,4 @@
+import IModel from "../../../Kernel/entities/Model/IModel";
 import Kernel from "../../../Kernel/Kernel";
 import ASLevel from "./ASLevel";
 
@@ -11,6 +12,8 @@ export default class LevelGround
 	
 	private _groundDrawCount: number; // How many images should we draw (starting from the furthest away)?
 	private _removeGround: boolean; // If the player is leaving this area of ground, we want to start removing the images
+	
+	private _modelsDistantToGround: IModel[]; // Models that we want to keep distant from any ground (on the z-axis)
 	
 	ground: IGround; //The shared data for every image (populated in load() by _getPopulatedGroundObject())
 	distance: number;//The distance between each image on the ground (on the z axis)
@@ -27,6 +30,7 @@ export default class LevelGround
 		this._groundPopulatedInitially = groundPopulatedInitially;
 		
 		this._removeGround = false;
+		this._modelsDistantToGround = [];
 		
         this.groundZPositions = [];
     }
@@ -65,12 +69,22 @@ export default class LevelGround
 		this._resetGroundIfReachedDistance();
 		
 		this.groundZPositions.forEach((pos, i) => {
-			if(i < this._groundDrawCount)
+			const offsetPos = pos - this.ground.offset;
+			
+			if(i < this._groundDrawCount && !this._positionIsTooCloseToModels(offsetPos, true))
 			{
-				this._drawLeftAndRightGroundImage(pos);
+				this._drawLeftAndRightGroundImage(offsetPos);
 			}
 		});
     }
+	
+	/**
+	 * Sets the models that we want to keep distant from any ground
+	 */
+	setDistancedModels(models:IModel[]):void
+	{
+		this._modelsDistantToGround = models;
+	}
 	
 	/**
 	 * Use this to trigger the ending of the ground (the images will start to disappear, as if 
@@ -120,6 +134,43 @@ export default class LevelGround
 	}
 	
 	/**
+	 * Is the given Z-axis position too close to a model that we want to keep the ground distant from?
+	 * @param zPosition the position on the z-axis
+	 * @param ignoreFurtherZDistance ignore the Z position if it's farther from the camera than the model being 
+	 * checked against
+	 * @param ignoreCloserZDistance ignore the Z position if it's closer to the camera than the model being 
+	 * checked against
+	 * @returns true if the given position is too close to a model (that we want to keep ground distant 
+	 * from), otherwise false
+	 */
+	private _positionIsTooCloseToModels(
+		zPosition:number,
+		ignoreFurtherZDistance = false,
+		ignoreCloserZDistance = false
+	):boolean
+	{
+		const minSafeZDistance = 30;
+		
+		for(let i = 0; i < this._modelsDistantToGround.length; i++) {
+			const modelZ = this._modelsDistantToGround[i].z;
+			
+			// "furthest" and "closest" are referring to the distance from the camera, not from the model
+			const furthestSafeZPosition = (ignoreFurtherZDistance)
+				? modelZ + 1
+				: modelZ + minSafeZDistance;
+			const closestSafeZPosition = (ignoreCloserZDistance)
+				? modelZ - 1
+				: modelZ - minSafeZDistance;
+			
+			if(zPosition < furthestSafeZPosition && zPosition > closestSafeZPosition) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * If an image has been moved enough to now be in the same position that the preceeding image 
 	 * started in, then the z offset can be reset back to 0. We do this for all the images, and it looks 
 	 * like they're all still moving towards us.
@@ -162,7 +213,6 @@ export default class LevelGround
 			? this.ground.width 
 			: settings.unitsWithinCameraX * 2;
 		
-		const offsetZPos = groundZPos - this.ground.offset;
 		const yUnitValue = settings.unitsWithinCameraY - this.ground.height;
 		
 		const leftDrawValues = graphicEngine.getScaledDrawPositionsAndDimensions({
@@ -170,7 +220,7 @@ export default class LevelGround
 			y: yUnitValue,
 			width: imageWidth,
 			height: this.ground.height,
-			z: offsetZPos
+			z: groundZPos
 		});
 		
 		const rightDrawValues = graphicEngine.getScaledDrawPositionsAndDimensions({
@@ -178,7 +228,7 @@ export default class LevelGround
 			y: yUnitValue,
 			width: imageWidth,
 			height: this.ground.height,
-			z: offsetZPos
+			z: groundZPos
 		});
 		
 		this._drawGroundImage(leftDrawValues.x, leftDrawValues.y, leftDrawValues.width, leftDrawValues.height);

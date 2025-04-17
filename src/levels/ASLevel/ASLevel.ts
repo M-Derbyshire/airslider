@@ -177,6 +177,8 @@ export default class ASLevel extends Level
         this._startSignDisplay = new SignDisplay(this._startSign);
         this._finishSign = new Sign("FINISH", null, this._signStartingZPosition, false);
         
+        this.groundManager.setDistancedModels([this._startSign, this._finishSign]);
+        
         const racers = this.racerManager.getModels();
         
         return [
