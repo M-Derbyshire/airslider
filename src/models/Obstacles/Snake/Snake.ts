@@ -88,6 +88,12 @@ export default class Snake extends Obstacle
         this.assetsToUnload.push(damageFlashImagePath);
     }
     
+    prepare(): void {
+        super.prepare();
+        
+        this.setYPositionFromBottom(this.height / 2);
+    }
+    
     act():void
     {
         super.act();
