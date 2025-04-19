@@ -120,35 +120,35 @@ export default interface IModel {
      * Moves the model to the left
      * @param speed the speed of the movement
      */
-    moveLeft(speed:number):void;
+    moveLeft(speed?:number):void;
     
     /**
      * Moves the model to the right
      * @param speed the speed of the movement
      */
-    moveRight(speed:number):void;
+    moveRight(speed?:number):void;
     
     /**
      * Moves the model up
      * @param speed the speed of the movement
      */
-    moveUp(speed:number):void;
+    moveUp(speed?:number):void;
     
     /**
      * Moves the model down
      * @param speed the speed of the movement
      */
-    moveDown(speed:number):void;
+    moveDown(speed?:number):void;
     
     /**
      * Moves the model further into the distance
      * @param speed the speed of the movement
      */
-    moveIn(speed:number):void;
+    moveIn(speed?:number):void;
     
     /**
      * Moves the model closer to the camera
      * @param speed the speed of the movement
      */
-    moveOut(speed:number):void;
+    moveOut(speed?:number):void;
 };

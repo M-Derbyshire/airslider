@@ -92,6 +92,6 @@ export default class Racer extends ASModel
     {
         super.act();
         
-        this.moveIn(this.zSpeed);
+        this.moveIn();
     }
 };

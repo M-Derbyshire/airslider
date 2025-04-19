@@ -157,7 +157,7 @@ export default class ElectricSeahorse extends Monster {
      */
     move():void
     {
-        this.moveLeft(this.xSpeed); //Can be a negative number, to move right
+        this.moveLeft(); // X speed can be a negative number, to move right
         this._correctLightningXPos();
         
 		this._handleOverlappingOfLevelEdges();

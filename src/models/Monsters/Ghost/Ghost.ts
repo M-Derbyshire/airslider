@@ -144,7 +144,7 @@ export default class Ghost extends Monster {
         this._handleMonsterOverlappingLevelEdges();
 		
         this.moveRight(this.xSpeed * this._directionMultiplier); // If the directionMultiplier is negative, it moves left
-        this.moveOut(this.zSpeed);
+        this.moveOut();
         
         if(this.z <= this._outLimit)
             this._handleMonsterReachingOutLimit();
@@ -155,7 +155,7 @@ export default class Ghost extends Monster {
      */
     moveUp():void
     {
-        this.moveIn(this.zSpeed);
+        this.moveIn();
         
         if(this.z >= this._inLimit)
             this._handleMonsterReachingInLimit();

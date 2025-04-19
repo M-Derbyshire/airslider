@@ -89,8 +89,8 @@ export default class LavaBall extends ASModel {
     {
         if(this.state === "drop")
         {
-            this.moveDown(this.ySpeed);
-            this.moveRight(this.xSpeed); // this may be a negative number, to move left
+            this.moveDown();
+            this.moveRight(); // the X speed may be a negative number, to move left
         }
         else if(this.state === "none")
         {

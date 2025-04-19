@@ -178,7 +178,7 @@ export default class ElectricHornet extends Monster {
             this.xSpeed = -this.xSpeed;
         }
         
-        this.moveRight(this.xSpeed); // Can be a negative number, to move left
+        this.moveRight(); // X speed can be a negative number, to move left
         
         // Determine if the monster should start to attack
         if(this._nextDropTime === null)
@@ -227,8 +227,8 @@ export default class ElectricHornet extends Monster {
      */
     private _drop():void
     {
-        this.moveDown(this.ySpeed);
-        this.moveRight(this.xSpeed);
+        this.moveDown();
+        this.moveRight();
     }
     
     /**
@@ -236,7 +236,7 @@ export default class ElectricHornet extends Monster {
      */
     private _rise():void
     {
-        this.moveUp(this.ySpeed);
+        this.moveUp();
         
         if(this.y <= this.startY)
         {

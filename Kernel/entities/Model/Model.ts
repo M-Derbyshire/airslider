@@ -288,7 +288,7 @@ export default class Model implements IModel
      * Moves the model to the left
      * @param speed the speed of the movement
      */
-    moveLeft(speed:number):void
+    moveLeft(speed = this.xSpeed):void
     {
         this.x -= UnitHelper.speed(speed);
     }
@@ -297,7 +297,7 @@ export default class Model implements IModel
      * Moves the model to the right
      * @param speed the speed of the movement
      */
-    moveRight(speed:number):void
+    moveRight(speed = this.xSpeed):void
     {
         this.x += UnitHelper.speed(speed);
     }
@@ -306,7 +306,7 @@ export default class Model implements IModel
      * Moves the model up
      * @param speed the speed of the movement
      */
-    moveUp(speed:number):void
+    moveUp(speed = this.ySpeed):void
     {
         this.y -= UnitHelper.speed(speed);
     }
@@ -315,7 +315,7 @@ export default class Model implements IModel
      * Moves the model down
      * @param speed the speed of the movement
      */
-    moveDown(speed:number):void
+    moveDown(speed = this.ySpeed):void
     {
         this.y += UnitHelper.speed(speed);
     }
@@ -324,7 +324,7 @@ export default class Model implements IModel
      * Moves the model further into the distance
      * @param speed the speed of the movement
      */
-    moveIn(speed:number):void
+    moveIn(speed = this.zSpeed):void
     {
         this.z += UnitHelper.speed(speed);
     }
@@ -333,7 +333,7 @@ export default class Model implements IModel
      * Moves the model closer to the camera
      * @param speed the speed of the movement
      */
-    moveOut(speed:number):void
+    moveOut(speed = this.zSpeed):void
     {
         this.z -= UnitHelper.speed(speed);
     }

@@ -298,7 +298,7 @@ export default class Falcon extends Monster {
 	
     swoopDown():void
     {
-        //y speed is used for both x and y movement, so it's diagonal.
+        //Y speed is used for both X and Y movement, so it's diagonal.
         //This is important to make sure the falcon hits the target
         this.moveRight(this.ySpeed * this.directionMultiplier);
         this.moveDown(this.ySpeed);

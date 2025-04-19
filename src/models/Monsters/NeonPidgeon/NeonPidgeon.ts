@@ -279,7 +279,7 @@ export default class NeonPidgeon extends Monster {
      */
     moveSideways():void
     {
-        this.moveRight(this.xSpeed); // Speed may be a negative number, to move left
+        this.moveRight(); // X speed may be a negative number, to move left
         
         this._handleMonsterOverlappingLevelEdges();
         
@@ -299,7 +299,7 @@ export default class NeonPidgeon extends Monster {
      */
     drop():void
     {
-        this.moveDown(this.ySpeed);
+        this.moveDown();
     }
     
     /**
@@ -307,7 +307,7 @@ export default class NeonPidgeon extends Monster {
      */
     rise():void
     {
-        this.moveUp(this.ySpeed);
+        this.moveUp();
         
         if(this.y <= this.startY)
         {

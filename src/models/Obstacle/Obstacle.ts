@@ -174,7 +174,7 @@ export default class Obstacle extends ASModel
         if(leavingLeftEdge || leavingRightEdge)
         {
             this.xSpeed = -this.xSpeed;
-            this.moveRight(this.xSpeed);
+            this.moveRight(); // If X speed is negative, this will move left
         }
     }
 }

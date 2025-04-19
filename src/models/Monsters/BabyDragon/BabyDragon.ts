@@ -182,7 +182,7 @@ export default class BabyDragon extends Monster
      */
     private _move():void
     {
-        this.moveRight(this.xSpeed); // May be a negative number, to move left
+        this.moveRight(); // X speed may be a negative number, to move left
         
 		this._handleOverlappingOfLevelEdges();
         

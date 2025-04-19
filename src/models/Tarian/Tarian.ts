@@ -321,8 +321,8 @@ export default class Tarian extends ASModel {
     {
         this._setXSpeedBasedOnAcceleration();
         
-        this.moveRight(this.xSpeed);
-        this.moveIn(this.zSpeed);
+        this.moveRight();
+        this.moveIn();
     }
 	
     /**
