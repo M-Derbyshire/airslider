@@ -9,12 +9,15 @@ import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventMa
 import Kernel from '../../../Kernel/Kernel';
 import Snake from '../../models/Obstacles/Snake/Snake';
 import Obstacle from '../../models/Obstacle/Obstacle';
+import IntroSnake from '../../models/Obstacles/IntroObstacles/IntroSnake/IntroSnake';
 
 /**
  * A class for a Level
  */
 export default class Forurn extends ASLevel
 {
+    private _introSnake:IntroSnake; // Used to introduce the "snake" obstacle to the player
+    
     constructor()
 	{
 		super();
@@ -54,6 +57,9 @@ export default class Forurn extends ASLevel
         this.obstacleManager.setCurrentObstacleCount(initialActiveSnakeCount);
         
         models.push(...snakes);
+        
+        this._introSnake = new IntroSnake();
+        models.push(this._introSnake);
         
         return models;
     }
@@ -112,8 +118,15 @@ export default class Forurn extends ASLevel
         super.act();
         
         this.levelSection(
-            "randomSnakes",
+            "introSnake",
             15000,
+            33400,
+            () => this._introSnake.start()
+        );
+        
+        this.levelSection(
+            "randomSnakes",
+            37000,
             90000,
             null,
             () => this.obstacleManager.sendObstacleIfReady()
