@@ -88,7 +88,7 @@ export default class Forurn extends ASLevel
         this.outsideLightMaskImage = assetHandler.loadImage(outsideLightMaskImagePath);
         this.outsideLightMaskLuminosity = 0.2;
         
-        this.groundManager.load(groundImagePath, 150, 100);
+        this.groundManager.load(groundImagePath, 150, 75);
         
         this.assetsToUnload.push(
             backgroundImagePath,
