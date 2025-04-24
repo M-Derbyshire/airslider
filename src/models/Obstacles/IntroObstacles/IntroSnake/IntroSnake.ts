@@ -116,15 +116,18 @@ export default class IntroSnake extends Snake implements IIntroObstacle
      */
     private _steadyMovement():void
     {
+        // If the X speed is negative, moveRight will move left
+        
         const tooFarLeft = this.x <= this._steadyMinX && this.xSpeed < 0;
         const tooFarRight = this.x >= this._steadyMaxX;
         
         if(tooFarLeft || tooFarRight) {
             this.xSpeed = -this.xSpeed;
+            this.moveRight(this.xSpeed / 2); // This is to ensure we won't retrigger this block next frame
             this._currentDriftCount++;
         }
         
-        this.moveRight(); // If the X speed is negative, this will move left
+        this.moveRight();
     }
     
     /**
