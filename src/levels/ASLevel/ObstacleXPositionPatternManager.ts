@@ -1,24 +1,15 @@
-import Kernel from "../../../Kernel/Kernel";
+import Obstacle from "../../models/Obstacle/Obstacle";
 
 /*
-	Used to position a set of models on the x-axis, in a way that will make 
-	a pattern (or multiple patterns) when these objects move down the z-axis. 
-	The models this should use are determined using the provided range of model 
-	indexes (their indexes in the loaded models array, in the kernel).
+	Used to position a set of obstacles on the x-axis, in a way that will make 
+	a pattern (or multiple patterns) when these objects move down the z-axis.
 */
-export default class ModelXPositionPatternManager
+export default class ObstacleXPositionPatternManager
 {
 	/**
-	 * Where on the z axis should the pattern of models begin?
+	 * These are the models that can be used when making patterns
 	 */
-	private _startingZPos:number;
-	
-	/**
-	 * This represents a range of indexes in the loaded models 
-	 * array. It is the range of models that can be used when 
-	 * making patterns
-	 */
-	private _modelIndexRange:{ from:number, to:number };
+	private _models:Obstacle[];
 	
 	/**
 	 * The patterns to be sent down the z-axis. See the addRepeatingPattern method.
@@ -26,46 +17,28 @@ export default class ModelXPositionPatternManager
 	private _activePatterns:IActivePattern[];
 	
 	/**
-	 * The next model available (in the model index range).
+	 * The index of the next model available (in the _models array).
 	 * Incremented when positioning the models (less than 0 means not set)
 	 */
-	private _nextIndexInModelRange:number;
+	private _nextModelIndex:number;
 	
 	constructor()
 	{
-		this._modelIndexRange = {
-			from: -1,
-			to: -1
-		};
-		
+		this._models = [];
 		this._activePatterns = [];
 		
-		this._nextIndexInModelRange = -1;
+		this._nextModelIndex = -1;
 	}
 	
 	/**
-	 * Sets the default settings for this manager. The models to be used should all be the same (or at least 
-	 * all have the same width)
-	 * @param fromModelIndex the first index, in the range of model indexes, that can be used by the pattern manager
-	 * @param toModelIndex the last index, in the range of model indexes, that can be used by the pattern manager
+	 * Sets the default settings for this manager. The models to be used should all be of the same 
+	 * type (or, at least, all have the same width)
+	 * @param models the models to be used when creating patterns
 	 */
-	setPatternDefaults(fromModelIndex:number, toModelIndex:number):void
+	setPatternDefaults(models:Obstacle[]):void
 	{
-		this._nextIndexInModelRange = fromModelIndex;
-		
-		this._modelIndexRange = {
-			from: fromModelIndex,
-			to: toModelIndex
-		};
-	}
-	
-	/**
-	 * Sets the z position that patterns will begin at
-	 * @param zPos the starting z position
-	 */
-	setStartingZPosition(zPos:number):void
-	{
-		this._startingZPos = zPos;
+		this._models = models;
+		this._nextModelIndex = models.length ? 0 : -1;
 	}
 	
 	/**
@@ -108,7 +81,7 @@ export default class ModelXPositionPatternManager
 	 */
 	sendPatterns():void
 	{
-		if(this._nextIndexInModelRange >= 0)
+		if(this._nextModelIndex >= 0)
 			this._activePatterns.forEach(this._sendGivenPattern.bind(this));
 	}
 	
@@ -143,7 +116,7 @@ export default class ModelXPositionPatternManager
 	}
 	
 	/**
-	 * Is it time to send this line of the pattern down the z axis? Based 
+	 * Is it time to send this line of the pattern down the Z axis? Based 
 	 * on the pattern's zGap.
 	 * @param pattern The pattern to check
 	 * @returns true if the given line should now be sent, false if not
@@ -153,9 +126,9 @@ export default class ModelXPositionPatternManager
 		const lastIndex = pattern.lastModelIndexUsed;
 		if(lastIndex < 0) return true;
 		
-		const lastModelUsed = Kernel.getInstance().loadedModels[lastIndex];
+		const lastModelUsed = this._models[lastIndex];
 		
-		return (lastModelUsed.z <= (this._startingZPos - pattern.zGap));
+		return (lastModelUsed.z <= (lastModelUsed.startZPosition - pattern.zGap));
 	}
 	
 	/**
@@ -179,9 +152,10 @@ export default class ModelXPositionPatternManager
 	 */
 	private _getPatternXAxisModelPositions(fromPosition:number, toPosition:number, patternMinXGap:number):number[]
 	{
-		if(fromPosition === toPosition) return [fromPosition]; // We only need the one model in this situation
+		if(fromPosition === toPosition)
+			return [fromPosition]; // We only need the one model in this situation
 		
-		const modelWidth = Kernel.getInstance().loadedModels[this._modelIndexRange.from].width;
+		const modelWidth = this._models[0]?.width ?? 0;
 		
 		// The width available to place models
 		const spaceForPositions = (toPosition - fromPosition);
@@ -211,28 +185,26 @@ export default class ModelXPositionPatternManager
 	 */
 	private _setNextModelToXPosition(xPos:number, pattern:IActivePattern):void
 	{
-		pattern.lastModelIndexUsed = this._getNextModelIndexInRange();
-		const currentModel = Kernel.getInstance().loadedModels[pattern.lastModelIndexUsed];
+		pattern.lastModelIndexUsed = this._getNextModelIndex();
+		const currentModel = this._models[pattern.lastModelIndexUsed];
 		
 		const modelCenterOffset = currentModel.width / 2;
 		
-		currentModel.z = this._startingZPos;
-		currentModel.active = true;
-		currentModel.x = xPos - modelCenterOffset;
+		currentModel.resetToStart(xPos - modelCenterOffset);
 	}
 	
 	/**
-	 * Get the index of the next available model in the model range
-	 * @returns the next available model index in the _modelIndexRange
+	 * Get the index of the next available model
+	 * @returns the next available model's index
 	 */
-	private _getNextModelIndexInRange():number
+	private _getNextModelIndex():number
 	{
-		const currentIndex = this._nextIndexInModelRange;
+		const currentIndex = this._nextModelIndex;
 		
-		if(currentIndex === this._modelIndexRange.to)
-			this._nextIndexInModelRange = this._modelIndexRange.from;
+		if(currentIndex === this._models.length - 1)
+			this._nextModelIndex = 0;
 		else
-			this._nextIndexInModelRange++;
+			this._nextModelIndex++;
 		
 		return currentIndex;
 	}
@@ -241,7 +213,7 @@ export default class ModelXPositionPatternManager
 
 
 /**
- * Represents a whole pattern of models, being sent down the z axis
+ * Represents a whole pattern of obstacles, being sent down the z axis
  */
 export interface IActivePattern {
 	/**

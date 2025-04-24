@@ -17,6 +17,11 @@ export default class Obstacle extends ASModel
     damageFlashImage:HTMLImageElement;
     
     /**
+     * The position on the Z axis that the obstacle will start its movement from
+     */
+    startZPosition:number;
+    
+    /**
      * The mode of the obstacle
      * "static" means it will move straight; 
      * "sweep" means it will move back and forth on the x axis, while moving towards the player; 
@@ -62,11 +67,11 @@ export default class Obstacle extends ASModel
     {
         super.prepare();
         
-        this.setYPositionFromBottom(this.height);
-        this.z = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
+        this.startZPosition = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
         
+        this.setYPositionFromBottom(this.height);
+        this.resetToStart(this.x);
         this.active = false;
-        this.hasCollidedWithPlayer = false;
         
         if(this._mode == "sweep")
             this._setRandomXDirection();
@@ -94,7 +99,7 @@ export default class Obstacle extends ASModel
      */
     resetToStart(xPosition:number):void
     {
-        this.z = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
+        this.z = this.startZPosition;
         this.x = xPosition;
         
         this.active = true;

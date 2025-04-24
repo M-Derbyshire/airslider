@@ -10,6 +10,7 @@ import Kernel from '../../../Kernel/Kernel';
 import Snake from '../../models/Obstacles/Snake/Snake';
 import Obstacle from '../../models/Obstacle/Obstacle';
 import IntroSnake from '../../models/Obstacles/IntroObstacles/IntroSnake/IntroSnake';
+import { IPartialPattern } from '../ASLevel/ObstacleXPositionPatternManager';
 
 /**
  * A class for a Level
@@ -17,6 +18,7 @@ import IntroSnake from '../../models/Obstacles/IntroObstacles/IntroSnake/IntroSn
 export default class Forurn extends ASLevel
 {
     private _introSnake:IntroSnake; // Used to introduce the "snake" obstacle to the player
+    private _snakes:Snake[]; // The Snake obstacles that the level will use
     
     constructor()
 	{
@@ -46,7 +48,7 @@ export default class Forurn extends ASLevel
         models.push(monster);
         
         // Setup the Snake obstacles
-        const totalSnakeCount = 20;
+        const totalSnakeCount = 100;
         const initialActiveSnakeCount = 5;
         
         const snakes:Obstacle[] = [];
@@ -55,8 +57,10 @@ export default class Forurn extends ASLevel
         
         this.obstacleManager.setObstacleModels(snakes);
         this.obstacleManager.setCurrentObstacleCount(initialActiveSnakeCount);
+        this.patternManager.setPatternDefaults(snakes);
         
         models.push(...snakes);
+        this._snakes = snakes;
         
         this._introSnake = new IntroSnake();
         models.push(this._introSnake);
@@ -106,8 +110,14 @@ export default class Forurn extends ASLevel
         
         this.outsideVisible = true;
         
-        this.patternManager.setStartingZPosition(this.zCalcStrategy.vanishingPointDepth);
+        const patternZGap = 200;
+        const patternMinXGap = 10;
         this.patternManager.clearPatterns();
+        this.patternManager.addRepeatingPattern(
+            patternZGap,
+            patternMinXGap,
+            this._generateSnakePatterns()
+        );
     }
     
     /**
@@ -120,7 +130,7 @@ export default class Forurn extends ASLevel
         this.levelSection(
             "introSnake",
             15000,
-            33400,
+            34000,
             () => this._introSnake.start()
         );
         
@@ -132,16 +142,63 @@ export default class Forurn extends ASLevel
             () => this.obstacleManager.sendObstacleIfReady()
         );
         
-        // this.levelSection(
-        //     "monster", 
-        //     15000, 
-        //     90000, 
-        //     () => this.monsters.forEach(monster => monster.start()),
-        //     null,
-        //     () => this.monsters.forEach(monster => monster.stop())
-        // );
+        this.levelSection(
+            "monster", 
+            92000, 
+            152000,
+            () => this.monsters.forEach(monster => monster.start()),
+            null,
+            () => this.monsters.forEach(monster => monster.stop())
+        );
+        
+        this.levelSection(
+            "snakeGroups",
+            152000,
+            212000,
+            null,
+            () => this.patternManager.sendPatterns(),
+            () => this.patternManager.clearPatterns()
+        );
         
         // Run the closing sequence
-        this.levelEndSection(95000);
+        this.levelEndSection(215000);
+    }
+    
+    /**
+     * Generate the patterns of Snakes that should be sent with the patternManager
+     */
+    private _generateSnakePatterns():IPartialPattern[] {
+        // We want to create a series of lines of snakes.
+        // Each line will have an X position that its snakes are centered on
+        
+        const lineHalfWith = this._snakes[0].width * 1.5;
+        
+        const lineXPositionsCount = 8;
+        const lineXPositions = [];
+        const randPositionMax = this.rightEdge - this.leftEdge;
+        const minPositionDifference = randPositionMax / 2;
+        
+        while(lineXPositions.length < lineXPositionsCount) {
+            // To ensure the player can't just stay in one place, we want to ensure we 
+            // have a line to the left, and a line to the right (the rest are set randomnly)
+            if(lineXPositions.length === 0) {
+                lineXPositions.push(this.leftEdge + lineHalfWith);
+                continue;
+            }
+            else if(lineXPositions.length === lineXPositionsCount / 2) {
+                lineXPositions.push(this.rightEdge - lineHalfWith);
+                continue;
+            }
+            
+            const xPos = Math.round(Math.random() * randPositionMax) + this.leftEdge;
+            
+            const lastXPos = lineXPositions[lineXPositions.length - 1] ?? -1000;
+            const differenceToLastPosition = Math.abs(xPos - lastXPos);
+            
+            if(differenceToLastPosition >= minPositionDifference)
+                lineXPositions.push(xPos);
+        }
+        
+        return lineXPositions.map(x => ({ fromPosition: x - lineHalfWith, toPosition: x + lineHalfWith }));
     }
 };

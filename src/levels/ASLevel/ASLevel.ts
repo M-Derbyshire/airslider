@@ -2,7 +2,7 @@ import Level from '../../../Kernel/entities/Level/Level';
 import MainHUD from '../../HUDs/MainHUD/MainHUD';
 import LevelRoad from './LevelRoad';
 import ObstacleManager from './ObstacleManager';
-import ModelXPositionPatternManager from './ModelXPositionPatternManager';
+import ObstacleXPositionPatternManager from './ObstacleXPositionPatternManager';
 import LevelGround from './LevelGround';
 import LevelTunnel from './LevelTunnel';
 import Sign from '../../models/Sign/Sign';
@@ -77,7 +77,7 @@ export default class ASLevel extends Level
     
     // Obstacle management
     protected obstacleManager: ObstacleManager;
-    protected patternManager: ModelXPositionPatternManager;
+    protected patternManager: ObstacleXPositionPatternManager;
     
     // Models we want to keep references to
     protected monsters:Monster[];
@@ -141,7 +141,7 @@ export default class ASLevel extends Level
         this.roadColor = "#A5A5A5";
         
         this.obstacleManager = new ObstacleManager();
-		this.patternManager = new ModelXPositionPatternManager();
+		this.patternManager = new ObstacleXPositionPatternManager();
         
         this.tunnelManager = new LevelTunnel();
         
@@ -256,7 +256,6 @@ export default class ASLevel extends Level
         this._finishFlagsActive = false;
         
         this._setupObstacleManager(this.leftEdge, this.rightEdge);
-		this._setupPatternManager();
         
         this.outsideVisible = false;
         
@@ -430,14 +429,6 @@ export default class ASLevel extends Level
     
     
     
-	
-	/**
-     * Sets up the model pattern manager
-     */
-	private _setupPatternManager():void
-	{
-		this.patternManager.setStartingZPosition(this.zCalcStrategy.vanishingPointDepth);
-	}
 	
     /**
      * Sets up the obstacle manager
