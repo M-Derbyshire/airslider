@@ -358,29 +358,30 @@ export default class ASLevel extends Level
     
     /**
      * Runs a section of the level (if it's time to do so). The initialiseCallback is ran once, then the actCallback 
-     * is called every frame. Finally, once the time is greater than msEnd, the endCallback is ran, and the actCallback 
+     * is called on every frame. Finally, once the time is greater than secsEnd, the endCallback is ran, and the actCallback 
      * is no longer called.
      * @param id A unique ID for the level section
-     * @param msStart The time (in milliseconds) when this section should become active
-     * @param msEnd The time (in milliseconds) when this section should stop being active
+     * @param secsStart The time (in seconds) when this section should become active
+     * @param secsEnd The time (in seconds) when this section should stop being active
      * @param initialiseCallback A callback to call when this section begins (may be null)
      * @param actCallback A callback to call on every frame while this section is active (may be null)
      * @param endCallback A callback to call when this section is no longer active (may be null)
      */
     protected levelSection(
         id:string, 
-        msStart:number, 
-        msEnd:number, 
+        secsStart:number, 
+        secsEnd:number, 
         initialiseCallback?:()=>void, 
         actCallback?:()=>void, 
         endCallback?:()=>void
     ) {
         if(this.levelMoving) {
-            const currentMS = Kernel.getInstance().totalLevelActiveMilliseconds;
+            const currentSecs = Kernel.getInstance().totalLevelActiveMilliseconds / 1000;
+            const actionIsActive = this._activeSections.includes(id);
         
-            if(currentMS >= msStart && currentMS <= msEnd) 
+            if(currentSecs >= secsStart && currentSecs <= secsEnd) 
             {
-                if(!this._activeSections.includes(id)) 
+                if(!actionIsActive)
                 {
                     if(initialiseCallback)
                         initialiseCallback();
@@ -392,23 +393,23 @@ export default class ASLevel extends Level
                     actCallback();
             }
             
-            if(currentMS > msEnd && this._activeSections.includes(id)) {
+            if(currentSecs > secsEnd && actionIsActive) {
                 if(endCallback)
                     endCallback();
                 
-                // Remove this section from currentSections
-                this._activeSections = this._activeSections.filter((cs:string) => cs !== id);
+                this._activeSections = this._activeSections.filter((activeId:string) => activeId !== id);
             }
         }
     }
     
     /**
      * Runs the closing sequence, if it is time to do so
-     * @param msStart the time (in milliseconds) that the end sequence should start from
+     * @param secsStart the time (in seconds) that the end sequence should start from
      */
-    protected levelEndSection(msStart:number)
+    protected levelEndSection(secsStart:number)
     {
         const kernel = Kernel.getInstance();
+        const msStart = secsStart * 1000;
         
         if(kernel.totalLevelActiveMilliseconds >= msStart) {
             if(!this._activeSections.includes(this._closingSectionId)) {

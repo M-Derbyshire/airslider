@@ -129,23 +129,23 @@ export default class Forurn extends ASLevel
         
         this.levelSection(
             "introSnake",
-            15000,
-            34000,
+            15,
+            34,
             () => this._introSnake.start()
         );
         
         this.levelSection(
             "randomSnakes",
-            36500,
-            90000,
+            36.5,
+            90,
             null,
             () => this.obstacleManager.sendObstacleIfReady()
         );
         
         this.levelSection(
             "increaseSnakeCount",
-            53500,
-            53600,
+            53.5,
+            53.6,
             () => this.obstacleManager.setCurrentObstacleCount(
                 this.obstacleManager.currentObstacleCount * 2
             )
@@ -153,8 +153,8 @@ export default class Forurn extends ASLevel
         
         this.levelSection(
             "monster", 
-            92000, 
-            152000,
+            92, 
+            152,
             () => this.monsters.forEach(monster => monster.start()),
             null,
             () => this.monsters.forEach(monster => monster.stop())
@@ -162,15 +162,15 @@ export default class Forurn extends ASLevel
         
         this.levelSection(
             "snakeGroups",
-            155000,
-            217000,
+            155,
+            217,
             null,
             () => this.patternManager.sendPatterns(),
             () => this.patternManager.clearPatterns()
         );
         
         // Run the closing sequence
-        this.levelEndSection(220000);
+        this.levelEndSection(220);
     }
     
     /**
