@@ -66,11 +66,16 @@ export default class DamageFlash extends ASHUDComponent
      * @param image the image to use as the flash
      */
     start(image:HTMLImageElement):void
-    {
+    {        
         if(this.opacity === 0)
         {
             this.image = image;
             this.opacity = 0.01; // Just needs to be anything over 0, to tell the component to start
+        }
+        
+        if(this.shouldFadeOut)
+        {
+            this.shouldFadeOut = false;
         }
     }
 	
