@@ -91,7 +91,7 @@ export default class Snake extends Obstacle
     prepare(): void {
         super.prepare();
         
-        this.setYPositionFromBottom(this.height / 2);
+        this.setYPositionFromBottom(this.height / 4);
     }
     
     act():void

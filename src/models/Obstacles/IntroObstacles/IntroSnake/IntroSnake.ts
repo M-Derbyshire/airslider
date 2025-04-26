@@ -47,7 +47,7 @@ export default class IntroSnake extends Snake implements IIntroObstacle
         
         this.active = false;
         this.hasCollidedWithPlayer = false;
-        this.x = -(this.width * 1.25);
+        this.x = -(this.width * 2);
         this.z = -1;
         this._currentMove = "entrance";
         this._currentDriftCount = 0;
