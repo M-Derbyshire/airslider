@@ -335,6 +335,8 @@ export default class ASLevel extends Level
      */
     private _prepareFrame():void
     {
+        this.frameManager.reset();
+        
         const settings = Kernel.getInstance().settings;
         
         //Setup the frame for the level
