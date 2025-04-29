@@ -14,6 +14,7 @@ export default class ObstacleManager
 	// The edges of the area (in units) that the obstacles can move within
 	private _leftEdge:number;
 	private _rightEdge:number;
+	private _areaCenter:number;
 	
 	// The level's obstacles.
 	private _obstacles:Obstacle[];
@@ -21,6 +22,14 @@ export default class ObstacleManager
 	//The ObstacleManager will only use this amount of the available obstacles
 	private _obstacleCount:number;
 	
+	// The index number of the last available obstacle (based on the amount of obstacles available, and
+	// the current _obstacleCount value)
+	private _lastAvailableObstacleIndex:number;
+	
+	// This is used when deciding how to position an obstacle, when sending it down the track.
+	// The number's value determines which method should set the position (helping to create 
+	// the pattern we want)
+	private _currentObstaclePositionNumber:number;
 	
 	/**
 	 * The left edge (in units) of the area that the obstacles can move within
@@ -47,6 +56,8 @@ export default class ObstacleManager
 		this._obstacles = [];
         
         this._obstacleCount = 0;
+		
+		this._currentObstaclePositionNumber = 0;
     }
     
 	/**
@@ -58,6 +69,9 @@ export default class ObstacleManager
     {
         this._leftEdge = left;
         this._rightEdge = right;
+		
+		const areaWidth = right - left;
+		this._areaCenter = (areaWidth / 2) + left
     }
     
 	/**
@@ -67,6 +81,7 @@ export default class ObstacleManager
     setObstacleModels(obstacles:Obstacle[]):void
     {
         this._obstacles = obstacles;
+		this._resetLastAvailableObstacleIndex();
     }
     
 	/**
@@ -77,6 +92,7 @@ export default class ObstacleManager
     setCurrentObstacleCount(num:number):void
     {
         this._obstacleCount = num;
+		this._resetLastAvailableObstacleIndex();
     }
     
 	/**
@@ -95,18 +111,24 @@ export default class ObstacleManager
     {
 		if(this._obstacleCount === 0) return;
 		
-		const lastAvailableObstacleIndex = (this._obstacles.length <= this._obstacleCount) 
-			? this._obstacles.length - 1
-			: this._obstacleCount - 1;
-		
-        for(let i = 0; i <= lastAvailableObstacleIndex; i++)
+        for(let i = 0; i <= this._lastAvailableObstacleIndex; i++)
         {
-			const obstacle = (this._obstacles[i]);
+			const obstacle = this._obstacles[i];
 			
             if(this._isTimeToSendNextObstacle(obstacle, i))
-				obstacle.resetToStart(this._getObstacleXPosition(obstacle, i));
+				obstacle.resetToStart(this._getObstacleXPosition(obstacle));
         }
     }
+	
+	/**
+	 * Corrects the value of the _lastAvailableObstacleIndex
+	 */
+	private _resetLastAvailableObstacleIndex(): void
+	{
+		this._lastAvailableObstacleIndex = (this._obstacles.length <= this._obstacleCount) 
+			? this._obstacles.length - 1
+			: this._obstacleCount - 1;
+	}
 	
 	/**
 	 * Should a given obstacle be sent down the road?
@@ -118,18 +140,19 @@ export default class ObstacleManager
 	{
 		if(!obstacle.active)
 		{
-			const kernel = Kernel.getInstance();
-			
 			if (obstacleIndex === 0) 
 				return true;
 			
 			const previousObstacle = this._obstacles[obstacleIndex - 1];
-			const vanishingPointDepth = (kernel.level as ASLevel).vanishingPointDepth;
+			if(!previousObstacle.active)
+				return false;
+			
+			const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
 			
 			const previousObstacleHasMovedFarEnough = 
 				(previousObstacle.z + (vanishingPointDepth / this._obstacleCount) < vanishingPointDepth);
 			
-			return (previousObstacle.active && previousObstacleHasMovedFarEnough);
+			return previousObstacleHasMovedFarEnough;
 		}
 		
 		return false;
@@ -138,26 +161,22 @@ export default class ObstacleManager
 	/**
 	 * Get a random(ish) x position for an obstacle
 	 * @param obstacle the obstacle
-	 * @param obstacleIndex the index of the obstacle in the _obstacles array
 	 * @returns the x position (in units) that this obstacle should be placed at
 	 */
-	private _getObstacleXPosition(obstacle:Obstacle, obstacleIndex:number):number
+	private _getObstacleXPosition(obstacle:Obstacle):number
 	{
-		if((obstacleIndex + 1) % 3 == 0) //the third of every 3 obstacles
-		{
-			// put somewhere on left side of level
-			return this._getRandomXPosInFirstHalfOfArea(obstacle.width);
+		this._setNextObstaclePositionNumber(3);
 		
-		} else if((obstacleIndex + 2) % 3 == 0) //the second of every 3 obstacles
+		if(this._currentObstaclePositionNumber == 0 || this._currentObstaclePositionNumber == 2)
 		{
-			// now on the right side
-			const halfOfAreaWidth = ((this._rightEdge - this._leftEdge) / 2);
-			return this._getRandomXPosInFirstHalfOfArea(obstacle.width) + halfOfAreaWidth;
-		
-		} else //the first of every 3 obstacles
-		{
-			// put where player is
 			return this._getObstacleXPositionCenteredOnPlayer(obstacle.width, this.playerModel);
+		}
+		else
+		{
+			if(this._currentObstaclePositionNumber == 3)
+				return this._getRandomXPosInFirstHalfOfArea(obstacle.width);
+			else
+				return this._getRandomXPosInFirstHalfOfArea(obstacle.width) + this._areaCenter;
 		}
 	}
 	
@@ -168,7 +187,10 @@ export default class ObstacleManager
 	 */
 	private _getRandomXPosInFirstHalfOfArea(currentObstacleWidth:number):number
 	{
-		return (Math.random() * (((this._rightEdge - currentObstacleWidth) - this._leftEdge) / 2));
+		const maxRight = this._areaCenter - currentObstacleWidth;
+		const randMax = maxRight - this._leftEdge;
+		
+		return Math.round(Math.random() * randMax) + this._leftEdge;
 	}
 	
 	/**
@@ -194,5 +216,18 @@ export default class ObstacleManager
 		}
 		
 		return obstacleXPos;
+	}
+	
+	/**
+	 * Increases the current obstacle position number, or loops it round if 
+	 * it's over the given max value
+	 * @param max the maximum number that the value can be
+	 */
+	private _setNextObstaclePositionNumber(max:number)
+	{
+		this._currentObstaclePositionNumber++;
+		
+		if(this._currentObstaclePositionNumber > max)
+			this._currentObstaclePositionNumber = 0;
 	}
 }

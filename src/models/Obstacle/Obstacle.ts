@@ -136,7 +136,7 @@ export default class Obstacle extends ASModel
 	{
         const level = Kernel.getInstance().level as ASLevel;
         
-        const speedModifier = 2;
+        const speedModifier = 2; // The lower this number, the faster the speed
         
 		if(!level.levelMoving)
             this.zSpeed = -(UnitHelper.speed(level.maxLevelSpeedRaw) / speedModifier);
