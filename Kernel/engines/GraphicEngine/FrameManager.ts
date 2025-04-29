@@ -19,36 +19,19 @@ export default class FrameManager implements IFrameManager {
     constructor(camera:ICamera)
     {
         this._camera = camera;
-        this.reset();
-    }
-    
-    /**
-     * Resets the frame manager, removing all the frames currently held
-     */
-    reset():void
-    {
+        
         this._frames = [];
         this._framesToBeDrawn = [];
     }
     
     /**
-     * Adds a frame to the level
-     * @param frame The frame to add
-     * @returns The index of the frame, in the manager's internal array
+     * Sets the frames for the level
+     * @param frames The frames to use
      */
-    addFrame(frame:IFrame):number
+    setFrames(frames:IFrame[]):void
     {
-        return this._frames.push(frame) - 1;
-    }
-    
-    /**
-     * Gets a frame from the manager's internal state
-     * @param index The index of the frame, in the manager's internal state
-     * @returns The requested frame
-     */
-    getFrameByIndex(index:number):IFrame
-    {
-        return this._frames[index];
+        this._framesToBeDrawn = [];
+        this._frames = frames;
     }
     
     /**

@@ -45,7 +45,7 @@ export default class LoadingScreen extends Level
         const backgroundImage = assetHandler.loadImage(this.backgroundImagePath);
         frame.setBackgroundImage(backgroundImage);
         
-        this.frameManager.addFrame(frame);
+        this.frameManager.setFrames([frame]);
         
         this.assetsToUnload.push(
             this.backgroundImagePath

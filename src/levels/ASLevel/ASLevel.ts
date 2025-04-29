@@ -32,13 +32,10 @@ import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventMa
  */
 export default class ASLevel extends Level 
 {
-    protected frameIndex: number; // The index of the level's current frame
-    
     // The edges of the playable area
     leftEdge:number;
     rightEdge:number;
     
-    // The strategy for the ZCalc
     protected zCalcStrategy: LinearVanishingPointStrategy;
     
     get vanishingPointX()
@@ -57,6 +54,7 @@ export default class ASLevel extends Level
     }
     
     // Frame management
+    protected frame: Frame;
     protected backgroundImage: HTMLImageElement;
     protected outsideLightMaskImage: HTMLImageElement;
     protected outsideLightMaskLuminosity: number;
@@ -335,18 +333,16 @@ export default class ASLevel extends Level
      */
     private _prepareFrame():void
     {
-        this.frameManager.reset();
-        
         const settings = Kernel.getInstance().settings;
         
         //Setup the frame for the level
-        let frame = new Frame(0, 0, settings.unitsWithinCameraX, settings.unitsWithinCameraY);
+        this.frame = new Frame(0, 0, settings.unitsWithinCameraX, settings.unitsWithinCameraY);
         
         // The light mask will be set during the gameplay (based on whether we're inside or outside a tunnel)
         // However, the background should be consistent, so we set it here.
-        frame.setBackgroundImage(this.backgroundImage);
+        this.frame.setBackgroundImage(this.backgroundImage);
         
-        this.frameIndex = this.frameManager.addFrame(frame);
+        this.frameManager.setFrames([this.frame]);
     }
     
     /**
@@ -483,7 +479,6 @@ export default class ASLevel extends Level
     private _setLightMask():void
     {
         const tunnelLength = this.tunnelManager.tunnel.length;
-        const frame = this.frameManager.getFrameByIndex(this.frameIndex);
         
         const isInside = (
             tunnelLength > 1 && 
@@ -493,11 +488,11 @@ export default class ASLevel extends Level
         
         if(isInside)
         {
-            frame.setLightMaskImage(this.insideLightMaskImage, this.insideLightMaskLuminosity);
+            this.frame.setLightMaskImage(this.insideLightMaskImage, this.insideLightMaskLuminosity);
         }
         else
         {
-            frame.setLightMaskImage(this.outsideLightMaskImage, this.outsideLightMaskLuminosity);
+            this.frame.setLightMaskImage(this.outsideLightMaskImage, this.outsideLightMaskLuminosity);
         }
     }    
     

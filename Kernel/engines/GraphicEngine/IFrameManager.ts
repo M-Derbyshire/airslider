@@ -5,23 +5,10 @@ import IFrame from "./IFrame";
  */
 export default interface IFrameManager {
     /**
-     * Resets the frame manager, removing all the frames currently held
+     * Sets the frames for the level
+     * @param frames The frames to use
      */
-    reset():void;
-    
-    /**
-     * Adds a frame to the level
-     * @param frame The frame to add
-     * @returns The index of the frame, in the manager's internal array
-     */
-    addFrame(frame:IFrame):number;
-    
-    /**
-     * Gets a frame from the manager's internal state
-     * @param index The index of the frame, in the manager's internal state
-     * @returns The requested frame
-     */
-    getFrameByIndex(index:number):IFrame;
+    setFrames(frames:IFrame[]):void;
     
     /**
      * Determines which frames should be drawn, and stores that info in the manager's internal 
