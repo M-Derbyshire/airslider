@@ -150,9 +150,9 @@ export default class Tarian extends ASModel {
         this.z = 20;
         
         this._lastSpeedChange = 0;
-        this._accl = 800;
-        this._deaccl = 100;
-        this.topSpeed = 1000;
+        this._accl = 1000;
+        this._deaccl = 50;
+        this.topSpeed = 1200;
         this.xSpeed = 0;
         this.zSpeed = 0;
         
