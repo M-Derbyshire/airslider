@@ -133,8 +133,8 @@ export default class TheConstruct extends ASLevel
         // Send some shockers
         // this.levelSection(
         //     "obstacles",
-        //     15000,
-        //     25000,
+        //     15,
+        //     25,
         //     null,
         //     () => this.obstacleManager.sendObstacle(),
         //     null
@@ -143,8 +143,8 @@ export default class TheConstruct extends ASLevel
 		// Runs the monster sequence
         this.levelSection(
             "monster", 
-            15000, 
-            90000, 
+            15, 
+            90, 
             () => this.monsters.forEach(monster => monster.start()),
             null,
             () => this.monsters.forEach(monster => monster.stop())
@@ -154,8 +154,8 @@ export default class TheConstruct extends ASLevel
 		//Set a pattern of shockers going
         // this.levelSection(
         //     "obstaclePattern",
-        //     15000,
-        //     25000,
+        //     15,
+        //     25,
         //     () => {
         //         const levelCenter = (this.rightEdge / 2) + (this.leftEdge / 2);
                 
@@ -178,7 +178,7 @@ export default class TheConstruct extends ASLevel
         // );
         
         // Run the closing sequence
-        this.levelEndSection(95000);
-        // this.levelEndSection(15000);
+        this.levelEndSection(95);
+        // this.levelEndSection(15);
     }
 }
