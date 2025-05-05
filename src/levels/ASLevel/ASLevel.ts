@@ -26,11 +26,12 @@ import UnitHelper from '../../../Kernel/utils/UnitHelper';
 import ZCalc from '../../../Kernel/utils/ZCalc/ZCalc';
 import IEventManager from '../../../Kernel/entities/Level/IEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
+import Obstacle from '../../models/Obstacle/Obstacle';
 
 /**
  * The game's base Level class
  */
-export default class ASLevel extends Level 
+export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends Level 
 {
     // The edges of the playable area
     leftEdge:number;
@@ -74,7 +75,7 @@ export default class ASLevel extends Level
     protected racerManager: RacerManager;
     
     // Obstacle management
-    protected obstacleManager: ObstacleManager;
+    protected obstacleManager: ObstacleManager<ObstacleType>;
     protected patternManager: ObstacleXPositionPatternManager;
     
     // Models we want to keep references to
@@ -138,7 +139,7 @@ export default class ASLevel extends Level
 		this.roadManager = new LevelRoad();
         this.roadColor = "#A5A5A5";
         
-        this.obstacleManager = new ObstacleManager();
+        this.obstacleManager = new ObstacleManager<ObstacleType>();
 		this.patternManager = new ObstacleXPositionPatternManager();
         
         this.tunnelManager = new LevelTunnel();

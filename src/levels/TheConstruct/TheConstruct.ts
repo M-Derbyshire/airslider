@@ -20,7 +20,7 @@ import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventMa
 /**
  * Testing/development level
  */
-export default class TheConstruct extends ASLevel
+export default class TheConstruct extends ASLevel<Shocker>
 {
     /**
      * Constructor
@@ -136,7 +136,7 @@ export default class TheConstruct extends ASLevel
         //     15,
         //     25,
         //     null,
-        //     () => this.obstacleManager.sendObstacle(),
+        //     () => this.obstacleManager.sendObstaclesIfReady(),
         //     null
         // );
 		

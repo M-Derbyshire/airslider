@@ -6,7 +6,7 @@ import ASLevel from './ASLevel';
 /**
  * Manages the level's "obstacle" models, setting their x positions and sending them down the road
  */
-export default class ObstacleManager
+export default class ObstacleManager<T extends Obstacle>
 {
 	// The model of the player character
 	protected playerModel:IModel;
@@ -14,22 +14,24 @@ export default class ObstacleManager
 	// The edges of the area (in units) that the obstacles can move within
 	private _leftEdge:number;
 	private _rightEdge:number;
-	private _areaCenter:number;
 	
 	// The level's obstacles.
-	private _obstacles:Obstacle[];
+	private _obstacles:T[];
 	
-	//The ObstacleManager will only use this amount of the available obstacles
-	private _obstacleCount:number;
+	// The width of the obstacles we're working with
+	private _obstacleWidth:number;
 	
-	// The index number of the last available obstacle (based on the amount of obstacles available, and
-	// the current _obstacleCount value)
-	private _lastAvailableObstacleIndex:number;
+	// We should only have this amount of lines (of obstacles) on the track at any one time
+	private _lineCount:number;
 	
-	// This is used when deciding how to position an obstacle, when sending it down the track.
-	// The number's value determines which method should set the position (helping to create 
-	// the pattern we want)
-	private _currentObstaclePositionNumber:number;
+	// This is the minimum amount of obstacles the manager requires
+	private _minObstacleCount:number;
+	
+	// The index number of the last obstacle that was sent (if this is negative, none have been sent)
+	private _lastSentObstacleIndex:number;
+	
+	// Should the next line of obstacles be placed on the right side of the track?
+	private _placeLineOnRight:boolean;
 	
 	/**
 	 * The left edge (in units) of the area that the obstacles can move within
@@ -42,9 +44,9 @@ export default class ObstacleManager
     get rightEdge() { return this._rightEdge; }
 	
 	/**
-	 * The amound of obstacles that the manager will currently make use of
+	 * The amount of lines (of obstacles) that can be on the track at any one time
 	 */
-	get currentObstacleCount() { return this._obstacleCount }
+	get currentLineCount() { return this._lineCount }
 	
 	
 	
@@ -55,9 +57,10 @@ export default class ObstacleManager
         
 		this._obstacles = [];
         
-        this._obstacleCount = 0;
+        this._lineCount = 0;
+		this._minObstacleCount = 2;
 		
-		this._currentObstaclePositionNumber = 0;
+		this._placeLineOnRight = false;
     }
     
 	/**
@@ -69,30 +72,34 @@ export default class ObstacleManager
     {
         this._leftEdge = left;
         this._rightEdge = right;
-		
-		const areaWidth = right - left;
-		this._areaCenter = (areaWidth / 2) + left
     }
     
 	/**
-	 * Give the manager the obstacles for the level
+	 * Give the manager the obstacles for the level (you are required to provide enough
+	 * obstacles for the current line count that you have set)
 	 * @param obstacles the obstacles
 	 */
-    setObstacleModels(obstacles:Obstacle[]):void
+    setObstacleModels(obstacles:T[]):void
     {
+		if(obstacles.length < this._minObstacleCount)
+			throw new Error(
+				`${obstacles.length} obstacles have been provided to the ObstacleManager. The minimum required is ${this._minObstacleCount}`
+			);
+		
         this._obstacles = obstacles;
-		this._resetLastAvailableObstacleIndex();
+		this._obstacleWidth = this._getObstaclesWidth();
+		this._lastSentObstacleIndex = -1;
     }
     
 	/**
-	 * How many obstacles should be in play at this time?
+	 * How many lines of obstacles can be in play at any one time?
 	 * (This will affect the difficulty)
-	 * @param num the amount of obstacles
+	 * @param num the amount of lines that are allowed on the track at 
+	 * the same time
 	 */
-    setCurrentObstacleCount(num:number):void
+    setCurrentLineCount(num:number):void
     {
-        this._obstacleCount = num;
-		this._resetLastAvailableObstacleIndex();
+		this._lineCount = num;
     }
     
 	/**
@@ -105,129 +112,130 @@ export default class ObstacleManager
 	}
     
     /**
-	 * Sends another obstacle (if one is needed) at a random(ish) position
+	 * Sends another line of obstacles, if needed
 	 */
-    sendObstacleIfReady():void
+    sendObstaclesIfReady():void
     {
-		if(this._obstacleCount === 0) return;
+		const lineMinSize = 2; // The least amount of obstacles per line
+		const lineMaxSize = this._minObstacleCount; // The max amount of obstacles per line
+		const obstacleCount = Math.floor(Math.random() * lineMaxSize) + lineMinSize;
 		
-        for(let i = 0; i <= this._lastAvailableObstacleIndex; i++)
-        {
-			const obstacle = this._obstacles[i];
+		if(this._isTimeToSendNextLine())
+		{
+			const xPositions = this._getObstacleXPositions(obstacleCount);
 			
-            if(this._isTimeToSendNextObstacle(obstacle, i))
-				obstacle.resetToStart(this._getObstacleXPosition(obstacle));
-        }
+			const obstacles = [];
+			for(let i = 0; i < obstacleCount; i++)
+			{
+				const obstacle = this._obstacles[this._getIndexForNextObstacle()];
+				
+				obstacle.resetToStart(xPositions[i]);
+				obstacle.z += this._getObstacleStartZModifier(20);
+				obstacles.push(obstacle);
+			}
+		}
     }
 	
 	/**
-	 * Corrects the value of the _lastAvailableObstacleIndex
+	 * Is it time for a line of obstacles to be sent down the track?
+	 * @returns true if we should send a new line, or false if not
 	 */
-	private _resetLastAvailableObstacleIndex(): void
+	private _isTimeToSendNextLine():boolean
 	{
-		this._lastAvailableObstacleIndex = (this._obstacles.length <= this._obstacleCount) 
-			? this._obstacles.length - 1
-			: this._obstacleCount - 1;
+		if(this._lastSentObstacleIndex < 0)
+			return true;
+		
+		const lastSentObstacle = this._obstacles[this._lastSentObstacleIndex];
+		
+		const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
+		
+		const desiredZGap = vanishingPointDepth / this._lineCount;
+		const lastObstaclesDistance = vanishingPointDepth - lastSentObstacle.z;
+		
+		return lastObstaclesDistance > desiredZGap;
 	}
 	
 	/**
-	 * Should a given obstacle be sent down the road?
-	 * @param obstacle the obstacle
-	 * @param obstacleIndex the index of the obstacle in the _obstacles array
-	 * @returns true if we should send this obstacle, or false if not
+	 * Increases (or loops) the _lastSentObstacleIndex value to the next 
+	 * obstacle that can be used
+	 * @returns the index of the next obstacle that we can use
 	 */
-	private _isTimeToSendNextObstacle(obstacle:Obstacle, obstacleIndex:number):boolean
+	private _getIndexForNextObstacle():number
 	{
-		if(!obstacle.active)
-		{
-			if (obstacleIndex === 0) 
-				return true;
-			
-			const previousObstacle = this._obstacles[obstacleIndex - 1];
-			if(!previousObstacle.active)
-				return false;
-			
-			const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
-			
-			const previousObstacleHasMovedFarEnough = 
-				(previousObstacle.z + (vanishingPointDepth / this._obstacleCount) < vanishingPointDepth);
-			
-			return previousObstacleHasMovedFarEnough;
-		}
+		const lastObstacleIndex = this._obstacles.length - 1;
+		const maxIndexReached = this._lastSentObstacleIndex === lastObstacleIndex;
 		
-		return false;
+		if(maxIndexReached)
+			return this._lastSentObstacleIndex = 0;
+		
+		return ++this._lastSentObstacleIndex;
 	}
 	
 	/**
-	 * Get a random(ish) x position for an obstacle
-	 * @param obstacle the obstacle
-	 * @returns the x position (in units) that this obstacle should be placed at
+	 * Get the X positions for a line of obstacles
+	 * @param count the amount of positions to return
+	 * @returns the X positions (in units) that the obstacles should be placed at
 	 */
-	private _getObstacleXPosition(obstacle:Obstacle):number
+	private _getObstacleXPositions(count:number):number[]
 	{
-		this._setNextObstaclePositionNumber(3);
+		this._placeLineOnRight = !this._placeLineOnRight;
 		
-		if(this._currentObstaclePositionNumber == 0 || this._currentObstaclePositionNumber == 2)
+		let leftEdgeOfLine;
+		
+		if(this._placeLineOnRight)
 		{
-			return this._getObstacleXPositionCenteredOnPlayer(obstacle.width, this.playerModel);
+			const lineWidth = this._obstacleWidth * count;
+			leftEdgeOfLine = this._rightEdge - lineWidth;
 		}
 		else
 		{
-			if(this._currentObstaclePositionNumber == 3)
-				return this._getRandomXPosInFirstHalfOfArea(obstacle.width);
-			else
-				return this._getRandomXPosInFirstHalfOfArea(obstacle.width) + this._areaCenter;
-		}
-	}
-	
-	/**
-	 * Generates a random position within the first half of the set obstacle area
-	 * @param currentObstacleWidth the width of the obstacle in question
-	 * @returns an x position in the first half of the set area
-	 */
-	private _getRandomXPosInFirstHalfOfArea(currentObstacleWidth:number):number
-	{
-		const maxRight = this._areaCenter - currentObstacleWidth;
-		const randMax = maxRight - this._leftEdge;
-		
-		return Math.round(Math.random() * randMax) + this._leftEdge;
-	}
-	
-	/**
-	 * Gets the x position for a obstacle, centered on the player
-	 * @param currentObstacleWidth the width of the obstacle in question
-	 * @param player the model of the player
-	 * @returns the correct x position for an obstacle, centered on the player's x position
-	 */
-	private _getObstacleXPositionCenteredOnPlayer(currentObstacleWidth:number, player:IModel)
-	{
-		const playerCenter = (player.x + (player.width / 2));
-		const obstacleCenter = (currentObstacleWidth / 2)
-		
-		let obstacleXPos = playerCenter - obstacleCenter;
-		
-		if(obstacleXPos < this._leftEdge)
-		{
-			return this._leftEdge;
-		} 
-		else if (obstacleXPos + currentObstacleWidth > this._rightEdge)
-		{
-			return this._rightEdge - currentObstacleWidth;
+			leftEdgeOfLine = this._leftEdge;
 		}
 		
-		return obstacleXPos;
+		return this._generateObstaclePositionsFromLineX(leftEdgeOfLine, count)
 	}
 	
 	/**
-	 * Increases the current obstacle position number, or loops it round if 
-	 * it's over the given max value
-	 * @param max the maximum number that the value can be
+	 * Generates a line of X positions, from the given X position (which acts as the left 
+	 * edge of the line)
+	 * @param lineX the left edge of the line
+	 * @param count the amount of positions to return
+	 * @returns the X positions for the obstacles, starting at the given line X
 	 */
-	private _setNextObstaclePositionNumber(max:number)
+	private _generateObstaclePositionsFromLineX(lineX:number, count:number):number[]
 	{
-		this._currentObstaclePositionNumber++;
+		const positions = [];
+		for(let i = 0; i < count; i++) 
+			positions.push(lineX + (this._obstacleWidth * i));
 		
-		if(this._currentObstaclePositionNumber > max)
-			this._currentObstaclePositionNumber = 0;
+		return positions;
+	}
+	
+	/**
+	 * Generates a number (which could be negative) that can be added to an 
+	 * obstacle's Z position, to give it a bit of randomness before it is 
+	 * sent down the track.
+	 * @param absMax the maximum/minimum value (the negative of this value 
+	 * will be the minimum)
+	 * @returns a number that should be added to the obstacle's Z value, 
+	 * after it has been reset to its start position
+	 */
+	private _getObstacleStartZModifier(absMax:number):number
+	{
+		const randMax = absMax * 2;
+		return (Math.random() * randMax) - absMax;
+	}
+	
+	/**
+	 * Gets the width of the obstacles we are working with
+	 * @returns the width of the obstacles (or 0 if we have no 
+	 * obstacles)
+	 */
+	private _getObstaclesWidth():number
+	{
+		if(this._obstacles.length === 0)
+			return 0;
+		
+		return this._obstacles[0].width;
 	}
 }

@@ -15,7 +15,7 @@ import { IPartialPattern } from '../ASLevel/ObstacleXPositionPatternManager';
 /**
  * A class for a Level
  */
-export default class Forurn extends ASLevel
+export default class Forurn extends ASLevel<Snake>
 {
     private _introSnake:IntroSnake; // Used to introduce the "snake" obstacle to the player
     private _snakes:Snake[]; // The Snake obstacles that the level will use
@@ -49,15 +49,10 @@ export default class Forurn extends ASLevel
         
         // Setup the Snake obstacles
         const totalSnakeCount = 100;
-        const initialActiveSnakeCount = 5;
         
         const snakes:Obstacle[] = [];
         for(let i = 0; i < totalSnakeCount; i++)
             snakes.push(new Snake());
-        
-        this.obstacleManager.setObstacleModels(snakes);
-        this.obstacleManager.setCurrentObstacleCount(initialActiveSnakeCount);
-        this.patternManager.setPatternDefaults(snakes);
         
         models.push(...snakes);
         this._snakes = snakes;
@@ -118,6 +113,11 @@ export default class Forurn extends ASLevel
             patternMinXGap,
             this._generateSnakePatterns()
         );
+        
+        const initialSnakeLineCount = 3;
+        this.obstacleManager.setObstacleModels(this._snakes);
+        this.obstacleManager.setCurrentLineCount(initialSnakeLineCount);
+        this.patternManager.setPatternDefaults(this._snakes);
     }
     
     /**
@@ -130,30 +130,30 @@ export default class Forurn extends ASLevel
         this.levelSection(
             "introSnake",
             15,
-            34,
+            37,
             () => this._introSnake.start()
         );
         
         this.levelSection(
             "randomSnakes",
-            36.5,
-            90,
+            43,
+            93,
             null,
-            () => this.obstacleManager.sendObstacleIfReady()
+            () => this.obstacleManager.sendObstaclesIfReady()
         );
         
         this.levelSection(
             "increaseSnakeCount",
-            53.5,
-            53.6,
-            () => this.obstacleManager.setCurrentObstacleCount(
-                this.obstacleManager.currentObstacleCount * 2
+            54.5,
+            54.6,
+            () => this.obstacleManager.setCurrentLineCount(
+                this.obstacleManager.currentLineCount + 1
             )
         );
         
         this.levelSection(
-            "monster", 
-            92, 
+            "monster",
+            97,
             152,
             () => this.monsters.forEach(monster => monster.start()),
             null,
