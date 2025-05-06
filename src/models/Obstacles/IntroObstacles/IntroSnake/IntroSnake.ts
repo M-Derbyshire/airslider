@@ -1,5 +1,3 @@
-import IHitBox from "../../../../../Kernel/entities/Model/IHitBox";
-import Kernel from "../../../../../Kernel/Kernel";
 import Snake from "../../Snake/Snake";
 import { IIntroObstacle } from "../types";
 
@@ -20,6 +18,7 @@ export default class IntroSnake extends Snake implements IIntroObstacle
     // These define the boundaries for the X movement during the "steady" movement
     private _steadyMinX:number;
     private _steadyMaxX:number;
+    private _steadyCenterX:number;
     
     // The snake will stay close to this z-position for the "steady" movement
     private _steadyZPosition:number;
@@ -34,7 +33,7 @@ export default class IntroSnake extends Snake implements IIntroObstacle
     {
         super();
         
-        this._steadyZPosition = 65;
+        this._steadyZPosition = 120;
         this._maxDriftCount = 3;
         
         this.zSpeed = 15;
@@ -52,8 +51,9 @@ export default class IntroSnake extends Snake implements IIntroObstacle
         this._currentMove = "entrance";
         this._currentDriftCount = 0;
         
-        this._steadyMinX = 25;
-        this._steadyMaxX = 975 - this.width;
+        this._steadyMinX = 25 - this.width;
+        this._steadyMaxX = 975;
+        this._steadyCenterX = ((this._steadyMaxX - this._steadyMinX) / 2) + this._steadyMinX;
     }
     
     act():void
@@ -94,12 +94,6 @@ export default class IntroSnake extends Snake implements IIntroObstacle
         this.active = true;
     }
     
-    getHitBoxes(): IHitBox[] {
-        return this._currentMove === "leave"
-            ? super.getHitBoxes()
-            : [];
-    }
-    
     // Overriding this, as we don't want to react to the snake leaving the game area
     extraEvents():void {}
     
@@ -136,5 +130,12 @@ export default class IntroSnake extends Snake implements IIntroObstacle
     private _leaveMovement():void
     {
         this.moveOut(this.zSpeed * 1.5);
+        
+        const xSpeed = Math.abs(this.xSpeed);
+        
+        if(this.x > this._steadyCenterX)
+            this.moveRight(xSpeed);
+        else
+            this.moveLeft(xSpeed);
     }
 }
