@@ -107,7 +107,6 @@ export default class Forurn extends ASLevel<Snake>
         
         const patternZGap = 200;
         const patternMinXGap = 10;
-        this.patternManager.clearPatterns();
         this.patternManager.addRepeatingPattern(
             patternZGap,
             patternMinXGap,

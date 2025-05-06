@@ -76,7 +76,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     
     // Obstacle management
     protected obstacleManager: ObstacleManager<ObstacleType>;
-    protected patternManager: ObstacleXPositionPatternManager;
+    protected patternManager: ObstacleXPositionPatternManager<ObstacleType>;
     
     // Models we want to keep references to
     protected monsters:Monster[];
@@ -140,7 +140,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         this.roadColor = "#A5A5A5";
         
         this.obstacleManager = new ObstacleManager<ObstacleType>();
-		this.patternManager = new ObstacleXPositionPatternManager();
+		this.patternManager = new ObstacleXPositionPatternManager<ObstacleType>();
         
         this.tunnelManager = new LevelTunnel();
         
@@ -169,8 +169,10 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     {
         const stdModels = super.getModels();
         
+        const centralState = Kernel.getInstance().centralState;
+        
         this.player = new Tarian();
-        Kernel.getInstance().centralState.set(CentralStateKey.PlayerModelIndex, stdModels.length);
+        centralState.set(CentralStateKey.PlayerModelIndex, stdModels.length);
         
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
         this._startSignDisplay = new SignDisplay(this._startSign);
@@ -255,6 +257,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         this._finishFlagsActive = false;
         
         this._setupObstacleManager(this.leftEdge, this.rightEdge);
+        this.patternManager.clearPatterns();
         
         this.outsideVisible = false;
         

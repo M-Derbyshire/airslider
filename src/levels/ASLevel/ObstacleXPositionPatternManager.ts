@@ -1,18 +1,18 @@
 import Obstacle from "../../models/Obstacle/Obstacle";
 
 /*
-	Used to position a set of obstacles on the x-axis, in a way that will make 
-	a pattern (or multiple patterns) when these objects move down the z-axis.
+	Used to position a set of obstacles on the X-axis, in a way that will make 
+	a pattern (or multiple patterns) when these objects move down the Z-axis.
 */
-export default class ObstacleXPositionPatternManager
+export default class ObstacleXPositionPatternManager<T extends Obstacle>
 {
 	/**
 	 * These are the models that can be used when making patterns
 	 */
-	private _models:Obstacle[];
+	private _models:T[];
 	
 	/**
-	 * The patterns to be sent down the z-axis. See the addRepeatingPattern method.
+	 * The patterns to be sent down the track
 	 */
 	private _activePatterns:IActivePattern[];
 	
@@ -31,11 +31,10 @@ export default class ObstacleXPositionPatternManager
 	}
 	
 	/**
-	 * Sets the default settings for this manager. The models to be used should all be of the same 
-	 * type (or, at least, all have the same width)
+	 * Sets the default settings for this manager
 	 * @param models the models to be used when creating patterns
 	 */
-	setPatternDefaults(models:Obstacle[]):void
+	setPatternDefaults(models:T[]):void
 	{
 		this._models = models;
 		this._nextModelIndex = models.length ? 0 : -1;
@@ -44,24 +43,25 @@ export default class ObstacleXPositionPatternManager
 	/**
 	 * Adds a pattern to the queue of patterns.
 	 * -----------------------------------------------------------------------
-	 * The "pattern" property is an array of objects. Each represents a section of a line 
-	 * of a pattern. These sections will be sent down the z-axis, one after the other
+	 * The "pattern" property is an array of objects. Each one represents a line of 
+	 * a pattern. These objects will be sent down the Z-axis, one after the other.
 	 *  
 	 * Each "pattern" object will have 2 properties: "fromPosition" and "toPosition" 
-	 * (representing the x-axis positions of the start and end of that line of 
+	 * (representing the X-axis positions of the start and end of that line of 
 	 * the pattern -- please note, the first and last models are placed centered
 	 * at these points, so that could cause some overlap).
 	 * 
 	 * NOTE: If the "fromPosition" and "toPosition" values are the same, then 
 	 * a single model will be placed at that position.
 	 * -----------------------------------------------------------------------
-	 * The activePatterns array, as a whole, represents the multiple patterns (being sent down 
-	 * the z-axis repeatably). All the activePatterns are started at the same time, so multiple 
-	 * pattern arrays can be added to create patterns that share the same horizontal lines.
-		-----------------------------------------------------------------------
-	 * @param zAxisGap the distance between each model in the pattern, on the z-axis.
-	 * @param patternMinXGap the minimum gap between models in the pattern, when placed along the x-axis
-	 * @param pattern details about multiple lines of models (which are part of an overall pattern)
+	 * The _activePatterns array, as a whole, represents the multiple patterns that are 
+	 * being sent down the z-axis (on repeat). All of the _activePatterns are started at 
+	 * the same time, so multiple pattern arrays can be added to create patterns that 
+	 * share the same horizontal lines.
+	 * -----------------------------------------------------------------------
+	 * @param zAxisGap the distance between each model in the pattern, on the Z-axis.
+	 * @param patternMinXGap the minimum gap between models in the pattern, when placed along the X-axis
+	 * @param pattern details about multiple lines of obstacles (which are part of an overall pattern)
 	 */
 	addRepeatingPattern(zAxisGap:number, patternMinXGap:number, pattern:IPartialPattern[]):void
 	{
@@ -75,14 +75,17 @@ export default class ObstacleXPositionPatternManager
 	}
 	
 	/**
-	 * Sends the patterns down the z axis.
+	 * Sends the patterns down the Z axis.
 	 * If not enough models are provided, we'll loop back to the first one (it is up to the 
-	 * caller to make sure the pattern manager has enough models for the patterns).
+	 * caller to make sure we have enough models for the patterns).
 	 */
 	sendPatterns():void
 	{
 		if(this._nextModelIndex >= 0)
-			this._activePatterns.forEach(this._sendGivenPattern.bind(this));
+			this._activePatterns.forEach(p => {
+				if(this._isTimeForNextLineOfPattern(p))	
+					this._sendGivenPattern(p);
+			});
 	}
 	
 	/**
@@ -91,28 +94,26 @@ export default class ObstacleXPositionPatternManager
 	clearPatterns():void
 	{
 		this._activePatterns = [];
+		this._nextModelIndex = -1;
 	}
 	
 	/**
-	 * Sends the given pattern down the z axis (if pattern is ready).
+	 * Sends the given pattern down the Z axis
 	 * @param pattern the pattern to send
 	 */
 	private _sendGivenPattern(pattern:IActivePattern):void
 	{
-		if(this._isTimeForNextLineOfPattern(pattern))
-		{
-			const xAxisLine = pattern.positions[pattern.nextPosition];
-			
-			const xAxisModelPositions = this._getPatternXAxisModelPositions(
-				xAxisLine.fromPosition, 
-				xAxisLine.toPosition,
-				pattern.patternMinXGap
-			);
-			
-			xAxisModelPositions.forEach((xPos) => this._setNextModelToXPosition(xPos, pattern));
-			
-			this._setPatternNextPosition(pattern);
-		}
+		const xAxisLine = pattern.positions[pattern.nextPosition];
+		
+		const xAxisModelPositions = this._getPatternXAxisModelPositions(
+			xAxisLine.fromPosition, 
+			xAxisLine.toPosition,
+			pattern.patternMinXGap
+		);
+		
+		xAxisModelPositions.forEach((xPos) => this._setNextModelToXPosition(xPos, pattern));
+		
+		this._setPatternNextPosition(pattern);
 	}
 	
 	/**
@@ -132,7 +133,7 @@ export default class ObstacleXPositionPatternManager
 	}
 	
 	/**
-	 * Increases (or loops round) a pattern's nextPosition property
+	 * Increases (or loops around) a pattern's nextPosition property
 	 * @param pattern the pattern to change
 	 */
 	private _setPatternNextPosition(pattern:IActivePattern):void
@@ -147,8 +148,8 @@ export default class ObstacleXPositionPatternManager
 	 * Generates an array of x positions, to place models at
 	 * @param fromPosition the first position, in units
 	 * @param toPosition the last position, in units
-	 * @param patternMinXGap the minimum gap, on the x axis, between models (in units)
-	 * @returns an array of x positions
+	 * @param patternMinXGap the minimum gap, on the X axis, between models (in units)
+	 * @returns an array of X positions
 	 */
 	private _getPatternXAxisModelPositions(fromPosition:number, toPosition:number, patternMinXGap:number):number[]
 	{
@@ -179,18 +180,19 @@ export default class ObstacleXPositionPatternManager
 	}
 	
 	/**
-	 * Sets the next model in the range to a given x position
-	 * @param xPos the x axis position
+	 * Sets the next model in the range to a given X position
+	 * @param xPos the X axis position
 	 * @param pattern the pattern that these models are a part of
 	 */
 	private _setNextModelToXPosition(xPos:number, pattern:IActivePattern):void
 	{
-		pattern.lastModelIndexUsed = this._getNextModelIndex();
-		const currentModel = this._models[pattern.lastModelIndexUsed];
+		const currentIndex = this._getNextModelIndex();
+		const currentModel = this._models[currentIndex];
 		
 		const modelCenterOffset = currentModel.width / 2;
 		
 		currentModel.resetToStart(xPos - modelCenterOffset);
+		pattern.lastModelIndexUsed = currentIndex;
 	}
 	
 	/**
