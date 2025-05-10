@@ -11,10 +11,8 @@ export default class ElectricHornet extends Monster {
     
     private _buzzSound:HTMLAudioElement; // The buzzing sound effect
     
-    private _dropWaitOffset:number; // The minimum amount of milliseconds between dropping for attacks
-    private _dropWaitRange:number; // The maximum amount of milliseconds to wait (after the drop wait offset) before attacking
-    private _initialDropWait:number; // The amount of milliseconds before the first attack
-    private _nextDropTime:number|null; // The next time (in milliseconds) to attack. Should be set to null initially
+    private _initialDropWait:number; // The amount of milliseconds before the first attack (after entering)
+    private _firstDropTimeMS:number; // The time (in milliseconds) when the attacking should begin
     
     private _startXSpeed:number; // The initial x speed (not including the entering sequence)
     
@@ -72,7 +70,7 @@ export default class ElectricHornet extends Monster {
         ];
         
         this.offScreenUnits = 500;
-        this.startY = 100;
+        this.startY = 200;
         this.startX = this.levelRightEdge + this.offScreenUnits;
         this.startZ = this.playerModel.z;
         this.y = this.startY;
@@ -85,11 +83,8 @@ export default class ElectricHornet extends Monster {
         this.xSpeed = this._startXSpeed;
         this.ySpeed = 1250;
         
-        // How long till the hornet will drop?
-        this._dropWaitOffset = 2000; // 2 seconds
-        this._dropWaitRange = 2000;
         this._initialDropWait = 4000;
-        this._nextDropTime = null;
+        this._firstDropTimeMS = null;
         
         this.state = "flapping";
     }
@@ -125,25 +120,34 @@ export default class ElectricHornet extends Monster {
     
     enter():void
     {
-        if(this.levelRightEdge < (this.x + this.width))
+        const thisRightEdge = this.x + this.width;
+        if(this.levelRightEdge < thisRightEdge)
         {
             this.moveLeft(this.enterXSpeed);
-        } else {
+        }
+        else
+        {
+            const currentMS = Kernel.getInstance().totalLevelActiveMilliseconds;
+            this._firstDropTimeMS = currentMS + this._initialDropWait;
+            
             this.entering = false;
-            this._nextDropTime = Kernel.getInstance().totalLevelActiveMilliseconds + this._initialDropWait;
         }
     }
     
     exit():void
     {
-        if(this.y != this.startY) // if not at the correct y position, don't leave yet
+        if(this.y != this.startY)
         {
             this._rise();
-        } else {        
+        }
+        else
+        {        
             this.moveLeft(this.exitXSpeed);
             
-            if((this.x + this.width) < (this.levelLeftEdge - this.offScreenUnits))
-                this._handleMonsterExitingScreen();
+            const thisRightEdge = this.x + this.width;
+            const exitEndPosition = this.levelLeftEdge - this.offScreenUnits;
+            if(thisRightEdge < exitEndPosition)
+                this._handleExitCompletion();
         }
     }
     
@@ -155,13 +159,60 @@ export default class ElectricHornet extends Monster {
     }
     
     /**
+     * Should the hornet be attacking the player at this time?
+     * @returns true if the hornet should be attacking, otherwise false
+     */
+    private _shouldBeAttacking():boolean
+    {
+        const currentMS = Kernel.getInstance().totalLevelActiveMilliseconds;
+        
+        return this.playerModel.health > 0 && currentMS > this._firstDropTimeMS;
+    }
+    
+    /**
+     * Has the hornet hit one of the level's edges?
+     * @returns true if the hornet has hit one of the level's edges, otherwise false
+     */
+    private _hasHitLevelEdge():boolean
+    {
+        const hasHitLeftEdge = this.x <= this.levelLeftEdge && this.xSpeed < 0;
+        
+        const hornetRightSide = this.x + this.width
+        const hasHitRightEdge = hornetRightSide >= this.levelRightEdge && this.xSpeed > 0;
+        
+        return hasHitLeftEdge || hasHitRightEdge;
+    }
+    
+    /**
+     * Sets the hornet's X/Y speeds to home in on the player
+     */
+    private _setHomingMovementDirection()
+    {
+        const playerXCenter = (this.playerModel.width / 2) + this.playerModel.x;
+        const playerYCenter = (this.playerModel.height / 2) + this.playerModel.y;
+        const thisXCenter = (this.width / 2) + this.x;
+        const stingerY = (this.height * 0.9) + this.y;
+        
+        const distanceToPlayerXCenter = playerXCenter - thisXCenter;
+        const distanceToPlayerYCenter = playerYCenter - stingerY;
+        
+        const speedMultiplier = 3.5;
+        
+        // (xSpeed can be a negative value, to move left)
+        this.xSpeed = distanceToPlayerXCenter * speedMultiplier;
+        this.ySpeed = distanceToPlayerYCenter * speedMultiplier;
+    }
+    
+    /**
      * Should be called once the monster has left the screen on exiting
      */
-    private _handleMonsterExitingScreen():void
+    private _handleExitCompletion():void
 	{
 		this.exiting = false;
     	this.active = false;
-        Kernel.getInstance().soundEngine.stopSound(this._buzzSound);
+        
+        const soundEngine = Kernel.getInstance().soundEngine;
+        soundEngine.stopSound(this._buzzSound);
 	}
     
     // Monster actions -----------------------------------------------------
@@ -171,54 +222,21 @@ export default class ElectricHornet extends Monster {
      */
     private _fly():void
     {
-        // Handle collision with level edges (if the model is over an edge, and still moving in that direction)
-        if((this.x <= this.levelLeftEdge && this.xSpeed < 0) || 
-            ((this.x + this.width) >= this.levelRightEdge && this.xSpeed > 0))
-        {
+        if(this._hasHitLevelEdge())
             this.xSpeed = -this.xSpeed;
-        }
         
         this.moveRight(); // X speed can be a negative number, to move left
         
-        // Determine if the monster should start to attack
-        if(this._nextDropTime === null)
-        {
-            this._nextDropTime = this._getNextDropTime();
-        } 
-        else if(Kernel.getInstance().totalLevelActiveMilliseconds >= this._nextDropTime)
-        {
+        if(this._shouldBeAttacking())
             this._triggerDrop();
-        }
     }
     
     /**
-     * Creates a randomised time for the next attack (bearing in mind the dropWaitOffset and dropWaitRange) in milliseconds
-     * @returns The new time (in milliseconds) for the next attack
-     */
-    private _getNextDropTime():number
-	{
-        const currentTime = Kernel.getInstance().totalLevelActiveMilliseconds;
-		return currentTime + this._dropWaitOffset + Math.floor(Math.random() * this._dropWaitRange);
-	}
-    
-    /**
-     * Sets the x/y speeds to aim at the player, and moves to the next action (to the drop attack)
+     * Aims the hornet at the player, and moves to the next action (the drop attack)
      */
     private _triggerDrop()
     {
-        this._nextDropTime = null;
-        
-        // We need to calculate the x/y speed needed to get to the player (xSpeed can be a negative value, to move left)
-        const distanceToPlayerTop = this.playerModel.y - (this.y + this.height);
-        const playerXCenter = (this.playerModel.width / 2) + this.playerModel.x;
-        const thisXCenter = (this.width / 2) + this.x;
-        const distanceToPlayerXCenter = playerXCenter - thisXCenter;
-        
-        const speedMultiplier = 2.75;
-        
-        this.xSpeed = distanceToPlayerXCenter * speedMultiplier;
-        this.ySpeed = distanceToPlayerTop * speedMultiplier;
-        
+        this._setHomingMovementDirection();
         this.nextAction();
     }
     
@@ -256,8 +274,11 @@ export default class ElectricHornet extends Monster {
     
     extraEvents():void
     {
+        const thisBottom = this.y + this.height;
+        const attackYLimit = this.playerModel.y + 50;
+        
         // Check for missing the player on an attack
-        if(this.isAttacking() && (this.y + this.height) > (this.playerModel.y + 100))
+        if(this.isAttacking() && thisBottom > attackYLimit)
             this.nextAction();
     }
 }
