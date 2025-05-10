@@ -155,19 +155,22 @@ export default class MusicManager
             if(!soundEngine.musicIsPlaying)
                 soundEngine.playMusic();
             
-            if(this._music.volume + volumeChange > this._musicMaxVolume)
+            const newVolume = this._music.volume + volumeChange;
+            if(newVolume > this._musicMaxVolume)
                 this._music.volume = this._musicMaxVolume;
             else
-                this._music.volume += volumeChange;
+                this._music.volume = newVolume;
         }
         
         // Fade out on player loss/win
         if(shouldFadeOut)
         {
-            if(this._music.volume - volumeChange < 0)
+            const newVolume = this._music.volume - volumeChange;
+            
+            if(newVolume < 0)
                 soundEngine.stopMusic();
             else
-                this._music.volume -= volumeChange;
+                this._music.volume = newVolume;
         }
     }
 }
