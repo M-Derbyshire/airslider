@@ -278,7 +278,9 @@ export default class Kernel implements IKernel {
                 
                 this.soundEngine.pauseAllSounds();
                 this._status = KernelStatus.PrePaused;
-            } else {
+            }
+            else
+            {
                 if(this.soundEngine.musicIsPaused)
                     this.soundEngine.playMusic();
                 
@@ -355,9 +357,16 @@ export default class Kernel implements IKernel {
             
             if(this._status !== KernelStatus.Paused)
             {
-                this.gameEngine.run();
+                if(this._status !== KernelStatus.PrePaused)
+                {
+                    this.gameEngine.run();
+                    this.soundEngine.run();
+                }
+                
+                // This will need to run if we're in the pre-pause state, so we 
+                // can re-draw the UI to match (e.g. drawing a play button 
+                // instead of a pause button)
                 this.graphicEngine.run();
-                this.soundEngine.run();
             }
             
             if(this._status === KernelStatus.PrePaused)

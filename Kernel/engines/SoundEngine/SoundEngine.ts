@@ -1,5 +1,3 @@
-import { KernelStatus } from '../../IKernel';
-import Kernel from '../../Kernel';
 import ISoundEngine from './ISoundEngine';
 
 /**
@@ -130,16 +128,13 @@ export default class SoundEngine implements ISoundEngine {
      */
     playSound(sound:HTMLAudioElement, loop:boolean = false):void
     {
-        const kernel = Kernel.getInstance();
-        
         sound.currentTime = 0; // Position needs to be reset so sounds will restart if they're triggered mid-way through playing
         sound.muted = false; // Sound may be muted, if it was in the middle of being force-loaded
         sound.loop = loop;
         
         this._currentSounds.set(sound.src, sound);
         
-        if(kernel.status === KernelStatus.Active)
-            sound.play();
+        sound.play();
     }
     
     /**
