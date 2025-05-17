@@ -3,82 +3,90 @@
  */
 export default interface ISoundEngine {
     /**
-     * The level's music
+     * Adds a sound to the engine's library (or replaces an existing sound)
+     * @param key a unique key, used to identify the sound
+     * @param asset the sound asset to add to the library
      */
-    music:HTMLAudioElement;
+    addSound(key:string, asset:HTMLAudioElement):void;
+
+    /**
+     * Gets the current status of a sound
+     * @param key the key used to identify the sound
+     * @returns the current status of the sound, or null if 
+     * the sound doesn't exist in the engine's library
+     */
+    getSoundStatus(key:string):SoundStatus;
     
     /**
-     * Should the music be played on repeat?
+     * Gets the current volume of a sound
+     * @param key the key used to identify the sound
+     * @returns the volume of the sound (a number between 0 and 1), or null if 
+     * the sound doesn't exist in the engine's library
      */
-    musicRepeat:boolean;
+    getSoundVolume(key:string):number;
     
     /**
-     * Has the level's music been explictly paused (not true if it has been stopped)
+     * Changes the volume of a sound
+     * @param key the key used to identify the sound
+     * @param volume a number between 0 and 1, (1 being the top volume, and 0
+     * being no volume)
      */
-    readonly musicIsPaused:boolean;
+    setSoundVolume(key:string, volume:number):void;
+
+    /**
+     * Starts (or unpauses) a sound. If the sound is already playing, this 
+     * will restart it
+     * @param key the key used to identify the sound
+     * @param loop should the sound be looped?
+     */
+    playSound(key:string, loop?:boolean):void
+
+    /**
+     * Pauses a sound
+     * @param key the key used to identify the sound
+     */
+    pauseSound(key:string):void;
+
+    /**
+     * Stops a sound
+     * @param key the key used to identify the sound
+     */
+    stopSound(key:string):void;
+
+    /**
+     * Stops and resets all of the current sounds
+     */
+    reset():void;
+
+    /**
+     * Forces a sound to be loaded (so it's definitely ready to be played)
+     * @param key the key used to identify the sound
+     */
+    forceSoundToLoad(key:string):void;
+
+    /**
+     * Generates an array that contains the keys of all of the sounds 
+     * in the engine's library
+     * @returns the keys for all of the sounds in the engine's library
+     */
+    getSoundKeys():string[];
     
     /**
-     * Is the level's music currently playing?
+     * Generates an array that contains the keys of the currently 
+     * playing sounds
+     * @returns the keys of the currently playing sounds
      */
-    readonly musicIsPlaying:boolean;
-    
-    /**
-     * Runs a check to see what playing sounds have now finished, and 
-     * updates the engine's state accordingly
-     */
-    run():void;
-    
-    /**
-     * Triggers the playing of the level's music
-     */
-    playMusic():void;
-    
-    /**
-     * Pauses the level's music
-     */
-    pauseMusic():void;
-    
-    /**
-     * Stops the level's music (and sets it back to the start of the audio track)
-     */
-    stopMusic():void;
-    
-    /**
-     * Plays the given sound
-     * @param sound The sound effect to be played
-     * @param loop Should this sound effect be played on repeat?
-     */
-    playSound(sound:HTMLAudioElement, loop?:boolean):void;
-    
-    /**
-     * Stops the playing of the given sound (and sets it back to the start of the audio track)
-     * @param sound The sound effect to be stopped
-     */
-    stopSound(sound:HTMLAudioElement):void;
-    
-    /**
-     * Pauses all sounds the engine has triggered
-     */
-    pauseAllSounds():void;
-    
-    /**
-     * Continues playing (after pausing) all sounds the engine has triggered
-     */
-    unpauseAllSounds():void;
-    
-    /**
-     * Stops all sounds, and resets their current time back to 0
-     */
-    stopAllSounds():void;
-    
-    /**
-     * Forces a sound to be loaded by playing it while muted
-     * @param sound The sound to be forced to load
-     */
-    forceSoundLoad(sound:HTMLAudioElement):void;
-    
-    /**
-     * Forces the music to be loaded by playing it while muted
-     */
-    forceMusicLoad():void;
+    getPlayingSoundKeys():string[];
 };
+
+/**
+ * The possible statuses of a sound
+ */
+enum SoundStatus {
+    Playing,
+    Paused,
+    Stopped,
+    ForceLoading
+}
+
+export { SoundStatus };

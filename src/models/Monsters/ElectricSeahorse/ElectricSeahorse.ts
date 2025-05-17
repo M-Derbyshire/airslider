@@ -12,7 +12,7 @@ export default class ElectricSeahorse extends Monster {
     private _playerModel:Tarian; // The model of the player
     private _leftLightningModel:Lightning; // The lightning model for the left side of the monster
     private _rightLightningModel:Lightning; // The lightning model for the right side of the monster
-    private _wingSound:HTMLAudioElement; // The sound effect for the flapping wings
+    private _wingSoundKey:string; // The key for the flapping wings sound effect
     private _lastAnimFrame:number; // The index of the current frame in the animation (see the act() method for explanation)
     private _nextDirectionChangeMilliSeconds:number; // When (in milliseconds) should the monster next change direction?
     
@@ -29,6 +29,8 @@ export default class ElectricSeahorse extends Monster {
         this._playerModel = playerModel;
         this._leftLightningModel = leftLightningModel;
         this._rightLightningModel = rightLightningModel;
+        
+        this._wingSoundKey = "/models/monsters/ElectricSeahorse/sounds/flap.mp3";
     }
     
     load(animationManager:IModelAnimationsManager):void
@@ -37,9 +39,13 @@ export default class ElectricSeahorse extends Monster {
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
-        const wingSoundPath = "/models/monsters/ElectricSeahorse/sounds/flap.mp3";
-        this._wingSound = assetHandler.loadAudio(wingSoundPath);
-        this.assetsToUnload.push(wingSoundPath);
+        const wingSound = assetHandler.loadAudio(this._wingSoundKey);
+        
+        this.sounds.push({
+            key: this._wingSoundKey,
+            asset: wingSound
+        });
+        this.assetsToUnload.push(this._wingSoundKey);
         
         const spritesheetPath = "/models/monsters/ElectricSeahorse/anim/electricSeahorse-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
@@ -97,7 +103,7 @@ export default class ElectricSeahorse extends Monster {
     
     start(): void {
         super.start();
-        Kernel.getInstance().soundEngine.forceSoundLoad(this._wingSound);
+        Kernel.getInstance().soundEngine.forceSoundToLoad(this._wingSoundKey);
     }
     
     enter():void
@@ -133,8 +139,10 @@ export default class ElectricSeahorse extends Monster {
     {
         super.act();
         
-        // Wing flap sound effect
-        this._wingSound.volume = this.getVolumeForDistance();
+        const soundEngine = Kernel.getInstance().soundEngine;
+        
+        soundEngine.setSoundVolume(this._wingSoundKey, this.getVolumeForDistance());
+        
         const flappingAnimation = this.animationManager.animations.move;
         
         // The animation runs at a lower FPS to the rest of the game. We were having a buzzing sound because 
@@ -143,7 +151,7 @@ export default class ElectricSeahorse extends Monster {
         const animationChangedFrame = this._lastAnimFrame !== flappingAnimation.currentFrameIndex;
         
         if(this.state === "move" && animationChangedFrame && flappingAnimation.currentFrameIndex === 1)
-            Kernel.getInstance().soundEngine.playSound(this._wingSound);
+            soundEngine.playSound(this._wingSoundKey);
         
         this._lastAnimFrame = flappingAnimation.currentFrameIndex;
         

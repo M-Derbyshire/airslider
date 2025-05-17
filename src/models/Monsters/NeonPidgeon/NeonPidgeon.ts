@@ -13,7 +13,7 @@ export default class NeonPidgeon extends Monster {
     private _playerModel:Tarian; // The model of the player 
     private _nextDrop:number; // The time for the next drop attack (in milliseconds)
     private _edgeOverflow:number; // Without this, the player can just stay on the edge of the level, and not get hit
-    private _flapSound:HTMLAudioElement; // The wings flapping sound effect
+    private _flapSoundKey:string; // The key for the wings flapping sound effect
     private _lowerPidgeon?:NeonPidgeon; // If this is the pidgeon on top, the pidgeon beneath it is stored here
     private _soundController:PidgeonSoundController; // Controls sound effects for all pidgeons
     
@@ -56,6 +56,8 @@ export default class NeonPidgeon extends Monster {
         this._playerModel = playerModel;
         this._lowerPidgeon = lowerPidgeon;
         
+        this._flapSoundKey = "/models/monsters/NeonPidgeon/sounds/flap.mp3";
+        
         this.damageDealt = 10;
     }
     
@@ -72,9 +74,13 @@ export default class NeonPidgeon extends Monster {
         this.damageFlashImage = assetHandler.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
         
-        const flapSoundPath = "/models/monsters/NeonPidgeon/sounds/flap.mp3";
-        this._flapSound = assetHandler.loadAudio(flapSoundPath);
-        this.assetsToUnload.push(flapSoundPath);
+        const flapSound = assetHandler.loadAudio(this._flapSoundKey);
+        
+        this.sounds.push({
+            key: this._flapSoundKey,
+            asset: flapSound
+        });
+        this.assetsToUnload.push(this._flapSoundKey);
         
         const spritesheetPath = "/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
@@ -159,8 +165,10 @@ export default class NeonPidgeon extends Monster {
         // If this is the upper pidgeon, it should trigger the sound controller
         if(this._soundController && this._lowerPidgeon)
         {
-            this._flapSound.volume = this.getVolumeForDistance();
-            this._soundController.act(this._flapSound); // Run the sound(s) if necessary
+            const soundEngine = Kernel.getInstance().soundEngine;
+            
+            soundEngine.setSoundVolume(this._flapSoundKey, this.getVolumeForDistance());
+            this._soundController.act(this._flapSoundKey); // Run the sound(s) if necessary
         }
     }
     
@@ -227,7 +235,7 @@ export default class NeonPidgeon extends Monster {
     
     start(): void {
         super.start();
-        Kernel.getInstance().soundEngine.forceSoundLoad(this._flapSound);
+        Kernel.getInstance().soundEngine.forceSoundToLoad(this._flapSoundKey);
     }
     
     enter():void

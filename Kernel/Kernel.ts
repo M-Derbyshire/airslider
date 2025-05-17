@@ -74,6 +74,7 @@ export default class Kernel implements IKernel {
     private _levelQueue:ILoadedLevel[]; // The queue of levels that have been loaded (or are currently loading)
     private _totalLevelActiveMilliseconds:number; // The total amount of milliseconds that the level has not been paused or stopped for any reason
     private _status:KernelStatus; // The current status of the game (e.g. is it playing, paused, or in another state)
+    private _soundKeysPlayingBeforeLastPause:string[]; // The sounds that were playing when the game was last paused
     
     private _hasError:boolean; // Has an error been caught and passed to the error handler?
     private _errorHandler:IErrorHandler; // Manages error-handling for the game
@@ -194,8 +195,8 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
-     * @returns the game engine, or undefined if there's no loaded levels
+     * The engine (for the current level) that triggers the actions of levels/models. It 
+     * also triggers the checking for in-game events
      */
     get gameEngine()
     {
@@ -203,7 +204,7 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * The engine that controls the drawing to the screen
+     * The engine (for the current level) that controls the drawing to the screen
      * @returns the graphic engine, or undefined if there's no loaded levels
      */
     get graphicEngine()
@@ -212,7 +213,7 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * The engine that controls the sound/music of the game
+     * The engine (for the current level) that controls the sound/music of the game
      * @returns the sound engine, or undefined if there's no loaded levels
      */
     get soundEngine()
@@ -273,18 +274,14 @@ export default class Kernel implements IKernel {
         {
             if(this._status === KernelStatus.Active)
             {
-                if(this.soundEngine.musicIsPlaying)
-                    this.soundEngine.pauseMusic();
+                this._soundKeysPlayingBeforeLastPause = this.soundEngine.getPlayingSoundKeys();
+                this._soundKeysPlayingBeforeLastPause.forEach(key => this.soundEngine.pauseSound(key));
                 
-                this.soundEngine.pauseAllSounds();
                 this._status = KernelStatus.PrePaused;
             }
             else
             {
-                if(this.soundEngine.musicIsPaused)
-                    this.soundEngine.playMusic();
-                
-                this.soundEngine.unpauseAllSounds();
+                this._soundKeysPlayingBeforeLastPause.forEach(key => this.soundEngine.playSound(key));
                 this._status = KernelStatus.Active
             }
         }
@@ -358,10 +355,7 @@ export default class Kernel implements IKernel {
             if(this._status !== KernelStatus.Paused)
             {
                 if(this._status !== KernelStatus.PrePaused)
-                {
                     this.gameEngine.run();
-                    this.soundEngine.run();
-                }
                 
                 // This will need to run if we're in the pre-pause state, so we 
                 // can re-draw the UI to match (e.g. drawing a play button 
@@ -447,12 +441,14 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Triggers the preparation of the current level, and all of its models
+     * Triggers the preparation for the current level
      */
     private _prepareCurrentLevelAndModels():void
     {
         if(this.level)
         {
+            this.soundEngine.reset();
+            
             this.level.prepare();
             this.loadedModels.forEach(model => model.prepare());
             
@@ -481,6 +477,8 @@ export default class Kernel implements IKernel {
      */
     private _unloadCurrentLevel():void
     {
+        this.soundEngine.reset();
+        
         this.loadedModels.forEach(model => model.unload());
         this.level.unload();
         

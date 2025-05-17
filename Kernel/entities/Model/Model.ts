@@ -4,14 +4,16 @@ import IHitBox from './IHitBox';
 import Kernel from '../../Kernel';
 import ITextContent from '../../engines/GraphicEngine/ITextContent';
 import UnitHelper from '../../utils/UnitHelper';
+import { entitySound } from '../types';
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)
  */
 export default class Model implements IModel 
 {
-    protected animationManager: IModelAnimationsManager;
+    protected animationManager:IModelAnimationsManager;
     protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
+    protected sounds:entitySound[]; // Sounds that need to be added to the sound engine, during preparation
     protected drawHitBoxes:boolean; // If we set this to true, we'll draw the boxes from this.getHitBoxes()
     
     private _state:string; // The current "state" of the model. This is also the name of the animation to use when drawing
@@ -35,6 +37,7 @@ export default class Model implements IModel
     constructor()
     {
         this.assetsToUnload = [];
+        this.sounds = [];
     }
     
     /**
@@ -198,6 +201,8 @@ export default class Model implements IModel
      */
     prepare():void
     {
+        const soundEngine = Kernel.getInstance().soundEngine;
+        
         this._display = true;
         this._active = false;
         this.drawHitBoxes = false;
@@ -213,6 +218,8 @@ export default class Model implements IModel
             alignment: "left",
             lineGap: 0
         };
+        
+        this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
     }
     
     /**

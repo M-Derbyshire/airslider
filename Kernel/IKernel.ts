@@ -52,17 +52,18 @@ export default interface IKernel {
     readonly assetHandler:IAssetHandler
     
     /**
-     * The engine that triggers the actions of levels/models. It also triggers the checking for in-game events
+     * The engine (for the current level) that triggers the actions of levels/models. It 
+     * also triggers the checking for in-game events
      */
     readonly gameEngine?:Omit<IGameEngine, "run">;
     
     /**
-     * The engine that controls the drawing to the screen
+     * The engine (for the current level) that controls the drawing to the screen
      */
     readonly graphicEngine?:Omit<IGraphicEngine, "run">;
     
     /**
-     * The engine that controls the sound/music of the game
+     * The engine (for the current level) that controls the sound/music of the game
      */
     readonly soundEngine?:Omit<ISoundEngine, "run">;
     

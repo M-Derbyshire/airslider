@@ -4,6 +4,7 @@ import IAnimation from '../../../Kernel/entities/Model/ModelAnimationsManager/IA
 import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Tarian from '../Tarian/Tarian';
 import UnitHelper from '../../../Kernel/utils/UnitHelper';
+import { SoundStatus } from '../../../Kernel/engines/SoundEngine/ISoundEngine';
 
 /**
  * Explosion effect, to be used during Tarian's loss sequence
@@ -16,7 +17,7 @@ export default class TarianExplosion extends ASModel {
     private _resizeSpeedX:number; // The speed that the width increases
     private _resizeSpeedY:number; // The speed that the height increases
     private _animFrame:IAnimation; // The single frame of the one animation the model uses
-    private _alarmSound:HTMLAudioElement; // The alarm sound effect that the explosion plays
+    private _alarmSoundKey:string; // The key for the alarm sound effect that the explosion plays
     
     /**
      * Constructor
@@ -31,6 +32,8 @@ export default class TarianExplosion extends ASModel {
         this._maxWidth = 2000;
         this._resizeSpeedX = 1500;
         this._resizeSpeedY = 1500;
+        
+        this._alarmSoundKey = "/models/TarianExplosion/sounds/alarm.mp3";
     }
     
     load(animationManager:IModelAnimationsManager):void
@@ -40,7 +43,11 @@ export default class TarianExplosion extends ASModel {
         const assetHandler = Kernel.getInstance().assetHandler;
         
         // Not adding this to assetsToUnload, as every level needs this
-        this._alarmSound = assetHandler.loadAudio("/models/TarianExplosion/sounds/alarm.mp3");
+        const alarmSound = assetHandler.loadAudio(this._alarmSoundKey);
+        this.sounds.push({
+            key: this._alarmSoundKey,
+            asset: alarmSound
+        });
         
         // Keeping a reference to this, as we want to change the draw width/height dynamically
         this._animFrame = this.animationManager.createAnimation({
@@ -94,7 +101,7 @@ export default class TarianExplosion extends ASModel {
     private _runSound():void
     {
         if(this._animFrame.width === 0)
-            Kernel.getInstance().soundEngine.playSound(this._alarmSound);
+            Kernel.getInstance().soundEngine.playSound(this._alarmSoundKey);
     }
     
     /**
@@ -141,11 +148,13 @@ export default class TarianExplosion extends ASModel {
     }
     
     /**
-     * Force the loading of the sound effect, in preperation for the explosion
+     * Force the loading of the sound effect, in preparation for the explosion
      */
     private _forceLoadAlarm():void
     {
-        if(this._alarmSound.currentTime === 0 || this._alarmSound.ended)
-            Kernel.getInstance().soundEngine.forceSoundLoad(this._alarmSound);
+        const soundEngine = Kernel.getInstance().soundEngine;
+        
+        if(soundEngine.getSoundStatus(this._alarmSoundKey) === SoundStatus.Stopped)
+            soundEngine.forceSoundToLoad(this._alarmSoundKey);
     }
 }

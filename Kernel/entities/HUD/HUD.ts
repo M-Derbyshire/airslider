@@ -2,15 +2,17 @@ import IHUDComponent from '../../../Kernel/entities/HUDComponent/IHUDComponent';
 import IHUD from './IHUD';
 import Kernel from '../../../Kernel/Kernel';
 import IPointerEventManager from '../Level/IPointerEventManager';
+import { entitySound } from '../types';
 
 /**
  * A level's Heads Up Display
  */
 export default class HUD implements IHUD
 {
-    protected pointerEventManager: IPointerEventManager;
-    protected components: IHUDComponent[]; //HUD components used by this HUD
-    protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
+    protected pointerEventManager:IPointerEventManager;
+    protected components:IHUDComponent[]; //HUD components used by this HUD
+    protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
+    protected sounds:entitySound[]; // Sounds that need to be added to the sound engine, during preparation
     
     /**
      * Constructor
@@ -19,6 +21,7 @@ export default class HUD implements IHUD
     {
         this.components = [];
         this.assetsToUnload = [];
+        this.sounds = [];
     }
     
     /**
@@ -54,10 +57,14 @@ export default class HUD implements IHUD
      */
     prepare():void
     {
+        const soundEngine = Kernel.getInstance().soundEngine;
+        
         this.components.forEach(component => {
             component.prepare();
             this.pointerEventManager.addPointerEventSubject(component);
         });
+        
+        this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
     }
     
     /**

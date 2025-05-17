@@ -1,48 +1,51 @@
 import IHUDComponent from './IHUDComponent';
 import Kernel from '../../Kernel';
 import ITextContent from '../../engines/GraphicEngine/ITextContent';
+import { entitySound } from '../types';
 
 /**
  * A component to be displayed by the Heads Up Display
  */
 export default class HUDComponent implements IHUDComponent
 {
-    protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
+    protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
+    protected sounds:entitySound[]; // Sounds that need to be added to the sound engine, during preparation
     
     /**
      * The x coordinate of this component (in units)
      */
-    x: number;
+    x:number;
     
     /**
      * The y coordinate of this component (in units)
      */
-    y: number;
+    y:number;
     
     /**
      * The width of this component (in units)
      */
-    width: number;
+    width:number;
     
     /**
      * The height of this component (in units)
      */
-    height: number;
+    height:number;
     
     /**
      * Is this component active?
      */
-    active: boolean;
+    active:boolean;
     
     /**
      * The text content to be displayed with the component
      */
-    text: ITextContent;
+    text:ITextContent;
     
     
     constructor()
     {
         this.assetsToUnload = [];
+        this.sounds = [];
         
         this.active = true;
     }
@@ -52,6 +55,8 @@ export default class HUDComponent implements IHUDComponent
      */
     prepare():void 
     {
+        const soundEngine = Kernel.getInstance().soundEngine;
+        
         this.text = {
             content: "",
             x: 0, // In units
@@ -63,6 +68,8 @@ export default class HUDComponent implements IHUDComponent
             alignment: "left",
             lineGap: 0
         };
+        
+        this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
     }
     
     /**

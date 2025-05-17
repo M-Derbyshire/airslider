@@ -7,20 +7,22 @@ import IControlsInitialiser from './IControlsInitialiser';
 import ControlsInitialiser from './ControlsInitialiser';
 import IFrameManager from '../../engines/GraphicEngine/IFrameManager';
 import IHUD from '../HUD/IHUD';
+import { entitySound } from '../types';
 
 /**
  * A level of the game
  */
 export default class Level implements ILevel
 {
-    protected assetsToUnload: string[]; // File paths of assets that need to be released when this is unloaded
+    protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
+    protected sounds:entitySound[]; // Sounds that need to be added to the sound engine, during preparation
     
-    protected frameManager: IFrameManager; // The frame manager for the level
+    protected frameManager:IFrameManager; // The frame manager for the level
     
-    protected eventManager: IEventManager; // Manages the event monitoring for a level (not including mouse clicks or screen touches)
+    protected eventManager:IEventManager; // Manages the event monitoring for a level (not including mouse clicks or screen touches)
     protected pointerEventManager:IPointerEventManager; // Manages any events relating to mouse clicks or screen touches
     
-    protected controlsInitialiser: IControlsInitialiser; // Handles the initialising of the game's controls
+    protected controlsInitialiser:IControlsInitialiser; // Handles the initialising of the game's controls
     
     /**
      * The Heads Up Display for the level
@@ -35,6 +37,7 @@ export default class Level implements ILevel
     constructor()
     {
         this.assetsToUnload = [];
+        this.sounds = [];
         this.isPauseable = true;
         
         this.controlsInitialiser = new ControlsInitialiser();
@@ -73,7 +76,6 @@ export default class Level implements ILevel
         this.pointerEventManager.removeEventHandlers();
         this.controlsInitialiser.unregisterEventListeners();
         this.HUD.unload();
-        this._resetAudio();
     }
     
     /**
@@ -90,7 +92,8 @@ export default class Level implements ILevel
         kernel.loadedModels.forEach(model => this.pointerEventManager.addPointerEventSubject(model));
         
         this._resetCameraPosition();
-        this._resetAudio();
+        
+        this.sounds.forEach(sound => kernel.soundEngine.addSound(sound.key, sound.asset));
     }
     
     /**
@@ -153,16 +156,5 @@ export default class Level implements ILevel
             kernel.settings.unitsWithinCameraX / 2,
             kernel.settings.unitsWithinCameraY / 2
         );
-    }
-    
-    /**
-     * Stops and resets all sound effects/music
-     */
-    private _resetAudio():void
-    {
-        const kernel = Kernel.getInstance();
-        
-        kernel.soundEngine.stopAllSounds();
-        kernel.soundEngine.stopMusic();
     }
 }

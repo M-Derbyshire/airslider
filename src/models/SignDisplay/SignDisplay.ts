@@ -15,8 +15,8 @@ export default class SignDisplay extends ASModel
     private _lastLightChangeMS:number; // The milliseconds since the lights last changed
     private _finalLightChangeWaitMS:number; // The milliseconds the end of the light sequence will last, before state changes to "finished"
     
-    private _countdownBeep:HTMLAudioElement; // The beep sound effect, whenever the lights change
-    private _startBeep:HTMLAudioElement; // The "go" beep sound, to be played on the last light change
+    private _countdownBeepKey:string; // The key for the beep sound effect (used whenever the lights change)
+    private _startBeepKey:string; // The key for the "go" beep sound (to be played on the last light change)
     
     /**
      * Constructor
@@ -30,6 +30,9 @@ export default class SignDisplay extends ASModel
         
         this._finalLightChangeWaitMS = 500; 
         this._lightChangeStartWaitMS = 3000;
+        
+        this._countdownBeepKey = "/models/SignDisplay/sounds/countdown_beep.mp3";
+        this._startBeepKey = "/models/SignDisplay/sounds/countdown_go.mp3";
     }
     
     load(animationManager:IModelAnimationsManager):void
@@ -38,9 +41,18 @@ export default class SignDisplay extends ASModel
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
-        // Not adding these to assetsToUnload, as every level needs this
-        this._countdownBeep = assetHandler.loadAudio("/models/SignDisplay/sounds/countdown_beep.mp3");
-        this._startBeep = assetHandler.loadAudio("/models/SignDisplay/sounds/countdown_go.mp3");
+        // Not adding these sounds to assetsToUnload, as every level needs these
+        const countdownBeep = assetHandler.loadAudio(this._countdownBeepKey);
+        const startBeep = assetHandler.loadAudio(this._startBeepKey);
+        
+        this.sounds.push({
+            key: this._countdownBeepKey,
+            asset: countdownBeep
+        });
+        this.sounds.push({
+            key: this._startBeepKey,
+            asset: startBeep
+        });
         
         const sheetPath = "/models/SignDisplay/anim/display_open_spritesheet.png";
         
@@ -111,7 +123,7 @@ export default class SignDisplay extends ASModel
     {
         super.prepare();
         
-        const kernel = Kernel.getInstance();
+        const soundEngine = Kernel.getInstance().soundEngine;
         
         this.x = 325;
         this.y = 115;
@@ -119,8 +131,8 @@ export default class SignDisplay extends ASModel
         this.state = "off";
         this.active = true;
         
-        kernel.soundEngine.forceSoundLoad(this._countdownBeep);
-        kernel.soundEngine.forceSoundLoad(this._startBeep);
+        soundEngine.forceSoundToLoad(this._countdownBeepKey);
+        soundEngine.forceSoundToLoad(this._startBeepKey);
         
         this._lastLightChangeMS = 0;
         this._lightChangeWaitMS = 1500;
@@ -181,19 +193,19 @@ export default class SignDisplay extends ASModel
         {
             case "off":
                 this.state = "one";
-                kernel.soundEngine.playSound(this._countdownBeep);
+                kernel.soundEngine.playSound(this._countdownBeepKey);
                 break;
             case "one":
                 this.state = "two";
-                kernel.soundEngine.playSound(this._countdownBeep);
+                kernel.soundEngine.playSound(this._countdownBeepKey);
                 break;
             case "two":
                 this.state = "three";
-                kernel.soundEngine.playSound(this._countdownBeep);
+                kernel.soundEngine.playSound(this._countdownBeepKey);
                 break;
             case "three":
                 this.state = "go";
-                kernel.soundEngine.playSound(this._startBeep);
+                kernel.soundEngine.playSound(this._startBeepKey);
                 break;
             case "go":
                 this.state = "finished";

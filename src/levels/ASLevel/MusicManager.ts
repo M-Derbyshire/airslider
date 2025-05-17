@@ -1,3 +1,4 @@
+import { SoundStatus } from "../../../Kernel/engines/SoundEngine/ISoundEngine";
 import Kernel from "../../../Kernel/Kernel";
 import TimeHelper from "../../../Kernel/utils/TimeHelper";
 import { CentralStateKey } from "../CentralStateKey";
@@ -7,13 +8,17 @@ import { CentralStateKey } from "../CentralStateKey";
  */
 export default class MusicManager
 {
-    private _music:HTMLAudioElement; // The chosen music for the level
+    private _musicFilePath:string; // The filepath of the chosen music for the level
+    private _musicAsset:HTMLAudioElement; // The chosen music audio asset
     private _musicMaxVolume:number; // The volume of the music, when it's not fading in/out
     private _fadeInProcessStartedAtMS:number; // The time (milliseconds) that the fade in process started (negative if it hasn't started)
     private _fadeOutProcessStartedAtMS:number; // The time (milliseconds) that the fade out process started (negative if it hasn't started)
     private _musicStartDelayMS:number; // The delay between the level's movement starting, and the music fading in (in milliseconds)
     private _musicFadeSpeedSeconds:number; // The duration of the music's fade in/out (in seconds)
     
+    /**
+     * Constructor
+     */
     constructor()
     {
         this._musicFadeSpeedSeconds = 2.5;
@@ -25,15 +30,18 @@ export default class MusicManager
      * @param musicFilePaths File paths to the available music
      * @returns The file path of the selected music (or null, if one couldn't be selected)
      */
-    load(musicFilePaths:string[]):string|null
+    load(musicFilePaths:string[]):string
     {
         const assetHandler = Kernel.getInstance().assetHandler;
         
-        const chosenMusicFilePath = this._chooseMusicPath(musicFilePaths);
-        if(chosenMusicFilePath)
-            this._music = assetHandler.loadAudio(chosenMusicFilePath);
+        const chosenPath = this._chooseMusicPath(musicFilePaths);
+        if(chosenPath)
+        {
+            this._musicAsset = assetHandler.loadAudio(chosenPath);
+            this._musicFilePath = chosenPath;
+        }
         
-        return chosenMusicFilePath;
+        return chosenPath;
     }
     
     /**
@@ -49,12 +57,11 @@ export default class MusicManager
         
         this._musicMaxVolume = volume;
         
-        if(this._music)
+        if(this._musicFilePath)
         {
-            this._music.volume = 0;
-            soundEngine.music = this._music;
-            soundEngine.musicRepeat = true;
-            soundEngine.forceMusicLoad();
+            soundEngine.addSound(this._musicFilePath, this._musicAsset);
+            soundEngine.setSoundVolume(this._musicFilePath, 0);
+            soundEngine.forceSoundToLoad(this._musicFilePath);
         }
     }
     
@@ -122,55 +129,78 @@ export default class MusicManager
      */
     private _fadeMusic():void
     {
-        // If the level hasn't started moving, we don't need to do anything
-        if(!this._music || this._fadeInProcessStartedAtMS < 0)
+        if(!this._readyToPlayMusic())
             return;
         
-        const kernel = Kernel.getInstance();
-        const soundEngine = kernel.soundEngine;
+        const soundEngine = Kernel.getInstance().soundEngine;
         
-        // Determine what action we need to take (if any)
-        const fadeOutProcessStarted = (this._fadeOutProcessStartedAtMS >= 0);
+        const currentVolume = soundEngine.getSoundVolume(this._musicFilePath);
+        const musicStatus = soundEngine.getSoundStatus(this._musicFilePath);
+        const musicIsPlaying = musicStatus === SoundStatus.Playing;
         
-        const shouldFadeIn = (
-            !fadeOutProcessStarted &&
-            this._music.volume < this._musicMaxVolume &&
-            kernel.totalLevelActiveMilliseconds > this._fadeInProcessStartedAtMS + this._musicStartDelayMS
-        );
-        
-        const shouldFadeOut = (fadeOutProcessStarted && soundEngine.musicIsPlaying);
+        const shouldFadeOut = musicIsPlaying && this._fadeOutProcessStartedAtMS >= 0;
+        const shouldFadeIn = !shouldFadeOut && currentVolume < this._musicMaxVolume;
         
         if(!shouldFadeIn && !shouldFadeOut)
             return;
         
-        // We need to figure out how much to fade the volume by, based on the FPS, to 
-        // make sure it's done at the speed we want (we recalculate this every frame, in
-        // case the FPS changes).
-        const frameCount = TimeHelper.secondsToFrames(this._musicFadeSpeedSeconds);
-        const volumeChange = this._musicMaxVolume / frameCount;
+        if(shouldFadeIn && !musicIsPlaying)
+            soundEngine.playSound(this._musicFilePath, true);
         
-        // Fade in after the opening + delay
-        if(shouldFadeIn)
-        {
-            if(!soundEngine.musicIsPlaying)
-                soundEngine.playMusic();
-            
-            const newVolume = this._music.volume + volumeChange;
-            if(newVolume > this._musicMaxVolume)
-                this._music.volume = this._musicMaxVolume;
-            else
-                this._music.volume = newVolume;
-        }
-        
-        // Fade out on player loss/win
+        let volumeChange = this._calculateVolumeChange();
         if(shouldFadeOut)
+            volumeChange = -volumeChange;
+        
+        this._changeVolume(volumeChange);
+    }
+    
+    /**
+     * Should the music be playing now?
+     * @returns true if we should be playing the music, false if not
+     */
+    private _readyToPlayMusic():boolean
+    {
+        if(!this._musicFilePath || this._fadeInProcessStartedAtMS < 0)
+            return false;
+        
+        const levelActiveMs = Kernel.getInstance().totalLevelActiveMilliseconds;
+        
+        const musicStartTimeMS = this._fadeInProcessStartedAtMS + this._musicStartDelayMS;
+        
+        return levelActiveMs > musicStartTimeMS;
+    }
+    
+    /**
+     * Calculates how much the volume should be changed by (based on the game's current 
+     * FPS)
+     * @returns the correct value to change the music's volume by
+     */
+    private _calculateVolumeChange():number
+    {
+        const frameCount = TimeHelper.secondsToFrames(this._musicFadeSpeedSeconds);
+        return this._musicMaxVolume / frameCount;
+    }
+    
+    /**
+     * Changes the volume of the music
+     * @param change the amount to change the volume by
+     */
+    private _changeVolume(change:number):void
+    {
+        const soundEngine = Kernel.getInstance().soundEngine;
+        
+        const currentVolume = soundEngine.getSoundVolume(this._musicFilePath);
+        let newVolume = currentVolume + change;
+        
+        if(newVolume < 0)
         {
-            const newVolume = this._music.volume - volumeChange;
-            
-            if(newVolume < 0)
-                soundEngine.stopMusic();
-            else
-                this._music.volume = newVolume;
+            soundEngine.stopSound(this._musicFilePath);
+            return;
         }
+        
+        if(newVolume > this._musicMaxVolume)
+            newVolume = this._musicMaxVolume;
+        
+        soundEngine.setSoundVolume(this._musicFilePath, newVolume);
     }
 }

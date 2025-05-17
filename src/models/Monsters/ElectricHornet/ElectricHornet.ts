@@ -9,7 +9,7 @@ import Tarian from '../../Tarian/Tarian';
  */
 export default class ElectricHornet extends Monster {
     
-    private _buzzSound:HTMLAudioElement; // The buzzing sound effect
+    private _buzzSoundKey:string; // The key for the buzzing sound effect
     
     private _initialDropWait:number; // The amount of milliseconds before the first attack (after entering)
     private _firstDropTimeMS:number; // The time (in milliseconds) when the attacking should begin
@@ -26,6 +26,8 @@ export default class ElectricHornet extends Monster {
         
         this.playerModel = playerModel;
         this.damageDealt = 10;
+        
+        this._buzzSoundKey = "/models/monsters/ElectricHornet/sounds/buzz.mp3";
     }
     
     load(animationManager:IModelAnimationsManager):void
@@ -34,9 +36,13 @@ export default class ElectricHornet extends Monster {
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
-        const buzzSoundPath = "/models/monsters/ElectricHornet/sounds/buzz.mp3";
-        this._buzzSound = assetHandler.loadAudio(buzzSoundPath);
-        this.assetsToUnload.push(buzzSoundPath);
+        const buzzSound = assetHandler.loadAudio(this._buzzSoundKey);
+        
+        this.sounds.push({
+            key: this._buzzSoundKey,
+            asset: buzzSound
+        });
+        this.assetsToUnload.push(this._buzzSoundKey);
         
         const spritesheetPath = "/models/monsters/ElectricHornet/anim/electricHornet_spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
@@ -91,7 +97,9 @@ export default class ElectricHornet extends Monster {
     
     act(): void {
         super.act();
-        this._buzzSound.volume = this.getVolumeForDistance();
+        const soundEngine = Kernel.getInstance().soundEngine;
+        
+        soundEngine.setSoundVolume(this._buzzSoundKey, this.getVolumeForDistance());
     }
     
     // Hit boxes for collision --------------------------------------------------------
@@ -115,7 +123,7 @@ export default class ElectricHornet extends Monster {
     
     start(): void {
         super.start();
-        Kernel.getInstance().soundEngine.playSound(this._buzzSound, true);
+        Kernel.getInstance().soundEngine.playSound(this._buzzSoundKey, true);
     }
     
     enter():void
@@ -212,7 +220,7 @@ export default class ElectricHornet extends Monster {
     	this.active = false;
         
         const soundEngine = Kernel.getInstance().soundEngine;
-        soundEngine.stopSound(this._buzzSound);
+        soundEngine.stopSound(this._buzzSoundKey);
 	}
     
     // Monster actions -----------------------------------------------------

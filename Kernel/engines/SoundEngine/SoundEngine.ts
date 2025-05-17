@@ -1,212 +1,211 @@
-import ISoundEngine from './ISoundEngine';
+import ISoundEngine, { SoundStatus } from './ISoundEngine';
 
 /**
  * The engine that controls the sound/music of the game
  */
 export default class SoundEngine implements ISoundEngine {
-    private _music:HTMLAudioElement; // The level's music
-    private _musicIsPaused:boolean; // Has the level's music been explictly paused (not true if it has been stopped)
-    private _musicIsLooped:boolean; // Is the level's music being looped?
-    
-    // The sounds we're currently playing (not including music, or sounds that are force-loading)
-    private _currentSounds:Map<string, HTMLAudioElement>;
+    private _sounds:Map<string, ISound>;
     
     /**
      * Constructor
      */
     constructor()
     {
-        this._currentSounds = new Map<string, HTMLAudioElement>();
-        this._musicIsPaused = false;
-        this._musicIsLooped = false;
+        this._sounds = new Map<string, ISound>();
     }
     
     /**
-     * The level's music
+     * Adds a sound to the engine's library (or replaces an existing sound)
+     * @param key a unique key, used to identify the sound
+     * @param asset the sound asset to add to the library
      */
-    get music()
+    addSound(key:string, asset:HTMLAudioElement):void
     {
-        return this._music;
-    }
-    set music(newValue:HTMLAudioElement)
-    {
-        this._music = newValue;
-        this._music.loop = this._musicIsLooped;
-        this._musicIsPaused = false;
-    }
-    
-    /**
-     * Should the music be played on repeat?
-     */
-    get musicRepeat()
-    {
-        return this._musicIsLooped;
-    }
-    set musicRepeat(newValue:boolean)
-    {
-        this._musicIsLooped = newValue;
-        
-        if(this._music)
-            this._music.loop = newValue;
-    }
-    
-    /**
-     * Is the level's music currently playing?
-     */
-    get musicIsPlaying()
-    {
-        return !!this._music && !this._music.paused && !this._music.muted;
-    }
-    
-    /**
-     * Has the level's music been explictly paused (not true if it has been stopped)
-     */
-    get musicIsPaused()
-    {
-        return this._musicIsPaused;
-    }
-    
-    /**
-     * Runs a check to see what playing sounds have now finished, and 
-     * updates the engine's state accordingly
-     */
-    run():void
-    {
-        this._currentSounds.forEach((sound, key, map) => {
-            if(sound.ended && !sound.loop) 
-                map.delete(key);
-        });
-    }
-    
-    /**
-     * Triggers the playing of the level's music
-     */
-    playMusic():void
-    {
-        if(this._music)
-        {
-            if(!this._musicIsPaused)
-                this._music.currentTime = 0;
-            
-            this._music.muted = false; // The music may have been muted by the forceMusicLoad method
-            this._musicIsPaused = false;
-            
-            this._music.play();
-        }
-    }
-    
-    /**
-     * Pauses the level's music
-     */
-    pauseMusic():void
-    {
-        if(this._music)
-        {
-            this._music.pause();
-            this._musicIsPaused = true;
-        }
-    }
-    
-    /**
-     * Stops the level's music (and sets it back to the start of the audio track)
-     */
-    stopMusic():void
-    {
-        if(this._music)
-        {
-            this._music.pause();
-            this._music.currentTime = 0;
-        }
-        
-        this._musicIsPaused = false;
-    }
-    
-    /**
-     * Plays the given sound
-     * @param sound The sound effect to be played
-     * @param loop Should this sound effect be played on repeat?
-     */
-    playSound(sound:HTMLAudioElement, loop:boolean = false):void
-    {
-        sound.currentTime = 0; // Position needs to be reset so sounds will restart if they're triggered mid-way through playing
-        sound.muted = false; // Sound may be muted, if it was in the middle of being force-loaded
-        sound.loop = loop;
-        
-        this._currentSounds.set(sound.src, sound);
-        
-        sound.play();
-    }
-    
-    /**
-     * Stops the playing of the given sound (and sets it back to the start of the audio track)
-     * @param sound The sound effect to be stopped
-     */
-    stopSound(sound:HTMLAudioElement):void
-    {
-        this._currentSounds.delete(sound.src);
-        sound.currentTime = 0;
-        sound.pause();
-    }
-    
-    /**
-     * Pauses all sounds that the engine has triggered
-     */
-    pauseAllSounds():void
-    {
-        this._currentSounds.forEach(sound => sound.pause());
-    }
-    
-    /**
-     * Continues playing (after pausing) all sounds the engine has triggered
-     */
-    unpauseAllSounds():void
-    {
-        this._currentSounds.forEach(sound => {
-            if(!sound.ended || sound.loop)
-                sound.play();
-        });
-    }
-    
-    /**
-     * Stops all sounds, and resets their current time back to 0
-     */
-    stopAllSounds():void
-    {
-        this._currentSounds.forEach(sound => this.stopSound(sound));
-    }
-    
-    /**
-     * Forces a sound to be loaded by playing it while muted
-     * @param sound The sound to be forced to load
-     */
-    forceSoundLoad(sound:HTMLAudioElement):void
-    {
-        const eventListenerType = "ended";
-        
-        const unmute = () => {
-            sound.muted = false;
-            sound.removeEventListener(eventListenerType, unmute);
+        const sound:ISound = {
+            asset,
+            status: SoundStatus.Stopped
         };
-        sound.addEventListener(eventListenerType, unmute);
         
-        sound.currentTime = 0;
-        sound.loop = false;
-        sound.muted = true;
-        
-        sound.play();
+        this._sounds.set(key, sound);
+        this._resetSound(sound);
+        this._addEventListenersToSound(sound);
     }
     
     /**
-     * Forces the music to be loaded by playing it while muted
+     * Gets the current status of a sound
+     * @param key the key used to identify the sound
+     * @returns the current status of the sound, or null if 
+     * the sound doesn't exist in the engine's library
      */
-    forceMusicLoad():void
+    getSoundStatus(key:string):SoundStatus
     {
-        if(this._music)
-        {
-            this._music.currentTime = 0;
-            this._music.muted = true;
-            this._musicIsPaused = false;
-            this._music.play();
-        }
+        const sound = this._sounds.get(key);
+        if(!sound)
+            return null;
+        
+        return sound.status;
     }
+    
+    /**
+     * Gets the current volume of a sound
+     * @param key the key used to identify the sound
+     * @returns the volume of the sound (a number between 0 and 1), or null if 
+     * the sound doesn't exist in the engine's library
+     */
+    getSoundVolume(key:string):number
+    {
+        const sound = this._sounds.get(key);
+        if(!sound)
+            return null;
+        
+        return sound.asset.volume;
+    }
+
+    /**
+     * Changes the volume of a sound
+     * @param key the key used to identify the sound
+     * @param volume a number between 0 and 1, (1 being the top volume, and 0
+     * being no volume)
+     */
+    setSoundVolume(key:string, volume:number):void
+    {
+        const sound = this._sounds.get(key);
+        if(!sound)
+            return;
+        
+        sound.asset.volume = volume;
+    }
+
+    /**
+     * Starts (or unpauses) a sound. If the sound is already playing, this 
+     * will restart it
+     * @param key the key used to identify the sound
+     * @param loop should the sound be looped?
+     */
+    playSound(key:string, loop:boolean = false):void
+    {
+        const sound = this._sounds.get(key);
+        if(!sound)
+            return;
+        
+        let newLoopValue = loop;
+        
+        if(sound.status === SoundStatus.Paused)
+            newLoopValue = sound.asset.loop;
+        else if(sound.status !== SoundStatus.Stopped)
+            this._resetSound(sound);
+        
+        sound.asset.loop = newLoopValue;
+        sound.asset.play();
+        
+        sound.status = SoundStatus.Playing;
+    }
+
+    /**
+     * Pauses a sound
+     * @param key the key used to identify the sound
+     */
+    pauseSound(key:string):void
+    {
+        const sound = this._sounds.get(key);
+        if(!sound)
+            return;
+        
+        sound.asset.pause();
+        
+        sound.status = SoundStatus.Paused;
+    }
+
+    /**
+     * Stops a sound
+     * @param key the key used to identify the sound
+     */
+    stopSound(key:string):void
+    {
+        const sound = this._sounds.get(key);
+        if(!sound)
+            return;
+        
+        this._resetSound(sound);
+    }
+
+    /**
+     * Stops and resets all of the current sounds
+     */
+    reset():void
+    {
+        for (const sound of this._sounds.values())
+            this._resetSound(sound);
+    }
+
+    /**
+     * Forces a sound to be loaded (so it's definitely ready to be played)
+     * @param key the key used to identify the sound
+     */
+    forceSoundToLoad(key:string):void
+    {
+        const sound = this._sounds.get(key);
+        if(!sound)
+            return;
+        
+        sound.asset.currentTime = 0;
+        sound.asset.muted = true;
+        sound.asset.play();
+        
+        sound.status = SoundStatus.ForceLoading;
+    }
+
+    /**
+     * Generates an array that contains the keys of all of the sounds 
+     * in the engine's library
+     * @returns the keys for all of the sounds in the engine's library
+     */
+    getSoundKeys():string[]
+    {
+        return [...this._sounds.keys()];
+    }
+    
+    /**
+     * Generates an array that contains the keys of the currently 
+     * playing sounds
+     * @returns the keys of the currently playing sounds
+     */
+    getPlayingSoundKeys():string[]
+    {
+        return this.getSoundKeys().filter(key => {
+            const status = this._sounds.get(key).status;
+            return status === SoundStatus.Playing;
+        });
+    }
+    
+    /**
+     * Resets a sound, placing it in the Stopped state
+     * @param sound the sound to reset
+     */
+    private _resetSound(sound:ISound):void
+    {
+        sound.status = SoundStatus.Stopped;
+        
+        sound.asset.pause();
+        sound.asset.muted = false;
+        sound.asset.currentTime = 0;
+        sound.asset.loop = false;
+    }
+    
+    /**
+     * Sets up the required event listeners on the given sound
+     * @param sound the sound that needs the event listeners
+     */
+    private _addEventListenersToSound(sound:ISound):void
+    {
+        sound.asset.addEventListener("ended", () => this._resetSound(sound));
+    }
+}
+
+/**
+ * A sound asset, and information related to it 
+ */
+interface ISound {
+    asset:HTMLAudioElement;
+    status:SoundStatus;
 }

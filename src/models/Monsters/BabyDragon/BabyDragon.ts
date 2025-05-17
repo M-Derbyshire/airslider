@@ -14,7 +14,7 @@ export default class BabyDragon extends Monster
     private _nextLavaBallIndex:number; // The "next" lava ball refers to the next one to drop (not the next one to select)
     private _nextDirectionToggleTime:number; // Determines when the monster should next toggle its direction
     private _initialXSpeed:number; // The initial speed of the monster (on the X axis), after the entrance movement
-    private _wingSound:HTMLAudioElement; // The sound effect for the flapping of the wings
+    private _wingSoundKey:string; // The key for the flapping wings sound effect
     
     // This model's animation runs at a lower framerate to the game. This stores the index of the last frame that was 
     // used. See the act() method for an explanation of how this relates to the sound effect.
@@ -32,6 +32,8 @@ export default class BabyDragon extends Monster
         
         this._playerModel = playerModel;
         this._lavaBalls = [lavaBall1, lavaBall2];
+        
+        this._wingSoundKey = "/models/monsters/BabyDragon/sounds/flap.mp3";
     }
     
     /**
@@ -49,9 +51,13 @@ export default class BabyDragon extends Monster
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
-        const wingSoundPath = "/models/monsters/BabyDragon/sounds/flap.mp3";
-        this._wingSound = assetHandler.loadAudio(wingSoundPath);
-        this.assetsToUnload.push(wingSoundPath);
+        const wingSound = assetHandler.loadAudio(this._wingSoundKey);
+        
+        this.sounds.push({
+            key: this._wingSoundKey,
+            asset: wingSound
+        });
+        this.assetsToUnload.push(this._wingSoundKey);
         
         const spritesheetPath = "/models/monsters/BabyDragon/anim/babyDragon-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
@@ -102,6 +108,8 @@ export default class BabyDragon extends Monster
     {
         super.prepare();
         
+        const soundEngine = Kernel.getInstance().soundEngine;
+        
         this.actions = [
             this._move
         ];
@@ -125,13 +133,15 @@ export default class BabyDragon extends Monster
         this._nextLavaBallIndex = 0;
         
         this._lastAnimFrame = 0;
-        this._wingSound.volume = 1;
+        soundEngine.setSoundVolume(this._wingSoundKey, 1);
     }
     
     act(): void {
         super.act();
         
-        this._wingSound.volume = this.getVolumeForDistance();
+        const soundEngine = Kernel.getInstance().soundEngine;
+        
+        soundEngine.setSoundVolume(this._wingSoundKey, this.getVolumeForDistance());
         const flappingAnimation = this.animationManager.animations[this.state];
         
         // We want to run the sound effect on every wing flap.
@@ -143,7 +153,7 @@ export default class BabyDragon extends Monster
         // The wing sound may restart too soon when changing between left/right animations.
         // Therefore, we run the sound on the last frame of the animation, not the first.
         if(animationChangedFrame && flappingAnimation.currentFrameIndex === flappingAnimation.frameCoordinates.length - 1)
-            Kernel.getInstance().soundEngine.playSound(this._wingSound);
+            soundEngine.playSound(this._wingSoundKey);
         
         this._lastAnimFrame = flappingAnimation.currentFrameIndex;
     }
@@ -152,7 +162,7 @@ export default class BabyDragon extends Monster
     
     start(): void {
         super.start();
-        Kernel.getInstance().soundEngine.forceSoundLoad(this._wingSound);
+        Kernel.getInstance().soundEngine.forceSoundToLoad(this._wingSoundKey);
     }
     
     enter():void

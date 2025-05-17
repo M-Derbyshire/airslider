@@ -26,21 +26,14 @@ export default class PidgeonSoundController {
     
     /**
      * Should be called once per frame. Runs the sound effect(s)
-     * @param flapSound the flapping sound effect
+     * @param flapSoundKey the key for the flapping sound effect
      */
-    act(flapSound:HTMLAudioElement):void
+    act(flapSoundKey:string):void
     {
-        // At the moment, we only want to play the sound once, regardless of the pidgeon count
+        // We only want to play the sound once, regardless of the pidgeon count
         
-        // First, determine if any pidgeons will be playing the sound. If so, which one are we basing the 
-        // timing on?
-        let flappingPidgeon = null;
-        if(this._isPidgeonFlapping(this._pidgeon1)) 
-            flappingPidgeon = this._pidgeon1;
-        else if (this._isPidgeonFlapping(this._pidgeon2)) 
-            flappingPidgeon = this._pidgeon2;
+        const flappingPidgeon = this._getCurrentlyFlappingPidgeon();
         
-        // Now we need to play the flapping sound if the time is right
         if(flappingPidgeon)
         {
             const flappingAnimFrame = flappingPidgeon.getCurrentFlappingFrame();
@@ -54,10 +47,29 @@ export default class PidgeonSoundController {
             // The frame index will always be 0 when off screen, as the animation won't be progressed (since the model won't be drawn),
             // so instead we play the sound every time it's on the second frame
             if(animationChangedFrame && flappingAnimFrame === 1) 
-                Kernel.getInstance().soundEngine.playSound(flapSound);
+                Kernel.getInstance().soundEngine.playSound(flapSoundKey);
                 
             this._lastFlappingAnimFrame = flappingAnimFrame;
         }
+    }
+    
+    /**
+     * Gets the pidgeon that is currently flapping (or one of them, if both are). This 
+     * will return null if none of them are flapping
+     * @returns the pidgeon that is flapping (or one of them), or null if none are
+     */
+    private _getCurrentlyFlappingPidgeon():NeonPidgeon
+    {
+        if(this._isPidgeonFlapping(this._pidgeon1))
+        {
+            return this._pidgeon1;
+        }
+        else if (this._isPidgeonFlapping(this._pidgeon2))
+        {
+            return this._pidgeon2;
+        }
+        
+        return null;
     }
     
     /**
