@@ -1,7 +1,7 @@
 import IHUDComponent from './IHUDComponent';
 import Kernel from '../../Kernel';
 import ITextContent from '../../engines/GraphicEngine/ITextContent';
-import { entitySound } from '../types';
+import { IEntitySound } from '../types';
 
 /**
  * A component to be displayed by the Heads Up Display
@@ -9,7 +9,7 @@ import { entitySound } from '../types';
 export default class HUDComponent implements IHUDComponent
 {
     protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
-    protected sounds:entitySound[]; // Sounds that need to be added to the sound engine, during preparation
+    protected sounds:IEntitySound[]; // Sounds that need to be added to the sound engine, during preparation
     
     /**
      * The x coordinate of this component (in units)

@@ -7,7 +7,7 @@ import IControlsInitialiser from './IControlsInitialiser';
 import ControlsInitialiser from './ControlsInitialiser';
 import IFrameManager from '../../engines/GraphicEngine/IFrameManager';
 import IHUD from '../HUD/IHUD';
-import { entitySound } from '../types';
+import { IEntitySound } from '../types';
 
 /**
  * A level of the game
@@ -15,7 +15,7 @@ import { entitySound } from '../types';
 export default class Level implements ILevel
 {
     protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
-    protected sounds:entitySound[]; // Sounds that need to be added to the sound engine, during preparation
+    protected sounds:IEntitySound[]; // Sounds that need to be added to the sound engine, during preparation
     
     protected frameManager:IFrameManager; // The frame manager for the level
     

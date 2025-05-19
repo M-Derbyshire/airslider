@@ -1,6 +1,9 @@
 /**
  * A sound belonging to an entity
  */
-type entitySound = { key:string, asset:HTMLAudioElement };
+interface IEntitySound {
+    key:string,
+    asset:HTMLAudioElement
+};
 
-export { entitySound };
+export { IEntitySound };

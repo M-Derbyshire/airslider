@@ -2,7 +2,7 @@ import IHUDComponent from '../../../Kernel/entities/HUDComponent/IHUDComponent';
 import IHUD from './IHUD';
 import Kernel from '../../../Kernel/Kernel';
 import IPointerEventManager from '../Level/IPointerEventManager';
-import { entitySound } from '../types';
+import { IEntitySound } from '../types';
 
 /**
  * A level's Heads Up Display
@@ -12,7 +12,7 @@ export default class HUD implements IHUD
     protected pointerEventManager:IPointerEventManager;
     protected components:IHUDComponent[]; //HUD components used by this HUD
     protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
-    protected sounds:entitySound[]; // Sounds that need to be added to the sound engine, during preparation
+    protected sounds:IEntitySound[]; // Sounds that need to be added to the sound engine, during preparation
     
     /**
      * Constructor

@@ -4,7 +4,7 @@ import IHitBox from './IHitBox';
 import Kernel from '../../Kernel';
 import ITextContent from '../../engines/GraphicEngine/ITextContent';
 import UnitHelper from '../../utils/UnitHelper';
-import { entitySound } from '../types';
+import { IEntitySound } from '../types';
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)
@@ -13,7 +13,7 @@ export default class Model implements IModel
 {
     protected animationManager:IModelAnimationsManager;
     protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
-    protected sounds:entitySound[]; // Sounds that need to be added to the sound engine, during preparation
+    protected sounds:IEntitySound[]; // Sounds that need to be added to the sound engine, during preparation
     protected drawHitBoxes:boolean; // If we set this to true, we'll draw the boxes from this.getHitBoxes()
     
     private _state:string; // The current "state" of the model. This is also the name of the animation to use when drawing
