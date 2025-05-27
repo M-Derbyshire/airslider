@@ -2,6 +2,7 @@ import Kernel from '../../../Kernel/Kernel';
 import IModel from '../../../Kernel/entities/Model/IModel';
 import Obstacle from '../../models/Obstacle/Obstacle';
 import ASLevel from './ASLevel';
+import { generateRandomPositionModifier } from './utils';
 
 /**
  * Manages the level's "obstacle" models, setting their x positions and sending them down the road
@@ -116,12 +117,16 @@ export default class ObstacleManager<T extends Obstacle>
 	 */
     sendObstaclesIfReady():void
     {
-		const lineMinSize = 2; // The least amount of obstacles per line
-		const lineMaxSize = this._minObstacleCount; // The max amount of obstacles per line
-		const obstacleCount = Math.floor(Math.random() * lineMaxSize) + lineMinSize;
-		
 		if(this._isTimeToSendNextLine())
 		{
+			const lineMinSize = 2; // The least amount of obstacles per line
+			const lineMaxSize = this._minObstacleCount; // The max amount of obstacles per line
+			const obstacleCount = Math.floor(Math.random() * lineMaxSize) + lineMinSize;
+			
+			// This value affects the maximum change that will get made to an obstacle's Z-axis 
+			// position, before it's sent
+			const zModifierAbsMax = 20;
+			
 			const xPositions = this._getObstacleXPositions(obstacleCount);
 			
 			const obstacles = [];
@@ -130,7 +135,7 @@ export default class ObstacleManager<T extends Obstacle>
 				const obstacle = this._obstacles[this._getIndexForNextObstacle()];
 				
 				obstacle.resetToStart(xPositions[i]);
-				obstacle.z += this._getObstacleStartZModifier(20);
+				obstacle.z += generateRandomPositionModifier(zModifierAbsMax);
 				obstacles.push(obstacle);
 			}
 		}
@@ -209,21 +214,6 @@ export default class ObstacleManager<T extends Obstacle>
 			positions.push(lineX + (this._obstacleWidth * i));
 		
 		return positions;
-	}
-	
-	/**
-	 * Generates a number (which could be negative) that can be added to an 
-	 * obstacle's Z position, to give it a bit of randomness before it is 
-	 * sent down the track.
-	 * @param absMax the maximum/minimum value (the negative of this value 
-	 * will be the minimum)
-	 * @returns a number that should be added to the obstacle's Z value, 
-	 * after it has been reset to its start position
-	 */
-	private _getObstacleStartZModifier(absMax:number):number
-	{
-		const randMax = absMax * 2;
-		return (Math.random() * randMax) - absMax;
 	}
 	
 	/**

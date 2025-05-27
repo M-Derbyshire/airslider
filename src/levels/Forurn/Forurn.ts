@@ -10,7 +10,7 @@ import Kernel from '../../../Kernel/Kernel';
 import Snake from '../../models/Obstacles/Snake/Snake';
 import Obstacle from '../../models/Obstacle/Obstacle';
 import IntroSnake from '../../models/Obstacles/IntroObstacles/IntroSnake/IntroSnake';
-import { IPartialPattern } from '../ASLevel/ObstacleXPositionPatternManager';
+import { IPattern } from '../ASLevel/ObstaclePatternManager';
 
 /**
  * A class for a Level
@@ -105,18 +105,12 @@ export default class Forurn extends ASLevel<Snake>
         
         this.outsideVisible = true;
         
-        const patternZGap = 200;
-        const patternMinXGap = 10;
-        this.patternManager.addRepeatingPattern(
-            patternZGap,
-            patternMinXGap,
-            this._generateSnakePatterns()
-        );
+        this.patternManager.setRepeatingPattern(this._generateSnakePattern());
         
         const initialSnakeLineCount = 3;
         this.obstacleManager.setObstacleModels(this._snakes);
         this.obstacleManager.setCurrentLineCount(initialSnakeLineCount);
-        this.patternManager.setPatternDefaults(this._snakes);
+        this.patternManager.setModelsForPattern(this._snakes);
     }
     
     /**
@@ -164,8 +158,7 @@ export default class Forurn extends ASLevel<Snake>
             155,
             217,
             null,
-            () => this.patternManager.sendPatterns(),
-            () => this.patternManager.clearPatterns()
+            () => this.patternManager.sendPattern()
         );
         
         // Run the closing sequence
@@ -173,40 +166,67 @@ export default class Forurn extends ASLevel<Snake>
     }
     
     /**
-     * Generate the patterns of Snakes that should be sent with the patternManager
+     * Generate the pattern of Snakes that should be created by the patternManager
+     * @returns a pattern object that can be used by the patternManager to create the 
+     * desired pattern of Snakes
      */
-    private _generateSnakePatterns():IPartialPattern[] {
-        // We want to create a series of lines of snakes.
-        // Each line will have an X position that its snakes are centered on
+    private _generateSnakePattern():IPattern {
+        const pattern:IPattern = {
+            zGap: 200,
+            zModifierAbs: 10,
+            positions: []
+        };
         
-        const lineHalfWith = this._snakes[0].width * 1.5;
+        if(!this._snakes.length)
+            return pattern;
         
-        const lineXPositionsCount = 8;
-        const lineXPositions = [];
-        const randPositionMax = this.rightEdge - this.leftEdge;
-        const minPositionDifference = randPositionMax / 2;
+        /*
+            There are 2 kinds of "lines" in the pattern: 
+            - lines where the snakes are on both sides of the level (with a gap in the center)
+            - a line in the center (may just be one snake)
+        */
+        const possibleLinePositions = this._getPossiblePatternLines(this._snakes[0].width);
         
-        while(lineXPositions.length < lineXPositionsCount) {
-            // To ensure the player can't just stay in one place, we want to ensure we 
-            // have a line to the left, and a line to the right (the rest are set randomnly)
-            if(lineXPositions.length === 0) {
-                lineXPositions.push(this.leftEdge + lineHalfWith);
-                continue;
-            }
-            else if(lineXPositions.length === lineXPositionsCount / 2) {
-                lineXPositions.push(this.rightEdge - lineHalfWith);
-                continue;
-            }
-            
-            const xPos = Math.round(Math.random() * randPositionMax) + this.leftEdge;
-            
-            const lastXPos = lineXPositions[lineXPositions.length - 1] ?? -1000;
-            const differenceToLastPosition = Math.abs(xPos - lastXPos);
-            
-            if(differenceToLastPosition >= minPositionDifference)
-                lineXPositions.push(xPos);
+        pattern.positions.push(possibleLinePositions.sides);
+        pattern.positions.push(possibleLinePositions.center);
+        
+        return pattern;
+    }
+    
+    /**
+     * Generates the horizontal "lines" that we can use when creating a pattern of 
+     * snakes. There are 2 possible lines: "center" and "sides". Each line is an 
+     * array of positions on the X-axis.
+     * @param modelWidth the width of the model that is being used in our patterns
+     * @returns an object with "lines" that can be used when making a pattern. Each 
+     * line is an array of X-axis positions.
+     */
+    private _getPossiblePatternLines(modelWidth:number):{ sides:number[], center:number[] }
+    {
+        const modelHalfWidth = modelWidth / 2;
+        const gapBetweenModels = 10;
+        
+        const levelWidth = this.rightEdge - this.leftEdge;
+        const levelCenter = (levelWidth / 2) + this.leftEdge;
+        const leftEdgeToUse = this.leftEdge - modelHalfWidth;
+        const rightEdgeToUse = this.rightEdge + modelHalfWidth;
+        
+        const centerPositions = [levelCenter - modelHalfWidth];
+        
+        const modelCountPerSide = 2;
+        const widthWithGap = modelWidth + gapBetweenModels;
+        const leftPositions:number[] = [];
+        const rightPositions:number[] = [];
+        
+        for(let i = 0; i < modelCountPerSide; i++)
+            leftPositions.push(leftEdgeToUse + (widthWithGap * i));
+        
+        for(let i = 1; i <= modelCountPerSide; i++)
+            rightPositions.push(rightEdgeToUse - (widthWithGap * i));
+        
+        return {
+            sides: [...leftPositions, ...rightPositions],
+            center: centerPositions
         }
-        
-        return lineXPositions.map(x => ({ fromPosition: x - lineHalfWith, toPosition: x + lineHalfWith }));
     }
 };

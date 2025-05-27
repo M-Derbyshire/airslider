@@ -109,8 +109,6 @@ export default class TheConstruct extends ASLevel<Shocker>
         
         this.outsideVisible = true;
         
-        this.patternManager.clearPatterns();
-        
         // this.tunnelManager.createStartingTunnel([
         //     this.tunnelManager.newTunnelPart(this.tunnelSprite, this.tunnelSpriteLength)
         // ]);

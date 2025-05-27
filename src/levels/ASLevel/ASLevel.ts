@@ -2,7 +2,7 @@ import Level from '../../../Kernel/entities/Level/Level';
 import MainHUD from '../../HUDs/MainHUD/MainHUD';
 import LevelRoad from './LevelRoad';
 import ObstacleManager from './ObstacleManager';
-import ObstacleXPositionPatternManager from './ObstacleXPositionPatternManager';
+import ObstaclePatternManager from './ObstaclePatternManager';
 import LevelGround from './LevelGround';
 import LevelTunnel from './LevelTunnel';
 import Sign from '../../models/Sign/Sign';
@@ -76,7 +76,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     
     // Obstacle management
     protected obstacleManager: ObstacleManager<ObstacleType>;
-    protected patternManager: ObstacleXPositionPatternManager<ObstacleType>;
+    protected patternManager: ObstaclePatternManager<ObstacleType>;
     
     // Models we want to keep references to
     protected monsters:Monster[];
@@ -140,7 +140,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         this.roadColor = "#A5A5A5";
         
         this.obstacleManager = new ObstacleManager<ObstacleType>();
-		this.patternManager = new ObstacleXPositionPatternManager<ObstacleType>();
+		this.patternManager = new ObstaclePatternManager<ObstacleType>();
         
         this.tunnelManager = new LevelTunnel();
         
@@ -257,7 +257,6 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         this._finishFlagsActive = false;
         
         this._setupObstacleManager(this.leftEdge, this.rightEdge);
-        this.patternManager.clearPatterns();
         
         this.outsideVisible = false;
         
