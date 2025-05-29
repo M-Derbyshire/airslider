@@ -1,4 +1,5 @@
 import Kernel from '../../../../Kernel/Kernel';
+import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
 import IFrameCoordinates from '../../../../Kernel/entities/Model/ModelAnimationsManager/IFrameCoordinates';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Obstacle from '../../Obstacle/Obstacle';
@@ -103,5 +104,17 @@ export default class Snake extends Obstacle
             this.state = "dead";
         else
             this.state = "slither";
+    }
+    
+    getHitBoxes(): IHitBox[] {
+        return [
+            {
+                x: this.x,
+                y: this.y,
+                z: this.z,
+                width: this.width,
+                height: this.height / 2
+            }
+        ];
     }
 }
