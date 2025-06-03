@@ -107,7 +107,7 @@ export default class Forurn extends ASLevel<Snake>
         
         this.patternManager.setRepeatingPattern(this._generateSnakePattern());
         
-        const initialSnakeLineCount = 3;
+        const initialSnakeLineCount = 4;
         this.obstacleManager.setObstacleModels(this._snakes);
         this.obstacleManager.setCurrentLineCount(initialSnakeLineCount);
         this.patternManager.setModelsForPattern(this._snakes);
@@ -133,15 +133,6 @@ export default class Forurn extends ASLevel<Snake>
             86,
             null,
             () => this.obstacleManager.sendObstaclesIfReady()
-        );
-        
-        this.levelSection(
-            "increaseSnakeCount",
-            47.5,
-            47.6,
-            () => this.obstacleManager.setCurrentLineCount(
-                this.obstacleManager.currentLineCount + 1
-            )
         );
         
         this.levelSection(
