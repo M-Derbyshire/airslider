@@ -1,6 +1,7 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
+import ASLevel from '../../../levels/ASLevel/ASLevel';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 
@@ -69,6 +70,8 @@ export default class ElectricHornet extends Monster {
     {
         super.prepare();
         
+        const level = (Kernel.getInstance().level as ASLevel);
+        
         this.actions = [
             this._fly,
             this._drop,
@@ -77,7 +80,7 @@ export default class ElectricHornet extends Monster {
         
         this.offScreenUnits = 500;
         this.startY = 200;
-        this.startX = this.levelRightEdge + this.offScreenUnits;
+        this.startX = level.rightEdge + this.offScreenUnits;
         this.startZ = this.playerModel.z;
         this.y = this.startY;
         this.x = this.startX;
@@ -128,14 +131,17 @@ export default class ElectricHornet extends Monster {
     
     enter():void
     {
+        const kernel = Kernel.getInstance();
+        const level = (kernel.level as ASLevel);
+        
         const thisRightEdge = this.x + this.width;
-        if(this.levelRightEdge < thisRightEdge)
+        if(level.rightEdge < thisRightEdge)
         {
             this.moveLeft(this.enterXSpeed);
         }
         else
         {
-            const currentMS = Kernel.getInstance().totalLevelActiveMilliseconds;
+            const currentMS = kernel.totalLevelActiveMilliseconds;
             this._firstDropTimeMS = currentMS + this._initialDropWait;
             
             this.entering = false;
@@ -152,8 +158,10 @@ export default class ElectricHornet extends Monster {
         {        
             this.moveLeft(this.exitXSpeed);
             
+            const level = (Kernel.getInstance().level as ASLevel);
+            
             const thisRightEdge = this.x + this.width;
-            const exitEndPosition = this.levelLeftEdge - this.offScreenUnits;
+            const exitEndPosition = level.leftEdge - this.offScreenUnits;
             if(thisRightEdge < exitEndPosition)
                 this._handleExitCompletion();
         }
@@ -183,10 +191,12 @@ export default class ElectricHornet extends Monster {
      */
     private _hasHitLevelEdge():boolean
     {
-        const hasHitLeftEdge = this.x <= this.levelLeftEdge && this.xSpeed < 0;
+        const level = (Kernel.getInstance().level as ASLevel);
+        
+        const hasHitLeftEdge = this.x <= level.leftEdge && this.xSpeed < 0;
         
         const hornetRightSide = this.x + this.width
-        const hasHitRightEdge = hornetRightSide >= this.levelRightEdge && this.xSpeed > 0;
+        const hasHitRightEdge = hornetRightSide >= level.rightEdge && this.xSpeed > 0;
         
         return hasHitLeftEdge || hasHitRightEdge;
     }

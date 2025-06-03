@@ -1,6 +1,7 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
+import ASLevel from '../../../levels/ASLevel/ASLevel';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 import PidgeonSoundController from './PidgeonSoundController';
@@ -127,6 +128,8 @@ export default class NeonPidgeon extends Monster {
     {
         super.prepare();
         
+        const level = (Kernel.getInstance().level as ASLevel);
+        
         this.actions = [
             this.moveSideways,
             this.drop,
@@ -141,7 +144,7 @@ export default class NeonPidgeon extends Monster {
         this.startZ = this._playerModel.z;
         this.startY = this._lowerPidgeon ? 150 : 250;
         this.offScreenUnits = this._lowerPidgeon ? 500 : 650;
-        this.startX = this.levelRightEdge + this.offScreenUnits;
+        this.startX = level.rightEdge + this.offScreenUnits;
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
@@ -240,12 +243,15 @@ export default class NeonPidgeon extends Monster {
     
     enter():void
     {
-        if(this.levelRightEdge < (this.x + this.width))
+        const kernel = Kernel.getInstance();
+        const level = (kernel.level as ASLevel);
+        
+        if(level.rightEdge < (this.x + this.width))
         {
             this.moveLeft(this.enterXSpeed);
         } else {
             this.entering = false;
-            this._nextDrop = Kernel.getInstance().totalLevelActiveMilliseconds + this.initialDropWait;
+            this._nextDrop = kernel.totalLevelActiveMilliseconds + this.initialDropWait;
         }
     }
     
@@ -256,6 +262,8 @@ export default class NeonPidgeon extends Monster {
             this.state = "rising";
             this.rise();
         } else {
+            const level = (Kernel.getInstance().level as ASLevel);
+            
             this.state = "flapping";
         
             // Because of how the sound effects work, the lower pidgeon needs to leave first.
@@ -266,7 +274,7 @@ export default class NeonPidgeon extends Monster {
                 this.moveRight(Math.abs(this.xSpeed));
             
             
-            if((this.x + this.width) < (this.levelLeftEdge - this.offScreenUnits))
+            if((this.x + this.width) < (level.leftEdge - this.offScreenUnits))
                 this._handleMonsterExitingScreen();
         }
     }
@@ -362,16 +370,18 @@ export default class NeonPidgeon extends Monster {
      */
 	private _handleMonsterOverlappingLevelEdges():void
 	{
-        const overlappingLeftEdge = this.x <= (this.levelLeftEdge - this._edgeOverflow);
-        const overlappingRightEdge = this.x + this.width >= (this.levelRightEdge + this._edgeOverflow);
+        const level = (Kernel.getInstance().level as ASLevel);
+        
+        const overlappingLeftEdge = this.x <= (level.leftEdge - this._edgeOverflow);
+        const overlappingRightEdge = this.x + this.width >= (level.rightEdge + this._edgeOverflow);
         
 		if(overlappingLeftEdge || overlappingRightEdge)
         {
             this.xSpeed = -this.xSpeed;
             
             this.x = (this.xSpeed > 0) ? 
-                (this.levelLeftEdge - this._edgeOverflow + 1) :
-                ((this.levelRightEdge - this.width) + this._edgeOverflow - 1);
+                (level.leftEdge - this._edgeOverflow + 1) :
+                ((level.rightEdge - this.width) + this._edgeOverflow - 1);
         }
 	}
     

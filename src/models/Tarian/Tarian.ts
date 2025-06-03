@@ -416,21 +416,23 @@ export default class Tarian extends ASModel {
 	
     extraEvents():void
     {
+        const level = (Kernel.getInstance().level as ASLevel);
+        
         // Check for leaving the game area
-        if(this.x < this.levelLeftEdge)
+        if(this.x < level.leftEdge)
         {
             if(this.state == "left")
                 this.state = "forward";
             
-            this.x = this.levelLeftEdge;
+            this.x = level.leftEdge;
             this.xSpeed = 0;
         }
-        if(this.x + this.width > this.levelRightEdge)
+        if(this.x + this.width > level.rightEdge)
         {
             if(this.state == "right")
                 this.state = "forward";
             
-            this.x = this.levelRightEdge - this.width;
+            this.x = level.rightEdge - this.width;
             this.xSpeed = 0;
         }
     }

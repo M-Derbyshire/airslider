@@ -1,5 +1,6 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
+import ASLevel from '../../../levels/ASLevel/ASLevel';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 import LavaBall from '../attacks/LavaBall/LavaBall';
@@ -108,7 +109,9 @@ export default class BabyDragon extends Monster
     {
         super.prepare();
         
-        const soundEngine = Kernel.getInstance().soundEngine;
+        const kernel = Kernel.getInstance();
+        const level = (kernel.level as ASLevel);
+        const soundEngine = kernel.soundEngine;
         
         this.actions = [
             this._move
@@ -116,7 +119,7 @@ export default class BabyDragon extends Monster
         
         this.startY = 10,
         this.offScreenUnits = 500;
-        this.startX = this.levelRightEdge + this.offScreenUnits;
+        this.startX = level.rightEdge + this.offScreenUnits;
         this.startZ = this._playerModel.z;
         
         this.x = this.startX;
@@ -167,7 +170,9 @@ export default class BabyDragon extends Monster
     
     enter():void
     {
-        if(this.levelRightEdge < (this.x + this.width))
+        const level = (Kernel.getInstance().level as ASLevel);
+        
+        if(level.rightEdge < (this.x + this.width))
             this.moveLeft(this.enterXSpeed);
         else
             this.entering = false;
@@ -175,10 +180,12 @@ export default class BabyDragon extends Monster
     
     exit():void
     {
+        const level = (Kernel.getInstance().level as ASLevel);
+        
         this.state = "left";
         this.moveLeft(this.enterXSpeed);
         
-        if((this.x + this.width) < (this.levelLeftEdge - this.offScreenUnits))
+        if((this.x + this.width) < (level.leftEdge - this.offScreenUnits))
         {
             this.exiting = false;
             this.active = false;
@@ -208,8 +215,10 @@ export default class BabyDragon extends Monster
      */
 	private _handleOverlappingOfLevelEdges():void
 	{
-		const hasOverlappedLeftEdge = (this.x + (this.width / 2) <= this.levelLeftEdge);
-		const hasOverlappedRightEdge = (this.x + (this.width / 2) >= this.levelRightEdge);
+        const level = (Kernel.getInstance().level as ASLevel);
+        
+		const hasOverlappedLeftEdge = (this.x + (this.width / 2) <= level.leftEdge);
+		const hasOverlappedRightEdge = (this.x + (this.width / 2) >= level.rightEdge);
 		
         if(hasOverlappedLeftEdge || hasOverlappedRightEdge)
         {
@@ -217,8 +226,8 @@ export default class BabyDragon extends Monster
             
             // Change the position, so we're no longer overlapping the edge
             this.x = (this.xSpeed > 0) ? 
-                ((this.levelLeftEdge - (this.width / 2)) + 1) :
-                ((this.levelRightEdge - (this.width / 2)) - 1);
+                ((level.leftEdge - (this.width / 2)) + 1) :
+                ((level.rightEdge - (this.width / 2)) - 1);
             
             this.animationManager.animations[this.state].currentFrameIndex = 0;
         }
@@ -230,7 +239,9 @@ export default class BabyDragon extends Monster
      */
     private _shouldChangeDirection():boolean
     {
-        const runningTime = Kernel.getInstance().totalLevelActiveMilliseconds;
+        const kernel = Kernel.getInstance();
+        const runningTime = kernel.totalLevelActiveMilliseconds;
+        const level = (kernel.level as ASLevel);
         
         // The initial time to change direction
         if(!this._nextDirectionToggleTime)
@@ -238,8 +249,8 @@ export default class BabyDragon extends Monster
         
         // We only want to change direction if the dragon is a certain distance from the edge of the level
         const areaSize = this.width / 8;
-        const leftArea = this.levelLeftEdge + areaSize;
-        const rightArea = this.levelRightEdge - areaSize;
+        const leftArea = level.leftEdge + areaSize;
+        const rightArea = level.rightEdge - areaSize;
         const monsterRightEdge = (this.x + this.width);
         
         const monsterIsWithinLeftArea = (this.x <= leftArea); 

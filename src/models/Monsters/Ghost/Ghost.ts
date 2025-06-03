@@ -166,13 +166,15 @@ export default class Ghost extends Monster {
      */
 	private _handleMonsterOverlappingLevelEdges():void
 	{
-		if(this.x < this.levelLeftEdge)
+        const level = (Kernel.getInstance().level as ASLevel);
+        
+		if(this.x < level.leftEdge)
         {
-            this.x = this.levelLeftEdge;
+            this.x = level.leftEdge;
             this._directionMultiplier = 1;
-        } else if (this.x + this.width > this.levelRightEdge)
+        } else if (this.x + this.width > level.rightEdge)
         {
-            this.x = this.levelRightEdge - this.width;
+            this.x = level.rightEdge - this.width;
             this._directionMultiplier = -1;
         }
 	}

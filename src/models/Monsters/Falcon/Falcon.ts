@@ -164,7 +164,7 @@ export default class Falcon extends Monster {
         this.enterXSpeed = 140;
         this.offScreenUnits = 800;
         this.startY = 75;
-        this.startX = this.levelLeftEdge - this.offScreenUnits;
+        this.startX = -this.offScreenUnits; //this.levelLeftEdge - this.offScreenUnits;
         this.startZ = this.playerModel.z;
         this.dropWaitOffset = TimeHelper.secondsToFrames(5);
         this.dropWaitRange = TimeHelper.secondsToFrames(5);
@@ -207,7 +207,8 @@ export default class Falcon extends Monster {
         
             this.moveRight(this.enterXSpeed);
             
-            if(this.x > (this.levelRightEdge + this.offScreenUnits))
+            // if(this.x > (this.levelRightEdge + this.offScreenUnits))
+            if(this.x > (1000 + this.offScreenUnits))
             {
                 this.exiting = false;
                 this.active = false;
@@ -241,7 +242,8 @@ export default class Falcon extends Monster {
 	
 	private _setSwoopDirection():void
 	{
-		if(this.x + (this.width / 2) > (this.levelRightEdge - this.levelLeftEdge) / 2)
+		// if(this.x + (this.width / 2) > (this.levelRightEdge - this.levelLeftEdge) / 2)
+        if(this.x + (this.width / 2) > 1000 / 2)
 		{
 			this.directionMultiplier = -1;
 			this.state = "left";

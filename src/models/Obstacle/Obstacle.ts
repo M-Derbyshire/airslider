@@ -172,9 +172,11 @@ export default class Obstacle extends ASModel
     
     extraEvents():void
     {
+        const level = (Kernel.getInstance().level as ASLevel);
+        
         // Check for leaving the game area
-        const leavingLeftEdge = (this.x < this.levelLeftEdge);
-        const leavingRightEdge = (this.x + this.width > this.levelRightEdge);
+        const leavingLeftEdge = (this.x < level.leftEdge);
+        const leavingRightEdge = (this.x + this.width > level.rightEdge);
         
         if(leavingLeftEdge || leavingRightEdge)
         {

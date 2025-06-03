@@ -6,11 +6,7 @@ import Kernel from '../../../Kernel/Kernel';
  * The game's base Model class
  */
 export default class ASModel extends Model 
-{
-	
-    protected levelLeftEdge:number; // The left edge of the level
-    protected levelRightEdge:number; // The right edge of the level
-    
+{   
     damageDealt:number; // If this model can do damage to the player, this is how much health is lost
     canBeControlled:boolean; // Can this model be controlled?
     
@@ -71,15 +67,5 @@ export default class ASModel extends Model
     protected hasHitGround():boolean
     {
         return (this.y + this.height) >= Kernel.getInstance().settings.unitsWithinCameraY;
-    }
-    
-    prepare():void
-    {
-        super.prepare();
-        
-        const level = Kernel.getInstance().level as ASLevel;
-        
-        this.levelLeftEdge = level.leftEdge;
-        this.levelRightEdge = level.rightEdge;
     }
 }

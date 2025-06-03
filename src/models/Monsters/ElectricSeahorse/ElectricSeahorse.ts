@@ -1,5 +1,6 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
+import ASLevel from '../../../levels/ASLevel/ASLevel';
 import Monster from '../../Monster/Monster';
 import Tarian from '../../Tarian/Tarian';
 import Lightning from '../attacks/Lightning/Lightning';
@@ -72,6 +73,8 @@ export default class ElectricSeahorse extends Monster {
     {
         super.prepare();
         
+        const level = (Kernel.getInstance().level as ASLevel);
+        
         this.actions = [
             this.move
         ];
@@ -79,7 +82,7 @@ export default class ElectricSeahorse extends Monster {
         this.startZ = this._playerModel.z;
         this.startY = 10;
         this.offScreenUnits = 500;
-        this.startX = this.levelRightEdge + this.offScreenUnits;
+        this.startX = level.rightEdge + this.offScreenUnits;
         this.x = this.startX;
         this.y = this.startY;
         this.z = this.startZ;
@@ -108,7 +111,9 @@ export default class ElectricSeahorse extends Monster {
     
     enter():void
     {
-        if(this.levelRightEdge < (this.x + this.width))
+        const level = (Kernel.getInstance().level as ASLevel);
+        
+        if(level.rightEdge < (this.x + this.width))
         {
             this.moveLeft(this.enterXSpeed);
         } else {
@@ -128,7 +133,9 @@ export default class ElectricSeahorse extends Monster {
     {
         this.moveLeft(this.enterXSpeed * 2);
         
-        if((this.x + this.width) < (this.levelLeftEdge - this.offScreenUnits))
+        const level = (Kernel.getInstance().level as ASLevel);
+        
+        if((this.x + this.width) < (level.leftEdge - this.offScreenUnits))
         {
             this.exiting = false;
             this.active = false;
@@ -194,11 +201,13 @@ export default class ElectricSeahorse extends Monster {
      */
     private _handleOverlappingOfLevelEdges():void
 	{
+        const level = (Kernel.getInstance().level as ASLevel);
+        
         // Defining the left/right edges that we want the monster to stay within.
         // If we take into account the z position, these aren't actually off the screen.
         const boundaryBuffer = (this.width / 5);
-        const leftEdgeBoundary = this.levelLeftEdge - boundaryBuffer; 
-        const rightEdgeBoundary = this.levelRightEdge + boundaryBuffer;
+        const leftEdgeBoundary = level.leftEdge - boundaryBuffer; 
+        const rightEdgeBoundary = level.rightEdge + boundaryBuffer;
         
 		const hasOverlappedLeftEdge = (this.x <= leftEdgeBoundary);
 		const hasOverlappedRightEdge = (this.x + this.width >= rightEdgeBoundary);
