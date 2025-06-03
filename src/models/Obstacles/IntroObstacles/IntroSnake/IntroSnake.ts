@@ -28,8 +28,6 @@ export default class IntroSnake extends Snake implements IIntroObstacle
     private _leaveXSpeed:number;
     private _leaveZSpeed:number;
     
-    private _speedChangeForZSlowdown:number;
-    
     // These define the boundaries for the X movement
     private _minX:number;
     private _maxX:number;
@@ -58,8 +56,6 @@ export default class IntroSnake extends Snake implements IIntroObstacle
         
         this._leaveXSpeed = 0;
         this._leaveZSpeed = 100;
-        
-        this._speedChangeForZSlowdown = UnitHelper.speed(22);
     }
     
     prepare(): void
@@ -178,7 +174,9 @@ export default class IntroSnake extends Snake implements IIntroObstacle
      */
     private _setSlowingEntranceZSpeed():void
     {
-        const newSpeed = this.zSpeed - this._speedChangeForZSlowdown;
+        const speedChangeForZSlowdown = UnitHelper.speed(23);
+        
+        const newSpeed = this.zSpeed - speedChangeForZSlowdown;
         
         if(newSpeed > this._steadyZSpeed)
             this.zSpeed = newSpeed;
