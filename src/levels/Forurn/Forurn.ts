@@ -105,11 +105,11 @@ export default class Forurn extends ASLevel<Snake>
         
         this.outsideVisible = true;
         
-        this.patternManager.setRepeatingPattern(this._generateSnakePattern());
-        
         const initialSnakeLineCount = 4;
         this.obstacleManager.setObstacleModels(this._snakes);
         this.obstacleManager.setCurrentLineCount(initialSnakeLineCount);
+        
+        this.patternManager.setRepeatingPattern(this._generateSnakePattern());
         this.patternManager.setModelsForPattern(this._snakes);
     }
     
@@ -123,22 +123,22 @@ export default class Forurn extends ASLevel<Snake>
         this.levelSection(
             "introSnake",
             15,
-            30,
+            33,
             () => this._introSnake.start()
         );
         
         this.levelSection(
             "randomSnakes",
-            38,
-            86,
+            37,
+            87,
             null,
             () => this.obstacleManager.sendObstaclesIfReady()
         );
         
         this.levelSection(
             "monster",
-            90,
-            145,
+            91,
+            146,
             () => this.monsters.forEach(monster => monster.start()),
             null,
             () => this.monsters.forEach(monster => monster.stop())
@@ -146,14 +146,14 @@ export default class Forurn extends ASLevel<Snake>
         
         this.levelSection(
             "snakeGroups",
-            148,
-            210,
+            155,
+            218,
             null,
             () => this.patternManager.sendPattern()
         );
         
         // Run the closing sequence
-        this.levelEndSection(213);
+        this.levelEndSection(225);
     }
     
     /**

@@ -49,7 +49,7 @@ export default class IntroSnake extends Snake implements IIntroObstacle
         this._entranceXSpeed = 250;
         this._entranceZSpeed = 200;
         
-        this._maxDriftCount = 3;
+        this._maxDriftCount = 2;
         this._steadyStartZPosition = 130;
         this._steadyXSpeed = this._entranceXSpeed;
         this._steadyZSpeed = this._entranceZSpeed / 40;
