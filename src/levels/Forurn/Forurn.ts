@@ -13,7 +13,7 @@ import IntroSnake from '../../models/Obstacles/IntroObstacles/IntroSnake/IntroSn
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
 
 /**
- * A class for a Level
+ * The Forurn level
  */
 export default class Forurn extends ASLevel<Snake>
 {
