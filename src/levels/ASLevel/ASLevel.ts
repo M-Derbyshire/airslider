@@ -84,9 +84,9 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     
     // Level speed management
     levelMoving:boolean; // Is the player moving forwards?
-    levelSpeedRaw:number; // The level speed (before being calculated by the zCalc)
-    maxLevelSpeedRaw:number; // The maximum speed (before being calculated by the zCalc)
-    levelSpeed:number; // The level speed (after being calculated by the zCalc)
+    levelSpeedRaw:number; // The level speed (before being calculated by the UnitHelper)
+    maxLevelSpeedRaw:number; // The maximum speed (before being calculated by the UnitHelper)
+    levelSpeed:number; // The level speed (after being calculated by the UnitHelper)
     protected levelSpeedAccl:number; // How quickly does the speed accelerate at the start?
     
     // Level ending
@@ -485,7 +485,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         const isInside = (
             tunnelLength > 1 && 
-            this.tunnelManager.tunnel[tunnelLength - 1].z <= 0 &&
+            this.tunnelManager.tunnel[tunnelLength - 1].zPosition <= 0 &&
             this.tunnelManager.tunnel[tunnelLength - 2].image
         );
         

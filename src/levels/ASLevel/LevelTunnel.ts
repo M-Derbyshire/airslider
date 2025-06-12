@@ -6,7 +6,7 @@ import ASLevel from "./ASLevel";
  */
 export default class LevelTunnel
 {
-    tunnel:ITunnelPart[]; // The sections of the tunnel
+    tunnel:ITunnelPart[]; // The pieces of the tunnel
     
     constructor()
     {   
@@ -14,90 +14,84 @@ export default class LevelTunnel
     }
     
     /**
-     * Creates a new piece for a tunnel
-     * @param image the image for the tunnel section. If null, there will be an empty space (a "clear piece")
-     * @param length the length (on the z axis) of the piece
-     * @returns A new piece of tunnel
-     */
-    newTunnelPart(image:HTMLImageElement|null, length:number = 1):ITunnelPart
-    {
-        return {
-            z: (Kernel.getInstance().level as ASLevel).vanishingPointDepth,
-            length: length,
-            image,
-            active: false
-        };
-    }
-    
-    /**
-     * Creates a tunnel that exists at the opening of the level (the provided tunnel parts will be repeated 
-     * until the tunnel spans the entire z axis)
+     * Creates a tunnel that can exist at the opening of the level (the provided tunnel parts will be repeated 
+     * until the tunnel spans the entire Z-axis)
      * @param parts the tunnel parts to use
      */
-    createStartingTunnel(parts:ITunnelPart[]):void
+    createStartingTunnel(parts:INewTunnelPart[]):void
     {
-        let newZ = -parts[0].length; // We start behind the camera, and populate up to the vanishing point
+        if(parts.length === 0)
+            return;
         
-        while(!this._isTunnelPopulatedToVanishingPoint())
+        const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
+        let newZ = 0;
+        
+        do
         {
-            const tunnelPartsCopy = parts.map(part => ({...part}));
-            
-            tunnelPartsCopy.forEach(tunnelPart => {
-                tunnelPart.active = true;
-                tunnelPart.z = newZ;
-                this.tunnel.push(tunnelPart);
+            parts.forEach(part => {
+                const copy = { ...part } as ITunnelPart;
                 
-                newZ += tunnelPart.length;
+                copy.active = true;
+                copy.zPosition = newZ;
+                this.tunnel.push(copy);
+                
+                newZ += copy.length;
             });
-        }
+        } while(this._getFarthestTunnelPart().zPosition < vanishingPointDepth);
     }
     
     /**
      * Adds more pieces to the tunnel (only does this if the tunnel is about to run out)
-     * @param newTunnelParts the tunnel pieces to add to the tunnel
+     * @param newTunnelParts the pieces to add to the tunnel
      */
-    continueTunnel(newTunnelParts:ITunnelPart[]):void
+    continueTunnel(newTunnelParts:INewTunnelPart[]):void
     {
         if(this._isReadyToAddMoreParts())
-            newTunnelParts.forEach(tunnelPart => this.tunnel.push(tunnelPart));
+            newTunnelParts.forEach(tunnelPart => {
+                this._setTunnelPartDefaults(tunnelPart as ITunnelPart);
+                this.tunnel.push(tunnelPart as ITunnelPart);
+            });
     }
     
     /**
-     * Moves, and then draws, the tunnel
-     * @param levelSpeed the z speed of the level
+     * Moves, and then draws, the pieces of the tunnel
+     * @param levelSpeed the Z-axis speed of the level
      */
     draw(levelSpeed:number):void
     {
-        // Draw array in reverse order
-        for(let i = this.tunnel.length - 1; i >= 0; i--)
+        const lastTunnelIdx = this.tunnel.length - 1;
+        
+        // We want to draw from the farthest, to the closest
+        for(let i = lastTunnelIdx; i >= 0; i--)
         {
             const part = this.tunnel[i];
+            
+            if(!part.active && this._tunnelPartShouldBeActivated(i))
+                part.active = true;
+            
             if(part.active)
             {
-                part.z -= levelSpeed;
+                part.zPosition -= levelSpeed;
                 
-                this._drawTunnelPart(part);
-                this._handlePartsActivation(i);
-                this._handlePartOutOfFrame(i);
+                if(i === 0 && this._isPartOutOfFrame(part))
+                    this.tunnel.shift();
+                else
+                    this._drawTunnelPart(part);
             }
         }
     }
     
     /**
-     * Does the current tunnel span the entire z axis?
-     * @returns true if the tunnel spans the whole z axis, false if not
+     * Sets the default values on the given tunnel piece
+     * @param part the piece to set the defaults on
      */
-	private _isTunnelPopulatedToVanishingPoint():boolean
-	{
+    private _setTunnelPartDefaults(part:ITunnelPart):void
+    {
         const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
-        const closestPart = this.tunnel[0] ?? null;
         
-        return (
-            !!closestPart && // tunnel is populated
-            this._getLastTunnelPart().z >= vanishingPointDepth && // furthest piece is at vanishing point
-            (closestPart.z + closestPart.length) <= 0 // nearest piece is behind camera
-        );
-	}
+        part.active = false;
+        part.zPosition = vanishingPointDepth;
+    }
 	
     /**
      * Is the tunnel about to run out of parts?
@@ -105,109 +99,86 @@ export default class LevelTunnel
      */
 	private _isReadyToAddMoreParts():boolean
 	{
-		return (this.tunnel.length === 0 || this._getLastTunnelPart().active);
+		return (this.tunnel.length === 0 || this._getFarthestTunnelPart().active);
 	}
 	
     /**
      * Gets the last (farthest) piece of the tunnel
-     * @returns the last piece of the tunnel
+     * @returns the last piece of the tunnel (or null, if there are none)
      */
-	private _getLastTunnelPart():ITunnelPart
+	private _getFarthestTunnelPart():ITunnelPart|null
 	{
+        if(this.tunnel.length === 0)
+            return null;
+        
 		return this.tunnel[this.tunnel.length - 1];
 	}
 	
     /**
      * Draws a piece of the tunnel
-     * @param tunnelPart the piece of the tunnel to draw
+     * @param part the piece of the tunnel to draw
      */
-	private _drawTunnelPart(tunnelPart:ITunnelPart):void
+	private _drawTunnelPart(part:ITunnelPart):void
 	{
-		if(tunnelPart.image) //(null is a clear piece)
-		{
-            const kernel = Kernel.getInstance();
-            
-            const { x, y, width, height } = kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
-                x: 0,
-                y: 0,
-                width: kernel.settings.unitsWithinCameraX,
-                height: kernel.settings.unitsWithinCameraY,
-                z: tunnelPart.z
-            }, true);
-            
-			kernel.canvasContext.drawImage(tunnelPart.image, x, y, width, height);
-		}
-	}
-	
-    /**
-     * Handles the activication of a tunnel piece (if it's ready to be activated)
-     * @param partIndex the index of the tunnel piece, in the this.tunnel array
-     */
-	private _handlePartsActivation(partIndex:number):void
-	{
-		if(partIndex >= 0 && this._isTimeToActivateNextTunnelPart(partIndex))
-		{
-			const currentPart = this.tunnel[partIndex];
-			const nextPart = this.tunnel[partIndex + 1];
-			
-			nextPart.active = true;
-			nextPart.z = currentPart.z + currentPart.length;
-		}
-	}
-	
-    /**
-     * Determines if the tunnel piece after the current one should be activated
-     * @param currentPartIndex the index of a tunnel piece, in the this.tunnel array
-     * @returns true if the tunnel piece after this index should be activated. False if not
-     */
-	private _isTimeToActivateNextTunnelPart(currentPartIndex:number):boolean
-	{
-        // If this is the last part of the tunnel (or there's only 1 part left in the tunnel), we don't need to do anything
-		if(this.tunnel.length === (currentPartIndex + 1))
-            return false;
+        if(!part.image) // a null image is a "clear" piece
+            return;
         
-        const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
-		
-		const currentPart = this.tunnel[currentPartIndex];
-		const nextPart = this.tunnel[currentPartIndex + 1];
-		
-		return (
-            !nextPart.active && 
-            (currentPart.z + currentPart.length) <= vanishingPointDepth
-        );
+        const kernel = Kernel.getInstance();
+        
+        const { x, y, width, height } = kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
+            x: 0,
+            y: 0,
+            width: kernel.settings.unitsWithinCameraX,
+            height: kernel.settings.unitsWithinCameraY,
+            z: part.zPosition
+        }, true);
+        
+        kernel.canvasContext.drawImage(part.image, x, y, width, height);
 	}
-	
+    
     /**
-     * Handles a piece of the tunnel leaving the frame
-     * @param partIndex the index of this piece of the tunnel, in the this.tunnel array
-     */
-	private _handlePartOutOfFrame(partIndex:number):void
-	{
-		if(this._isPartOutOfFrame(partIndex))
-		{
-			this.tunnel.shift();
-		}
-	}
-	
-    /**
-     * Determines if a tunnel piece has left the frame
-     * @param partIndex the index of this piece of the tunnel, in the this.tunnel array
+     * Determines if a tunnel piece is behind the camera
+     * @param part the piece of the tunnel
      * @returns true if the tunnel piece is out of the frame, false if not
      */
-	private _isPartOutOfFrame(partIndex:number):boolean
+	private _isPartOutOfFrame(part:ITunnelPart):boolean
 	{
-        const tunnelPart = this.tunnel[partIndex];
-        
-		return (partIndex === 0 && (tunnelPart.z + tunnelPart.length) < 0);
+		return (part.zPosition + part.length) < 0;
 	}
+	
+    /**
+     * Should an inactive part of the tunnel be activated?
+     * @param partIdx the index of the part
+     * @returns true if the part should be activated, or false if not
+     */
+    private _tunnelPartShouldBeActivated(partIdx:number):boolean
+    {
+        const previousPartIdx = partIdx - 1;
+        
+		if(previousPartIdx < 0)
+            return true;
+        
+		const previousPart = this.tunnel[previousPartIdx];
+        const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
+        
+		return (
+            previousPart.active && 
+            (previousPart.zPosition + previousPart.length) <= vanishingPointDepth
+        );
+    }
 }
 
 /**
- * A section of the tunnel
+ * A piece of a tunnel
  */
-export interface ITunnelPart {
-    z:number; // z position
-    length:number; // the length of the piece, on the z-axis
+interface ITunnelPart {
+    zPosition:number; // Z-axis position
+    length:number; // the length of the piece, on the Z-axis
     image:HTMLImageElement|null; // the image for the tunnel piece (if null, this will be used as a "clear" piece)
     active:boolean; // is the piece currently active?
 };
+
+/**
+ * A new piece to be added to the tunnel
+ */
+export type INewTunnelPart = Omit<ITunnelPart, "zPosition"|"active">;
