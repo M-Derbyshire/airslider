@@ -130,15 +130,15 @@ export default class Forurn extends ASLevel<Snake>
         this.levelSection(
             "randomSnakes",
             37,
-            87,
+            91,
             null,
             () => this.obstacleManager.sendObstaclesIfReady()
         );
         
         this.levelSection(
             "monster",
-            91,
-            146,
+            97,
+            152,
             () => this.monsters.forEach(monster => monster.start()),
             null,
             () => this.monsters.forEach(monster => monster.stop())
@@ -146,14 +146,14 @@ export default class Forurn extends ASLevel<Snake>
         
         this.levelSection(
             "snakeGroups",
-            155,
-            218,
+            161,
+            224,
             null,
             () => this.patternManager.sendPattern()
         );
         
         // Run the closing sequence
-        this.levelEndSection(225);
+        this.levelEndSection(231);
     }
     
     /**
