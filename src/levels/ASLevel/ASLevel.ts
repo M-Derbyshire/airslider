@@ -483,20 +483,20 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     {
         const tunnelLength = this.tunnelManager.tunnel.length;
         
-        const isInside = (
-            tunnelLength > 1 && 
-            this.tunnelManager.tunnel[tunnelLength - 1].zPosition <= 0 &&
-            this.tunnelManager.tunnel[tunnelLength - 2].image
-        );
+        let isInside = false;
+        if(tunnelLength > 0) {
+            const part = this.tunnelManager.tunnel[0];
+            
+            isInside = 
+                part.active &&
+                part.zPosition <= 0 &&
+                !!part.image;
+        }
         
         if(isInside)
-        {
             this.frame.setLightMaskImage(this.insideLightMaskImage, this.insideLightMaskLuminosity);
-        }
         else
-        {
             this.frame.setLightMaskImage(this.outsideLightMaskImage, this.outsideLightMaskLuminosity);
-        }
     }    
     
     
