@@ -80,18 +80,18 @@ export default class Forurn extends ASLevel<Snake>
         const assetHandler = Kernel.getInstance().assetHandler;
         
         const backgroundImagePath = "/levels/Forurn/images/background.png";
-        const outsideLightMaskImagePath = "/levels/Forurn/images/outside-lightmask.png";
+        const lightMaskImagePath = "/levels/Forurn/images/lightmask.png";
         const groundImagePath = "/levels/Forurn/images/ground.png";
         
         this.backgroundImage = assetHandler.loadImage(backgroundImagePath);
-        this.outsideLightMaskImage = assetHandler.loadImage(outsideLightMaskImagePath);
-        this.outsideLightMaskLuminosity = 0.2;
+        this.lightMaskImage = assetHandler.loadImage(lightMaskImagePath);
+        this.lightMaskLuminosity = 0.2;
         
         this.groundManager.load(groundImagePath, 150, 75);
         
         this.assetsToUnload.push(
             backgroundImagePath,
-            outsideLightMaskImagePath,
+            lightMaskImagePath,
             groundImagePath
         );
 	}
@@ -102,8 +102,6 @@ export default class Forurn extends ASLevel<Snake>
     prepare():void
     {
         super.prepare();
-        
-        this.outsideVisible = true;
         
         const initialSnakeLineCount = 4;
         this.obstacleManager.setObstacleModels(this._snakes);

@@ -4,7 +4,6 @@ import LevelRoad from './LevelRoad';
 import ObstacleManager from './ObstacleManager';
 import ObstaclePatternManager from './ObstaclePatternManager';
 import LevelGround from './LevelGround';
-import LevelTunnel from './LevelTunnel';
 import Sign from '../../models/Sign/Sign';
 import SignDisplay from '../../models/SignDisplay/SignDisplay';
 import Tarian from '../../models/Tarian/Tarian';
@@ -57,19 +56,13 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     // Frame management
     protected frame: Frame;
     protected backgroundImage: HTMLImageElement;
-    protected outsideLightMaskImage: HTMLImageElement;
-    protected outsideLightMaskLuminosity: number;
-    protected insideLightMaskImage: HTMLImageElement;
-    protected insideLightMaskLuminosity: number;
+    protected lightMaskImage: HTMLImageElement;
+    protected lightMaskLuminosity: number;
     
     // Environment management
     protected roadColor: string;
     protected roadManager: LevelRoad;
     protected groundManager: LevelGround;
-    protected tunnelManager: LevelTunnel;
-    protected outsideVisible: boolean;
-    protected tunnelSprite: HTMLImageElement;
-    protected tunnelSpriteLength: number;
     
     // Management of the other racers on the track
     protected racerManager: RacerManager;
@@ -141,8 +134,6 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         this.obstacleManager = new ObstacleManager<ObstacleType>();
 		this.patternManager = new ObstaclePatternManager<ObstacleType>();
-        
-        this.tunnelManager = new LevelTunnel();
         
         this.racerManager = new RacerManager();
         
@@ -258,8 +249,6 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         this._setupObstacleManager(this.leftEdge, this.rightEdge);
         
-        this.outsideVisible = false;
-        
         this.levelCompletedAtMS = -1;
         this.stoppedForlossAtMS = -1;
     }
@@ -273,9 +262,6 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         // Keeps level speed consistent, via the fps
         this._updateLevelSpeed();
-        
-        // If we move outside/inside a tunnel, change the light mask
-        this._setLightMask();
         
         // Let the MusicManager do what it needs to do each frame
         this._musicManager.act();
@@ -300,13 +286,11 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
      */
     drawBack():void
     {
-        if(this.outsideVisible)
-            this.groundManager.draw(this.levelSpeed);
+        this.groundManager.draw(this.levelSpeed);
         
         if(this._finishFlagsActive)
             this._finishFlagsManager.draw(this.levelSpeed);
         
-        this.tunnelManager.draw(this.levelSpeed);
         this.roadManager.draw(this.roadColor);
     }
     
@@ -341,9 +325,8 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         //Setup the frame for the level
         this.frame = new Frame(0, 0, settings.unitsWithinCameraX, settings.unitsWithinCameraY);
         
-        // The light mask will be set during the gameplay (based on whether we're inside or outside a tunnel)
-        // However, the background should be consistent, so we set it here.
         this.frame.setBackgroundImage(this.backgroundImage);
+        this.frame.setLightMaskImage(this.lightMaskImage, this.lightMaskLuminosity);
         
         this.frameManager.setFrames([this.frame]);
     }
@@ -475,32 +458,6 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
             this.levelSpeed = 0;
         }
     }
-    
-    /**
-     * Sets the light mask, based on the whether or not the player's going through a tunnel
-     */
-    private _setLightMask():void
-    {
-        const tunnelLength = this.tunnelManager.tunnel.length;
-        
-        let isInside = false;
-        if(tunnelLength > 0) {
-            const part = this.tunnelManager.tunnel[0];
-            
-            isInside = 
-                part.active &&
-                part.zPosition <= 0 &&
-                !!part.image;
-        }
-        
-        if(isInside)
-            this.frame.setLightMaskImage(this.insideLightMaskImage, this.insideLightMaskLuminosity);
-        else
-            this.frame.setLightMaskImage(this.outsideLightMaskImage, this.outsideLightMaskLuminosity);
-    }    
-    
-    
-    
     
     /**
      * Runs the level opening sequence (if it's active)
