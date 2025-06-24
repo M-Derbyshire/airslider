@@ -393,21 +393,28 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     protected levelEndSection(secsStart:number)
     {
         const kernel = Kernel.getInstance();
-        const msStart = secsStart * 1000;
         
-        if(kernel.totalLevelActiveMilliseconds >= msStart) {
-            if(!this._activeSections.includes(this._closingSectionId)) {
-                this._activeSections.push(this._closingSectionId);
-                
-                // Start the finish flags
-                this._finishFlagsActive = true;
-                
-                // Start the loading of the next level's loading screen
-                kernel.loadLevel(new this.NextLevelLoadingScreen());
-            }
+        const msStart = secsStart * 1000;
+        const isTimeToRunSection = kernel.totalLevelActiveMilliseconds >= msStart;
+        
+        const playerModelIdx = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
+        const playerModel = kernel.loadedModels[playerModelIdx] as Tarian;
+        const playerInLosingState = playerModel.health === 0;
+        
+        if(!isTimeToRunSection || playerInLosingState)
+            return;
+        
+        if(!this._activeSections.includes(this._closingSectionId)) {
+            this._activeSections.push(this._closingSectionId);
             
-            this._levelClosing(msStart);
+            // Start the finish flags
+            this._finishFlagsActive = true;
+            
+            // Start the loading of the next level's loading screen
+            kernel.loadLevel(new this.NextLevelLoadingScreen());
         }
+        
+        this._levelClosing(msStart);
     }
     
     
