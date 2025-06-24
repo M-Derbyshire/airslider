@@ -11,6 +11,7 @@ import Snake from '../../models/Obstacles/Snake/Snake';
 import Obstacle from '../../models/Obstacle/Obstacle';
 import IntroSnake from '../../models/Obstacles/IntroObstacles/IntroSnake/IntroSnake';
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
+import SideGroupsObstacleManager from '../ASLevel/ObstacleManager/SideGroupsObstacleManager';
 
 /**
  * The Forurn level
@@ -30,6 +31,7 @@ export default class Forurn extends ASLevel<Snake>
         this.musicFilePaths = this.musicFilePaths.filter(path => path.endsWith("airslider_track_1.mp3"));
         
         this.roadColor = "#8EA08E";
+        this.obstacleManager = new SideGroupsObstacleManager<Snake>();
 	}
     
     /**
