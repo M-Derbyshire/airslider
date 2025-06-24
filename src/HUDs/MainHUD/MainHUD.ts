@@ -19,6 +19,8 @@ export default class MainHUD extends ASHUD
     private _retryLevelDialog:Dialog;
     private _retryLevelButton:TextButton;
     
+    private _pauseButton:PauseButton;
+    
     load(pointerEventManager:IPointerEventManager):void
     {
         super.load(pointerEventManager);
@@ -67,14 +69,26 @@ export default class MainHUD extends ASHUD
             dialogFontSize
         );
         
+        this._pauseButton = new PauseButton(920, 25, 65, 100);
+        
         this.components.push(this._damageFlash);
         this.components.push(this._lowHealthFlash);
         this.components.push(this._nextLevelDialog);
         this.components.push(this._nextLevelButton);
         this.components.push(this._retryLevelDialog);
         this.components.push(this._retryLevelButton);
+        this.components.push(this._pauseButton);
         this.components.push(new HealthDisplay(25, 500, 150, 200));
-        this.components.push(new PauseButton(920, 25, 65, 100));
+    }
+    
+    /**
+     * Prepares the HUD before the level starts (triggers the same on any HUD components)
+     */
+    prepare():void
+    {
+        super.prepare();
+        
+        this.pointerEventManager.addPointerEventSubject(this._pauseButton, true);
     }
     
     /**

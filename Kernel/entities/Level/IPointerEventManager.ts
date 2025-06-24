@@ -8,8 +8,9 @@ export default interface IPointerEventManager {
      * (to be valid, it must have an "isPointerOverlapping" method, and either an "onClick" or an "onHover" method).
 	 * This will not re-add a subject that it already holds a reference to.
      * @param subject an object that should react to a pointer event
+     * @param isActiveWhenPaused should pointer events for this subject still be active when the game is paused?
      */
-    addPointerEventSubject(subject:any):void;
+    addPointerEventSubject(subject:any, isActiveWhenPaused?:boolean):void;
     
     /**
      * Checks the pointer-event subjects to see if any are being hovered over, and triggers 

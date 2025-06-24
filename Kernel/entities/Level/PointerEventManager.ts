@@ -1,3 +1,4 @@
+import { KernelStatus } from "../../IKernel";
 import Kernel from "../../Kernel";
 import IPointerEventManager from "./IPointerEventManager";
 
@@ -8,7 +9,7 @@ export default class PointerEventManager implements IPointerEventManager {
 	/**
 	 * The registered entities that are able to handle click events
 	 */
-	private _subjects:any[];
+	private _subjects:ISubject[];
 	
 	/**
 	 * The X position (on the canvas, not the screen) of the mouse pointer
@@ -60,11 +61,17 @@ export default class PointerEventManager implements IPointerEventManager {
      * (to be valid, it must have an "isPointerOverlapping" method, and either an "onClick" or an "onHover" method).
 	 * This will not re-add a subject that it already holds a reference to.
      * @param subject an object that should react to a pointer event
+     * @param isActiveWhenPaused should pointer events for this subject still be active when the game is paused?
      */
-	addPointerEventSubject(subject:any):void
+    addPointerEventSubject(subject:any, isActiveWhenPaused:boolean = false):void
 	{
 		if(this._isValidEventSubject(subject))
-			this._subjects.push(subject);
+			this._subjects.push({
+				entity: subject,
+				configuration: {
+					isActiveWhenPaused
+				}
+			});
 	}
     
     /**
@@ -113,14 +120,20 @@ export default class PointerEventManager implements IPointerEventManager {
 	 */
 	private _onPointerEventCallback(actionMethodName:string):void
 	{
+		const gameIsPaused = Kernel.getInstance().status === KernelStatus.Paused;
+		
 		this._subjects.forEach(subject => {
+			const { entity, configuration } = subject;
+			const entityIsPaused = gameIsPaused && !configuration.isActiveWhenPaused;
+			
 			if(
-				subject.active &&
-				typeof subject[actionMethodName] === "function" && 
-				subject.isPointerOverlapping(this._canvasPointerX, this._canvasPointerY)
+				!entityIsPaused &&
+				entity.active &&
+				typeof entity[actionMethodName] === "function" && 
+				entity.isPointerOverlapping(this._canvasPointerX, this._canvasPointerY)
 			)
 			{
-				subject[actionMethodName]();
+				entity[actionMethodName]();
 			}
 		});
 	}
@@ -145,3 +158,24 @@ export default class PointerEventManager implements IPointerEventManager {
 		return { pointerX, pointerY };
 	}
 };
+
+/**
+ * Represents an entity that can be the subject of pointer 
+ * events, and the configuration data that is related to it
+ */
+interface ISubject {
+	/**
+	 * The subject object
+	 */
+    entity:any;
+	
+	/**
+	 * The configuration settings for this subject
+	 */
+	configuration: {
+		/**
+		 * Is this subject active when the game is paused?
+		 */
+		isActiveWhenPaused:boolean;
+	}
+}

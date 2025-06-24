@@ -55,6 +55,16 @@ export default class LoadingScreenHUD extends ASHUD
     }
     
     /**
+     * Prepares the HUD before the level starts (triggers the same on any HUD components)
+     */
+    prepare():void
+    {
+        super.prepare();
+        
+        this.pointerEventManager.addPointerEventSubject(this._continueButton);
+    }
+    
+    /**
      * Tells the HUD if the next level has finished loading (so it can activate/deactivate components)
      * @param hasLoaded Has the level finished loading?
      */

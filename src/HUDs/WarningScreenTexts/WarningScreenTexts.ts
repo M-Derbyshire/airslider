@@ -1,12 +1,15 @@
 import ASHUD from "../ASHUD/ASHUD";
 import TextOnlyButton from "../../HUDComponents/UI-Components/TextOnlyButton/TextOnlyButton";
 import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
+import ASHUDComponent from "../../HUDComponents/ASHUDComponent/ASHUDComponent";
 
 /**
  * Displays text for a warning screen
  */
 export default class WarningScreenTexts extends ASHUD
 {
+    private _continueButton:ASHUDComponent;
+    
     /**
      * Constructor
      * @param titleText the title for the warning
@@ -50,7 +53,7 @@ export default class WarningScreenTexts extends ASHUD
             20
         );
         
-        const continueBtn = new TextOnlyButton(
+        this._continueButton = new TextOnlyButton(
             onContinue,
             375,
             800,
@@ -67,7 +70,17 @@ export default class WarningScreenTexts extends ASHUD
         this.components = [
             title,
             body,
-            continueBtn
+            this._continueButton
         ];
+    }
+    
+    /**
+     * Prepares the HUD before the level starts (triggers the same on any HUD components)
+     */
+    prepare():void
+    {
+        super.prepare();
+        
+        this.pointerEventManager.addPointerEventSubject(this._continueButton);
     }
 };
