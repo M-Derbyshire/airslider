@@ -89,7 +89,6 @@ export default class Level implements ILevel
         
         this.eventManager.clearEvents();
         this.registerLevelEvents();
-        kernel.loadedModels.forEach(model => this.pointerEventManager.addPointerEventSubject(model));
         
         this._resetCameraPosition();
         
