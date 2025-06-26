@@ -1,5 +1,4 @@
 import Obstacle from "../../../models/Obstacle/Obstacle";
-import { generateRandomPositionModifier } from "../utils";
 import ObstacleManager from "./ObstacleManager";
 
 /**
@@ -18,51 +17,26 @@ export default class SideGroupsObstacleManager<T extends Obstacle> extends Obsta
         
         this._placeLineOnRight = false;
         this.minObstacleCount = 2;
-    }
-    
-    /**
-	 * Sends another line of obstacles, if needed
-	 */
-    sendObstaclesIfReady():void
-    {
-		if(this.isTimeToSendNextLine())
-		{
-			const lineMinSize = 2; // The least amount of obstacles per line
-			const lineMaxSize = this.minObstacleCount; // The max amount of obstacles per line
-			const obstacleCount = Math.floor(Math.random() * lineMaxSize) + lineMinSize;
-			
-			// This value affects the maximum change that will get made to an obstacle's Z-axis 
-			// position, before it's sent
-			const zModifierAbsMax = 20;
-			
-			const xPositions = this._getObstacleXPositions(obstacleCount);
-			
-			const obstacles = [];
-			for(let i = 0; i < obstacleCount; i++)
-			{
-				const obstacle = this.obstacles[this.getIndexForNextObstacle()];
-				
-				obstacle.resetToStart(xPositions[i]);
-				obstacle.z += generateRandomPositionModifier(zModifierAbsMax);
-				obstacles.push(obstacle);
-			}
-		}
+		this.zModifierAbsMax = 20;
     }
     
     /**
 	 * Get the X positions for a line of obstacles
-	 * @param count the amount of positions to return
 	 * @returns the X positions (in units) that the obstacles should be placed at
 	 */
-	private _getObstacleXPositions(count:number):number[]
+	protected getObstacleXPositionsForLine():number[]
 	{
+		const lineMinSize = 2; // The least amount of obstacles per line
+		const lineMaxSize = this.minObstacleCount; // The max amount of obstacles per line
+		const obstacleCount = Math.floor(Math.random() * lineMaxSize) + lineMinSize;
+		
 		this._placeLineOnRight = !this._placeLineOnRight;
 		
 		let leftEdgeOfLine;
 		
 		if(this._placeLineOnRight)
 		{
-			const lineWidth = this.obstacleWidth * count;
+			const lineWidth = this.obstacleWidth * obstacleCount;
 			leftEdgeOfLine = this.areaRightEdge - lineWidth;
 		}
 		else
@@ -70,7 +44,7 @@ export default class SideGroupsObstacleManager<T extends Obstacle> extends Obsta
 			leftEdgeOfLine = this.areaLeftEdge;
 		}
 		
-		return this._generateObstaclePositionsFromLineX(leftEdgeOfLine, count)
+		return this._generateObstaclePositionsFromLineX(leftEdgeOfLine, obstacleCount)
 	}
     
     /**

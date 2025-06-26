@@ -2,6 +2,7 @@ import Kernel from '../../../../Kernel/Kernel';
 import IModel from '../../../../Kernel/entities/Model/IModel';
 import Obstacle from '../../../models/Obstacle/Obstacle';
 import ASLevel from '../ASLevel';
+import { generateRandomPositionModifier } from '../utils';
 
 /**
  * Manages the level's "obstacle" models, setting their x positions and sending them down the road
@@ -23,6 +24,10 @@ export default class ObstacleManager<T extends Obstacle>
 	
 	// This is the minimum amount of obstacles the manager requires
 	protected minObstacleCount:number;
+	
+	// This value affects the maximum change that will be made to an obstacle's Z-axis 
+	// position, before it's sent
+	protected zModifierAbsMax:number;
 	
 	// We should only have this amount of lines (of obstacles) on the track at any one time
 	private _lineCount:number;
@@ -46,6 +51,8 @@ export default class ObstacleManager<T extends Obstacle>
         
         this._lineCount = 0;
 		this.minObstacleCount = 2;
+		
+		this.zModifierAbsMax = 0;
     }
     
 	/**
@@ -99,7 +106,20 @@ export default class ObstacleManager<T extends Obstacle>
     /**
 	 * Sends another line of obstacles, if needed
 	 */
-    sendObstaclesIfReady():void {}
+    sendObstaclesIfReady():void
+    {
+		if(this.isTimeToSendNextLine())
+		{
+			const xPositions = this.getObstacleXPositionsForLine();
+			
+			xPositions.forEach(position => {
+				const obstacle = this.obstacles[this.getIndexForNextObstacle()];
+				
+				obstacle.resetToStart(position);
+				obstacle.z += generateRandomPositionModifier(this.zModifierAbsMax);
+			});
+		}
+    }
 	
 	/**
 	 * Is it time for a line of obstacles to be sent down the track?
@@ -118,6 +138,15 @@ export default class ObstacleManager<T extends Obstacle>
 		const lastObstaclesDistance = vanishingPointDepth - lastSentObstacle.z;
 		
 		return lastObstaclesDistance > desiredZGap;
+	}
+	
+	/**
+	 * Get the X positions for a line of obstacles
+	 * @returns the X positions (in units) that the obstacles should be placed at
+	 */
+	protected getObstacleXPositionsForLine():number[]
+	{
+		return [];
 	}
 	
 	/**
