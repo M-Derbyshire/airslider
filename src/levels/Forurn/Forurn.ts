@@ -12,6 +12,7 @@ import Obstacle from '../../models/Obstacle/Obstacle';
 import IntroSnake from '../../models/Obstacles/IntroObstacles/IntroSnake/IntroSnake';
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
 import SideGroupsObstacleManager from '../ASLevel/ObstacleManager/SideGroupsObstacleManager';
+import LarsLoadingScreen from '../LoadingScreens/LarsLoadingScreen/LarsLoadingScreen';
 
 /**
  * The Forurn level
@@ -25,7 +26,7 @@ export default class Forurn extends ASLevel<Snake>
 	{
 		super();
         
-        this.NextLevelLoadingScreen = ForurnLoadingScreen;
+        this.NextLevelLoadingScreen = LarsLoadingScreen;
         
         // We only want the first track as the music for this level
         this.musicFilePaths = this.musicFilePaths.filter(path => path.endsWith("airslider_track_1.mp3"));
