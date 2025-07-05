@@ -27,7 +27,7 @@ export default class Lars extends ASLevel<Snake>
         
         this.NextLevelLoadingScreen = LarsLoadingScreen;
         
-        this.roadColor = "#8EA08E";
+        this.roadColor = "#9E8C8C";
         this.obstacleManager = new SideGroupsObstacleManager<Snake>();
 	}
     
