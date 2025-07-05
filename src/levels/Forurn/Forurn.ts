@@ -1,7 +1,6 @@
 import ASLevel from '../ASLevel/ASLevel';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
-import ForurnLoadingScreen from '../LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen';
 import ASModel from '../../models/ASModel/ASModel';
 import ElectricHornet from '../../models/Monsters/ElectricHornet/ElectricHornet';
 import IEventManager from '../../../Kernel/entities/Level/IEventManager';
