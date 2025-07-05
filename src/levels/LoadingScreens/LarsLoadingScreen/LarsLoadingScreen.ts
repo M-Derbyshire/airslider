@@ -1,4 +1,4 @@
-import Forurn from '../../Forurn/Forurn';
+import Lars from '../../Lars/Lars';
 import LoadingScreen from '../../LoadingScreen/LoadingScreen';
 
 /**
@@ -10,7 +10,7 @@ export default class LarsLoadingScreen extends LoadingScreen
     {
         super();
         
-        this.LevelToLoad = Forurn;
+        this.LevelToLoad = Lars;
         this.backgroundImagePath = "/levels/LoadingScreens/LarsLoadingScreen/images/background.png";
     }
 };
