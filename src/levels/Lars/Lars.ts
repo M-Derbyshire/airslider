@@ -88,7 +88,7 @@ export default class Lars extends ASLevel<Snake>
         this.lightMaskImage = assetHandler.loadImage(lightMaskImagePath);
         this.lightMaskLuminosity = 0.4;
         
-        this.groundManager.load(groundImagePath, 150, 75);
+        this.groundManager.load(groundImagePath, 500, 75);
         
         this.assetsToUnload.push(
             backgroundImagePath,
