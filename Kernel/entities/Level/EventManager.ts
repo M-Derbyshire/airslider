@@ -83,6 +83,9 @@ export default class EventManager implements IEventManager
      */
     private _checkForExtraModelEvents():void
     {
-        Kernel.getInstance().loadedModels.forEach(model => model.checkForExtraEvents());
+        Kernel.getInstance().loadedModels.forEach(model => {
+            if(model.active)
+                model.checkForExtraEvents()
+        });
     }
 };
