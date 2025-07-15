@@ -5,6 +5,7 @@ import Lightning from "../../../models/Monsters/attacks/Lightning/Lightning";
 import ElectricHornet from "../../../models/Monsters/ElectricHornet/ElectricHornet";
 import Ghost from "../../../models/Monsters/Ghost/Ghost";
 import NeonPidgeon from "../../../models/Monsters/NeonPidgeon/NeonPidgeon";
+import IntroRockBall from "../../../models/Obstacles/IntroObstacles/IntroRockBall/IntroRockBall";
 import IntroSnake from "../../../models/Obstacles/IntroObstacles/IntroSnake/IntroSnake";
 import RockBall from "../../../models/Obstacles/RockBall/RockBall";
 import Shocker from "../../../models/Obstacles/Shocker/Shocker";
@@ -47,6 +48,15 @@ const standardModelEvents:IEventRegistrationDetails[] = [
         class1: Tarian,
         class2: RockBall,
         reactionCallback: (t:Tarian, rb:RockBall) => {
+            t.zCollisionEventAction(rb);
+            rb.hitEventAction();
+        }
+    },
+    {
+        check: zCollisionEventCheck,
+        class1: Tarian,
+        class2: IntroRockBall,
+        reactionCallback: (t:Tarian, rb:IntroRockBall) => {
             t.zCollisionEventAction(rb);
             rb.hitEventAction();
         }

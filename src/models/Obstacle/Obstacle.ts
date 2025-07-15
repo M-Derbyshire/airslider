@@ -88,8 +88,13 @@ export default class Obstacle extends ASModel
         if(this.z < 0)
             this.active = false;
 		
-        const currentXSpeed = (this._mode == "home") ? this._getHomingMovementXSpeed() : this.xSpeed;
-		this.moveRight(currentXSpeed); // This may be negative (which would be left movement)
+        if(this._mode !== "static") {
+            const currentXSpeed = (this._mode == "home")
+                ? this._getHomingMovementXSpeed()
+                : this.xSpeed;
+            
+            this.moveRight(currentXSpeed); // This may be negative (which would be left movement)
+        }
     }
     
     /**

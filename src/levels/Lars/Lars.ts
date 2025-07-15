@@ -5,21 +5,20 @@ import ASModel from '../../models/ASModel/ASModel';
 import IEventManager from '../../../Kernel/entities/Level/IEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import Kernel from '../../../Kernel/Kernel';
-import Snake from '../../models/Obstacles/Snake/Snake';
-import Obstacle from '../../models/Obstacle/Obstacle';
-import IntroSnake from '../../models/Obstacles/IntroObstacles/IntroSnake/IntroSnake';
 import SideGroupsObstacleManager from '../ASLevel/ObstacleManager/SideGroupsObstacleManager';
 import LarsLoadingScreen from '../LoadingScreens/LarsLoadingScreen/LarsLoadingScreen';
 import BabyDragon from '../../models/Monsters/BabyDragon/BabyDragon';
 import LavaBall from '../../models/Monsters/attacks/LavaBall/LavaBall';
+import RockBall from '../../models/Obstacles/RockBall/RockBall';
+import IntroRockBall from '../../models/Obstacles/IntroObstacles/IntroRockBall/IntroRockBall';
 
 /**
  * The Lars level
  */
-export default class Lars extends ASLevel<Snake>
+export default class Lars extends ASLevel<RockBall>
 {
-    private _introRockBalls:IntroSnake[]; // Used to introduce the "Rock Ball" obstacle to the player
-    private _rockBalls:Snake[]; // The Rock Ball obstacles that the level will use
+    private _introRockBalls:IntroRockBall[]; // Used to introduce the "Rock Ball" obstacle to the player
+    private _rockBalls:RockBall[]; // The Rock Ball obstacles that the level will use
     
     constructor()
 	{
@@ -28,7 +27,7 @@ export default class Lars extends ASLevel<Snake>
         this.NextLevelLoadingScreen = LarsLoadingScreen;
         
         this.roadColor = "#9E8C8C";
-        this.obstacleManager = new SideGroupsObstacleManager<Snake>();
+        this.obstacleManager = new SideGroupsObstacleManager<RockBall>();
 	}
     
     /**
@@ -47,18 +46,19 @@ export default class Lars extends ASLevel<Snake>
         const monster = new BabyDragon(this.player, lavaBall1, lavaBall2);
         this.monsters = [monster];
         models.push(monster);
+        models.push(lavaBall1, lavaBall2);
         
         // Setup the Rock Ball obstacles
         const totalBallCount = 100;
         
-        const balls:Obstacle[] = [];
+        const balls:RockBall[] = [];
         for(let i = 0; i < totalBallCount; i++)
-            balls.push(new Snake());
+            balls.push(new RockBall());
         
         models.push(...balls);
         this._rockBalls = balls;
         
-        this._introRockBalls = [new IntroSnake(), new IntroSnake()];
+        this._introRockBalls = [new IntroRockBall("left"), new IntroRockBall("right")];
         models.push(...this._introRockBalls);
         
         return models;
@@ -121,11 +121,9 @@ export default class Lars extends ASLevel<Snake>
         this.levelSection(
             "introRockBalls",
             15,
-            33,
+            30,
             () => this._introRockBalls.forEach(rb => rb.start())
         );
-        
-        
         
         // Run the closing sequence
         this.levelEndSection(231);

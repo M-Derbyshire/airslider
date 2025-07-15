@@ -8,7 +8,7 @@ export default class RockBall extends Obstacle
 {
     protected maxBounceSpeed:number; // Sets the maximum upward speed for the ball's bounce
     protected bounceDeceleration:number; // Controls how quickly the bounce of the ball decelerates
-    protected lowestBouncePosition:number; // The closest the ball can be to the ground when bouncing
+    private _lowestBouncePosition:number; // The closest the ball can be to the ground when bouncing
     
     /**
      * Constructor
@@ -70,8 +70,8 @@ export default class RockBall extends Obstacle
     prepare(): void {
         super.prepare();
         
-        this.lowestBouncePosition = Kernel.getInstance().settings.unitsWithinCameraY;
-        this.y = this.lowestBouncePosition - this.height;
+        this._lowestBouncePosition = Kernel.getInstance().settings.unitsWithinCameraY;
+        this.y = this._lowestBouncePosition - this.height;
         this.ySpeed = this.maxBounceSpeed;
     }
     
@@ -118,7 +118,7 @@ export default class RockBall extends Obstacle
      */
     private _bounceBall():void
     {
-        const maxValidYPos = this.lowestBouncePosition - this.height;
+        const maxValidYPos = this._lowestBouncePosition - this.height;
         if(this.y >= maxValidYPos) {
             this.y = maxValidYPos;
             this.ySpeed = this.maxBounceSpeed;
