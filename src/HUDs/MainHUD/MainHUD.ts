@@ -78,7 +78,7 @@ export default class MainHUD extends ASHUD
         this.components.push(this._retryLevelDialog);
         this.components.push(this._retryLevelButton);
         this.components.push(this._pauseButton);
-        this.components.push(new HealthDisplay(25, 500, 150, 200));
+        this.components.push(new HealthDisplay(25, 25, 150, 200));
     }
     
     /**
