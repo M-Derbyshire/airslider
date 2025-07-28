@@ -21,6 +21,7 @@ export default class LoadingScreen extends Level
 		super();
         
         this.HUD = new LoadingScreenHUD();
+        this.isPauseable = false;
 	}
     
     /**
