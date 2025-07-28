@@ -282,7 +282,7 @@ export default class Kernel implements IKernel {
             else
             {
                 this._soundKeysPlayingBeforeLastPause.forEach(key => this.soundEngine.playSound(key));
-                this._status = KernelStatus.Active
+                this._status = KernelStatus.Active;
             }
         }
     }

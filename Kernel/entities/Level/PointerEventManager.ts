@@ -130,20 +130,23 @@ export default class PointerEventManager implements IPointerEventManager {
 	 */
 	private _onPointerEventCallback(actionMethodName:string):void
 	{
-		const gameIsPaused = Kernel.getInstance().status === KernelStatus.Paused;
+		const kernel = Kernel.getInstance();
+		const gameIsPaused = kernel.status === KernelStatus.Paused;
 		
 		this._subjects.forEach(subject => {
 			const { entity, configuration } = subject;
+			
 			const entityIsPaused = gameIsPaused && !configuration.isActiveWhenPaused;
 			
-			if(
-				!entityIsPaused &&
-				entity.active &&
-				typeof entity[actionMethodName] === "function" && 
-				entity.isPointerOverlapping(this._canvasPointerX, this._canvasPointerY)
-			)
+			const entityIsClickable = !entityIsPaused && entity.active && typeof entity[actionMethodName] === "function";
+			const pointerIsOver = entity.isPointerOverlapping(this._canvasPointerX, this._canvasPointerY);
+			
+			if(entityIsClickable && pointerIsOver)
 			{
 				entity[actionMethodName]();
+				
+				if(gameIsPaused)
+					kernel.toggleGamePause();
 			}
 		});
 	}
