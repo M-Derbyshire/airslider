@@ -85,7 +85,7 @@ export default class Level implements ILevel
     {
         const kernel = Kernel.getInstance();
         
-        this.HUD.prepare();
+        this.pointerEventManager.removePointerEventSubjects();
         
         this.eventManager.clearEvents();
         this.registerLevelEvents();
@@ -93,6 +93,8 @@ export default class Level implements ILevel
         this._resetCameraPosition();
         
         this.sounds.forEach(sound => kernel.soundEngine.addSound(sound.key, sound.asset));
+        
+        this.HUD.prepare();
     }
     
     /**

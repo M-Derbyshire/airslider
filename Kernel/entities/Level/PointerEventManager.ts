@@ -83,6 +83,14 @@ export default class PointerEventManager implements IPointerEventManager {
 			}
 		});
 	}
+	
+	/**
+     * Unregisters all of the event subjects
+     */
+    removePointerEventSubjects():void
+	{
+		this._subjects = [];
+	}
     
     /**
      * Checks the pointer-event subjects to see if any are being hovered over, and triggers 
