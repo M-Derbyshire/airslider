@@ -81,12 +81,9 @@ export default class PauseButton extends ASHUDComponent {
      */
     onClick()
     {
-        const kernel = Kernel.getInstance();
+        Kernel.getInstance().toggleGamePause();
         
-        // As this entity is clickable when paused, clicking it in the paused state
-        // will unpause the game. Therefore, we only need to run the below when 
-        // the game is active
-        if(kernel.status === KernelStatus.Active)
-            kernel.toggleGamePause();
+        // After the level has been restarted, the pause button won't unpause after a pause
+        // (and if the game was paused when retry was clicked, the game won't stop unpausing -- unless you change tabs)
     }
 };

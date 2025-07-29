@@ -438,6 +438,7 @@ export default class Kernel implements IKernel {
     {
         this._totalLevelActiveMilliseconds = 0;
         this._status = KernelStatus.Active;
+        this._soundKeysPlayingBeforeLastPause = [];
     }
     
     /**
