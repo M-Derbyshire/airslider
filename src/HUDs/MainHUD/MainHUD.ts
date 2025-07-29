@@ -89,8 +89,8 @@ export default class MainHUD extends ASHUD
         super.prepare();
         
         this.pointerEventManager.addPointerEventSubject(this._pauseButton, true);
-        this.pointerEventManager.addPointerEventSubject(this._nextLevelButton);
-        this.pointerEventManager.addPointerEventSubject(this._retryLevelButton);
+        this.pointerEventManager.addPointerEventSubject(this._nextLevelButton, true);
+        this.pointerEventManager.addPointerEventSubject(this._retryLevelButton, true);
     }
     
     /**
