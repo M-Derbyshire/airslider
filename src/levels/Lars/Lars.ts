@@ -5,12 +5,12 @@ import ASModel from '../../models/ASModel/ASModel';
 import IEventManager from '../../../Kernel/entities/Level/IEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import Kernel from '../../../Kernel/Kernel';
-import SideGroupsObstacleManager from '../ASLevel/ObstacleManager/SideGroupsObstacleManager';
 import LarsLoadingScreen from '../LoadingScreens/LarsLoadingScreen/LarsLoadingScreen';
 import BabyDragon from '../../models/Monsters/BabyDragon/BabyDragon';
 import LavaBall from '../../models/Monsters/attacks/LavaBall/LavaBall';
 import RockBall from '../../models/Obstacles/RockBall/RockBall';
 import IntroRockBall from '../../models/Obstacles/IntroObstacles/IntroRockBall/IntroRockBall';
+import SweepingObstacleManager from '../ASLevel/ObstacleManager/SweepingObstacleManager';
 
 /**
  * The Lars level
@@ -18,7 +18,7 @@ import IntroRockBall from '../../models/Obstacles/IntroObstacles/IntroRockBall/I
 export default class Lars extends ASLevel<RockBall>
 {
     private _introRockBalls:IntroRockBall[]; // Used to introduce the "Rock Ball" obstacle to the player
-    private _rockBalls:RockBall[]; // The Rock Ball obstacles that the level will use
+    private _sweepingRockBalls:RockBall[]; // The sweeping Rock Ball obstacles that the level will use (not for patterns)
     
     constructor()
 	{
@@ -27,7 +27,7 @@ export default class Lars extends ASLevel<RockBall>
         this.NextLevelLoadingScreen = LarsLoadingScreen;
         
         this.roadColor = "#9E8C8C";
-        this.obstacleManager = new SideGroupsObstacleManager<RockBall>();
+        this.obstacleManager = new SweepingObstacleManager<RockBall>();
 	}
     
     /**
@@ -49,14 +49,16 @@ export default class Lars extends ASLevel<RockBall>
         models.push(lavaBall1, lavaBall2);
         
         // Setup the Rock Ball obstacles
-        const totalBallCount = 100;
+        const totalSweepingBallCount = 10;
         
-        const balls:RockBall[] = [];
-        for(let i = 0; i < totalBallCount; i++)
-            balls.push(new RockBall());
+        const sweepingBalls:RockBall[] = [];
+        const sweepingXSpeed = 1000;
         
-        models.push(...balls);
-        this._rockBalls = balls;
+        for(let i = 0; i < totalSweepingBallCount; i++)
+            sweepingBalls.push(new RockBall("sweep", sweepingXSpeed));
+        
+        models.push(...sweepingBalls);
+        this._sweepingRockBalls = sweepingBalls;
         
         this._introRockBalls = [new IntroRockBall("left"), new IntroRockBall("right")];
         models.push(...this._introRockBalls);
@@ -104,11 +106,11 @@ export default class Lars extends ASLevel<RockBall>
     {
         super.prepare();
         
-        const initialRockBallLineCount = 4;
-        this.obstacleManager.setObstacleModels(this._rockBalls);
+        const initialRockBallLineCount = 6;
+        this.obstacleManager.setObstacleModels(this._sweepingRockBalls);
         this.obstacleManager.setCurrentLineCount(initialRockBallLineCount);
         
-        this.patternManager.setModelsForPattern(this._rockBalls);
+        this.patternManager.setModelsForPattern(this._sweepingRockBalls);
     }
     
     /**
@@ -123,6 +125,14 @@ export default class Lars extends ASLevel<RockBall>
             15,
             30,
             () => this._introRockBalls.forEach(rb => rb.start())
+        );
+        
+        this.levelSection(
+            "sweepingRockBalls1",
+            34,
+            88,
+            null,
+            () => this.obstacleManager.sendObstaclesIfReady()
         );
         
         // Run the closing sequence

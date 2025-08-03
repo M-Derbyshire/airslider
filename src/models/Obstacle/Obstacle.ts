@@ -45,6 +45,13 @@ export default class Obstacle extends ASModel
     protected hasCollidedWithPlayer:boolean;
     
     /**
+     * This number controls the speed on the Z-axis (the speed is based on the level
+     * speed, but this value modifies that). The lower this number, the faster the
+     * speed.
+     */
+    protected speedModifier:number;
+    
+    /**
      * Constructor
      * @param mode The obstacle's mode
      * @param homingZStart At what z position should the homing movement begin (in "home" mode)?
@@ -61,6 +68,7 @@ export default class Obstacle extends ASModel
         this.xSpeed = speedX;
         this._homingTarget = playerModel;
         this.hasCollidedWithPlayer = false;
+        this.speedModifier = 2;
     }
     
     prepare():void
@@ -72,9 +80,6 @@ export default class Obstacle extends ASModel
         this.setYPositionFromBottom(this.height);
         this.resetToStart(this.x);
         this.active = false;
-        
-        if(this._mode == "sweep")
-            this._setRandomXDirection();
     }
     
     act():void
@@ -124,16 +129,6 @@ export default class Obstacle extends ASModel
     }
     
     /**
-     * Sets the xSpeed to a random direction
-     */
-    private _setRandomXDirection():void
-    {
-        let directionMultiplier = ((Math.round(Math.random())) * 2) - 1; // 1 or -1
-        
-        this.xSpeed = directionMultiplier * this.xSpeed;
-    }
-    
-    /**
      * Corrects the z speed of the obstacle (based on the speed of the level). 
      * We want the obstacles to fly off into the distance if the level stops moving.
      */
@@ -141,12 +136,10 @@ export default class Obstacle extends ASModel
 	{
         const level = Kernel.getInstance().level as ASLevel;
         
-        const speedModifier = 2; // The lower this number, the faster the speed
-        
 		if(!level.levelMoving)
-            this.zSpeed = -(UnitHelper.speed(level.maxLevelSpeedRaw) / speedModifier);
+            this.zSpeed = -(UnitHelper.speed(level.maxLevelSpeedRaw) / this.speedModifier);
         else
-            this.zSpeed = level.levelSpeed / speedModifier;
+            this.zSpeed = level.levelSpeed / this.speedModifier;
 	}
 	
     /**

@@ -27,10 +27,13 @@ export default class IntroRockBall extends RockBall implements IIntroObstacle
      */
     constructor(side:rockBallEntranceSide)
     {
-        super();
+        super("static", 0);
         
         this._side = side;
         this._exitZSpeed = 20;
+        
+        this.speedModifier = 2;
+        this.maxBounceSpeed = 480;
     }
     
     prepare():void {

@@ -12,15 +12,18 @@ export default class RockBall extends Obstacle
     
     /**
      * Constructor
+     * @param mode The obstacle's mode
+     * @param speedX The x speed of the obstacle. This needs to be quite high (1000-2000+) for sweeping
      */
-    constructor()
+    constructor(mode:"static"|"sweep", speedX:number)
     {
-        super("static", 0, 0, null);
+        super(mode, 0, speedX, null);
         
         this.damageDealt = 2;
         this.state = "spin";
+        this.speedModifier = 3;
         
-        this.maxBounceSpeed = 480;
+        this.maxBounceSpeed = 240;
         this.bounceDeceleration = 500;
     }
     
