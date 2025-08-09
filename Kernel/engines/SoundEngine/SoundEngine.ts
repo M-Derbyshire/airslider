@@ -1,3 +1,4 @@
+import Kernel from '../../Kernel';
 import ISoundEngine, { SoundStatus } from './ISoundEngine';
 
 /**
@@ -96,7 +97,14 @@ export default class SoundEngine implements ISoundEngine {
             this._resetSound(sound);
         
         sound.asset.loop = newLoopValue;
-        sound.asset.play();
+        sound.asset.play()
+            .catch(err => {
+                // If pause is called on the asset before this promise
+                // has resolved, an "AbortError" will be thrown. We just
+                // want to catch and swallow it here.
+                if(err.name !== "AbortError")
+                    Kernel.getInstance().handleError(err);
+            });
         
         sound.status = SoundStatus.Playing;
     }
