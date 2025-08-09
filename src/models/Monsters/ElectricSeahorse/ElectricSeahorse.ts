@@ -10,7 +10,6 @@ import Lightning from '../attacks/Lightning/Lightning';
  */
 export default class ElectricSeahorse extends Monster {
 
-    private _playerModel:Tarian; // The model of the player
     private _leftLightningModel:Lightning; // The lightning model for the left side of the monster
     private _rightLightningModel:Lightning; // The lightning model for the right side of the monster
     private _wingSoundKey:string; // The key for the flapping wings sound effect
@@ -27,7 +26,7 @@ export default class ElectricSeahorse extends Monster {
     {
         super();
         
-        this._playerModel = playerModel;
+        this.playerModel = playerModel;
         this._leftLightningModel = leftLightningModel;
         this._rightLightningModel = rightLightningModel;
         
@@ -79,7 +78,7 @@ export default class ElectricSeahorse extends Monster {
             this.move
         ];
         
-        this.startZ = this._playerModel.z;
+        this.startZ = this.playerModel.z;
         this.startY = 10;
         this.offScreenUnits = 500;
         this.startX = level.rightEdge + this.offScreenUnits;

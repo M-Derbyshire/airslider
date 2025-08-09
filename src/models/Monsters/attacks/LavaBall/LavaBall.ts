@@ -104,7 +104,7 @@ export default class LavaBall extends ASModel {
     aimAtPlayer():void
     {
         const speedMultiplier = 2.25; // Change this to affect the speed of the ball
-        const xSpeedLimit = 250; // A limit on the x speed (regardless of direction)
+        const xSpeedLimit = 350; // A limit on the x speed (regardless of direction)
         
         // We need to determine the distance between the ball and the player
         const playerXCenter = (this.playerModel.width / 2) + this.playerModel.x;

@@ -10,8 +10,6 @@ import PidgeonSoundController from './PidgeonSoundController';
  * The Neon Pidgeon monster (there should be 2 in the level, at the same time)
  */
 export default class NeonPidgeon extends Monster {
-    
-    private _playerModel:Tarian; // The model of the player 
     private _nextDrop:number; // The time for the next drop attack (in milliseconds)
     private _edgeOverflow:number; // Without this, the player can just stay on the edge of the level, and not get hit
     private _flapSoundKey:string; // The key for the wings flapping sound effect
@@ -54,7 +52,7 @@ export default class NeonPidgeon extends Monster {
     {
         super();
         
-        this._playerModel = playerModel;
+        this.playerModel = playerModel;
         this._lowerPidgeon = lowerPidgeon;
         
         this._flapSoundKey = "/models/monsters/NeonPidgeon/sounds/flap.mp3";
@@ -141,7 +139,7 @@ export default class NeonPidgeon extends Monster {
         this.xSpeed = this._lowerPidgeon ? -760 : -880;
         this.ySpeed = 1250;
         
-        this.startZ = this._playerModel.z;
+        this.startZ = this.playerModel.z;
         this.startY = this._lowerPidgeon ? 150 : 250;
         this.offScreenUnits = this._lowerPidgeon ? 500 : 650;
         this.startX = level.rightEdge + this.offScreenUnits;

@@ -25,7 +25,6 @@ export default class Ghost extends Monster {
      */
     exitZSpeed:number;
     
-    private _playerModel:Tarian; // The player's model
     private _minXSpeed:number; 
     private _maxXSpeed:number;
     private _directionMultiplier:number; // The x speed is multiplied by this; Negate it to change direction
@@ -41,7 +40,7 @@ export default class Ghost extends Monster {
     {
         super();
         
-        this._playerModel = playerModel;
+        this.playerModel = playerModel;
         this.damageDealtOrig = 2;
     }
     
@@ -104,7 +103,7 @@ export default class Ghost extends Monster {
         //outLimit is how far back the monster will go, before moving forward
         //inLimit is the point it will start it's sweeping again
         this._outLimit = 1;
-        this._inLimit = (this._playerModel.z + 100);
+        this._inLimit = (this.playerModel.z + 100);
         
         this.damageDealt = this.damageDealtOrig;
     }

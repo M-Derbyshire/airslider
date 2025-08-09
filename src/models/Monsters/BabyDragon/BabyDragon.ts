@@ -10,10 +10,8 @@ import LavaBall from '../attacks/LavaBall/LavaBall';
  */
 export default class BabyDragon extends Monster 
 {
-    private _playerModel:Tarian; // The player's model
     private _lavaBalls:LavaBall[]; // The lava ball models that the dragon will drop onto the player
     private _nextLavaBallIndex:number; // The "next" lava ball refers to the next one to drop (not the next one to select)
-    private _nextDirectionToggleTime:number; // Determines when the monster should next toggle its direction
     private _initialXSpeed:number; // The initial speed of the monster (on the X axis), after the entrance movement
     private _wingSoundKey:string; // The key for the flapping wings sound effect
     
@@ -31,7 +29,7 @@ export default class BabyDragon extends Monster
     {
         super();
         
-        this._playerModel = playerModel;
+        this.playerModel = playerModel;
         this._lavaBalls = [lavaBall1, lavaBall2];
         
         this._wingSoundKey = "/models/monsters/BabyDragon/sounds/flap.mp3";
@@ -120,7 +118,7 @@ export default class BabyDragon extends Monster
         this.startY = 10,
         this.offScreenUnits = 500;
         this.startX = level.rightEdge + this.offScreenUnits;
-        this.startZ = this._playerModel.z;
+        this.startZ = this.playerModel.z;
         
         this.x = this.startX;
         this.y = this.startY;
@@ -129,7 +127,7 @@ export default class BabyDragon extends Monster
         this.state = "left";
         
         this.enterXSpeed = 90;
-        this._initialXSpeed = -720;
+        this._initialXSpeed = -1000;
         this.xSpeed = this._initialXSpeed;
         
         this._lavaBalls.forEach(lb => lb.z = this.startZ);
@@ -199,75 +197,50 @@ export default class BabyDragon extends Monster
      */
     private _move():void
     {
-        this.moveRight(); // X speed may be a negative number, to move left
+        const isAbovePlayer = this._isAbovePlayer();
         
-		this._handleOverlappingOfLevelEdges();
+        if(!isAbovePlayer)
+            this.moveRight(); // X speed may be a negative number, to move left
         
         this._dropBallIfTime();
         
-        if(this._shouldChangeDirection())
+        if(this._shouldChangeDirection(isAbovePlayer))
             this._toggleDirection();
     }
-	
+    
     /**
-     * Checks to see if the dragon is overlapping the level edges, and triggers the 
-     * change of direction
+     * Is the dragon above the player model?
+     * @returns true if the dragon is above the player model, false if not
      */
-	private _handleOverlappingOfLevelEdges():void
-	{
-        const level = (Kernel.getInstance().level as ASLevel);
+    private _isAbovePlayer():boolean
+    {
+        const player = this.playerModel;
         
-		const hasOverlappedLeftEdge = (this.x + (this.width / 2) <= level.leftEdge);
-		const hasOverlappedRightEdge = (this.x + (this.width / 2) >= level.rightEdge);
-		
-        if(hasOverlappedLeftEdge || hasOverlappedRightEdge)
-        {
-            this._toggleDirection();
-            
-            // Change the position, so we're no longer overlapping the edge
-            this.x = (this.xSpeed > 0) ? 
-                ((level.leftEdge - (this.width / 2)) + 1) :
-                ((level.rightEdge - (this.width / 2)) - 1);
-            
-            this.animationManager.animations[this.state].currentFrameIndex = 0;
-        }
-	}
+        // We know the dragon model is wider than the player model
+        return (
+            (player.x >= this.x)
+            && (
+                (player.x + player.width) <= (this.x + this.width)
+            )
+        );
+    }
     
     /**
      * Determines if it's time for the dragon to change direction (and generates the next time to change)
+     * @param isAbovePlayer is the dragon currently above the player model?
      * @returns true if the dragon should change direction, false if not
      */
-    private _shouldChangeDirection():boolean
+    private _shouldChangeDirection(isAbovePlayer:boolean):boolean
     {
-        const kernel = Kernel.getInstance();
-        const runningTime = kernel.totalLevelActiveMilliseconds;
-        const level = (kernel.level as ASLevel);
+        const player = this.playerModel;
         
-        // The initial time to change direction
-        if(!this._nextDirectionToggleTime)
-            this._nextDirectionToggleTime = runningTime + 5000;
-        
-        // We only want to change direction if the dragon is a certain distance from the edge of the level
-        const areaSize = this.width / 8;
-        const leftArea = level.leftEdge + areaSize;
-        const rightArea = level.rightEdge - areaSize;
-        const monsterRightEdge = (this.x + this.width);
-        
-        const monsterIsWithinLeftArea = (this.x <= leftArea); 
-        const monsterIsWithinRightArea = (monsterRightEdge >= rightArea);
-        
-        if(
-            runningTime >= this._nextDirectionToggleTime && // Is it time to toggle?
-            // We only want to start moving right if in the left area (or vice-versa)
-            ((monsterIsWithinLeftArea && this.state === "left") || (monsterIsWithinRightArea && this.state === "right"))
-        )
-        {
-            const newTimePeriod = (Math.random() * 4000) + 2000; //between 2 and 4 seconds
-            this._nextDirectionToggleTime = runningTime + newTimePeriod;
-            return true;
-        }
-        
-        return false;
+        return (
+            !isAbovePlayer
+            && (
+                (this.state === "left" && player.x > (this.x + this.width))
+                || (this.state === "right" && (player.x + player.width) < this.x)
+            )
+        );
     }
     
     /**
@@ -289,11 +262,14 @@ export default class BabyDragon extends Monster
         
         const unitsWithinCameraY = Kernel.getInstance().settings.unitsWithinCameraY;
         
-        if ((!altLavaBall.active && !nextLavaBall.active && this.fireWeapon) || //This will trigger the first drop
-            //After the first drop, the below triggers any further drops
-            (this.fireWeapon &&
-            nextLavaBall.state !== "drop" && //When we check for this with .active, there's a bug where it can stop dropping balls
-            (altLavaBall.y > unitsWithinCameraY / 1.5)))
+        const shouldTriggerInitialDrop = (!altLavaBall.active && !nextLavaBall.active && this.fireWeapon);
+        const shouldTriggerRegularDrop = (
+            this.fireWeapon
+            && nextLavaBall.state !== "drop"
+            && (altLavaBall.y > unitsWithinCameraY / 1.5)
+        );
+        
+        if (shouldTriggerInitialDrop || shouldTriggerRegularDrop)
         {
             this._dropBall();
             this._nextLavaBallIndex = this._altLavaBallIndex;
