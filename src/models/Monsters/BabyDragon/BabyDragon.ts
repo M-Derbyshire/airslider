@@ -181,7 +181,7 @@ export default class BabyDragon extends Monster
         const level = (Kernel.getInstance().level as ASLevel);
         
         this.state = "left";
-        this.moveLeft(this.enterXSpeed);
+        this.moveLeft(this.enterXSpeed * 2);
         
         if((this.x + this.width) < (level.leftEdge - this.offScreenUnits))
         {
