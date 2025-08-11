@@ -147,21 +147,30 @@ export default class Lars extends ASLevel<RockBall>
         this.levelSection(
             "rockBallsZigZagPattern",
             95,
-            150,
+            122,
             null,
             () => this.patternManager.sendPattern()
         );
         
-        // this.levelSection(
-        //     "sweepingRockBalls2",
-        //     34,
-        //     88,
-        //     () => this.obstacleManager.setCurrentLineCount(7),
-        //     () => this.obstacleManager.sendObstaclesIfReady()
-        // );
+        this.levelSection(
+            "babyDragon",
+            127,
+            177,
+            () => this.monsters.forEach(monster => monster.start()),
+            null,
+            () => this.monsters.forEach(monster => monster.stop())
+        );
+        
+        this.levelSection(
+            "sweepingRockBalls2",
+            187,
+            242,
+            () => this.obstacleManager.setCurrentLineCount(7),
+            () => this.obstacleManager.sendObstaclesIfReady()
+        );
         
         // Run the closing sequence
-        this.levelEndSection(231);
+        this.levelEndSection(249);
     }
     
     /**
