@@ -22,7 +22,7 @@ export default class LavaBall extends ASModel {
         super();
         
         this.playerModel = playerModel;
-        this.damageDealt = 2;
+        this.damageDealt = 10;
     }
     
     load(animationManager:IModelAnimationsManager):void
