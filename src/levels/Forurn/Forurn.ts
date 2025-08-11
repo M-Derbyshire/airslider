@@ -174,12 +174,19 @@ export default class Forurn extends ASLevel<Snake>
         /*
             There are 2 kinds of "lines" in the pattern: 
             - lines where the snakes are on both sides of the level (with a gap in the center)
-            - a line in the center (may just be one snake)
+            - a line in the center
+            These lines can have either 1 or 2 snakes, so we're going to generate a few lines,
+            to get a good mixture
         */
-        const possibleLinePositions = this._getPossiblePatternLines(this._snakes[0].width);
+       
+        const totalLineCount = 20;
+        for(let i = 0; i < (totalLineCount / 2); i++)
+        {
+            const possibleLinePositions = this._getPossiblePatternLines(this._snakes[0].width);
         
-        pattern.positions.push(possibleLinePositions.sides);
-        pattern.positions.push(possibleLinePositions.center);
+            pattern.positions.push(possibleLinePositions.sides);
+            pattern.positions.push(possibleLinePositions.center);
+        }
         
         return pattern;
     }
@@ -194,6 +201,8 @@ export default class Forurn extends ASLevel<Snake>
      */
     private _getPossiblePatternLines(modelWidth:number):{ sides:number[], center:number[] }
     {
+        const lineHasMultipleObstacles = Math.round(Math.random()) === 0;
+        
         const modelHalfWidth = modelWidth / 2;
         const gapBetweenModels = 10;
         
@@ -202,12 +211,21 @@ export default class Forurn extends ASLevel<Snake>
         const leftEdgeToUse = this.leftEdge - modelHalfWidth;
         const rightEdgeToUse = this.rightEdge + modelHalfWidth;
         
-        const centerPositions = [levelCenter - modelHalfWidth];
+        const centerPositions:number[] = [];
+        if(lineHasMultipleObstacles) {
+            const halfGapWidth = gapBetweenModels / 2;
+            const leftOfCenter = levelCenter - modelWidth - halfGapWidth
+            const rightOfCenter = levelCenter + halfGapWidth
+            
+            centerPositions.push(leftOfCenter, rightOfCenter);
+        } else {
+            centerPositions.push(levelCenter - modelHalfWidth);
+        }
         
-        const modelCountPerSide = 2;
-        const widthWithGap = modelWidth + gapBetweenModels;
         const leftPositions:number[] = [];
         const rightPositions:number[] = [];
+        const modelCountPerSide = lineHasMultipleObstacles ? 2 : 1;
+        const widthWithGap = modelWidth + gapBetweenModels;
         
         for(let i = 0; i < modelCountPerSide; i++)
             leftPositions.push(leftEdgeToUse + (widthWithGap * i));
