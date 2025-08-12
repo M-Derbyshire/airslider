@@ -120,10 +120,9 @@ export default class Forurn extends ASLevel<Snake>
     {
         super.act();
         
-        this.levelSection(
-            "introSnake",
-            15,
+        this.levelIntroSection(
             33,
+            22,
             () => this._introSnake.start()
         );
         

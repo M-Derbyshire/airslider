@@ -129,10 +129,9 @@ export default class Lars extends ASLevel<RockBall>
     {
         super.act();
         
-        this.levelSection(
-            "introRockBalls",
-            15,
+        this.levelIntroSection(
             30,
+            19,
             () => this._introRockBalls.forEach(rb => rb.start())
         );
         

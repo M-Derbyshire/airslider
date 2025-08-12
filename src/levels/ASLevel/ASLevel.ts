@@ -107,9 +107,13 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     private _musicManager:MusicManager; // Manages the level's music
     
     // Level section management 
-    private _activeSections: string[]; // The IDs of the level sections that are currently active
+    private _activeSections:string[]; // The IDs of the level sections that are currently active
     private _openingSectionId = "opening"; // The ID of the level's opening section
     private _closingSectionId = "closing"; // The ID of the level's closing section
+    
+    // An amount of seconds (can be negative) to shift the level section's start/end times by.
+    // This will not be reset during level preperation
+    private _permanentSectionTimeShiftSecs:number;
     
     // Models/info for the opening and closing of the level
     private _startSign:Sign; // The sign at the start of the level
@@ -150,6 +154,8 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         this._nextLevelDialogDelayMS = 2000;
         this._retryLevelDialogDelayMS = 2000;
+        
+        this._permanentSectionTimeShiftSecs = 0;
 	}
     
     /**
@@ -275,7 +281,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         {
             (this.HUD as MainHUD).displayRetryLevelDialog();
             this._musicManager.startFadeOutProcess();
-        }    
+        }
         
         // Let the RacerManager do what it needs to do each frame
         this.racerManager.act();
@@ -362,8 +368,11 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         if(this.levelMoving) {
             const currentSecs = Kernel.getInstance().totalLevelActiveMilliseconds / 1000;
             const actionIsActive = this._activeSections.includes(id);
+            
+            const shiftedSecsStart = secsStart + this._permanentSectionTimeShiftSecs;
+            const shiftedSecsEnd = secsEnd + this._permanentSectionTimeShiftSecs;
         
-            if(currentSecs >= secsStart && currentSecs <= secsEnd) 
+            if(currentSecs >= shiftedSecsStart && currentSecs <= shiftedSecsEnd) 
             {
                 if(!actionIsActive)
                 {
@@ -377,13 +386,49 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
                     actCallback();
             }
             
-            if(currentSecs > secsEnd && actionIsActive) {
+            if(currentSecs > shiftedSecsEnd && actionIsActive) {
                 if(endCallback)
                     endCallback();
                 
                 this._activeSections = this._activeSections.filter((activeId:string) => activeId !== id);
             }
         }
+    }
+    
+    /**
+     * Runs a level section that will introduce aspects of the level (e.g. the obstacles) to the
+     * player (this should be the first section of the level). If the player loses the level, this
+     * section will be skipped when they retry it (so it will only be ran during the first attempt
+     * of the level)
+     * @param secsEnd The time (in seconds) when this section should stop being active
+     * @param secsToShiftWhenSkippingIntro The (positive) number of seconds that other sections should
+     * be shifted by, when skipping this section
+     * @param initialiseCallback A callback to call when this section begins (may be null)
+     * @param actCallback A callback to call on every frame while this section is active (may be null)
+     * @param endCallback A callback to call when this section is no longer active (may be null)
+     */
+    protected levelIntroSection(
+        secsEnd:number,
+        secsToShiftWhenSkippingIntro:number,
+        initialiseCallback?:()=>void,
+        actCallback?:()=>void,
+        endCallback?:()=>void
+    )
+    {
+        const secsStart = 15;
+        
+        if(!this._permanentSectionTimeShiftSecs)
+            this.levelSection(
+                "levelIntro",
+                secsStart,
+                secsEnd,
+                initialiseCallback,
+                actCallback,
+                endCallback
+            );
+        
+        if(this.lost)
+            this._permanentSectionTimeShiftSecs = -secsToShiftWhenSkippingIntro;
     }
     
     /**
@@ -394,7 +439,8 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     {
         const kernel = Kernel.getInstance();
         
-        const msStart = secsStart * 1000;
+        const shiftedSecsStart = secsStart + this._permanentSectionTimeShiftSecs;
+        const msStart = shiftedSecsStart * 1000;
         const isTimeToRunSection = kernel.totalLevelActiveMilliseconds >= msStart;
         
         const playerModelIdx = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
