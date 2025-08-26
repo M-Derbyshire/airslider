@@ -1,5 +1,5 @@
-import Lars from '../../Lars/Lars';
 import LoadingScreen from '../../LoadingScreen/LoadingScreen';
+import Neonus from '../../Neonus/Neonus';
 
 /**
  * The loading screen for Neonus
@@ -10,7 +10,7 @@ export default class NeonusLoadingScreen extends LoadingScreen
     {
         super();
         
-        this.LevelToLoad = Lars;
+        this.LevelToLoad = Neonus;
         this.backgroundImagePath = "/levels/LoadingScreens/NeonusLoadingScreen/images/background.png";
     }
 };

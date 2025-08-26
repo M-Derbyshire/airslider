@@ -5,13 +5,13 @@ import ASModel from '../../models/ASModel/ASModel';
 import IEventManager from '../../../Kernel/entities/Level/IEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import Kernel from '../../../Kernel/Kernel';
-import LarsLoadingScreen from '../LoadingScreens/LarsLoadingScreen/LarsLoadingScreen';
 import BabyDragon from '../../models/Monsters/BabyDragon/BabyDragon';
 import LavaBall from '../../models/Monsters/attacks/LavaBall/LavaBall';
 import RockBall from '../../models/Obstacles/RockBall/RockBall';
 import IntroRockBall from '../../models/Obstacles/IntroObstacles/IntroRockBall/IntroRockBall';
 import SweepingObstacleManager from '../ASLevel/ObstacleManager/SweepingObstacleManager';
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
+import NeonusLoadingScreen from '../LoadingScreens/NeonusLoadingScreen/NeonusLoadingScreen';
 
 /**
  * The Lars level
@@ -26,7 +26,7 @@ export default class Lars extends ASLevel<RockBall>
 	{
 		super();
         
-        this.NextLevelLoadingScreen = LarsLoadingScreen;
+        this.NextLevelLoadingScreen = NeonusLoadingScreen;
         
         this.roadColor = "#9E8C8C";
         this.obstacleManager = new SweepingObstacleManager<RockBall>();
@@ -39,8 +39,6 @@ export default class Lars extends ASLevel<RockBall>
     getModels():IModel[]
     {
         const models = super.getModels() as ASModel[];
-        
-        this.obstacleManager.setPlayerModel(this.player);
         
         // Setup the monster
         const lavaBall1 = new LavaBall(this.player);
