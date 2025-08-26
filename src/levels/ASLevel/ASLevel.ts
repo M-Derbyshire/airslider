@@ -170,6 +170,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         this.player = new Tarian();
         centralState.set(CentralStateKey.PlayerModelIndex, stdModels.length);
+        this.obstacleManager.setPlayerModel(this.player);
         
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
         this._startSignDisplay = new SignDisplay(this._startSign);
