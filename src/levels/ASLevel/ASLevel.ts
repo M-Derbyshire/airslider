@@ -1,6 +1,6 @@
 import Level from '../../../Kernel/entities/Level/Level';
 import MainHUD from '../../HUDs/MainHUD/MainHUD';
-import LevelRoad from './LevelRoad';
+import LevelRoadManager from './LevelRoadManager';
 import ObstacleManager from './ObstacleManager/ObstacleManager';
 import ObstaclePatternManager from './ObstaclePatternManager';
 import LevelGroundManager from './LevelGroundManager';
@@ -61,7 +61,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     
     // Environment management
     protected roadColor: string;
-    protected roadManager: LevelRoad;
+    protected roadManager: LevelRoadManager;
     protected groundManager: LevelGroundManager;
     
     // Management of the other racers on the track
@@ -133,7 +133,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         this.controlsInitialiser = new ASControlsInitialiser();
 		
-		this.roadManager = new LevelRoad();
+		this.roadManager = new LevelRoadManager();
         this.roadColor = "#A5A5A5";
         
         this.obstacleManager = new ObstacleManager<ObstacleType>();

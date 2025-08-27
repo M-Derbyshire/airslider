@@ -3,9 +3,9 @@ import UnitHelper from "../../../Kernel/utils/UnitHelper";
 import ASLevel from "./ASLevel";
 
 /**
- * Draws the level's road
+ * Manages the drawing of the level's road
  */
-export default class LevelRoad
+export default class LevelRoadManager
 {
     /**
      * Draws the road
