@@ -3,9 +3,9 @@ import Kernel from "../../../Kernel/Kernel";
 import ASLevel from "./ASLevel";
 
 /**
- * Draws an image on the ground at each side of the road.
+ * Manages the ground images at each side of the road.
  */
-export default class LevelGround
+export default class LevelGroundManager
 {
 	private _canvasCtx:CanvasRenderingContext2D;
 	private _groundPopulatedInitially:boolean; // True if the images should be drawn from the start. If false, player is moving towards them

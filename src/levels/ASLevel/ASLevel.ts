@@ -3,7 +3,7 @@ import MainHUD from '../../HUDs/MainHUD/MainHUD';
 import LevelRoad from './LevelRoad';
 import ObstacleManager from './ObstacleManager/ObstacleManager';
 import ObstaclePatternManager from './ObstaclePatternManager';
-import LevelGround from './LevelGround';
+import LevelGroundManager from './LevelGroundManager';
 import Sign from '../../models/Sign/Sign';
 import SignDisplay from '../../models/SignDisplay/SignDisplay';
 import Tarian from '../../models/Tarian/Tarian';
@@ -62,7 +62,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     // Environment management
     protected roadColor: string;
     protected roadManager: LevelRoad;
-    protected groundManager: LevelGround;
+    protected groundManager: LevelGroundManager;
     
     // Management of the other racers on the track
     protected racerManager: RacerManager;
@@ -121,7 +121,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     private _finishSign:Sign; // The finish sign
     private _finishFlagsActive:boolean; // Should the flags at the end of the level be active?
     private _signStartingZPosition:number; // Where on the z axis does the startSign start, and the finishSign end?
-    private _finishFlagsManager:LevelGround; // Manages the flags at the end of the level
+    private _finishFlagsManager:LevelGroundManager; // Manages the flags at the end of the level
     
 	constructor()
 	{
@@ -205,8 +205,8 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
 	{
 		super.load(frameManager, eventManager, pointerEventManager);
         
-        this.groundManager = new LevelGround();
-        this._finishFlagsManager = new LevelGround(false); 
+        this.groundManager = new LevelGroundManager();
+        this._finishFlagsManager = new LevelGroundManager(false); 
         
         this._finishFlagsManager.load(
             "/levels/ASLevel/images/finish_flag.png",
