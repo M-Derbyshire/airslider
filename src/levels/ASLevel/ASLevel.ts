@@ -210,6 +210,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         this._finishFlagsManager.load(
             "/levels/ASLevel/images/finish_flag.png",
+            null,
             312,
             50,
             312

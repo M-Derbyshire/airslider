@@ -87,7 +87,7 @@ export default class Forurn extends ASLevel<Snake>
         this.lightMaskImage = assetHandler.loadImage(lightMaskImagePath);
         this.lightMaskLuminosity = 0.2;
         
-        this.groundManager.load(groundImagePath, 150, 75);
+        this.groundManager.load(groundImagePath, null, 150, 75);
         
         this.assetsToUnload.push(
             backgroundImagePath,

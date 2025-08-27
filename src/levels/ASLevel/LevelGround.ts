@@ -15,9 +15,9 @@ export default class LevelGround
 	
 	private _modelsDistantToGround: IModel[]; // Models that we want to keep distant from any ground (on the z-axis)
 	
-	ground: IGround; //The shared data for every image (populated in load() by _getPopulatedGroundObject())
-	distance: number;//The distance between each image on the ground (on the z axis)
-	groundZPositions:number[]; //The z-axis positions of every image on the ground
+	private _groundSettings: IGroundSettings; //The shared data for every piece of ground (on both the left and right sides)
+	private _distance: number;//The distance between each image on the ground (on the Z-axis)
+	private _groundZPositions:number[]; //The Z-axis positions of every image on the ground
 	
 	/**
 	 * Constructor
@@ -32,20 +32,27 @@ export default class LevelGround
 		this._removeGround = false;
 		this._modelsDistantToGround = [];
 		
-        this.groundZPositions = [];
+        this._groundZPositions = [];
     }
 	
 	/**
 	 * Loads the level ground manager
-	 * @param imagePath the file path to the image asset
+	 * @param primaryImagePath the file path to the image asset for the left side of the level (if the secondaryImagePath is
+	 * not provided, this will also be used on the right side)
+	 * @param secondaryImagePath the file path to the image asset for the right side of the level (if this is not provided,
+	 * the primaryImagePath will be used instead)
 	 * @param imageHeight the height to draw the image (in units)
 	 * @param gapZDistance the number of units, on the z axis, between each image on the ground
-	 * @param imageStaticWidth if imageStaticWidth is not provided, the image will be stretched to fill the space. Provided width should be in units
+	 * @param imageStaticWidth if imageStaticWidth is not provided, the image will be stretched to fill the space. Provided width
+	 * should be in units
 	 */
-	load(imagePath:string, imageHeight:number, gapZDistance:number, imageStaticWidth:number|null = null):void
+	load(primaryImagePath:string, secondaryImagePath:string|null, imageHeight:number, gapZDistance:number, imageStaticWidth:number|null = null):void
 	{
-		this.ground = this._getPopulatedGroundObject(imagePath, imageHeight, imageStaticWidth);
-		this.distance = gapZDistance;
+		const leftImgPath = primaryImagePath;
+		const rightImgPath = secondaryImagePath ?? leftImgPath;
+		
+		this._groundSettings = this._getPopulatedGroundSettings(leftImgPath, rightImgPath, imageHeight, imageStaticWidth);
+		this._distance = gapZDistance;
 	}
     
 	/**
@@ -65,11 +72,11 @@ export default class LevelGround
 	 */
     draw(levelSpeed:number):void
     {
-		this.ground.offset += levelSpeed;
+		this._groundSettings.offset += levelSpeed;
 		this._resetGroundIfReachedDistance();
 		
-		this.groundZPositions.forEach((pos, i) => {
-			const offsetPos = pos - this.ground.offset;
+		this._groundZPositions.forEach((pos, i) => {
+			const offsetPos = pos - this._groundSettings.offset;
 			
 			if(i < this._groundDrawCount && !this._positionIsTooCloseToModels(offsetPos, true))
 			{
@@ -97,17 +104,20 @@ export default class LevelGround
 	
 	/**
 	 * Sets up the shared details that will be used when drawing each image on the ground
-	 * @param path the file path to the image asset
+	 * @param leftImagePath the file path to the image asset for the left side of the level
+	 * @param rightImagePath the file path to the image asset for the right side of the level
 	 * @param height the height to draw the image
-	 * @param width if this is null, the image will be stretched to fill the space. Otherwise, this is used as the width. Provided width shouldn't be in units
+	 * @param width if this is null, the image will be stretched to fill the space. Otherwise, this is used as the width.
+	 * The provided width should be in units
 	 * @returns Details that will be used when drawing every image
 	 */
-	private _getPopulatedGroundObject(path:string, height:number, width:number|null):IGround
+	private _getPopulatedGroundSettings(leftImagePath:string, rightImagePath:string, height:number, width:number|null):IGroundSettings
 	{
 		const assetHandler = Kernel.getInstance().assetHandler;
 		
 		return {
-            image: assetHandler.loadImage(path),
+            leftImage: assetHandler.loadImage(leftImagePath),
+			rightImage: assetHandler.loadImage(rightImagePath),
             height, //Height to draw the image
 			width,
             offset: 0 //The amount the images have all moved along the z-axis
@@ -122,15 +132,15 @@ export default class LevelGround
 	{
 		const vanishingPointDepth = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
 		
-		this.groundZPositions = [];
+		this._groundZPositions = [];
 		
 		//Start from the furthest away, and move inwards, so we don't draw the distant ones on top of the closer ones
-		for(let zPos = vanishingPointDepth; zPos >= 0; zPos -= this.distance)
+		for(let zPos = vanishingPointDepth; zPos >= 0; zPos -= this._distance)
 		{
-			this.groundZPositions.push(zPos);
+			this._groundZPositions.push(zPos);
 		}
 		
-		this._groundDrawCount = (this._groundPopulatedInitially) ? this.groundZPositions.length : 1;
+		this._groundDrawCount = (this._groundPopulatedInitially) ? this._groundZPositions.length : 1;
 	}
 	
 	/**
@@ -180,18 +190,18 @@ export default class LevelGround
 	 */
 	private _resetGroundIfReachedDistance():void
 	{
-		if(this.ground.offset >= this.distance)
+		if(this._groundSettings.offset >= this._distance)
 		{
-			this.ground.offset = 0;
+			this._groundSettings.offset = 0;
 			
-			if(!this._groundPopulatedInitially && this._groundDrawCount < this.groundZPositions.length)
+			if(!this._groundPopulatedInitially && this._groundDrawCount < this._groundZPositions.length)
 			{
 				this._groundDrawCount++;
 			}
 				
 			if(this._removeGround)
 			{
-				this.groundZPositions.shift();
+				this._groundZPositions.shift();
 			}
 		}
 	}
@@ -209,17 +219,17 @@ export default class LevelGround
 		const graphicEngine = kernel.graphicEngine;
 		
 		// The default for this needs to be double the width of the canvas (at 0 on z-axis) to look correct
-		const imageWidth = (this.ground.width) 
-			? this.ground.width 
+		const imageWidth = (this._groundSettings.width) 
+			? this._groundSettings.width 
 			: settings.unitsWithinCameraX * 2;
 		
-		const yUnitValue = settings.unitsWithinCameraY - this.ground.height;
+		const yUnitValue = settings.unitsWithinCameraY - this._groundSettings.height;
 		
 		const leftDrawValues = graphicEngine.getScaledDrawPositionsAndDimensions({
 			x: -imageWidth,
 			y: yUnitValue,
 			width: imageWidth,
-			height: this.ground.height,
+			height: this._groundSettings.height,
 			z: groundZPos
 		});
 		
@@ -227,33 +237,35 @@ export default class LevelGround
 			x: settings.unitsWithinCameraX,
 			y: yUnitValue,
 			width: imageWidth,
-			height: this.ground.height,
+			height: this._groundSettings.height,
 			z: groundZPos
 		});
 		
-		this._drawGroundImage(leftDrawValues.x, leftDrawValues.y, leftDrawValues.width, leftDrawValues.height);
-		this._drawGroundImage(rightDrawValues.x, rightDrawValues.y, rightDrawValues.width, rightDrawValues.height);
+		this._drawGroundImage(this._groundSettings.leftImage, leftDrawValues.x, leftDrawValues.y, leftDrawValues.width, leftDrawValues.height);
+		this._drawGroundImage(this._groundSettings.rightImage, rightDrawValues.x, rightDrawValues.y, rightDrawValues.width, rightDrawValues.height);
 	}
 	
 	/**
 	 * Draws one of the images on the ground
+	 * @param image the image to draw
 	 * @param x the x position (not in units) to draw at
 	 * @param y the y position (not in units) to draw at
 	 * @param width the width (not in units) to draw with
 	 * @param height the height (not in units) to draw with
 	 */
-	private _drawGroundImage(x:number, y:number, width:number, height:number):void
+	private _drawGroundImage(image:HTMLImageElement, x:number, y:number, width:number, height:number):void
 	{
-		this._canvasCtx.drawImage(this.ground.image, x, y, width, height);
+		this._canvasCtx.drawImage(image, x, y, width, height);
 	}
 }
 
 /**
- * Data used by LevelGround to draw images on the ground
+ * The data required to draw images on the ground
  */
-export interface IGround {
-	image: HTMLImageElement,
-	height: number, //Height to draw the image (not in units)
-	width: number|null, //Width to draw the image (not in units). If null, the image will be stretched to fill the space
-	offset: number //The amount the images have all moved along the z-axis
+interface IGroundSettings {
+	leftImage: HTMLImageElement,
+	rightImage: HTMLImageElement,
+	height: number, // Height to draw the image (not in units)
+	width: number|null, // Width to draw the image. If null, the image will be stretched to fill the space
+	offset: number // The amount the images have all moved along the z-axis
 };
