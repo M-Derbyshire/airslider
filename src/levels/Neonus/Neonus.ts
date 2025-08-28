@@ -53,14 +53,14 @@ export default class Neonus extends ASLevel<RockBall>
         
         const backgroundImagePath = "/levels/Neonus/images/background.png";
         const lightMaskImagePath = "/levels/Neonus/images/lightmask.png";
-        const leftGroundImagePath = "/levels/Forurn/images/ground.png";
-        const rightGroundImagePath = "/levels/Lars/images/ground.png";
+        const leftGroundImagePath = "/levels/Neonus/images/leftGround.png";
+        const rightGroundImagePath = "/levels/Neonus/images/rightGround.png";
         
         this.backgroundImage = assetHandler.loadImage(backgroundImagePath);
         this.lightMaskImage = assetHandler.loadImage(lightMaskImagePath);
         this.lightMaskLuminosity = 0;
         
-        this.groundManager.load(leftGroundImagePath, rightGroundImagePath, 150, 75);
+        this.groundManager.load(leftGroundImagePath, rightGroundImagePath, 1000, 75, 1200);
         
         this.assetsToUnload.push(
             backgroundImagePath,
