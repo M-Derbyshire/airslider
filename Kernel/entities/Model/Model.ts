@@ -38,6 +38,8 @@ export default class Model implements IModel
     {
         this.assetsToUnload = [];
         this.sounds = [];
+        
+        this.drawHitBoxes = false;
     }
     
     /**
@@ -205,7 +207,6 @@ export default class Model implements IModel
         
         this._display = true;
         this._active = false;
-        this.drawHitBoxes = false;
         
         this.text = {
             content: "",
