@@ -107,6 +107,9 @@ export default class Snake extends Obstacle
     }
     
     getHitBoxes(): IHitBox[] {
+        if(this.hasCollidedWithPlayer)
+            return [];
+        
         return [
             {
                 x: this.x,
