@@ -1,19 +1,22 @@
 import ASLevel from '../ASLevel/ASLevel';
-import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
-import IModel from '../../../Kernel/entities/Model/IModel';
 import ASModel from '../../models/ASModel/ASModel';
-import IEventManager from '../../../Kernel/entities/Level/IEventManager';
-import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import Kernel from '../../../Kernel/Kernel';
-import RockBall from '../../models/Obstacles/RockBall/RockBall';
 import SweepingObstacleManager from '../ASLevel/ObstacleManager/SweepingObstacleManager';
 import NeonusLoadingScreen from '../LoadingScreens/NeonusLoadingScreen/NeonusLoadingScreen';
+import GangMember from '../../models/Obstacles/GangMember/GangMember';
+import IntroGangMember from '../../models/Obstacles/IntroObstacles/IntroGangMember/IntroGangMember';
+import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
+import IEventManager from '../../../Kernel/entities/Level/IEventManager';
+import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
+import IModel from '../../../Kernel/entities/Model/IModel';
 
 /**
  * The Lars level
  */
-export default class Neonus extends ASLevel<RockBall>
+export default class Neonus extends ASLevel<GangMember>
 {
+    private _introGangMembers:IntroGangMember[];
+    
     constructor()
     {
         super();
@@ -21,7 +24,7 @@ export default class Neonus extends ASLevel<RockBall>
         this.NextLevelLoadingScreen = NeonusLoadingScreen;
         
         this.roadColor = "#899699";
-        this.obstacleManager = new SweepingObstacleManager<RockBall>();
+        this.obstacleManager = new SweepingObstacleManager<GangMember>();
     }
     
     /**
@@ -31,6 +34,18 @@ export default class Neonus extends ASLevel<RockBall>
     getModels():IModel[]
     {
         const models = super.getModels() as ASModel[];
+        
+        const leftIntroGangMember = new IntroGangMember(false);
+        const rightIntroGangMember = new IntroGangMember(false);
+        const leadIntroGangMember = new IntroGangMember(true, leftIntroGangMember, rightIntroGangMember);
+        
+        this._introGangMembers = [
+            leftIntroGangMember,
+            rightIntroGangMember,
+            leadIntroGangMember
+        ];
+        
+        models.push(...this._introGangMembers);
         
         return models;
     }
@@ -85,11 +100,11 @@ export default class Neonus extends ASLevel<RockBall>
     {
         super.act();
         
-        // this.levelIntroSection(
-        //     30,
-        //     19,
-        //     () => this._introRockBalls.forEach(rb => rb.start())
-        // );
+        this.levelIntroSection(
+            39,
+            29,
+            () => this._introGangMembers.forEach(gm => gm.start())
+        );
         
         
         

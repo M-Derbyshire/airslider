@@ -15,7 +15,6 @@ export default class GangMember extends Obstacle
         super(mode, 0, speedX, null);
         
         this.damageDealt = 2;
-        this.state = "forward";
         this.speedModifier = 3;
     }
     
@@ -98,6 +97,8 @@ export default class GangMember extends Obstacle
     }
     
     prepare(): void {
+        this.state = "forward";
+        
         super.prepare();
         
         this._resetYPosition();
@@ -120,6 +121,14 @@ export default class GangMember extends Obstacle
         
         this.x -= xPosShift;
         this._resetYPosition();
+    }
+    
+    /**
+     * Has the gang-member fallen off of their board?
+     */
+    hasFallen():boolean
+    {
+        return this.state === "fallen";
     }
     
     private _resetYPosition():void

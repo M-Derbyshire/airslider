@@ -6,6 +6,7 @@ import ElectricHornet from "../../../models/Monsters/ElectricHornet/ElectricHorn
 import Ghost from "../../../models/Monsters/Ghost/Ghost";
 import NeonPidgeon from "../../../models/Monsters/NeonPidgeon/NeonPidgeon";
 import GangMember from "../../../models/Obstacles/GangMember/GangMember";
+import IntroGangMember from "../../../models/Obstacles/IntroObstacles/IntroGangMember/IntroGangMember";
 import IntroRockBall from "../../../models/Obstacles/IntroObstacles/IntroRockBall/IntroRockBall";
 import IntroSnake from "../../../models/Obstacles/IntroObstacles/IntroSnake/IntroSnake";
 import RockBall from "../../../models/Obstacles/RockBall/RockBall";
@@ -67,6 +68,15 @@ const standardModelEvents:IEventRegistrationDetails[] = [
         class1: Tarian,
         class2: GangMember,
         reactionCallback: (t:Tarian, gm:GangMember) => {
+            t.zCollisionEventAction(gm);
+            gm.hitEventAction();
+        }
+    },
+    {
+        check: zCollisionEventCheck,
+        class1: Tarian,
+        class2: IntroGangMember,
+        reactionCallback: (t:Tarian, gm:IntroGangMember) => {
             t.zCollisionEventAction(gm);
             gm.hitEventAction();
         }
