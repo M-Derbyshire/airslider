@@ -254,6 +254,9 @@ export default class BabyDragon extends Monster
      */
 	private _dropBallIfTime():void
 	{
+        if(this.playerModel.lost)
+            return;
+        
         const nextLavaBall = this._lavaBalls[this._nextLavaBallIndex];
         const altLavaBall = this._lavaBalls[this._altLavaBallIndex];
         
