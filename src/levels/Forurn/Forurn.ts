@@ -43,7 +43,7 @@ export default class Forurn extends ASLevel<Snake>
         const models = super.getModels() as ASModel[];
         
         // Setup the monster
-        const monster = new ElectricHornet(this.player);
+        const monster = new ElectricHornet();
         this.monsters = [monster];
         models.push(monster);
         

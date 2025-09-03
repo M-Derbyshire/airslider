@@ -2,7 +2,6 @@ import Kernel from '../../../../Kernel/Kernel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import ASLevel from '../../../levels/ASLevel/ASLevel';
 import Monster from '../../Monster/Monster';
-import Tarian from '../../Tarian/Tarian';
 import Lightning from '../attacks/Lightning/Lightning';
 
 /**
@@ -18,15 +17,13 @@ export default class ElectricSeahorse extends Monster {
     
     /**
      * Constructor
-     * @param playerModel The model of the player
      * @param leftLightningModel The lightning attack, for the left side
      * @param rightLightningModel The lightning attack, for the right side
      */
-    constructor(playerModel:Tarian, leftLightningModel:Lightning, rightLightningModel:Lightning)
+    constructor(leftLightningModel:Lightning, rightLightningModel:Lightning)
     {
         super();
         
-        this.playerModel = playerModel;
         this._leftLightningModel = leftLightningModel;
         this._rightLightningModel = rightLightningModel;
         

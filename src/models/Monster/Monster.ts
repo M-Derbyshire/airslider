@@ -1,5 +1,6 @@
 import Kernel from '../../../Kernel/Kernel';
 import ASLevel from '../../levels/ASLevel/ASLevel';
+import { CentralStateKey } from '../../levels/CentralStateKey';
 import ASModel from '../ASModel/ASModel';
 import Tarian from '../Tarian/Tarian';
 
@@ -98,6 +99,10 @@ export default class Monster extends ASModel {
     prepare():void
     {
         super.prepare();
+        
+        const kernel = Kernel.getInstance();
+        const playerModelIdx = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
+        this.playerModel = kernel.loadedModels[playerModelIdx] as Tarian;
         
         this.currentAction = 0;
         

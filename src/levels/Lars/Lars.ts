@@ -43,7 +43,7 @@ export default class Lars extends ASLevel<RockBall>
         // Setup the monster
         const lavaBall1 = new LavaBall(this.player);
         const lavaBall2 = new LavaBall(this.player);
-        const monster = new BabyDragon(this.player, lavaBall1, lavaBall2);
+        const monster = new BabyDragon(lavaBall1, lavaBall2);
         this.monsters = [monster];
         models.push(monster);
         models.push(lavaBall1, lavaBall2);

@@ -3,7 +3,6 @@ import ASLevel from '../../../levels/ASLevel/ASLevel';
 import IModel from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
-import Tarian from '../../Tarian/Tarian';
 
 /**
  * The ghost monster
@@ -34,13 +33,11 @@ export default class Ghost extends Monster {
     
     /**
      * Constructor
-     * @param playerModel The player's model
      */
-    constructor(playerModel:Tarian)
+    constructor()
     {
         super();
         
-        this.playerModel = playerModel;
         this.damageDealtOrig = 2;
     }
     

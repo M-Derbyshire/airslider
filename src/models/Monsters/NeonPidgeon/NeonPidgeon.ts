@@ -3,7 +3,6 @@ import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import ASLevel from '../../../levels/ASLevel/ASLevel';
 import Monster from '../../Monster/Monster';
-import Tarian from '../../Tarian/Tarian';
 import PidgeonSoundController from './PidgeonSoundController';
 
 /**
@@ -45,14 +44,12 @@ export default class NeonPidgeon extends Monster {
     
     /**
      * Constructor
-     * @param playerModel the model of the player 
-     * @param lowerPidgeon If this pidgeon is above another (on the y axis) this will be the lower pidgeon
+     * @param lowerPidgeon The pidgeon that will be beneath this pidgeon (if this pidgeon is on top)
      */
-    constructor(playerModel:Tarian, lowerPidgeon:NeonPidgeon = undefined)
+    constructor(lowerPidgeon?:NeonPidgeon)
     {
         super();
         
-        this.playerModel = playerModel;
         this._lowerPidgeon = lowerPidgeon;
         
         this._flapSoundKey = "/models/monsters/NeonPidgeon/sounds/flap.mp3";

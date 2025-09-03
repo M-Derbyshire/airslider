@@ -2,7 +2,6 @@ import Kernel from '../../../../Kernel/Kernel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import ASLevel from '../../../levels/ASLevel/ASLevel';
 import Monster from '../../Monster/Monster';
-import Tarian from '../../Tarian/Tarian';
 import LavaBall from '../attacks/LavaBall/LavaBall';
 
 /**
@@ -21,15 +20,13 @@ export default class BabyDragon extends Monster
     
     /**
      * Constructor
-     * @param playerModel The player model
      * @param lavaBall1 The model of the first lava ball
      * @param lavaBall2 The model of the second lava ball
      */
-    constructor(playerModel:Tarian, lavaBall1:LavaBall, lavaBall2:LavaBall)
+    constructor(lavaBall1:LavaBall, lavaBall2:LavaBall)
     {
         super();
         
-        this.playerModel = playerModel;
         this._lavaBalls = [lavaBall1, lavaBall2];
         
         this._wingSoundKey = "/models/monsters/BabyDragon/sounds/flap.mp3";

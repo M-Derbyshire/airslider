@@ -3,7 +3,6 @@ import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import ASLevel from '../../../levels/ASLevel/ASLevel';
 import Monster from '../../Monster/Monster';
-import Tarian from '../../Tarian/Tarian';
 
 /**
  * The Electric Hornet monster
@@ -19,13 +18,11 @@ export default class ElectricHornet extends Monster {
     
     /**
      * Constructor
-     * @param playerModel The model of the player
      */
-    constructor(playerModel:Tarian)
+    constructor()
     {
         super();
         
-        this.playerModel = playerModel;
         this.damageDealt = 10;
         
         this._buzzSoundKey = "/models/monsters/ElectricHornet/sounds/buzz.mp3";
