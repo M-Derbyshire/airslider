@@ -20,12 +20,14 @@ export default class Monster extends ASModel {
     
     protected fireWeapon:boolean; // Should this monster be firing its weapon/attack?
     
-    protected offScreenUnits:number; // How far off the screen should the monster start (on the x axis)
+    protected offScreenUnits:number; // How far off the screen should the monster start?
     protected startY:number; // Where should this model start, on the y axis
     protected startX:number; // Where should this model start, on the x axis
     protected startZ:number; // Where should this model start, on the z axis
-    protected enterXSpeed:number; // The speed that the monster should enter at, on the x axis
-    protected exitXSpeed:number; // The speed that the monster should exit at, on the x axis
+    protected enterXSpeed:number; // The speed that the monster should enter at, on the X-axis
+    protected exitXSpeed:number; // The speed that the monster should exit at, on the X-axis
+    protected enterYSpeed:number; // The speed that the monster should enter at, on the Y-axis
+    protected exitYSpeed:number; // The speed that the monster should exit at, on the Y-axis
     
     /**
      * Is this monster currently entering the level?

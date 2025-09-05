@@ -9,7 +9,7 @@ export default class PidgeonSoundController {
     private _pidgeon1:NeonPidgeon; // The first pidgeon model
     private _pidgeon2:NeonPidgeon; // The second pidgeon model
     
-    private _lastFlappingAnimFrame:number; // The index of the previous frame of the flapping animation
+    private _lastFlappingAnimFrameIdx:number; // The index of the previous frame of the flapping animation
     
     /**
      * Constructor
@@ -21,35 +21,34 @@ export default class PidgeonSoundController {
         this._pidgeon1 = pidgeon1;
         this._pidgeon2 = pidgeon2;
         
-        this._lastFlappingAnimFrame = 0;
+        this._lastFlappingAnimFrameIdx = 0;
     }
     
     /**
-     * Should be called once per frame. Runs the sound effect(s)
+     * Runs the sound effects (Should be called once per frame)
      * @param flapSoundKey the key for the flapping sound effect
      */
     act(flapSoundKey:string):void
     {
-        // We only want to play the sound once, regardless of the pidgeon count
-        
         const flappingPidgeon = this._getCurrentlyFlappingPidgeon();
         
         if(flappingPidgeon)
         {
-            const flappingAnimFrame = flappingPidgeon.getCurrentFlappingFrame();
+            const flappingAnimFrameIdx = flappingPidgeon.getFlappingAnimation().currentFrameIndex;
             
             // The animation runs at a lower FPS to the rest of the game. We were having a buzzing sound because 
-            // the current animation frame equaled 1 for quite a few game frames, so was being repeatedly restarted.
+            // the animation frame didn't change for quite a few game frames, so the sound was being repeatedly 
+            // restarted.
             // Therefore, we only want to run the sound when the animation frame has actually changed (and the change needs  
             // to be to a larger index -- a change of target pidgeon may cause another buzz if it's smaller).
-            const animationChangedFrame = flappingAnimFrame > this._lastFlappingAnimFrame;
+            const animationChangedFrame = flappingAnimFrameIdx > this._lastFlappingAnimFrameIdx;
             
             // The frame index will always be 0 when off screen, as the animation won't be progressed (since the model won't be drawn),
             // so instead we play the sound every time it's on the second frame
-            if(animationChangedFrame && flappingAnimFrame === 1) 
+            if(animationChangedFrame && flappingAnimFrameIdx === 1)
                 Kernel.getInstance().soundEngine.playSound(flapSoundKey);
-                
-            this._lastFlappingAnimFrame = flappingAnimFrame;
+            
+            this._lastFlappingAnimFrameIdx = flappingAnimFrameIdx;
         }
     }
     

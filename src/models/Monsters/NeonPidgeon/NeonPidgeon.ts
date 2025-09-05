@@ -1,5 +1,6 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
+import IAnimation from '../../../../Kernel/entities/Model/ModelAnimationsManager/IAnimation';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import ASLevel from '../../../levels/ASLevel/ASLevel';
 import Monster from '../../Monster/Monster';
@@ -9,16 +10,26 @@ import PidgeonSoundController from './PidgeonSoundController';
  * The Neon Pidgeon monster (there should be 2 in the level, at the same time)
  */
 export default class NeonPidgeon extends Monster {
-    private _nextDrop:number; // The time for the next drop attack (in milliseconds)
-    private _edgeOverflow:number; // Without this, the player can just stay on the edge of the level, and not get hit
+    // How far over the edges of the level should the pidgeon be able to go (Without this, the player
+    // can just stay on the edge of the level, and not get hit)
+    private _edgeOverflow:number;
+    
     private _flapSoundKey:string; // The key for the wings flapping sound effect
-    private _lowerPidgeon?:NeonPidgeon; // If this is the pidgeon on top, the pidgeon beneath it is stored here
     private _soundController:PidgeonSoundController; // Controls sound effects for all pidgeons
     
-    /**
-     * Is this pidgeon's x position currently overlapping the player's?
-     */
-    overlapping:boolean;
+    private _higherPidgeonModel?:NeonPidgeon; // the pidgeon that's flying above this one is stored here (If this one is the lower one)
+    
+    private _overlapping:boolean; // Is this pidgeon's X-axis position currently overlapping the player's?
+    private _nextDrop:number; // The time for the next drop attack (in milliseconds)
+    private _dropWaitOffset:number; // A minimum span of time (in milliseconds) between each drop attack
+    private _dropWaitRange:number; // A span of time (milliseconds). The total amount that can be added to the dropWaitOffset, to get a new drop time.
+    private _initialDropWait:number; // The amount of time (in milliseconds) the monster will wait before its initial drop attack
+    private _dropYSpeed:number; // The movement speed on the Y-axis, when dropping/rising
+    
+    private _higherPidgeonSteadyY:number; // The standard Y-axis position of the higher pidgeon
+    private _lowerPidgeonSteadyY:number; // The standard Y-axis position of the lower pidgeon
+    private _steadyY:number; // The standard Y-axis position of this pidgeon, as it flys back and forth
+    private _extraOffScreenYPosOffset:number; // This value adds extra units to what we consider to be "off screen" (on the Y-axis)
     
     /**
      * How much damage does this monster do?
@@ -26,35 +37,25 @@ export default class NeonPidgeon extends Monster {
     damageDealt:number;
     
     /**
-     * A minimum span of time (in milliseconds) between each drop attack
-     */
-    dropWaitOffset:number;
-    
-    /**
-     * A span of time, in milliseconds.
-     * This is the total amount that can be added to the dropWaitOffset, to get a new drop time.
-     */
-    dropWaitRange:number;
-    
-    /**
-     * The amount of time (in milliseconds) the monster will wait before its initial drop attack
-     */
-    initialDropWait:number;
-    
-    
-    /**
      * Constructor
-     * @param lowerPidgeon The pidgeon that will be beneath this pidgeon (if this pidgeon is on top)
+     * @param higherPidgeon The pidgeon that will be above this pidgeon (if this pidgeon is the lower one)
      */
-    constructor(lowerPidgeon?:NeonPidgeon)
+    constructor(higherPidgeon?:NeonPidgeon)
     {
         super();
         
-        this._lowerPidgeon = lowerPidgeon;
+        this._higherPidgeonModel = higherPidgeon;
         
         this._flapSoundKey = "/models/monsters/NeonPidgeon/sounds/flap.mp3";
         
         this.damageDealt = 10;
+        
+        this._extraOffScreenYPosOffset = 75;
+        this._higherPidgeonSteadyY = 150;
+        this._lowerPidgeonSteadyY = 250;
+        this._steadyY = !this._higherPidgeonModel
+            ? this._higherPidgeonSteadyY
+            : this._lowerPidgeonSteadyY;
     }
     
     load(animationManager:IModelAnimationsManager):void
@@ -123,7 +124,7 @@ export default class NeonPidgeon extends Monster {
     {
         super.prepare();
         
-        const level = (Kernel.getInstance().level as ASLevel);
+        this.state = "flapping";
         
         this.actions = [
             this.moveSideways,
@@ -131,55 +132,27 @@ export default class NeonPidgeon extends Monster {
             this.rise
         ];
         
-        this.enterXSpeed = 90;
-        this.exitXSpeed = 240;
-        this.xSpeed = this._lowerPidgeon ? -760 : -880;
-        this.ySpeed = 1250;
+        this._resetPositionValues();
+        this._resetSpeedValues();
         
-        this.startZ = this.playerModel.z;
-        this.startY = this._lowerPidgeon ? 150 : 250;
-        this.offScreenUnits = this._lowerPidgeon ? 500 : 650;
-        this.startX = level.rightEdge + this.offScreenUnits;
-        this.y = this.startY;
-        this.x = this.startX;
-        this.z = this.startZ;
+        this._resetDropValues();
         
-        this.overlapping = false;
-        this.dropWaitOffset = 2000; //2 seconds
-        this.dropWaitRange = 2000;
-        this.initialDropWait = 8000;
-        this._nextDrop = -1;
-        
-        this.state = "flapping";
-        
-        if(this._lowerPidgeon)
-            this._soundController = new PidgeonSoundController(this, this._lowerPidgeon);
+        if(this._higherPidgeonModel)
+            this._soundController = new PidgeonSoundController(this._higherPidgeonModel, this);
     }
     
     act():void
     {
         super.act();
         
-        // If this is the upper pidgeon, it should trigger the sound controller
-        if(this._soundController && this._lowerPidgeon)
+        this._preDrawSynchronise();
+        
+        if(this._soundController)
         {
             const soundEngine = Kernel.getInstance().soundEngine;
             
             soundEngine.setSoundVolume(this._flapSoundKey, this.getVolumeForDistance());
-            this._soundController.act(this._flapSoundKey); // Run the sound(s) if necessary
-        }
-    }
-    
-    draw():void
-    {
-        super.draw();
-        
-        // The pidgeon's flapping animations should be kept synced (otherwise the flapping sound can be inconsistent 
-        // when one of the pidgeon's is dropping)
-        if(this.state === "flapping" && this._soundController && this._lowerPidgeon)
-        {
-            const flappingAnimFrame = this.getCurrentFlappingFrame();
-            this._lowerPidgeon.animationManager.animations.flapping.currentFrameIndex = flappingAnimFrame;
+            this._soundController.act(this._flapSoundKey);
         }
     }
     
@@ -191,13 +164,45 @@ export default class NeonPidgeon extends Monster {
     }
     
     /**
-     * Gets the current frame index of the flapping animation. 
-     * This is used by the PidgeonSoundController to time the flapping sound effect.
-     * @returns the current frame index of this pidgeon's flapping animation
+     * Gets the flapping animation object from the model's animation manager
      */
-    getCurrentFlappingFrame():number
+    getFlappingAnimation():IAnimation
     {
-        return this.animationManager.animations.flapping.currentFrameIndex;
+        return this.animationManager.animations.flapping;
+    }
+    
+    /**
+     * Sets the flapping animation object in the model's animation manager
+     */
+    setFlappingAnimation(newAnim:IAnimation):void
+    {
+        this.animationManager.animations.flapping = newAnim;
+    }
+    
+    /**
+     * Before being drawn, the pidegons need to be synchronised in certain ways (for
+     * example, if both are flapping, their animations will need to be synced to ensure
+     * the sound effect is timed correctly)
+     */
+    private _preDrawSynchronise():void
+    {
+        if(!this._higherPidgeonModel)
+            return;
+        
+        // The pidgeon's flapping animations should be kept synced (otherwise the flapping sound can be inconsistent)
+        
+        const lowPidgeonAnimation = this.getFlappingAnimation();
+        const highPidgeonAnimation = this._higherPidgeonModel.getFlappingAnimation();
+        const animName = "flapping";
+        
+        const shouldSyncAnimations = (
+            this.state === animName
+            && this._higherPidgeonModel.state === animName
+            && highPidgeonAnimation.currentFrameIndex !== lowPidgeonAnimation.currentFrameIndex
+        );
+        
+        if(shouldSyncAnimations)
+            this._higherPidgeonModel.setFlappingAnimation({ ...lowPidgeonAnimation });
     }
     
     // Hit boxes --------------------------------------------------------
@@ -239,37 +244,32 @@ export default class NeonPidgeon extends Monster {
     enter():void
     {
         const kernel = Kernel.getInstance();
-        const level = (kernel.level as ASLevel);
         
-        if(level.rightEdge < (this.x + this.width))
+        if(this.y < this._steadyY)
         {
-            this.moveLeft(this.enterXSpeed);
+            this.moveDown(this.enterYSpeed);
         } else {
+            this.y = this._steadyY;
             this.entering = false;
-            this._nextDrop = kernel.totalLevelActiveMilliseconds + this.initialDropWait;
+            this._nextDrop = kernel.totalLevelActiveMilliseconds + this._initialDropWait;
         }
     }
     
     exit():void
     {
-        if(this.y != this.startY) // If not at correct height, don't leave yet
+        if(this.y > this._steadyY) // If not at correct height, don't leave yet (may be mid-drop)
         {
             this.state = "rising";
             this.rise();
-        } else {
-            const level = (Kernel.getInstance().level as ASLevel);
-            
+        }
+        else
+        {
             this.state = "flapping";
         
-            // Because of how the sound effects work, the lower pidgeon needs to leave first.
-            // So, move upper pidgeon to the right until it's on the right edge of the lower one.
-            if(!this._lowerPidgeon || !this._lowerPidgeon.active || (this._lowerPidgeon.x + this._lowerPidgeon.width < this.x))
-                this.moveLeft(this.exitXSpeed);
-            else
-                this.moveRight(Math.abs(this.xSpeed));
+            this.moveUp(this.exitYSpeed);
             
             
-            if((this.x + this.width) < (level.leftEdge - this.offScreenUnits))
+            if((this.y + this.height) < -this._extraOffScreenYPosOffset)
                 this._handleMonsterExitingScreen();
         }
     }
@@ -282,6 +282,64 @@ export default class NeonPidgeon extends Monster {
         this.exiting = false;
         this.active = false;
 	}
+    
+    /**
+     * Resets the values associated with the model's positioning
+     * at different points during the level
+     */
+    private _resetPositionValues():void
+    {
+        const { leftEdge, rightEdge } = Kernel.getInstance().level as ASLevel;
+        const levelCenter = (rightEdge - leftEdge) / 2;
+        
+        const isLowerPidgeon = !!this._higherPidgeonModel;
+        const yDifference = this._lowerPidgeonSteadyY - this._higherPidgeonSteadyY;
+        
+        const offScreenYPosition = -(this.height + this._extraOffScreenYPosOffset);
+        this.startY = isLowerPidgeon
+            ? offScreenYPosition
+            : offScreenYPosition - yDifference;
+        
+        const xOffsetFromCenter = 100;
+        
+        this.startX = isLowerPidgeon
+            ? (levelCenter - this.width) - xOffsetFromCenter
+            : levelCenter + xOffsetFromCenter;
+        
+        this.startZ = this.playerModel.z;
+        
+        this.y = this.startY;
+        this.x = this.startX;
+        this.z = this.startZ;
+    }
+    
+    /**
+     * Resets the values associated with the model's speed
+     */
+    private _resetSpeedValues():void
+    {
+        const isLowerPidgeon = !!this._higherPidgeonModel;
+        
+        this._dropYSpeed = 1250;
+        this.enterYSpeed = 45;
+        this.exitYSpeed = 90;
+        
+        const xSpeed = 760;
+        this.xSpeed = isLowerPidgeon ? xSpeed : -xSpeed;
+    }
+    
+    /**
+     * Resets the values associated with the dropping/rising
+     * of the Pidgeon
+     */
+    private _resetDropValues():void
+    {
+        this._overlapping = false;
+        this._dropWaitOffset = 1500;
+        this._dropWaitRange = 1500;
+        this._initialDropWait = 8000;
+        this._nextDrop = -1;
+    }
     
     // Actions -----------------------------------------------------
     
@@ -302,7 +360,7 @@ export default class NeonPidgeon extends Monster {
 		// If this should be true, it will have been set to true by the
         // neonPidgeonOverlappingEventAction method, so we end on changing 
         // this back to false.
-        this.overlapping = false;
+        this._overlapping = false;
     }
     
     /**
@@ -310,7 +368,7 @@ export default class NeonPidgeon extends Monster {
      */
     drop():void
     {
-        this.moveDown();
+        this.moveDown(this._dropYSpeed);
     }
     
     /**
@@ -318,11 +376,11 @@ export default class NeonPidgeon extends Monster {
      */
     rise():void
     {
-        this.moveUp();
+        this.moveUp(this._dropYSpeed);
         
-        if(this.y <= this.startY)
+        if(this.y <= this._steadyY)
         {
-            this.y = this.startY;
+            this.y = this._steadyY;
             this.state = "flapping";
             this.nextAction();
         }
@@ -346,7 +404,7 @@ export default class NeonPidgeon extends Monster {
 	{
         const totalActiveMS = Kernel.getInstance().totalLevelActiveMilliseconds;
         
-		return totalActiveMS + this.dropWaitOffset + Math.floor(Math.random() * this.dropWaitRange);
+		return totalActiveMS + this._dropWaitOffset + Math.floor(Math.random() * this._dropWaitRange);
 	}
 	
     /**
@@ -357,7 +415,7 @@ export default class NeonPidgeon extends Monster {
 	{
         const totalActiveMS = Kernel.getInstance().totalLevelActiveMilliseconds;
         
-		return (totalActiveMS >= this._nextDrop && this.overlapping);
+		return (totalActiveMS >= this._nextDrop && this._overlapping);
 	}
 	
     /**
@@ -398,7 +456,7 @@ export default class NeonPidgeon extends Monster {
      */
     overlappingPlayerXEventAction():void
     {
-        this.overlapping = true;
+        this._overlapping = true;
     }
     
     /**
