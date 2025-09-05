@@ -9,6 +9,7 @@ import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import IEventManager from '../../../Kernel/entities/Level/IEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
+import NeonPidgeon from '../../models/Monsters/NeonPidgeon/NeonPidgeon';
 
 /**
  * The Lars level
@@ -34,6 +35,11 @@ export default class Neonus extends ASLevel<GangMember>
     getModels():IModel[]
     {
         const models = super.getModels() as ASModel[];
+        
+        const higherPidgeon = new NeonPidgeon();
+        const lowerPidgeon = new NeonPidgeon(higherPidgeon);
+        this.monsters = [higherPidgeon, lowerPidgeon];
+        models.push(...this.monsters);
         
         const leftIntroGangMember = new IntroGangMember(false);
         const rightIntroGangMember = new IntroGangMember(false);
@@ -100,13 +106,20 @@ export default class Neonus extends ASLevel<GangMember>
     {
         super.act();
         
-        this.levelIntroSection(
-            39,
-            29,
-            () => this._introGangMembers.forEach(gm => gm.start())
-        );
+        // this.levelIntroSection(
+        //     39,
+        //     29,
+        //     () => this._introGangMembers.forEach(gm => gm.start())
+        // );
         
-        
+        // this.levelSection(
+        //     "neonPidgeons",
+        //     15,
+        //     76,
+        //     () => this.monsters.forEach(monster => monster.start()),
+        //     null,
+        //     () => this.monsters.forEach(monster => monster.stop())
+        // );
         
         // Run the closing sequence
         this.levelEndSection(249);
