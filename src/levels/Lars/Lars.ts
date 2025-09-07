@@ -145,9 +145,12 @@ export default class Lars extends ASLevel<RockBall>
             "rockBallsZigZagPattern",
             95,
             122,
+            () => this.patternManager.start(),
             null,
-            () => this.patternManager.sendPattern()
+            () => this.patternManager.stop()
         );
+        
+        this.patternManager.act();
         
         this.levelSection(
             "babyDragon",
@@ -210,6 +213,8 @@ export default class Lars extends ASLevel<RockBall>
         ));
         
         pattern.positions.push(...leftToRightWall, ...rightToLeftWall);
+        pattern.lineCountPerSection = leftToRightWall.length;
+        
         return pattern;
     }
     

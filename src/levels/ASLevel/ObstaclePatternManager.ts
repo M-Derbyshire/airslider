@@ -8,6 +8,11 @@ import { generateRandomPositionModifier } from "./utils";
 export default class ObstaclePatternManager<T extends Obstacle>
 {
 	/**
+	 * Has the pattern been stopped?
+	 */
+	private _isStopped:boolean;
+	
+	/**
 	 * These are the models that can be used when making patterns
 	 */
 	private _models:T[];
@@ -28,11 +33,18 @@ export default class ObstaclePatternManager<T extends Obstacle>
 	 */
 	private _nextLineToSendIndex:number;
 	
+	/**
+	 * How many lines are left in the current "section" of the pattern?
+	 */
+	private _linesLeftInSectionCount:number;
+	
 	constructor()
 	{
 		this._models = [];
 		this._nextModelIndex = 0;
 		this._nextLineToSendIndex = 0;
+		this._isStopped = true;
+		this._linesLeftInSectionCount = 0;
 	}
 	
 	/**
@@ -54,18 +66,43 @@ export default class ObstaclePatternManager<T extends Obstacle>
 	 */
 	setRepeatingPattern(pattern:IPattern):void
 	{
-		this._pattern = pattern
+		this._pattern = { ...pattern };
+		
+		const count = pattern.lineCountPerSection ?? 0;
+		if (count < 1)
+			this._pattern.lineCountPerSection = 1;
+		
+		this._isStopped = true;
+		this._linesLeftInSectionCount = 0;
 	}
 	
 	/**
-	 * Sends the pattern down the Z axis.
+	 * Sends the pattern down the Z-axis, if the pattern manager has been started (or if there
+	 * is an unfinished section of the pattern still being sent).
 	 * If not enough models are provided, we'll loop back to the first one (it is up to the 
 	 * caller to make sure we have enough models for the pattern)
 	 */
-	sendPattern():void
+	act():void
 	{
-		if(this._isTimeForNextLineOfPattern())
+		if(this._patternIsActive() && this._isTimeForNextLineOfPattern())
 			this._sendNextLineOfPattern();
+	}
+	
+	/**
+	 * Starts the pattern running
+	 */
+	start():void
+	{
+		this._isStopped = false;
+	}
+	
+	/**
+	 * Stops the pattern (if there is an unfinished section of the pattern, the pattern
+	 * will only stop once that's completed)
+	 */
+	stop():void
+	{
+		this._isStopped = true;
 	}
 	
 	/**
@@ -73,11 +110,27 @@ export default class ObstaclePatternManager<T extends Obstacle>
 	 */
 	private _sendNextLineOfPattern():void
 	{
+		if(this._linesLeftInSectionCount === 0)
+			this._linesLeftInSectionCount = this._pattern.lineCountPerSection;
+		
 		const line = this._pattern.positions[this._getNextLineIndex()];
 		
 		line.forEach((xPos) => {
 			this._setNextModelToStartPosition(xPos, this._pattern.zModifierAbs);
 		});
+		
+		this._linesLeftInSectionCount--;
+	}
+	
+	/**
+	 * Is the pattern currently active?
+	 */
+	private _patternIsActive():boolean
+	{
+		return (
+			!this._isStopped
+			|| this._linesLeftInSectionCount > 0
+		);
 	}
 	
 	/**
@@ -189,4 +242,11 @@ export interface IPattern {
 	 * obstacles will be repeatably sent down the Z-axis, one after the other.
 	 */
 	positions:number[][];
+	
+	/**
+	 * The count of lines (on the Z-axis) for every "section" of the pattern. We
+	 * always want a section to be completed, even if the pattern is stopped.
+	 * If this is less than 1, or undefined, it will be set to 1.
+	 */
+	lineCountPerSection?:number;
 };

@@ -145,9 +145,12 @@ export default class Forurn extends ASLevel<Snake>
             "snakeGroups",
             161,
             224,
+            () => this.patternManager.start(),
             null,
-            () => this.patternManager.sendPattern()
+            () => this.patternManager.stop()
         );
+        
+        this.patternManager.act();
         
         // Run the closing sequence
         this.levelEndSection(231);
