@@ -11,9 +11,12 @@ export default class SweepingObstacleManager<T extends Obstacle> extends Obstacl
     // Should the obstacle start on the right edge, instead of the left?
     private _placeObstacleOnRight:boolean;
     
-    constructor()
+    /**
+     * Resets the manager
+     */
+    reset():void
     {
-        super();
+        super.reset();
         
         this._placeObstacleOnRight = false;
         

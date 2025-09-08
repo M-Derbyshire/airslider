@@ -477,6 +477,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
      */
 	private _setupObstacleManager(leftEdge:number, rightEdge:number):void
 	{
+        this.obstacleManager.reset();
 		this.obstacleManager.setAreaEdges(leftEdge, rightEdge);
 	}
     

@@ -40,11 +40,12 @@ export default class ObstacleManager<T extends Obstacle>
 	 */
 	get currentLineCount() { return this._lineCount }
 	
-	
-	
-    constructor()
-    {
-        this.areaLeftEdge = 0;
+	/**
+	 * Resets the manager
+	 */
+	reset():void
+	{
+		this.areaLeftEdge = 0;
         this.areaRightEdge = 0;
         
 		this.obstacles = [];
@@ -53,7 +54,7 @@ export default class ObstacleManager<T extends Obstacle>
 		this.minObstacleCount = 2;
 		
 		this.zModifierAbsMax = 0;
-    }
+	}
     
 	/**
 	 * Sets the horizontal area that we want the obstacles to be able to move in

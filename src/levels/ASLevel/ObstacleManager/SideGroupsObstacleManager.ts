@@ -10,15 +10,18 @@ export default class SideGroupsObstacleManager<T extends Obstacle> extends Obsta
 {
     // Should the next line of obstacles be placed on the right side of the track?
 	private _placeLineOnRight:boolean;
-    
-    constructor()
-    {
-        super();
-        
-        this._placeLineOnRight = false;
+	
+	/**
+	 * Resets the manager
+	 */
+	reset():void
+	{
+		super.reset();
+		
+		this._placeLineOnRight = false;
         this.minObstacleCount = 2;
 		this.zModifierAbsMax = 20;
-    }
+	}
     
     /**
 	 * Get the X positions for a line of obstacles
