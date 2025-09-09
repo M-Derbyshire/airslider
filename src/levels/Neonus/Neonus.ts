@@ -1,7 +1,6 @@
 import ASLevel from '../ASLevel/ASLevel';
 import ASModel from '../../models/ASModel/ASModel';
 import Kernel from '../../../Kernel/Kernel';
-import SweepingObstacleManager from '../ASLevel/ObstacleManager/SweepingObstacleManager';
 import NeonusLoadingScreen from '../LoadingScreens/NeonusLoadingScreen/NeonusLoadingScreen';
 import GangMember from '../../models/Obstacles/GangMember/GangMember';
 import IntroGangMember from '../../models/Obstacles/IntroObstacles/IntroGangMember/IntroGangMember';
@@ -10,6 +9,7 @@ import IEventManager from '../../../Kernel/entities/Level/IEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
 import NeonPidgeon from '../../models/Monsters/NeonPidgeon/NeonPidgeon';
+import SweepAndAimObstacleManager from '../ASLevel/ObstacleManager/SweepAndAimObstacleManager';
 
 /**
  * The Lars level
@@ -18,6 +18,12 @@ export default class Neonus extends ASLevel<GangMember>
 {
     private _introGangMembers:IntroGangMember[];
     
+     // The count of "lines" that the obstacle manager will put on screen at any one time
+    private _gangMembersLineCount:number;
+    
+    private _staticGangMembers:GangMember[];
+    private _sweepingGangMembers:GangMember[];
+    
     constructor()
     {
         super();
@@ -25,7 +31,11 @@ export default class Neonus extends ASLevel<GangMember>
         this.NextLevelLoadingScreen = NeonusLoadingScreen;
         
         this.roadColor = "#899699";
-        this.obstacleManager = new SweepingObstacleManager<GangMember>();
+        this.obstacleManager = new SweepAndAimObstacleManager<GangMember>();
+        
+        this._gangMembersLineCount = 8;
+        this._staticGangMembers = [];
+        this._sweepingGangMembers = [];
     }
     
     /**
@@ -52,6 +62,19 @@ export default class Neonus extends ASLevel<GangMember>
         ];
         
         models.push(...this._introGangMembers);
+        
+        const sweepingCount = this._gangMembersLineCount * 2;
+        const staticCount = Math.ceil(sweepingCount / 2);
+        const sweepingXSpeed = 1000;
+        
+        for(let i = 0; i < sweepingCount; i++)
+            this._sweepingGangMembers.push(new GangMember("sweep", sweepingXSpeed));
+        
+        for(let i = 0; i < staticCount; i++)
+            this._staticGangMembers.push(new GangMember("static", 0));
+        
+        models.push(...this._sweepingGangMembers);
+        models.push(...this._staticGangMembers);
         
         return models;
     }
@@ -97,6 +120,12 @@ export default class Neonus extends ASLevel<GangMember>
     prepare():void
     {
         super.prepare();
+        
+        this.obstacleManager.setCurrentLineCount(this._gangMembersLineCount);
+        (this.obstacleManager as SweepAndAimObstacleManager<GangMember>).setSeperatedObstacleModels(
+            this._sweepingGangMembers,
+            this._staticGangMembers
+        );
     }
     
     /**
@@ -119,6 +148,14 @@ export default class Neonus extends ASLevel<GangMember>
         //     () => this.monsters.forEach(monster => monster.start()),
         //     null,
         //     () => this.monsters.forEach(monster => monster.stop())
+        // );
+        
+        // this.levelSection(
+        //     "gangMembers1",
+        //     15,
+        //     76,
+        //     null,
+        //     () => this.obstacleManager.sendObstaclesIfReady()
         // );
         
         // Run the closing sequence

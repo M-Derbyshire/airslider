@@ -16,6 +16,8 @@ export default class GangMember extends Obstacle
         
         this.damageDealt = 2;
         this.speedModifier = 3;
+        
+        this.state = "forward";
     }
     
     load(animationManager:IModelAnimationsManager):void

@@ -151,19 +151,30 @@ export default class ObstacleManager<T extends Obstacle>
 	}
 	
 	/**
-	 * Increases (or loops) the _lastSentObstacleIndex value to the next 
+	 * Increases (or loops) the manager's internal state to point to the next 
 	 * obstacle that can be used
 	 * @returns the index of the next obstacle that we can use
 	 */
 	protected getIndexForNextObstacle():number
 	{
+		this._lastSentObstacleIndex = this.peekIndexForNextObstacle();
+		return this._lastSentObstacleIndex;
+	}
+	
+	/**
+	 * Gets the index of the next obstacle that will be used (without
+	 * moving the manager's state to the next index)
+	 * @returns the index of the next obstacle that will be used
+	 */
+	protected peekIndexForNextObstacle():number
+	{
 		const lastObstacleIndex = this.obstacles.length - 1;
 		const maxIndexReached = this._lastSentObstacleIndex === lastObstacleIndex;
 		
 		if(maxIndexReached)
-			return this._lastSentObstacleIndex = 0;
+			return 0;
 		
-		return ++this._lastSentObstacleIndex;
+		return this._lastSentObstacleIndex + 1;
 	}
 	
 	/**

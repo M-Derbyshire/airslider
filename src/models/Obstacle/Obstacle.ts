@@ -1,7 +1,6 @@
 import Kernel from "../../../Kernel/Kernel";
 import ASLevel from "../../levels/ASLevel/ASLevel";
 import ASModel from "../ASModel/ASModel";
-import IModel from "../../../Kernel/entities/Model/IModel";
 import Tarian from "../Tarian/Tarian";
 import UnitHelper from "../../../Kernel/utils/UnitHelper";
 import IHitBox from "../../../Kernel/entities/Model/IHitBox";
@@ -22,14 +21,6 @@ export default class Obstacle extends ASModel
     startZPosition:number;
     
     /**
-     * The mode of the obstacle
-     * "static" means it will move straight; 
-     * "sweep" means it will move back and forth on the x axis, while moving towards the player; 
-     * "home" means it will try and home in on the player
-     */
-    private _mode:obstacleModes;
-    
-    /**
      * The player model, used when in "home" mode
      */
     private _homingTarget:Tarian|null;
@@ -38,6 +29,14 @@ export default class Obstacle extends ASModel
      * At what z position should the homing movement begin (in "home" mode)?
      */
     private _homingZStart:number;
+    
+    /**
+     * The mode of the obstacle
+     * "static" means it will move straight; 
+     * "sweep" means it will move back and forth on the x axis, while moving towards the player; 
+     * "home" means it will try and home in on the player
+     */
+    private _mode:obstacleModes;
     
     /**
      * Has this obstacle had a collision with the player (on this run down the track)?
@@ -50,6 +49,11 @@ export default class Obstacle extends ASModel
      * speed.
      */
     protected speedModifier:number;
+    
+    get mode():obstacleModes
+    {
+        return this._mode;
+    }
     
     /**
      * Constructor
