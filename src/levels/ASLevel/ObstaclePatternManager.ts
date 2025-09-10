@@ -67,6 +67,8 @@ export default class ObstaclePatternManager<T extends Obstacle>
 	setRepeatingPattern(pattern:IPattern):void
 	{
 		this._pattern = { ...pattern };
+		if(this._pattern.zGapBetweenSections === undefined)
+			this._pattern.zGapBetweenSections = this._pattern.zGap;
 		
 		const count = pattern.lineCountPerSection ?? 0;
 		if (count < 1)
@@ -154,9 +156,11 @@ export default class ObstaclePatternManager<T extends Obstacle>
 		if(!lastModelUsed.active)
 			return true;
 		
-		const requiredPositionForCurrentLine = lastModelUsed.startZPosition - this._pattern.zGap;
+		const gapToNextLine = (this._linesLeftInSectionCount === 0)
+			? this._pattern.zGapBetweenSections
+			: this._pattern.zGap;
 		
-		return requiredPositionForCurrentLine >= lastModelUsed.z;
+		return (lastModelUsed.startZPosition - gapToNextLine) >= lastModelUsed.z;
 	}
 	
 	/**
@@ -220,9 +224,15 @@ export default class ObstaclePatternManager<T extends Obstacle>
  */
 export interface IPattern {
 	/**
-	 * The distance (on the Z-axis) between each line of the pattern
+	 * The distance (on the Z-axis) between each line within a pattern "section"
 	 */
 	zGap:number;
+	
+	/**
+	 * The distance (on the Z-axis) between each "section" of the pattern. If
+	 * this is not provided, it will default to the zGap value.
+	 */
+	zGapBetweenSections?:number;
 	
 	/**
 	 * The Z position of the obstacles in a line can be given a random 
