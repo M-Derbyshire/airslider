@@ -38,12 +38,12 @@ export default class SweepAndAimObstacleManager<T extends Obstacle> extends Obst
         const requiredStaticCount = Math.ceil(sweepingModelsCopy.length / 2);
         
         if(staticModelsCopy.length < requiredStaticCount)
-            throw new Error("not enough static obstacles provided. the static obstacle count should be half the sweeping obstacle count");
+            throw new Error("not enough static obstacles provided. the static obstacle count should be at least half the sweeping obstacle count");
         
         const orderedObstacles:T[] = [];
-        const totalCount = staticModelsCopy.length + sweepingModelsCopy.length;
+        const totalLineCount = sweepingModelsCopy.length * 1.5; // 1 static for every 2 sweeping
         
-        for(let i = 1; i <= totalCount; i++)
+        for(let i = 1; i <= totalLineCount; i++)
         {
             const useStatic = i % 3 === 0;
             
