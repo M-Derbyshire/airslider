@@ -139,42 +139,42 @@ export default class Neonus extends ASLevel<GangMember>
     {
         super.act();
         
-        // this.levelIntroSection(
-        //     39,
-        //     29,
-        //     () => this._introGangMembers.forEach(gm => gm.start())
-        // );
+        this.levelIntroSection(
+            39,
+            27,
+            () => this._introGangMembers.forEach(gm => gm.start())
+        );
         
-        // this.levelSection(
-        //     "neonPidgeons",
-        //     15,
-        //     76,
-        //     () => this.monsters.forEach(monster => monster.start()),
-        //     null,
-        //     () => this.monsters.forEach(monster => monster.stop())
-        // );
+        this.levelSection(
+            "gangMembers1",
+            43,
+            98,
+            null,
+            () => this.obstacleManager.sendObstaclesIfReady()
+        );
         
-        // this.levelSection(
-        //     "gangMembers1",
-        //     15,
-        //     76,
-        //     null,
-        //     () => this.obstacleManager.sendObstaclesIfReady()
-        // );
+        this.levelSection(
+            "neonPidgeons",
+            107,
+            157,
+            () => this.monsters.forEach(monster => monster.start()),
+            null,
+            () => this.monsters.forEach(monster => monster.stop())
+        );
         
-        // this.levelSection(
-        //     "gangDiamondsPattern",
-        //     15,
-        //     75,
-        //     () => this.patternManager.start(),
-        //     null,
-        //     () => this.patternManager.stop()
-        // );
+        this.levelSection(
+            "gangDiamondsPattern",
+            166,
+            216,
+            () => this.patternManager.start(),
+            null,
+            () => this.patternManager.stop()
+        );
         
         this.patternManager.act();
         
         // Run the closing sequence
-        this.levelEndSection(249);
+        this.levelEndSection(223);
     }
     
     /**
