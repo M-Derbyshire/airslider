@@ -10,6 +10,7 @@ import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventMa
 import IModel from '../../../Kernel/entities/Model/IModel';
 import NeonPidgeon from '../../models/Monsters/NeonPidgeon/NeonPidgeon';
 import SweepAndAimObstacleManager from '../ASLevel/ObstacleManager/SweepAndAimObstacleManager';
+import { IPattern } from '../ASLevel/ObstaclePatternManager';
 
 /**
  * The Lars level
@@ -64,7 +65,7 @@ export default class Neonus extends ASLevel<GangMember>
         models.push(...this._introGangMembers);
         
         const sweepingCount = this._gangMembersLineCount * 2;
-        const staticCount = Math.ceil(sweepingCount / 2);
+        const staticCount = 50; // These are also used by the pattern manager
         const sweepingXSpeed = 1000;
         
         for(let i = 0; i < sweepingCount; i++)
@@ -126,6 +127,9 @@ export default class Neonus extends ASLevel<GangMember>
             this._sweepingGangMembers,
             this._staticGangMembers
         );
+        
+        this.patternManager.setRepeatingPattern(this._generateGangPattern());
+        this.patternManager.setModelsForPattern(this._staticGangMembers);
     }
     
     /**
@@ -158,7 +162,103 @@ export default class Neonus extends ASLevel<GangMember>
         //     () => this.obstacleManager.sendObstaclesIfReady()
         // );
         
+        // this.levelSection(
+        //     "gangDiamondsPattern",
+        //     15,
+        //     75,
+        //     () => this.patternManager.start(),
+        //     null,
+        //     () => this.patternManager.stop()
+        // );
+        
+        this.patternManager.act();
+        
         // Run the closing sequence
         this.levelEndSection(249);
+    }
+    
+    /**
+     * Generates an obstacle pattern that sends groups of
+     * obstacles towards the player, on different sides of
+     * the track
+     * @returns a pattern to be used by the pattern manager
+     */
+    private _generateGangPattern():IPattern
+    {
+        const pattern:IPattern = {
+            zGap: 25,
+            zGapBetweenSections: 75,
+            lineCountPerSection: 5,
+            zModifierAbs: 0,
+            positions: []
+        };
+        
+        let lastGroupWasOnLeftSide = false;
+        const obstacleWidth = this._staticGangMembers[0].width;
+        const sectionCount = 30;
+        
+        for(let i = 0; i < sectionCount; i++)
+        {
+            let section:number[][];
+            
+            if(lastGroupWasOnLeftSide)
+                section = this._generateRightSideGangPositions(obstacleWidth);
+            else
+                section = this._generateLeftSideGangPositions(obstacleWidth);
+            
+            pattern.positions.push(...section);
+            lastGroupWasOnLeftSide = !lastGroupWasOnLeftSide;
+        }
+        
+        return pattern;
+    }
+    
+    /**
+     * Generates the pattern positions for gang-members on the left side of 
+     * the track
+     * @param modelWidth the width of the obstacle models being used
+     * @returns the positions (the first array contains arrays of X-axis positions)
+     */
+    private _generateLeftSideGangPositions(modelWidth:number):number[][]
+    {
+        const levelHalfWidth = (this.rightEdge - this.leftEdge) / 2;
+        const levelCenter = this.leftEdge + levelHalfWidth;
+        const modelHalfWidth = modelWidth / 2;
+        
+        const groupRightmostPosition = levelCenter - modelHalfWidth;
+        const groupCenter = ((groupRightmostPosition - this.leftEdge) / 2) + this.leftEdge;
+        const spaceBetweenMiddleObstacles = (groupCenter - this.leftEdge) / 4;
+        
+        const positions = [
+            [groupCenter],
+            [
+                this.leftEdge + spaceBetweenMiddleObstacles,
+                groupRightmostPosition - spaceBetweenMiddleObstacles
+            ],
+            [this.leftEdge, groupRightmostPosition]
+        ];
+        
+        // Add the first 2 lines again, in reverse, to complete the diamond pattern
+        positions.push(positions[1], positions[0]);
+        
+        return positions;
+    }
+    
+    /**
+     * Generates the pattern positions for gang-members on the right side of 
+     * the track
+     * @param modelWidth the width of the obstacle models being used
+     * @returns the positions (the first array contains arrays of X-axis positions)
+     */
+    private _generateRightSideGangPositions(modelWidth:number):number[][]
+    {
+        const levelHalfWidth = (this.rightEdge - this.leftEdge) / 2;
+        const leftPositions = this._generateLeftSideGangPositions(modelWidth);
+        
+        const rightPositions:number[][] = leftPositions.map(xPositions => {
+            return xPositions.map(position => position + levelHalfWidth);
+        });
+        
+        return rightPositions;
     }
 };
