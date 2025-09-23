@@ -6,10 +6,6 @@ import Obstacle from '../../Obstacle/Obstacle';
 
 export default class RockBall extends Obstacle
 {
-    protected maxBounceSpeed:number; // Sets the maximum upward speed for the ball's bounce
-    protected bounceDeceleration:number; // Controls how quickly the bounce of the ball decelerates
-    private _lowestBouncePosition:number; // The closest the ball can be to the ground when bouncing
-    
     /**
      * Constructor
      * @param mode The obstacle's mode
@@ -70,25 +66,15 @@ export default class RockBall extends Obstacle
         this.assetsToUnload.push(damageFlashImagePath);
     }
     
-    prepare(): void {
-        super.prepare();
-        
-        this._lowestBouncePosition = Kernel.getInstance().settings.unitsWithinCameraY;
-        this.y = this._lowestBouncePosition - this.height;
-        this.ySpeed = this.maxBounceSpeed;
-    }
-    
     act():void
     {
         super.act();
         
         // When the player-collision status is reset to false, the model's state should also be reset
-        if(this.hasCollidedWithPlayer) {
+        if(this.hasCollidedWithPlayer)
             this.state = "broken";
-        } else {
+        else
             this.state = "spin";
-            this._bounceBall();
-        }
     }
     
     /**
@@ -114,23 +100,5 @@ export default class RockBall extends Obstacle
         }
         
         return spinFrameCoordinates;
-    }
-    
-    /**
-     * Creates the bouncing effect for the ball
-     */
-    private _bounceBall():void
-    {
-        const maxValidYPos = this._lowestBouncePosition - this.height;
-        if(this.y >= maxValidYPos) {
-            this.y = maxValidYPos;
-            this.ySpeed = this.maxBounceSpeed;
-        }
-        
-        this.moveUp();
-        
-        // When the ySpeed goes negative, the ball will start to come back down
-        const realBounceDeceleration = UnitHelper.speed(this.bounceDeceleration);
-        this.ySpeed -= realBounceDeceleration;
     }
 }

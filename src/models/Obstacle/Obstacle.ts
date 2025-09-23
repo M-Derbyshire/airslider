@@ -39,6 +39,21 @@ export default class Obstacle extends ASModel
     private _mode:obstacleModes;
     
     /**
+     * The closest the ball can be to the ground when bouncing
+     */
+    private _lowestBouncePosition:number;
+    
+    /**
+     * Sets the maximum upward speed for the ball's bounce
+     */
+    protected maxBounceSpeed:number;
+    
+    /**
+     * Controls how quickly the bounce of the ball decelerates
+     */
+    protected bounceDeceleration:number;
+    
+    /**
      * Has this obstacle had a collision with the player (on this run down the track)?
      */
     protected hasCollidedWithPlayer:boolean;
@@ -68,11 +83,17 @@ export default class Obstacle extends ASModel
         super();
         
         this._mode = mode;
-        this._homingZStart = homingZStart;
-        this.xSpeed = speedX;
+        
         this._homingTarget = playerModel;
+        this._homingZStart = homingZStart;
+        
         this.hasCollidedWithPlayer = false;
+        
         this.speedModifier = 2;
+        this.xSpeed = speedX;
+        
+        this.maxBounceSpeed = 0;
+        this.bounceDeceleration = 0;
     }
     
     prepare():void
@@ -80,6 +101,11 @@ export default class Obstacle extends ASModel
         super.prepare();
         
         this.startZPosition = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
+        
+        const levelBottom = Kernel.getInstance().settings.unitsWithinCameraY;
+        this._lowestBouncePosition = levelBottom - this.height;
+        this.y = this._lowestBouncePosition;
+        this.ySpeed = this.maxBounceSpeed;
         
         this.setYPositionFromBottom(this.height);
         this.resetToStart(this.x);
@@ -104,6 +130,9 @@ export default class Obstacle extends ASModel
             
             this.moveRight(currentXSpeed); // This may be negative (which would be left movement)
         }
+        
+        if(this.maxBounceSpeed && !this.hasCollidedWithPlayer)
+            this._bounceBall();
     }
     
     /**
@@ -164,6 +193,24 @@ export default class Obstacle extends ASModel
         
 		return (playerCenter - obstacleCenter) / homingSpeed;
 	}
+    
+    /**
+     * Creates the bouncing effect for the ball
+     */
+    private _bounceBall():void
+    {
+        if(this.y >= this._lowestBouncePosition)
+        {
+            this.y = this._lowestBouncePosition;
+            this.ySpeed = this.maxBounceSpeed;
+        }
+        
+        this.moveUp();
+        
+        // When the ySpeed goes negative, the ball will start to come back down
+        const realBounceDeceleration = UnitHelper.speed(this.bounceDeceleration);
+        this.ySpeed -= realBounceDeceleration;
+    }
     
     // Events -------------------------------------------------------------------
     
