@@ -1,5 +1,5 @@
 import LoadingScreen from '../../LoadingScreen/LoadingScreen';
-import Neonus from '../../Neonus/Neonus';
+import Vevania from '../../Vevania/Vevania';
 
 /**
  * The loading screen for Vevania
@@ -10,7 +10,7 @@ export default class VevaniaLoadingScreen extends LoadingScreen
     {
         super();
         
-        this.LevelToLoad = Neonus;
+        this.LevelToLoad = Vevania;
         this.backgroundImagePath = "/levels/LoadingScreens/VevaniaLoadingScreen/images/background.png";
     }
 };

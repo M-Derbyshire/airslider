@@ -13,7 +13,7 @@ import SweepAndAimObstacleManager from '../ASLevel/ObstacleManager/SweepAndAimOb
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
 
 /**
- * The Lars level
+ * The Neonus level
  */
 export default class Neonus extends ASLevel<GangMember>
 {
