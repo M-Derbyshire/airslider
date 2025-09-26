@@ -1,7 +1,6 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IFrameCoordinates from '../../../../Kernel/entities/Model/ModelAnimationsManager/IFrameCoordinates';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
-import UnitHelper from '../../../../Kernel/utils/UnitHelper';
 import Obstacle from '../../Obstacle/Obstacle';
 
 export default class RockBall extends Obstacle
