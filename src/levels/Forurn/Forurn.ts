@@ -31,7 +31,9 @@ export default class Forurn extends ASLevel<Snake>
         this.musicFilePaths = this.musicFilePaths.filter(path => path.endsWith("airslider_track_1.mp3"));
         
         this.roadColor = "#8EA08E";
-        this.obstacleManager = new SideGroupsObstacleManager<Snake>();
+        this.obstacleManagers = [
+            new SideGroupsObstacleManager<Snake>()
+        ];
 	}
     
     /**
@@ -104,8 +106,8 @@ export default class Forurn extends ASLevel<Snake>
         super.prepare();
         
         const initialSnakeLineCount = 4;
-        this.obstacleManager.setObstacleModels(this._snakes);
-        this.obstacleManager.setCurrentLineCount(initialSnakeLineCount);
+        this.obstacleManagers[0].setObstacleModels(this._snakes);
+        this.obstacleManagers[0].setCurrentLineCount(initialSnakeLineCount);
         
         this.patternManager.setRepeatingPattern(this._generateSnakePattern());
         this.patternManager.setModelsForPattern(this._snakes);
@@ -129,7 +131,7 @@ export default class Forurn extends ASLevel<Snake>
             37,
             91,
             null,
-            () => this.obstacleManager.sendObstaclesIfReady()
+            () => this.obstacleManagers[0].sendObstaclesIfReady()
         );
         
         this.levelSection(

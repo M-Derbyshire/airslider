@@ -29,7 +29,9 @@ export default class Lars extends ASLevel<RockBall>
         this.NextLevelLoadingScreen = NeonusLoadingScreen;
         
         this.roadColor = "#9E8C8C";
-        this.obstacleManager = new SweepingObstacleManager<RockBall>();
+        this.obstacleManagers = [
+            new SweepingObstacleManager<RockBall>()
+        ];
 	}
     
     /**
@@ -113,8 +115,8 @@ export default class Lars extends ASLevel<RockBall>
         super.prepare();
         
         const initialRockBallLineCount = 6;
-        this.obstacleManager.setObstacleModels(this._sweepingRockBalls);
-        this.obstacleManager.setCurrentLineCount(initialRockBallLineCount);
+        this.obstacleManagers[0].setObstacleModels(this._sweepingRockBalls);
+        this.obstacleManagers[0].setCurrentLineCount(initialRockBallLineCount);
         
         this.patternManager.setRepeatingPattern(this._generateZigZagPattern());
         this.patternManager.setModelsForPattern(this._staticRockBalls);
@@ -138,7 +140,7 @@ export default class Lars extends ASLevel<RockBall>
             34,
             88,
             null,
-            () => this.obstacleManager.sendObstaclesIfReady()
+            () => this.obstacleManagers[0].sendObstaclesIfReady()
         );
         
         this.levelSection(
@@ -165,8 +167,8 @@ export default class Lars extends ASLevel<RockBall>
             "sweepingRockBalls2",
             187,
             242,
-            () => this.obstacleManager.setCurrentLineCount(7),
-            () => this.obstacleManager.sendObstaclesIfReady()
+            () => this.obstacleManagers[0].setCurrentLineCount(7),
+            () => this.obstacleManagers[0].sendObstaclesIfReady()
         );
         
         // Run the closing sequence

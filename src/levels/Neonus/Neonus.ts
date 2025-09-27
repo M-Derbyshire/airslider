@@ -32,7 +32,9 @@ export default class Neonus extends ASLevel<GangMember>
         this.NextLevelLoadingScreen = NeonusLoadingScreen;
         
         this.roadColor = "#899699";
-        this.obstacleManager = new SweepAndAimObstacleManager<GangMember>();
+        this.obstacleManagers = [
+            new SweepAndAimObstacleManager<GangMember>()
+        ];
         
         this._gangMembersLineCount = 8;
         this._staticGangMembers = [];
@@ -122,8 +124,8 @@ export default class Neonus extends ASLevel<GangMember>
     {
         super.prepare();
         
-        this.obstacleManager.setCurrentLineCount(this._gangMembersLineCount);
-        (this.obstacleManager as SweepAndAimObstacleManager<GangMember>).setSeperatedObstacleModels(
+        this.obstacleManagers[0].setCurrentLineCount(this._gangMembersLineCount);
+        (this.obstacleManagers[0] as SweepAndAimObstacleManager<GangMember>).setSeperatedObstacleModels(
             this._sweepingGangMembers,
             this._staticGangMembers
         );
@@ -150,7 +152,7 @@ export default class Neonus extends ASLevel<GangMember>
             43,
             98,
             null,
-            () => this.obstacleManager.sendObstaclesIfReady()
+            () => this.obstacleManagers[0].sendObstaclesIfReady()
         );
         
         this.levelSection(

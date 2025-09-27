@@ -68,7 +68,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     protected racerManager: RacerManager;
     
     // Obstacle management
-    protected obstacleManager: ObstacleManager<ObstacleType>;
+    protected obstacleManagers: ObstacleManager<ObstacleType>[];
     protected patternManager: ObstaclePatternManager<ObstacleType>;
     
     // Models we want to keep references to
@@ -136,7 +136,9 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
 		this.roadManager = new LevelRoadManager();
         this.roadColor = "#A5A5A5";
         
-        this.obstacleManager = new ObstacleManager<ObstacleType>();
+        this.obstacleManagers = [
+            new ObstacleManager<ObstacleType>()
+        ];
 		this.patternManager = new ObstaclePatternManager<ObstacleType>();
         
         this.racerManager = new RacerManager();
@@ -170,7 +172,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         this.player = new Tarian();
         centralState.set(CentralStateKey.PlayerModelIndex, stdModels.length);
-        this.obstacleManager.setPlayerModel(this.player);
+        this.obstacleManagers.forEach(om => om.setPlayerModel(this.player));
         
         this._startSign = new Sign("", this._signStartingZPosition, -1, true);
         this._startSignDisplay = new SignDisplay(this._startSign);
@@ -477,8 +479,10 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
      */
 	private _setupObstacleManager(leftEdge:number, rightEdge:number):void
 	{
-        this.obstacleManager.reset();
-		this.obstacleManager.setAreaEdges(leftEdge, rightEdge);
+        this.obstacleManagers.forEach(om => {
+            om.reset();
+            om.setAreaEdges(leftEdge, rightEdge);
+        });
 	}
     
     /**

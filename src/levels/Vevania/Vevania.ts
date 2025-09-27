@@ -21,7 +21,9 @@ export default class Vevania extends ASLevel<Skeleton>
         this.NextLevelLoadingScreen = VevaniaLoadingScreen;
         
         this.roadColor = "#525950";
-        this.obstacleManager = new SweepAndAimObstacleManager<Skeleton>();
+        this.obstacleManagers = [
+            new SweepAndAimObstacleManager<Skeleton>()
+        ];
     }
     
     /**
