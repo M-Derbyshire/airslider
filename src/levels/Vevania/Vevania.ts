@@ -1,18 +1,18 @@
 import ASLevel from '../ASLevel/ASLevel';
 import ASModel from '../../models/ASModel/ASModel';
 import Kernel from '../../../Kernel/Kernel';
-import GangMember from '../../models/Obstacles/GangMember/GangMember';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import IEventManager from '../../../Kernel/entities/Level/IEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
 import SweepAndAimObstacleManager from '../ASLevel/ObstacleManager/SweepAndAimObstacleManager';
 import VevaniaLoadingScreen from '../LoadingScreens/VevaniaLoadingScreen/VevaniaLoadingScreen';
+import Skeleton from '../../models/Obstacles/Skeleton/Skeleton';
 
 /**
  * The Vevania level
  */
-export default class Vevania extends ASLevel<GangMember>
+export default class Vevania extends ASLevel<Skeleton>
 {
     constructor()
     {
@@ -21,7 +21,7 @@ export default class Vevania extends ASLevel<GangMember>
         this.NextLevelLoadingScreen = VevaniaLoadingScreen;
         
         this.roadColor = "#525950";
-        this.obstacleManager = new SweepAndAimObstacleManager<GangMember>();
+        this.obstacleManager = new SweepAndAimObstacleManager<Skeleton>();
     }
     
     /**

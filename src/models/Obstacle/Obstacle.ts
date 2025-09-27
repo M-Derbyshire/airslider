@@ -78,7 +78,7 @@ export default class Obstacle extends ASModel
      * much less for the homing
      * @param playerModel The player model. This can be null, as it is only needed for "home" mode
      */
-    constructor(mode:obstacleModes, homingZStart:number, speedX:number = 0, playerModel:Tarian|null = null)
+    constructor(mode:obstacleModes, homingZStart?:number, speedX:number = 0, playerModel:Tarian|null = null)
     {
         super();
         
