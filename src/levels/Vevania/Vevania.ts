@@ -53,14 +53,14 @@ export default class Vevania extends ASLevel<Skeleton>
         
         const backgroundImagePath = "/levels/Vevania/images/background.png";
         const lightMaskImagePath = "/levels/Vevania/images/lightmask.png";
-        const leftGroundImagePath = "/levels/Forurn/images/ground.png";
-        const rightGroundImagePath = "/levels/Forurn/images/ground.png";
+        const leftGroundImagePath = "/levels/Vevania/images/leftGround.png";
+        const rightGroundImagePath = "/levels/Vevania/images/rightGround.png";
         
         this.backgroundImage = assetHandler.loadImage(backgroundImagePath);
         this.lightMaskImage = assetHandler.loadImage(lightMaskImagePath);
         this.lightMaskLuminosity = 0;
         
-        this.groundManager.load(leftGroundImagePath, rightGroundImagePath, 150, 75, 1200);
+        this.groundManager.load(leftGroundImagePath, rightGroundImagePath, 1000, 75, 1200);
         
         this.assetsToUnload.push(
             backgroundImagePath,
