@@ -93,7 +93,7 @@ export default class GangMember extends Obstacle
             })
         });
         
-        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/none.png";
+        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/standard.png";
         this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
         this.assetsToUnload.push(damageFlashImagePath);
     }

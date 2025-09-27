@@ -67,7 +67,7 @@ export default class Falcon extends Monster {
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
-        const damageFlashSpritesheet = "/HUDComponents/DamageFlash/images/none.png";
+        const damageFlashSpritesheet = "/HUDComponents/DamageFlash/images/standard.png";
         this.damageFlashImage = assetHandler.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
         
