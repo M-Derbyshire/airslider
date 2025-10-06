@@ -132,7 +132,7 @@ export default class Obstacle extends ASModel
         }
         
         if(this.maxBounceSpeed && !this.hasCollidedWithPlayer)
-            this._bounceBall();
+            this.bounceObstacle();
     }
     
     /**
@@ -159,6 +159,24 @@ export default class Obstacle extends ASModel
             return [];
         
         return super.getHitBoxes();
+    }
+    
+    /**
+     * Creates the bouncing effect for the obstacle
+     */
+    protected bounceObstacle():void
+    {
+        if(this.y >= this._lowestBouncePosition)
+        {
+            this.y = this._lowestBouncePosition;
+            this.ySpeed = this.maxBounceSpeed;
+        }
+        
+        this.moveUp();
+        
+        // When the ySpeed goes negative, the obstacle will start to come back down
+        const realBounceDeceleration = UnitHelper.speed(this.bounceDeceleration);
+        this.ySpeed -= realBounceDeceleration;
     }
     
     /**
@@ -193,24 +211,6 @@ export default class Obstacle extends ASModel
         
 		return (playerCenter - obstacleCenter) / homingSpeed;
 	}
-    
-    /**
-     * Creates the bouncing effect for the ball
-     */
-    private _bounceBall():void
-    {
-        if(this.y >= this._lowestBouncePosition)
-        {
-            this.y = this._lowestBouncePosition;
-            this.ySpeed = this.maxBounceSpeed;
-        }
-        
-        this.moveUp();
-        
-        // When the ySpeed goes negative, the ball will start to come back down
-        const realBounceDeceleration = UnitHelper.speed(this.bounceDeceleration);
-        this.ySpeed -= realBounceDeceleration;
-    }
     
     // Events -------------------------------------------------------------------
     

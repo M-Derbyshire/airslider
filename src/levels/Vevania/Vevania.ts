@@ -8,12 +8,15 @@ import IModel from '../../../Kernel/entities/Model/IModel';
 import SweepAndAimObstacleManager from '../ASLevel/ObstacleManager/SweepAndAimObstacleManager';
 import VevaniaLoadingScreen from '../LoadingScreens/VevaniaLoadingScreen/VevaniaLoadingScreen';
 import Skeleton from '../../models/Obstacles/Skeleton/Skeleton';
+import IntroSkeleton from '../../models/Obstacles/IntroObstacles/IntroSkeleton/IntroSkeleton';
 
 /**
  * The Vevania level
  */
 export default class Vevania extends ASLevel<Skeleton>
 {
+    private _introSkeletons:IntroSkeleton[];
+    
     constructor()
     {
         super();
@@ -33,6 +36,12 @@ export default class Vevania extends ASLevel<Skeleton>
     getModels():IModel[]
     {
         const models = super.getModels() as ASModel[];
+        
+        this._introSkeletons = [
+            new IntroSkeleton("left"),
+            new IntroSkeleton("right")
+        ];
+        models.push(...this._introSkeletons);
         
         return models;
     }
@@ -86,6 +95,12 @@ export default class Vevania extends ASLevel<Skeleton>
     act():void
     {
         super.act();
+        
+        // this.levelIntroSection(
+        //     40,
+        //     28,
+        //     () => this._introSkeletons.forEach(s => s.start())
+        // );
         
         // Run the closing sequence
         this.levelEndSection(223);
