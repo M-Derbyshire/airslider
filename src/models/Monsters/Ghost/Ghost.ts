@@ -8,37 +8,36 @@ import Monster from '../../Monster/Monster';
  * The ghost monster
  */
 export default class Ghost extends Monster {
-    
-    /**
-     * The maximum damage value this monster can have (damageDealt is the damage currently dealt by the monster)
-     */
-    damageDealtOrig:number;
-    
     /**
      * The current damage dealt by this monster
      */
     damageDealt:number;
     
-    /**
-     * The speed that this monster should exit the level, on the z axis
-     */
-    exitZSpeed:number;
+    // The maximum damage value this monster can have (damageDealt is the damage currently dealt by the monster)
+    private _damageDealtOriginal:number;
     
-    private _minXSpeed:number; 
-    private _maxXSpeed:number;
-    private _directionMultiplier:number; // The x speed is multiplied by this; Negate it to change direction
+    private _directionMultiplier:number; // The X-axis speed can be multiplied by this; Negate this to change direction
+    private _exitZSpeed:number; // The speed that this monster should exit the level, on the Z-axis
+    private _attackingZSpeed:number; // The Z-axis speed to use when attacking
+    private _maxAttackingXSpeed:number; // The maximum X-axis speed to use when attacking
     
     private _outLimit:number; // How far back will the monster go, before moving forward
     private _inLimit:number; // The point when the monster will start its sweeping again, after moving back from an attack
     
+    private _startPosition:ghostStartPosition; // Determines the starting X-axis position
+    
+    private _playerModel:IModel; // The player's character model
+    
     /**
      * Constructor
      */
-    constructor()
+    constructor(playerModel:IModel, startPosition:ghostStartPosition)
     {
         super();
         
-        this.damageDealtOrig = 2;
+        this._damageDealtOriginal = 5;
+        this._playerModel = playerModel;
+        this._startPosition = startPosition;
     }
     
     load(animationManager:IModelAnimationsManager):void
@@ -58,8 +57,8 @@ export default class Ghost extends Monster {
             normal: this.animationManager.createAnimation({
                 sheetPath: spritesheetPath,
                 fps: 24,
-                drawWidth: 219,
-                drawHeight: 212,
+                drawWidth: 175,
+                drawHeight: 170,
 				frameCoordinates: [
 					{ x: 0, y: 0, width: 319, height: 312 },
 					{ x: 0, y: 313, width: 319, height: 312 },
@@ -74,35 +73,43 @@ export default class Ghost extends Monster {
     {
         super.prepare();
         
+        const level = (Kernel.getInstance().level as ASLevel);
+        const vpDepth = level.vanishingPointDepth;
+        
         this.actions = [
-            this.sweep,
+            this.attack,
             this.moveUp
         ];
         
         this.state = "normal";
         
-        this.startZ = (Kernel.getInstance().level as ASLevel).vanishingPointDepth;
+        // outLimit is how far back the monster will go, before moving forward.
+        // inLimit is the point it will start attacking again
+        this._outLimit = 1;
+        this._inLimit = 180;
+        const attackSpaceDepth = this._inLimit - this._outLimit;
+        
+        this.startZ = (this._startPosition === "left")
+            ? vpDepth
+            : vpDepth + attackSpaceDepth;
+        this.startX = (this._startPosition === "left")
+            ? level.leftEdge
+            : (level.rightEdge - this.width);
+        
         this.setYPositionFromBottom(this.height);
-        this.startY = this.y;
-        this.centerXPosition();
-        this.startX = this.x;
-        this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
         
-        this.zSpeed = 120;
-        this.exitZSpeed = 50;
-        this._minXSpeed = 1000;
-        this._maxXSpeed = 2000;
-        this.xSpeed = this._minXSpeed;
+        // Initial speed values
+        this.zSpeed = 70;
+        this.xSpeed = 350;
         this._directionMultiplier = 1;
         
-        //outLimit is how far back the monster will go, before moving forward
-        //inLimit is the point it will start it's sweeping again
-        this._outLimit = 1;
-        this._inLimit = (this.playerModel.z + 100);
+        this._exitZSpeed = 70;
+        this._attackingZSpeed = 100;
+        this._maxAttackingXSpeed = 500;
         
-        this.damageDealt = this.damageDealtOrig;
+        this.damageDealt = this._damageDealtOriginal;
     }
     
     /**
@@ -116,12 +123,20 @@ export default class Ghost extends Monster {
     
     enter():void
     {
-        this.entering = false; // Go straight to the sweeping
+        this._handleMonsterOverlappingLevelEdges();
+        
+        this.moveRight(this.xSpeed * this._directionMultiplier); // If the speed is negative, it moves left
+        this.moveOut(this._attackingZSpeed);
+        
+        if(this.z <= this._inLimit) {
+            this._handleMonsterReachingInLimit();
+            this.entering = false;
+        }
     }
     
     exit():void
     {
-        this.moveIn(this.exitZSpeed);
+        this.moveIn(this._exitZSpeed);
         
         if(this.z >= this.startZ)
         {
@@ -133,14 +148,16 @@ export default class Ghost extends Monster {
     // Actions for movement-----------------------------------------------------
     
     /**
-     * Sweeping movement
+     * Attacking movement
      */
-    sweep():void
+    attack():void
     {
         this._handleMonsterOverlappingLevelEdges();
-		
-        this.moveRight(this.xSpeed * this._directionMultiplier); // If the directionMultiplier is negative, it moves left
-        this.moveOut();
+        
+        this.xSpeed = this._getXSpeedTargetedAtPlayer();
+        
+        this.moveRight(this.xSpeed); // If the xSpeed is negative, it moves left
+        this.moveOut(this._attackingZSpeed);
         
         if(this.z <= this._outLimit)
             this._handleMonsterReachingOutLimit();
@@ -151,14 +168,17 @@ export default class Ghost extends Monster {
      */
     moveUp():void
     {
-        this.moveIn();
+        this._handleMonsterOverlappingLevelEdges();
+        
+        this.moveIn(this._attackingZSpeed);
+        this.moveRight(); // Uses the last speed used by the attacking movement
         
         if(this.z >= this._inLimit)
             this._handleMonsterReachingInLimit();
     }
 	
     /**
-     * Keeps the monster within the x edges of the level;
+     * Keeps the monster within the X-axis edges of the level;
      */
 	private _handleMonsterOverlappingLevelEdges():void
 	{
@@ -174,14 +194,14 @@ export default class Ghost extends Monster {
             this._directionMultiplier = -1;
         }
 	}
-	
+    
     /**
      * Keeps the monster from coming too far towards the camera
      */
 	private _handleMonsterReachingOutLimit():void
 	{
 		this.z = this._outLimit;
-        this.nextAction();
+        this._handleMonsterReachingZSpaceLimit();
 	}
 	
     /**
@@ -189,21 +209,39 @@ export default class Ghost extends Monster {
      */
 	private _handleMonsterReachingInLimit():void
 	{
-		this.xSpeed = this._getNewSpeed();
 		this.z = this._inLimit;
-		this.damageDealt = this.damageDealtOrig;
-		this.nextAction();
+        this._handleMonsterReachingZSpaceLimit();
 	}
     
     /**
-     * Generates a new speed for the monster
-     * @returns the new speed
+     * Handles a situation where the monster is moving out of its attack zone (on the Z-axis)
      */
-    private _getNewSpeed():number
+    private _handleMonsterReachingZSpaceLimit():void
     {
-        return this._minXSpeed + (Math.random() * (this._maxXSpeed - this._minXSpeed));
+        this.damageDealt = this._damageDealtOriginal;
+		this.nextAction();
     }
     
+    /**
+     * Generates an X-axis speed that will aim the monster's movement towards
+     * the player 
+     */
+    private _getXSpeedTargetedAtPlayer():number
+    {
+        const homingSpeed = 100 / this._maxAttackingXSpeed;
+		
+        const playerCenter = (this._playerModel.x + (this._playerModel.width / 2));
+        const obstacleCenter = (this.x + (this.width / 2));
+        
+        let newSpeed = (playerCenter - obstacleCenter) / homingSpeed;
+        
+        if(Math.abs(newSpeed) > this._maxAttackingXSpeed)
+            newSpeed = (newSpeed < 0)
+                ? -this._maxAttackingXSpeed
+                : this._maxAttackingXSpeed;
+        
+		return newSpeed;
+    }
     
     // Events ------------------------------------------------------------
     
@@ -211,13 +249,11 @@ export default class Ghost extends Monster {
      * What to do when the player collides with this monster
      * @param otherModel the player
      */
-    zCollisionEventAction(otherModel:IModel):void
+    zCollisionEventAction(_:IModel):void
     {
         if(this.currentAction === 0 && !this.exiting)
-        {
-            this.z = otherModel.z;
-            this.damageDealt = 0; // We only want to do damage once on the collision (this is reset when it gets to the inLimit)
-            this.nextAction();
-        }
+            this.damageDealt = 0; // We only want to do damage once, on the collision
     }
 }
+
+type ghostStartPosition = "left"|"right";
