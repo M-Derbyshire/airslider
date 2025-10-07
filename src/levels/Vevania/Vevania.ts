@@ -9,6 +9,7 @@ import SweepAndAimObstacleManager from '../ASLevel/ObstacleManager/SweepAndAimOb
 import VevaniaLoadingScreen from '../LoadingScreens/VevaniaLoadingScreen/VevaniaLoadingScreen';
 import Skeleton from '../../models/Obstacles/Skeleton/Skeleton';
 import IntroSkeleton from '../../models/Obstacles/IntroObstacles/IntroSkeleton/IntroSkeleton';
+import Ghost from '../../models/Monsters/Ghost/Ghost';
 
 /**
  * The Vevania level
@@ -42,6 +43,12 @@ export default class Vevania extends ASLevel<Skeleton>
             new IntroSkeleton("right")
         ];
         models.push(...this._introSkeletons);
+        
+        this.monsters = [
+            new Ghost(this.player, "left"),
+            new Ghost(this.player, "right")
+        ];
+        models.push(...this.monsters);
         
         return models;
     }
@@ -100,6 +107,15 @@ export default class Vevania extends ASLevel<Skeleton>
         //     40,
         //     28,
         //     () => this._introSkeletons.forEach(s => s.start())
+        // );
+        
+        // this.levelSection(
+        //     "ghosts",
+        //     15,
+        //     65,
+        //     () => this.monsters.forEach(monster => monster.start()),
+        //     null,
+        //     () => this.monsters.forEach(monster => monster.stop())
         // );
         
         // Run the closing sequence
