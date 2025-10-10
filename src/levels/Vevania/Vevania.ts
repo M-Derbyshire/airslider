@@ -10,6 +10,7 @@ import VevaniaLoadingScreen from '../LoadingScreens/VevaniaLoadingScreen/Vevania
 import Skeleton from '../../models/Obstacles/Skeleton/Skeleton';
 import IntroSkeleton from '../../models/Obstacles/IntroObstacles/IntroSkeleton/IntroSkeleton';
 import Ghost from '../../models/Monsters/Ghost/Ghost';
+import SweepingObstacleManager from '../ASLevel/ObstacleManager/SweepingObstacleManager';
 
 /**
  * The Vevania level
@@ -17,6 +18,13 @@ import Ghost from '../../models/Monsters/Ghost/Ghost';
 export default class Vevania extends ASLevel<Skeleton>
 {
     private _introSkeletons:IntroSkeleton[];
+    private _sweepingSkeletons:Skeleton[];
+    private _staticSkeletons:Skeleton[];
+    
+    private _sweepingObstacleManager:SweepingObstacleManager<Skeleton>;
+    private _sweepAndAimObstacleManager:SweepAndAimObstacleManager<Skeleton>;
+    private _sweepingLineCount:number; // The line count for the SweepingObstacleManager
+    private _sweepAndAimLineCount:number; // The line count for the SweepAndAimObstacleManager
     
     constructor()
     {
@@ -25,9 +33,19 @@ export default class Vevania extends ASLevel<Skeleton>
         this.NextLevelLoadingScreen = VevaniaLoadingScreen;
         
         this.roadColor = "#525950";
+        
+        this._sweepingObstacleManager = new SweepingObstacleManager<Skeleton>();
+        this._sweepAndAimObstacleManager = new SweepAndAimObstacleManager<Skeleton>();
+        
         this.obstacleManagers = [
-            new SweepAndAimObstacleManager<Skeleton>()
+            this._sweepingObstacleManager,
+            this._sweepAndAimObstacleManager
         ];
+        
+        this._sweepingLineCount = 6;
+        this._sweepAndAimLineCount = 8;
+        this._sweepingSkeletons = [];
+        this._staticSkeletons = [];
     }
     
     /**
@@ -49,6 +67,19 @@ export default class Vevania extends ASLevel<Skeleton>
             new Ghost(this.player, "right")
         ];
         models.push(...this.monsters);
+        
+        // Setup the obstacles for the obstacle managers
+        const sweepingCount = this._sweepingLineCount * 2;
+        const staticCount = sweepingCount / 2;
+        
+        for(let i = 0; i < sweepingCount; i++)
+            this._sweepingSkeletons.push(new Skeleton("sweep", 1000, 0));
+        
+        for(let i = 0; i < staticCount; i++)
+            this._staticSkeletons.push(new Skeleton("static", 0, 0));
+        
+        models.push(...this._sweepingSkeletons);
+        models.push(...this._staticSkeletons);
         
         return models;
     }
@@ -94,6 +125,11 @@ export default class Vevania extends ASLevel<Skeleton>
     prepare():void
     {
         super.prepare();
+        
+        this._sweepingObstacleManager.setObstacleModels(this._sweepingSkeletons);
+        this._sweepingObstacleManager.setCurrentLineCount(this._sweepingLineCount);
+        this._sweepAndAimObstacleManager.setSeperatedObstacleModels(this._sweepingSkeletons, this._staticSkeletons);
+        this._sweepAndAimObstacleManager.setCurrentLineCount(this._sweepAndAimLineCount);
     }
     
     /**
@@ -110,12 +146,28 @@ export default class Vevania extends ASLevel<Skeleton>
         // );
         
         // this.levelSection(
+        //     "sweepingSkeletons",
+        //     15,
+        //     70,
+        //     null,
+        //     () => this._sweepingObstacleManager.sendObstaclesIfReady()
+        // );
+        
+        // this.levelSection(
         //     "ghosts",
         //     15,
         //     65,
         //     () => this.monsters.forEach(monster => monster.start()),
         //     null,
         //     () => this.monsters.forEach(monster => monster.stop())
+        // );
+        
+        // this.levelSection(
+        //     "sweepAndAimSkeletons",
+        //     15,
+        //     70,
+        //     null,
+        //     () => this._sweepAndAimObstacleManager.sendObstaclesIfReady()
         // );
         
         // Run the closing sequence
