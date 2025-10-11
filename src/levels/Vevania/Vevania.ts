@@ -11,6 +11,7 @@ import Skeleton from '../../models/Obstacles/Skeleton/Skeleton';
 import IntroSkeleton from '../../models/Obstacles/IntroObstacles/IntroSkeleton/IntroSkeleton';
 import Ghost from '../../models/Monsters/Ghost/Ghost';
 import SweepingObstacleManager from '../ASLevel/ObstacleManager/SweepingObstacleManager';
+import { IPattern } from '../ASLevel/ObstaclePatternManager';
 
 /**
  * The Vevania level
@@ -20,11 +21,14 @@ export default class Vevania extends ASLevel<Skeleton>
     private _introSkeletons:IntroSkeleton[];
     private _sweepingSkeletons:Skeleton[];
     private _staticSkeletons:Skeleton[];
+    private _homingSkeletons:Skeleton[];
     
     private _sweepingObstacleManager:SweepingObstacleManager<Skeleton>;
     private _sweepAndAimObstacleManager:SweepAndAimObstacleManager<Skeleton>;
     private _sweepingLineCount:number; // The line count for the SweepingObstacleManager
     private _sweepAndAimLineCount:number; // The line count for the SweepAndAimObstacleManager
+    
+    private _homingPatternZGap:number; // The gap (on the Z-axis) between the homing skeletons
     
     constructor()
     {
@@ -46,6 +50,9 @@ export default class Vevania extends ASLevel<Skeleton>
         this._sweepAndAimLineCount = 8;
         this._sweepingSkeletons = [];
         this._staticSkeletons = [];
+        
+        this._homingPatternZGap = 150;
+        this._homingSkeletons = [];
     }
     
     /**
@@ -72,14 +79,24 @@ export default class Vevania extends ASLevel<Skeleton>
         const sweepingCount = this._sweepingLineCount * 2;
         const staticCount = sweepingCount / 2;
         
+        const sweepSpeed = 1000;
         for(let i = 0; i < sweepingCount; i++)
-            this._sweepingSkeletons.push(new Skeleton("sweep", 1000, 0));
+            this._sweepingSkeletons.push(new Skeleton("sweep", sweepSpeed, 0));
         
         for(let i = 0; i < staticCount; i++)
             this._staticSkeletons.push(new Skeleton("static", 0, 0));
         
         models.push(...this._sweepingSkeletons);
         models.push(...this._staticSkeletons);
+        
+        // Setup the homing skeletons for the homing pattern
+        const homingCount = 7;
+        const homingZStart = 150;
+        const homingXSpeed = 400;
+        for(let i = 0; i < homingCount; i++)
+            this._homingSkeletons.push(new Skeleton("home", homingXSpeed, homingZStart, this.player))
+        
+        models.push(...this._homingSkeletons);
         
         return models;
     }
@@ -130,6 +147,10 @@ export default class Vevania extends ASLevel<Skeleton>
         this._sweepingObstacleManager.setCurrentLineCount(this._sweepingLineCount);
         this._sweepAndAimObstacleManager.setSeperatedObstacleModels(this._sweepingSkeletons, this._staticSkeletons);
         this._sweepAndAimObstacleManager.setCurrentLineCount(this._sweepAndAimLineCount);
+        
+        const pattern = this._generateCenterLinePattern(this._homingSkeletons[0].width);
+        this.patternManager.setModelsForPattern(this._homingSkeletons);
+        this.patternManager.setRepeatingPattern(pattern);
     }
     
     /**
@@ -170,7 +191,41 @@ export default class Vevania extends ASLevel<Skeleton>
         //     () => this._sweepAndAimObstacleManager.sendObstaclesIfReady()
         // );
         
+        // this.levelSection(
+        //     "homingSkeletons",
+        //     15,
+        //     65,
+        //     () => this.patternManager.start(),
+        //     null,
+        //     () => this.patternManager.stop()
+        // );
+        
+        // this.patternManager.act();
+        
         // Run the closing sequence
         this.levelEndSection(223);
+    }
+    
+    /**
+     * Generates an obstacle pattern that sends a line of
+     * obstacles down the center of the track
+     * @param obstacleWidth the width of the obstacles
+     * @returns a pattern to be used by the pattern manager
+     */
+    private _generateCenterLinePattern(obstacleWidth:number):IPattern
+    {
+        const levelHalfWidth = (this.rightEdge - this.leftEdge) / 2;
+        const levelCenter = this.leftEdge + levelHalfWidth;
+        
+        const modelHalfWidth = obstacleWidth / 2;
+        const centeredModelPosition = levelCenter - modelHalfWidth;
+        
+        return {
+            zGap: this._homingPatternZGap,
+            zModifierAbs: 0,
+            positions: [
+                [centeredModelPosition]
+            ]
+        };
     }
 };
