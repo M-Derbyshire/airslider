@@ -3,6 +3,7 @@ import ASLevel from '../../../levels/ASLevel/ASLevel';
 import IModel from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
+import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
 
 /**
  * The ghost monster
@@ -244,6 +245,25 @@ export default class Ghost extends Monster {
     }
     
     // Events ------------------------------------------------------------
+    
+    /**
+     * Creates and returns the current array of hit boxes for the model.
+     * @returns An array of box's that can be used for events (e.g. boxes covering a character, for use by collision events)
+     */
+    getHitBoxes():IHitBox[]
+    {
+        const graceAreaWidth = this.width / 10;
+        
+        return [
+            {
+                x: this.x + graceAreaWidth,
+                y: this.y,
+                z: this.z,
+                width: this.width - (graceAreaWidth * 2),
+                height: this.height
+            }
+        ];
+    }
     
     /**
      * What to do when the player collides with this monster
