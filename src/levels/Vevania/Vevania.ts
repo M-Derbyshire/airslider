@@ -160,50 +160,50 @@ export default class Vevania extends ASLevel<Skeleton>
     {
         super.act();
         
-        // this.levelIntroSection(
-        //     40,
-        //     28,
-        //     () => this._introSkeletons.forEach(s => s.start())
-        // );
+        this.levelIntroSection(
+            40,
+            28,
+            () => this._introSkeletons.forEach(s => s.start())
+        );
         
-        // this.levelSection(
-        //     "sweepingSkeletons",
-        //     15,
-        //     70,
-        //     null,
-        //     () => this._sweepingObstacleManager.sendObstaclesIfReady()
-        // );
+        this.levelSection(
+            "sweepingSkeletons",
+            44,
+            100,
+            null,
+            () => this._sweepingObstacleManager.sendObstaclesIfReady()
+        );
         
-        // this.levelSection(
-        //     "ghosts",
-        //     15,
-        //     65,
-        //     () => this.monsters.forEach(monster => monster.start()),
-        //     null,
-        //     () => this.monsters.forEach(monster => monster.stop())
-        // );
+        this.levelSection(
+            "ghosts",
+            108,
+            158,
+            () => this.monsters.forEach(monster => monster.start()),
+            null,
+            () => this.monsters.forEach(monster => monster.stop())
+        );
         
-        // this.levelSection(
-        //     "sweepAndAimSkeletons",
-        //     15,
-        //     70,
-        //     null,
-        //     () => this._sweepAndAimObstacleManager.sendObstaclesIfReady()
-        // );
+        this.levelSection(
+            "sweepAndAimSkeletons",
+            171,
+            221,
+            null,
+            () => this._sweepAndAimObstacleManager.sendObstaclesIfReady()
+        );
         
-        // this.levelSection(
-        //     "homingSkeletons",
-        //     15,
-        //     65,
-        //     () => this.patternManager.start(),
-        //     null,
-        //     () => this.patternManager.stop()
-        // );
+        this.levelSection(
+            "homingSkeletons",
+            230,
+            280,
+            () => this.patternManager.start(),
+            null,
+            () => this.patternManager.stop()
+        );
         
-        // this.patternManager.act();
+        this.patternManager.act();
         
         // Run the closing sequence
-        this.levelEndSection(223);
+        this.levelEndSection(288);
     }
     
     /**
