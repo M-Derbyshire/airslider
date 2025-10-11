@@ -251,8 +251,7 @@ export default class Ghost extends Monster {
      */
     zCollisionEventAction(_:IModel):void
     {
-        if(this.currentAction === 0 && !this.exiting)
-            this.damageDealt = 0; // We only want to do damage once, on the collision
+        this.damageDealt = 0; // We only want to do damage once, on the collision
     }
 }
 
