@@ -34,6 +34,21 @@ export default class Sign extends ASModel
     private _textToDisplay:string;
     
     /**
+     * An image to be drawn at the bases of the sign (one on each side)
+     */
+    private _baseImage:HTMLImageElement;
+    
+    /**
+     * The width to use when drawing the base image
+     */
+    private _baseImageWidth:number;
+    
+    /**
+     * The height to use when drawing the base image
+     */
+    private _baseImageHeight:number;
+    
+    /**
      * Constructor
      * @param displayText Text to display on the sign
      * @param startPosition The starting z position of the sign (if this is null, it should be set to the vanishing point depth in prepare())
@@ -115,6 +130,29 @@ export default class Sign extends ASModel
             this.active = false;
     }
     
+    draw():void
+    {
+        super.draw();
+        
+        if(this._baseImage) {
+            this._drawBaseImageOnLeft();
+            this._drawBaseImageOnRight();
+        }
+    }
+    
+    /**
+     * Sets the image to be drawn at the bases of the sign (one on each side)
+     * @param image the image to be drawn
+     * @param width the width to draw the image with
+     * @param height the height to draw the image with
+     */
+    setBaseImage(image:HTMLImageElement, width:number, height:number):void
+    {
+        this._baseImage = image;
+        this._baseImageWidth = width;
+        this._baseImageHeight = height;
+    }
+    
     /**
      * Checks to see if the sign is in its target position, and sets hasReachedTargetPosition to true
      */
@@ -137,4 +175,58 @@ export default class Sign extends ASModel
 		if(level.levelMoving)
             this.zSpeed = level.levelSpeed;
 	}
+    
+    /**
+     * Draws the base image on the left-side base of the sign
+     */
+    private _drawBaseImageOnLeft():void
+    {
+        const signHalfWidth = this._baseImageWidth / 2;
+        const centerOfLeftBase = this.x + 45;
+        
+        const imageXPosition = centerOfLeftBase - signHalfWidth;
+        const imageYPosition = (this.y + this.height) - this._baseImageHeight;
+        
+        this._drawBaseImage(imageXPosition, imageYPosition);
+    }
+    
+    /**
+     * Draws the base image on the right-side base of the sign
+     */
+    private _drawBaseImageOnRight():void
+    {
+        const signHalfWidth = this._baseImageWidth / 2;
+        const centerOfRightBase = (this.x + this.width) - 45;
+        
+        const imageXPosition = centerOfRightBase - signHalfWidth;
+        const imageYPosition = (this.y + this.height) - this._baseImageHeight;
+        
+        this._drawBaseImage(imageXPosition, imageYPosition);
+    }
+    
+    /**
+     * Draws a base image (taking into account the Z-axis position of the sign)
+     * @param x the X-axis position to draw the image at
+     * @param y the Y-axis position to draw the image at
+     */
+    private _drawBaseImage(x:number, y:number):void
+    {
+        const kernel = Kernel.getInstance();
+        
+        const scaledDrawValues = kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
+			x,
+			y,
+			width: this._baseImageWidth,
+			height: this._baseImageHeight,
+			z: this.z
+		});
+        
+        kernel.canvasContext.drawImage(
+            this._baseImage,
+            scaledDrawValues.x,
+            scaledDrawValues.y,
+            scaledDrawValues.width,
+            scaledDrawValues.height
+        );
+    }
 }

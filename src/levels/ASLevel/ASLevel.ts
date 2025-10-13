@@ -116,9 +116,9 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     private _permanentSectionTimeShiftSecs:number;
     
     // Models/info for the opening and closing of the level
-    private _startSign:Sign; // The sign at the start of the level
+    protected startSign:Sign; // The sign at the start of the level
     private _startSignDisplay:SignDisplay; // The light display on the starting sign
-    private _finishSign:Sign; // The finish sign
+    private finishSign:Sign; // The finish sign
     private _finishFlagsActive:boolean; // Should the flags at the end of the level be active?
     private _signStartingZPosition:number; // Where on the z axis does the startSign start, and the finishSign end?
     private _finishFlagsManager:LevelGroundManager; // Manages the flags at the end of the level
@@ -174,11 +174,11 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         centralState.set(CentralStateKey.PlayerModelIndex, stdModels.length);
         this.obstacleManagers.forEach(om => om.setPlayerModel(this.player));
         
-        this._startSign = new Sign("", this._signStartingZPosition, -1, true);
-        this._startSignDisplay = new SignDisplay(this._startSign);
-        this._finishSign = new Sign("FINISH", null, this._signStartingZPosition, false);
+        this.startSign = new Sign("", this._signStartingZPosition, -1, true);
+        this._startSignDisplay = new SignDisplay(this.startSign);
+        this.finishSign = new Sign("FINISH", null, this._signStartingZPosition, false);
         
-        this.groundManager.setDistancedModels([this._startSign, this._finishSign]);
+        this.groundManager.setDistancedModels([this.startSign, this.finishSign]);
         
         const racers = this.racerManager.getModels();
         
@@ -186,9 +186,9 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
             ...stdModels,
             this.player,
             new TarianExplosion(this.player),
-            this._startSign,
+            this.startSign,
             this._startSignDisplay,
-            this._finishSign,
+            this.finishSign,
             ...racers
         ];
     }
@@ -553,7 +553,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     {
         const currentMs = Kernel.getInstance().totalLevelActiveMilliseconds;
         
-        if(!this._finishSign.active)
+        if(!this.finishSign.active)
         {
             // End the finish flags, before starting the sign's entrance
             if(currentMs >= (closingStartMS + 3500))
@@ -561,11 +561,11 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
             
             // Trigger the finish sign's entrance
             if(currentMs >= (closingStartMS + 4000))
-                this._finishSign.active = true;
+                this.finishSign.active = true;
         }
         
         // If the sign is in position, stop the level
-        if(this._finishSign.hasReachedTargetPosition && this.player.zSpeed === 0)
+        if(this.finishSign.hasReachedTargetPosition && this.player.zSpeed === 0)
         {
             this.player.zSpeed = this.levelSpeedRaw;
             this.levelMoving = false;
