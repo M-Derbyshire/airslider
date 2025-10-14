@@ -1,4 +1,5 @@
 import EpilepsyWarning from '../src/levels/EpilepsyWarning/EpilepsyWarning';
+import CoratuneLoadingScreen from '../src/levels/LoadingScreens/CoratuneLoadingScreen/CoratuneLoadingScreen';
 import ForurnLoadingScreen from '../src/levels/LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen';
 import LarsLoadingScreen from '../src/levels/LoadingScreens/LarsLoadingScreen/LarsLoadingScreen';
 import NeonusLoadingScreen from '../src/levels/LoadingScreens/NeonusLoadingScreen/NeonusLoadingScreen';
@@ -10,5 +11,5 @@ export default {
 	unitsWithinCameraY: 1000,
 	aspectRatioHorizontal: 17,
 	aspectRatioVertical: 9,
-	InitialLevelClass: VevaniaLoadingScreen
+	InitialLevelClass: CoratuneLoadingScreen
 } as ISettings;
