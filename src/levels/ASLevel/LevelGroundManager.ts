@@ -16,8 +16,19 @@ export default class LevelGroundManager
 	private _modelsDistantToGround: IModel[]; // Models that we want to keep distant from any ground (on the z-axis)
 	
 	private _groundSettings: IGroundSettings; //The shared data for every piece of ground (on both the left and right sides)
-	private _distance: number;//The distance between each image on the ground (on the Z-axis)
+	private _distanceBetweenImages: number;// The distance between each image on the ground (on the Z-axis)
 	private _groundZPositions:number[]; //The Z-axis positions of every image on the ground
+	
+	private _distanceFromLevelRoad:number; // The distance between the ground and the level's road
+	private _yPositionOffset:number // Used to add/remove from the Y position of the images
+	
+	/**
+	 * Is the ground currently being removed?
+	 */
+	get groundIsBeingRemoved()
+	{
+		return this._removeGround;
+	}
 	
 	/**
 	 * Constructor
@@ -44,15 +55,27 @@ export default class LevelGroundManager
 	 * @param imageHeight the height to draw the image (in units)
 	 * @param gapZDistance the number of units, on the z axis, between each image on the ground
 	 * @param imageStaticWidth if imageStaticWidth is not provided, the image will be stretched to fill the space. Provided width
+	 * @param distanceFromLevelRoad the distance between the ground and the level's road
+	 * @param yPositionOffset used to add/remove from the Y position of the images
 	 * should be in units
 	 */
-	load(primaryImagePath:string, secondaryImagePath:string|null, imageHeight:number, gapZDistance:number, imageStaticWidth:number|null = null):void
+	load(
+		primaryImagePath:string,
+		secondaryImagePath:string|null,
+		imageHeight:number,
+		gapZDistance:number,
+		imageStaticWidth:number|null = null,
+		distanceFromLevelRoad:number = 0,
+		yPositionOffset:number = 0
+	):void
 	{
 		const leftImgPath = primaryImagePath;
 		const rightImgPath = secondaryImagePath ?? leftImgPath;
 		
 		this._groundSettings = this._getPopulatedGroundSettings(leftImgPath, rightImgPath, imageHeight, imageStaticWidth);
-		this._distance = gapZDistance;
+		this._distanceBetweenImages = gapZDistance;
+		this._distanceFromLevelRoad = distanceFromLevelRoad;
+		this._yPositionOffset = yPositionOffset;
 	}
     
 	/**
@@ -135,7 +158,7 @@ export default class LevelGroundManager
 		this._groundZPositions = [];
 		
 		//Start from the furthest away, and move inwards, so we don't draw the distant ones on top of the closer ones
-		for(let zPos = vanishingPointDepth; zPos >= 0; zPos -= this._distance)
+		for(let zPos = vanishingPointDepth; zPos >= 0; zPos -= this._distanceBetweenImages)
 		{
 			this._groundZPositions.push(zPos);
 		}
@@ -190,7 +213,7 @@ export default class LevelGroundManager
 	 */
 	private _resetGroundIfReachedDistance():void
 	{
-		if(this._groundSettings.offset >= this._distance)
+		if(this._groundSettings.offset >= this._distanceBetweenImages)
 		{
 			this._groundSettings.offset = 0;
 			
@@ -223,10 +246,10 @@ export default class LevelGroundManager
 			? this._groundSettings.width 
 			: settings.unitsWithinCameraX * 2;
 		
-		const yUnitValue = settings.unitsWithinCameraY - this._groundSettings.height;
+		const yUnitValue = (settings.unitsWithinCameraY - this._groundSettings.height) + this._yPositionOffset;
 		
 		const leftDrawValues = graphicEngine.getScaledDrawPositionsAndDimensions({
-			x: -imageWidth,
+			x: 0 - (imageWidth + this._distanceFromLevelRoad),
 			y: yUnitValue,
 			width: imageWidth,
 			height: this._groundSettings.height,
@@ -234,7 +257,7 @@ export default class LevelGroundManager
 		});
 		
 		const rightDrawValues = graphicEngine.getScaledDrawPositionsAndDimensions({
-			x: settings.unitsWithinCameraX,
+			x: settings.unitsWithinCameraX + this._distanceFromLevelRoad,
 			y: yUnitValue,
 			width: imageWidth,
 			height: this._groundSettings.height,
