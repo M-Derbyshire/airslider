@@ -11,6 +11,7 @@ import IModel from '../../../Kernel/entities/Model/IModel';
 import NeonPidgeon from '../../models/Monsters/NeonPidgeon/NeonPidgeon';
 import SweepAndAimObstacleManager from '../ASLevel/ObstacleManager/SweepAndAimObstacleManager';
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
+import VevaniaLoadingScreen from '../LoadingScreens/VevaniaLoadingScreen/VevaniaLoadingScreen';
 
 /**
  * The Neonus level
@@ -29,7 +30,7 @@ export default class Neonus extends ASLevel<GangMember>
     {
         super();
         
-        this.NextLevelLoadingScreen = NeonusLoadingScreen;
+        this.NextLevelLoadingScreen = VevaniaLoadingScreen;
         
         this.roadColor = "#899699";
         this.obstacleManagers = [

@@ -6,12 +6,12 @@ import IEventManager from '../../../Kernel/entities/Level/IEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
 import SweepAndAimObstacleManager from '../ASLevel/ObstacleManager/SweepAndAimObstacleManager';
-import VevaniaLoadingScreen from '../LoadingScreens/VevaniaLoadingScreen/VevaniaLoadingScreen';
 import Skeleton from '../../models/Obstacles/Skeleton/Skeleton';
 import IntroSkeleton from '../../models/Obstacles/IntroObstacles/IntroSkeleton/IntroSkeleton';
 import Ghost from '../../models/Monsters/Ghost/Ghost';
 import SweepingObstacleManager from '../ASLevel/ObstacleManager/SweepingObstacleManager';
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
+import CoratuneLoadingScreen from '../LoadingScreens/CoratuneLoadingScreen/CoratuneLoadingScreen';
 
 /**
  * The Vevania level
@@ -34,7 +34,7 @@ export default class Vevania extends ASLevel<Skeleton>
     {
         super();
         
-        this.NextLevelLoadingScreen = VevaniaLoadingScreen;
+        this.NextLevelLoadingScreen = CoratuneLoadingScreen;
         
         this.roadColor = "#525950";
         
