@@ -118,10 +118,10 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     // Models/info for the opening and closing of the level
     protected startSign:Sign; // The sign at the start of the level
     private _startSignDisplay:SignDisplay; // The light display on the starting sign
-    private finishSign:Sign; // The finish sign
-    private _finishFlagsActive:boolean; // Should the flags at the end of the level be active?
+    protected finishSign:Sign; // The finish sign
+    protected finishFlagsActive:boolean; // Should the flags at the end of the level be active?
     private _signStartingZPosition:number; // Where on the z axis does the startSign start, and the finishSign end?
-    private _finishFlagsManager:LevelGroundManager; // Manages the flags at the end of the level
+    protected finishFlagsManager:LevelGroundManager; // Manages the flags at the end of the level
     
 	constructor()
 	{
@@ -208,9 +208,9 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
 		super.load(frameManager, eventManager, pointerEventManager);
         
         this.groundManager = new LevelGroundManager();
-        this._finishFlagsManager = new LevelGroundManager(false); 
+        this.finishFlagsManager = new LevelGroundManager(false); 
         
-        this._finishFlagsManager.load(
+        this.finishFlagsManager.load(
             "/levels/ASLevel/images/finish_flag.png",
             null,
             312,
@@ -249,13 +249,13 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         this.racerManager.prepare();
         
         this.groundManager.setupGround();
-        this._finishFlagsManager.setupGround();
+        this.finishFlagsManager.setupGround();
         
         this._activeSections = [this._openingSectionId];
         this.levelMoving = false;
         this._setupLevelSpeed();
         
-        this._finishFlagsActive = false;
+        this.finishFlagsActive = false;
         
         this._setupObstacleManager(this.leftEdge, this.rightEdge);
         
@@ -298,8 +298,8 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     {
         this.groundManager.draw(this.levelSpeed);
         
-        if(this._finishFlagsActive)
-            this._finishFlagsManager.draw(this.levelSpeed);
+        if(this.finishFlagsActive)
+            this.finishFlagsManager.draw(this.levelSpeed);
         
         this.roadManager.draw(this.roadColor);
     }
@@ -458,7 +458,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
             this._activeSections.push(this._closingSectionId);
             
             // Start the finish flags
-            this._finishFlagsActive = true;
+            this.finishFlagsActive = true;
             
             // Start the loading of the next level's loading screen
             kernel.loadLevel(new this.NextLevelLoadingScreen());
@@ -557,7 +557,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         {
             // End the finish flags, before starting the sign's entrance
             if(currentMs >= (closingStartMS + 3500))
-                this._finishFlagsManager.removeGround();
+                this.finishFlagsManager.removeGround();
             
             // Trigger the finish sign's entrance
             if(currentMs >= (closingStartMS + 4000))

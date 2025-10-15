@@ -7,12 +7,17 @@ import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventMa
 import IModel from '../../../Kernel/entities/Model/IModel';
 import Skeleton from '../../models/Obstacles/Skeleton/Skeleton';
 import CoratuneLoadingScreen from '../LoadingScreens/CoratuneLoadingScreen/CoratuneLoadingScreen';
+import LevelGroundManager from '../ASLevel/LevelGroundManager';
 
 /**
  * The Coratune level
  */
 export default class Coratune extends ASLevel<Skeleton>
 {
+    private _buoyImage:HTMLImageElement;
+    private _buoyImageDimensions:{ width:number, height:number };
+    private _finishFlagsBuoyManager:LevelGroundManager; // Draws Buoys in front of the finish flags
+    
     constructor()
     {
         super();
@@ -59,10 +64,29 @@ export default class Coratune extends ASLevel<Skeleton>
         
         this.groundManager.load(groundImagePath, null, 150, 75);
         
+        const buoyImagePath = "/levels/Coratune/images/buoy.png";
+        this._buoyImage = assetHandler.loadImage(buoyImagePath);
+        this._buoyImageDimensions = {
+            width: 125,
+            height: 150
+        };
+        
+        this._finishFlagsBuoyManager = new LevelGroundManager(false);
+        this._finishFlagsBuoyManager.load(
+            buoyImagePath,
+            null,
+            this._buoyImageDimensions.height * 1.25,
+            50,
+            this._buoyImageDimensions.width * 1.35,
+            70,
+            17
+        );
+        
         this.assetsToUnload.push(
             backgroundImagePath,
             lightMaskImagePath,
-            groundImagePath
+            groundImagePath,
+            buoyImagePath
         );
     }
     
@@ -72,6 +96,20 @@ export default class Coratune extends ASLevel<Skeleton>
     prepare():void
     {
         super.prepare();
+        
+        // Set the buoy image for the bases of the start/finish signs
+        this.startSign.setBaseImage(
+            this._buoyImage,
+            this._buoyImageDimensions.width,
+            this._buoyImageDimensions.height
+        );
+        this.finishSign.setBaseImage(
+            this._buoyImage,
+            this._buoyImageDimensions.width,
+            this._buoyImageDimensions.height
+        );
+        
+        this._finishFlagsBuoyManager.setupGround();
     }
     
     /**
@@ -83,5 +121,19 @@ export default class Coratune extends ASLevel<Skeleton>
         
         // Run the closing sequence
         this.levelEndSection(288);
+    }
+
+    /**
+     * Draws anything that needs to be in the back (before the models) of the level
+     */
+    drawBack():void
+    {
+        super.drawBack();
+        
+        if(this.finishFlagsActive)
+            this._finishFlagsBuoyManager.draw(this.levelSpeed);
+        
+        if(this.finishFlagsManager.groundIsBeingRemoved)
+            this._finishFlagsBuoyManager.removeGround();
     }
 };
