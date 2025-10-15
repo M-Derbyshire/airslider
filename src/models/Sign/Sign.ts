@@ -182,12 +182,11 @@ export default class Sign extends ASModel
     private _drawBaseImageOnLeft():void
     {
         const signHalfWidth = this._baseImageWidth / 2;
-        const centerOfLeftBase = this.x + 45;
+        const mountPosition = this.x + 30;
         
-        const imageXPosition = centerOfLeftBase - signHalfWidth;
-        const imageYPosition = (this.y + this.height) - this._baseImageHeight;
+        const imageXPosition = mountPosition - signHalfWidth;
         
-        this._drawBaseImage(imageXPosition, imageYPosition);
+        this._drawBaseImage(imageXPosition);
     }
     
     /**
@@ -196,26 +195,29 @@ export default class Sign extends ASModel
     private _drawBaseImageOnRight():void
     {
         const signHalfWidth = this._baseImageWidth / 2;
-        const centerOfRightBase = (this.x + this.width) - 45;
+        const mountPosition = (this.x + this.width) - 30;
         
-        const imageXPosition = centerOfRightBase - signHalfWidth;
-        const imageYPosition = (this.y + this.height) - this._baseImageHeight;
+        const imageXPosition = mountPosition - signHalfWidth;
         
-        this._drawBaseImage(imageXPosition, imageYPosition);
+        this._drawBaseImage(imageXPosition);
     }
     
     /**
      * Draws a base image (taking into account the Z-axis position of the sign)
      * @param x the X-axis position to draw the image at
-     * @param y the Y-axis position to draw the image at
      */
-    private _drawBaseImage(x:number, y:number):void
+    private _drawBaseImage(x:number):void
     {
         const kernel = Kernel.getInstance();
         
+        const signBottom = this.y + this.height;
+        const extraY = 17;
+        
+        const imageYPosition = (signBottom - this._baseImageHeight) + extraY;
+        
         const scaledDrawValues = kernel.graphicEngine.getScaledDrawPositionsAndDimensions({
 			x,
-			y,
+			y: imageYPosition,
 			width: this._baseImageWidth,
 			height: this._baseImageHeight,
 			z: this.z
