@@ -56,13 +56,13 @@ export default class Coratune extends ASLevel<Skeleton>
         
         const backgroundImagePath = "/levels/Coratune/images/background.png";
         const lightMaskImagePath = "/levels/Coratune/images/lightmask.png";
-        const groundImagePath = "/levels/Forurn/images/ground.png";
+        const groundImagePath = "/levels/Coratune/images/ground.png";
         
         this.backgroundImage = assetHandler.loadImage(backgroundImagePath);
         this.lightMaskImage = assetHandler.loadImage(lightMaskImagePath);
         this.lightMaskLuminosity = 0;
         
-        this.groundManager.load(groundImagePath, null, 150, 75);
+        this.groundManager.load(groundImagePath, null, 150, 75, 1000, 200);
         
         const buoyImagePath = "/levels/Coratune/images/buoy.png";
         this._buoyImage = assetHandler.loadImage(buoyImagePath);
@@ -79,7 +79,7 @@ export default class Coratune extends ASLevel<Skeleton>
             50,
             this._buoyImageDimensions.width * 1.35,
             70,
-            17
+            35
         );
         
         this.assetsToUnload.push(
