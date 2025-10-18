@@ -8,6 +8,7 @@ import IModel from '../../../Kernel/entities/Model/IModel';
 import Skeleton from '../../models/Obstacles/Skeleton/Skeleton';
 import CoratuneLoadingScreen from '../LoadingScreens/CoratuneLoadingScreen/CoratuneLoadingScreen';
 import LevelGroundManager from '../ASLevel/LevelGroundManager';
+import IntroJellyfish from '../../models/Obstacles/IntroObstacles/IntroJellyfish/IntroJellyfish';
 
 /**
  * The Coratune level
@@ -17,6 +18,8 @@ export default class Coratune extends ASLevel<Skeleton>
     private _buoyImage:HTMLImageElement;
     private _buoyImageDimensions:{ width:number, height:number };
     private _finishFlagsBuoyManager:LevelGroundManager; // Draws Buoys in front of the finish flags
+    
+    private _introJellyfish:IntroJellyfish;
     
     constructor()
     {
@@ -34,6 +37,9 @@ export default class Coratune extends ASLevel<Skeleton>
     getModels():IModel[]
     {
         const models = super.getModels() as ASModel[];
+        
+        this._introJellyfish = new IntroJellyfish();
+        models.push(this._introJellyfish);
         
         return models;
     }
@@ -118,6 +124,12 @@ export default class Coratune extends ASLevel<Skeleton>
     act():void
     {
         super.act();
+        
+        this.levelIntroSection(
+            36,
+            24,
+            () => this._introJellyfish.start()
+        );
         
         // Run the closing sequence
         this.levelEndSection(288);
