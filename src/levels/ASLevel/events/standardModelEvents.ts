@@ -9,6 +9,7 @@ import GangMember from "../../../models/Obstacles/GangMember/GangMember";
 import IntroGangMember from "../../../models/Obstacles/IntroObstacles/IntroGangMember/IntroGangMember";
 import IntroRockBall from "../../../models/Obstacles/IntroObstacles/IntroRockBall/IntroRockBall";
 import IntroSnake from "../../../models/Obstacles/IntroObstacles/IntroSnake/IntroSnake";
+import Jellyfish from "../../../models/Obstacles/Jellyfish/Jellyfish";
 import RockBall from "../../../models/Obstacles/RockBall/RockBall";
 import Shocker from "../../../models/Obstacles/Shocker/Shocker";
 import Skeleton from "../../../models/Obstacles/Skeleton/Skeleton";
@@ -89,6 +90,15 @@ const standardModelEvents:IEventRegistrationDetails[] = [
         reactionCallback: (t:Tarian, s:Skeleton) => {
             t.zCollisionEventAction(s);
             s.hitEventAction();
+        }
+    },
+    {
+        check: zCollisionEventCheck,
+        class1: Tarian,
+        class2: Jellyfish,
+        reactionCallback: (t:Tarian, j:Jellyfish) => {
+            t.zCollisionEventAction(j);
+            j.hitEventAction();
         }
     },
     { 
