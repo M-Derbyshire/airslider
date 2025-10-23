@@ -5,21 +5,27 @@ import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import IEventManager from '../../../Kernel/entities/Level/IEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
-import Skeleton from '../../models/Obstacles/Skeleton/Skeleton';
 import CoratuneLoadingScreen from '../LoadingScreens/CoratuneLoadingScreen/CoratuneLoadingScreen';
 import LevelGroundManager from '../ASLevel/LevelGroundManager';
 import IntroJellyfish from '../../models/Obstacles/IntroObstacles/IntroJellyfish/IntroJellyfish';
+import { IPattern } from '../ASLevel/ObstaclePatternManager';
+import Jellyfish from '../../models/Obstacles/Jellyfish/Jellyfish';
+import CenterLineObstacleManager from '../ASLevel/ObstacleManager/CenterLineObstacleManager';
 
 /**
  * The Coratune level
  */
-export default class Coratune extends ASLevel<Skeleton>
+export default class Coratune extends ASLevel<Jellyfish>
 {
     private _buoyImage:HTMLImageElement;
     private _buoyImageDimensions:{ width:number, height:number };
     private _finishFlagsBuoyManager:LevelGroundManager; // Draws Buoys in front of the finish flags
     
     private _introJellyfish:IntroJellyfish;
+    private _centerHomingJellyfish:Jellyfish[]; // The homing jellyfish that are in the center of the track
+    private _sidesHomingJellyfish:Jellyfish[]; // The homing jellyfish that are on the sides of the level
+    
+    private _homingJellyfishInitialXSpeed:number; // The initial X speed for the homing jellyfish
     
     constructor()
     {
@@ -28,6 +34,13 @@ export default class Coratune extends ASLevel<Skeleton>
         this.NextLevelLoadingScreen = CoratuneLoadingScreen;
         
         this.roadColor = "#789994";
+        
+        this._centerHomingJellyfish = [];
+        this._sidesHomingJellyfish = [];
+        
+        this.obstacleManagers = [
+            new CenterLineObstacleManager<Jellyfish>()
+        ];
     }
     
     /**
@@ -40,6 +53,23 @@ export default class Coratune extends ASLevel<Skeleton>
         
         this._introJellyfish = new IntroJellyfish();
         models.push(this._introJellyfish);
+        
+        // Setup the obstacles for the pattern and obstacle-manager
+        const centerHomingJellyfishCount = 6;
+        const sidesHomingJellyfishCount = 7;
+        const homingZStart = 150;
+        this._homingJellyfishInitialXSpeed = 450;
+        
+        for(let i = 0; i < centerHomingJellyfishCount; i++)
+            this._centerHomingJellyfish.push(new Jellyfish("home", this._homingJellyfishInitialXSpeed, homingZStart, this.player));
+        
+        for(let i = 0; i < sidesHomingJellyfishCount; i++)
+            this._sidesHomingJellyfish.push(
+                new Jellyfish("home", this._homingJellyfishInitialXSpeed, homingZStart, this.player)
+            );
+        
+        models.push(...this._centerHomingJellyfish);
+        models.push(...this._sidesHomingJellyfish);
         
         return models;
     }
@@ -116,6 +146,16 @@ export default class Coratune extends ASLevel<Skeleton>
         );
         
         this._finishFlagsBuoyManager.setupGround();
+        
+        const pattern = this._generateLinesOnSidesPattern(this._sidesHomingJellyfish[0].width);
+        this.patternManager.setModelsForPattern(this._sidesHomingJellyfish);
+        this.patternManager.setRepeatingPattern(pattern);
+        
+        this.obstacleManagers[0].setObstacleModels(this._centerHomingJellyfish);
+        this.obstacleManagers[0].setCurrentLineCount(6);
+        
+        this._sidesHomingJellyfish.forEach(j => j.xSpeed = this._homingJellyfishInitialXSpeed);
+        this._centerHomingJellyfish.forEach(j => j.xSpeed = this._homingJellyfishInitialXSpeed);
     }
     
     /**
@@ -125,11 +165,35 @@ export default class Coratune extends ASLevel<Skeleton>
     {
         super.act();
         
-        this.levelIntroSection(
-            36,
-            24,
-            () => this._introJellyfish.start()
-        );
+        // this.levelIntroSection(
+        //     36,
+        //     24,
+        //     () => this._introJellyfish.start()
+        // );
+        
+        this.patternManager.act();
+        
+        // this.levelSection(
+        //     "homingJellyfishFromSides",
+        //     15,
+        //     85,
+        //     () => this.patternManager.start(),
+        //     null,
+        //     () => this.patternManager.stop()
+        // );
+        
+        // this.levelSection(
+        //     "homingJellyfishFromSidesAndCenter",
+        //     15,
+        //     85,
+        //     () => {
+        //         this.patternManager.start();
+        //         this._sidesHomingJellyfish.forEach(j => j.xSpeed *= 0.25);
+        //         this._centerHomingJellyfish.forEach(j => j.xSpeed *= 0.25);
+        //     },
+        //     () => this.obstacleManagers[0].sendObstaclesIfReady(),
+        //     () => this.patternManager.stop()
+        // );
         
         // Run the closing sequence
         this.levelEndSection(288);
@@ -147,5 +211,24 @@ export default class Coratune extends ASLevel<Skeleton>
         
         if(this.finishFlagsManager.groundIsBeingRemoved)
             this._finishFlagsBuoyManager.removeGround();
+    }
+    
+    /**
+     * Generates an obstacle pattern that sends 2 lines of
+     * obstacles down the track (one line on each side of
+     * the track)
+     * @param obstacleWidth the width of the obstacles
+     * @returns a pattern to be used by the pattern manager
+     */
+    private _generateLinesOnSidesPattern(obstacleWidth:number):IPattern
+    {
+        return {
+            zGap: 150,
+            zModifierAbs: 0,
+            positions: [
+                [this.leftEdge],
+                [this.rightEdge - obstacleWidth]
+            ]
+        };
     }
 };

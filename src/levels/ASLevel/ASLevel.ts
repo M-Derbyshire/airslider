@@ -136,9 +136,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
 		this.roadManager = new LevelRoadManager();
         this.roadColor = "#A5A5A5";
         
-        this.obstacleManagers = [
-            new ObstacleManager<ObstacleType>()
-        ];
+        this.obstacleManagers = [];
 		this.patternManager = new ObstaclePatternManager<ObstacleType>();
         
         this.racerManager = new RacerManager();

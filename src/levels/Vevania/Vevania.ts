@@ -94,7 +94,7 @@ export default class Vevania extends ASLevel<Skeleton>
         const homingZStart = 150;
         const homingXSpeed = 400;
         for(let i = 0; i < homingCount; i++)
-            this._homingSkeletons.push(new Skeleton("home", homingXSpeed, homingZStart, this.player))
+            this._homingSkeletons.push(new Skeleton("home", homingXSpeed, homingZStart, this.player));
         
         models.push(...this._homingSkeletons);
         
