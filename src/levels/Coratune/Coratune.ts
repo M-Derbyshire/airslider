@@ -182,18 +182,20 @@ export default class Coratune extends ASLevel<Jellyfish>
         //     () => this.patternManager.stop()
         // );
         
-        // this.levelSection(
-        //     "homingJellyfishFromSidesAndCenter",
-        //     15,
-        //     85,
-        //     () => {
-        //         this.patternManager.start();
-        //         this._sidesHomingJellyfish.forEach(j => j.xSpeed *= 0.25);
-        //         this._centerHomingJellyfish.forEach(j => j.xSpeed *= 0.25);
-        //     },
-        //     () => this.obstacleManagers[0].sendObstaclesIfReady(),
-        //     () => this.patternManager.stop()
-        // );
+        this.levelSection(
+            "homingJellyfishFromSidesAndCenter",
+            15,
+            85,
+            () => {
+                this.patternManager.start();
+                
+                const newSpeed = this._homingJellyfishInitialXSpeed * 0.25;
+                this._sidesHomingJellyfish.forEach(j => j.xSpeed = newSpeed);
+                this._centerHomingJellyfish.forEach(j => j.xSpeed = newSpeed);
+            },
+            () => this.obstacleManagers[0].sendObstaclesIfReady(),
+            () => this.patternManager.stop()
+        );
         
         // Run the closing sequence
         this.levelEndSection(288);
