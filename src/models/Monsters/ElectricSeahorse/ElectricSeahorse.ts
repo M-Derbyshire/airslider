@@ -13,7 +13,6 @@ export default class ElectricSeahorse extends Monster {
     private _rightLightningModel:Lightning; // The lightning model for the right side of the monster
     private _wingSoundKey:string; // The key for the flapping wings sound effect
     private _lastAnimFrame:number; // The index of the current frame in the animation (see the act() method for explanation)
-    private _nextDirectionChangeMilliSeconds:number; // When (in milliseconds) should the monster next change direction?
     
     /**
      * Constructor
@@ -90,10 +89,9 @@ export default class ElectricSeahorse extends Monster {
         this._rightLightningModel.z = this.startZ;
         this._setLightningActiveStatus(false);
         
-        this.enterXSpeed = 90;
-        this.xSpeed = 500;
+        this.enterXSpeed = 45;
+        this.xSpeed = 1100;
         
-        this._nextDirectionChangeMilliSeconds = 0;
         this._lastAnimFrame = 0;
         this.state = "move";   
     }
@@ -114,7 +112,6 @@ export default class ElectricSeahorse extends Monster {
             this.moveLeft(this.enterXSpeed);
         } else {
             this.entering = false;
-            this._nextDirectionChangeMilliSeconds = this._getNewDirectionChangeTimeMS();
             this._setLightningActiveStatus(true);
         }
     }
@@ -127,7 +124,7 @@ export default class ElectricSeahorse extends Monster {
     
     exit():void
     {
-        this.moveLeft(this.enterXSpeed * 2);
+        this.moveLeft(this.enterXSpeed * 3);
         
         const level = (Kernel.getInstance().level as ASLevel);
         
@@ -172,14 +169,6 @@ export default class ElectricSeahorse extends Monster {
         this._correctLightningXPos();
         
 		this._handleOverlappingOfLevelEdges();
-        
-        //We want to change direction at random times
-        const totalActiveMS = Kernel.getInstance().totalLevelActiveMilliseconds;
-        if (totalActiveMS >= this._nextDirectionChangeMilliSeconds)
-        {
-            this.xSpeed = -this.xSpeed;
-            this._nextDirectionChangeMilliSeconds = this._getNewDirectionChangeTimeMS();
-        }
     }
     
     /**
@@ -201,7 +190,7 @@ export default class ElectricSeahorse extends Monster {
         
         // Defining the left/right edges that we want the monster to stay within.
         // If we take into account the z position, these aren't actually off the screen.
-        const boundaryBuffer = (this.width / 5);
+        const boundaryBuffer = (this.width / 3.5);
         const leftEdgeBoundary = level.leftEdge - boundaryBuffer; 
         const rightEdgeBoundary = level.rightEdge + boundaryBuffer;
         
@@ -216,20 +205,6 @@ export default class ElectricSeahorse extends Monster {
                 : (rightEdgeBoundary - this.width - 1);
         }
 	}
-    
-    /**
-     * Gets a new time (in milliseconds) to change the direction of the monster. When this time is reached, 
-     * the monster can change direction again
-     * @returns a new time (in milliseconds)
-     */
-    private _getNewDirectionChangeTimeMS():number
-    {
-        const minChangeTimeMS = 2000;
-        const maxChangeTimeMS = 4000;
-        const totalActiveMS = Kernel.getInstance().totalLevelActiveMilliseconds;
-        
-        return totalActiveMS + (Math.random() * (maxChangeTimeMS - minChangeTimeMS)) + minChangeTimeMS;
-    }
     
     /**
      * Sets the correct x positions for the lightning models
