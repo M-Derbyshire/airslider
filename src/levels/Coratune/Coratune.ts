@@ -76,12 +76,12 @@ export default class Coratune extends ASLevel<Jellyfish>
         // Setup the monster
         const lighting1 = new Lightning();
         const lighting2 = new Lightning();
-        const seahorse = new ElectricSeahorse(lighting1, lighting2);
         
         this.monsters = [
-            seahorse
+            new ElectricSeahorse(lighting1, lighting2),
+            new ElectricSeahorse(lighting1, lighting2)
         ];
-        models.push(lighting1, lighting2, seahorse);
+        models.push(lighting1, lighting2, ...this.monsters);
         
         return models;
     }
@@ -177,61 +177,58 @@ export default class Coratune extends ASLevel<Jellyfish>
     {
         super.act();
         
-        // this.levelIntroSection(
-        //     36,
-        //     24,
-        //     () => this._introJellyfish.start()
-        // );
+        this.levelIntroSection(
+            36,
+            24,
+            () => this._introJellyfish.start()
+        );
         
         this.patternManager.act();
         
-        // this.levelSection(
-        //     "homingJellyfishFromSides",
-        //     15,
-        //     85,
-        //     () => this.patternManager.start(),
-        //     null,
-        //     () => this.patternManager.stop()
-        // );
+        this.levelSection(
+            "homingJellyfishFromSides",
+            38,
+            88,
+            () => this.patternManager.start(),
+            null,
+            () => this.patternManager.stop()
+        );
         
-        // this.levelSection(
-        //     "electricSeahorse1",
-        //     15,
-        //     65,
-        //     () => this.monsters.forEach(monster => monster.start()),
-        //     null,
-        //     () => this.monsters.forEach(monster => monster.stop())
-        // );
+        this.levelSection(
+            "electricSeahorse1",
+            88,
+            138,
+            () => this.monsters[0].start(),
+            null,
+            () => this.monsters[0].stop()
+        );
         
-        // this.levelSection(
-        //     "homingJellyfishFromSidesAndCenter",
-        //     15,
-        //     85,
-        //     () => {
-        //         this.patternManager.start();
+        this.levelSection(
+            "homingJellyfishFromSidesAndCenter",
+            149,
+            179,
+            () => {
+                this.patternManager.start();
                 
-        //         const newSpeed = this._homingJellyfishInitialXSpeed * 0.25;
-        //         this._sidesHomingJellyfish.forEach(j => j.xSpeed = newSpeed);
-        //         this._centerHomingJellyfish.forEach(j => j.xSpeed = newSpeed);
-        //     },
-        //     () => this.obstacleManagers[0].sendObstaclesIfReady(),
-        //     () => this.patternManager.stop()
-        // );
+                const newSpeed = this._homingJellyfishInitialXSpeed * 0.25;
+                this._sidesHomingJellyfish.forEach(j => j.xSpeed = newSpeed);
+                this._centerHomingJellyfish.forEach(j => j.xSpeed = newSpeed);
+            },
+            () => this.obstacleManagers[0].sendObstaclesIfReady(),
+            () => this.patternManager.stop()
+        );
         
-        // this.levelSection(
-        //     "electricSeahorse2",
-        //     15,
-        //     65,
-        //     () => this.monsters.forEach(monster => {
-        //         monster.prepare();
-        //         monster.start();
-        //     }),
-        //     null,
-        //     () => this.monsters.forEach(monster => monster.stop())
-        // );
+        this.levelSection(
+            "electricSeahorse2",
+            179,
+            229,
+            () => this.monsters[1].start(),
+            null,
+            () => this.monsters[1].stop()
+        );
         
         // Run the closing sequence
-        this.levelEndSection(288);
+        this.levelEndSection(239);
     }
 
     /**
