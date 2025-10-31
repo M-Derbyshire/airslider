@@ -297,8 +297,6 @@ export default class Kernel implements IKernel {
 		const aspectRatioVertical = this.settings.aspectRatioVertical;
 		const camera = new Camera(aspectRatioHorizontal, aspectRatioVertical);
 		const frameManager = new FrameManager(camera);
-		
-        const engines = this._initialiseAllEngines(camera, frameManager); // New engines, set up for this level
         
         level.load(
             frameManager, 
@@ -308,6 +306,8 @@ export default class Kernel implements IKernel {
         
         const loadedModels = level.getModels();
         this._loadModels(loadedModels);
+        
+        const engines = this._initialiseAllEngines(level, loadedModels, camera, frameManager); // New engines, set up for this level
         
         this._levelQueue.push({ 
             level, 
@@ -459,13 +459,15 @@ export default class Kernel implements IKernel {
     
 	/**
      * Returns new instances of all engines
+     * @param level the level
+     * @param loadedModels the models created/used by the level
      * @param camera The level's camera
      * @param frameManager Manages the frames of a level
      * @returns The new instances of all engines
      */
-	private _initialiseAllEngines(camera:ICamera, frameManager:IFrameManager):ILevelEngines
+	private _initialiseAllEngines(level:ILevel, loadedModels:IModel[], camera:ICamera, frameManager:IFrameManager):ILevelEngines
 	{
-		const gameEngine = new GameEngine();
+		const gameEngine = new GameEngine(level, loadedModels);
         const graphicEngine = new GraphicEngine(camera, frameManager);
         const soundEngine = new SoundEngine();
         
