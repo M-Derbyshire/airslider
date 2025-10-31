@@ -293,9 +293,21 @@ export default class Kernel implements IKernel {
      */
     loadLevel(level:ILevel):void
     {
-		const aspectRatioHorizontal = this.settings.aspectRatioHorizontal;
-		const aspectRatioVertical = this.settings.aspectRatioVertical;
-		const camera = new Camera(aspectRatioHorizontal, aspectRatioVertical);
+		const {
+            aspectRatioHorizontal,
+            aspectRatioVertical,
+            unitsWithinCameraX,
+            unitsWithinCameraY
+        } = this.settings;
+        
+		const camera = new Camera(
+            this._canvasContext.canvas,
+            aspectRatioHorizontal,
+            aspectRatioVertical,
+            unitsWithinCameraX,
+            unitsWithinCameraY
+        );
+        
 		const frameManager = new FrameManager(camera);
         
         level.load(

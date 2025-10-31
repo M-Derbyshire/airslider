@@ -1,7 +1,6 @@
 import ICamera from './ICamera';
 import ICameraPositions from './ICameraPositions';
 import ICameraDrawPositionsCalc from './ICameraDrawPositionsCalc';
-import Kernel from '../../Kernel';
 import UnitHelper from '../../utils/UnitHelper';
 import ZCalc from '../../utils/ZCalc/ZCalc';
 
@@ -11,6 +10,10 @@ import ZCalc from '../../utils/ZCalc/ZCalc';
 export default class Camera implements ICamera {
     private _aspectRatioHorizontal:number; // The horizontal aspect ratio value (e.g. the "16" in "16:9")
     private _aspectRatioVertical:number; // The vertical aspect ratio value (e.g. the "9" in "16:9")
+    private _unitsWithinCameraX:number; // How many draw-space units are there within the camera's size (on the x axis)? So, if this value was 1000, then a model with a width of 1000 would take up the entire screen (assuming its z position was 0)
+    private _unitsWithinCameraY:number; // How many draw-space units are there within the camera's size (on the y axis)? So, if this value was 1000, then a model with a height of 1000 would take up the entire screen (assuming its z position was 0)
+    
+    private _canvas:HTMLCanvasElement; // The HTML canvas element where the game is being drawn
     
     private _positions:ICameraPositions; // The canvas and draw-space positions/dimensions
     
@@ -24,11 +27,25 @@ export default class Camera implements ICamera {
      * Constructor
      * @param aspectRatioHorizontal The horizontal aspect ratio value (e.g. the "16" in "16:9")
      * @param aspectRatioVertical The vertical aspect ratio value (e.g. the "9" in "16:9")
+     * @param unitsWithinCameraX How many draw-space units are there within the camera's size (on the x axis)?
+     * @param unitsWithinCameraY How many draw-space units are there within the camera's size (on the y axis)?
+     * @param canvas The HTML canvas element where the game is being drawn
      */
-    constructor(aspectRatioHorizontal:number = 17, aspectRatioVertical:number = 9)
+    constructor(
+        canvas:HTMLCanvasElement,
+        aspectRatioHorizontal:number = 17,
+        aspectRatioVertical:number = 9,
+        unitsWithinCameraX:number = 1000,
+        unitsWithinCameraY:number = 1000
+    )
     {
         this._aspectRatioHorizontal = aspectRatioHorizontal;
         this._aspectRatioVertical = aspectRatioVertical;
+        
+        this._unitsWithinCameraX = unitsWithinCameraX;
+        this._unitsWithinCameraY = unitsWithinCameraY;
+        
+        this._canvas = canvas;
         
         this._positions = {
             canvas: { x: 0, y: 0, width: 0, height: 0 },
@@ -103,19 +120,17 @@ export default class Camera implements ICamera {
         let height:number;
         let widthRatio = this._aspectRatioHorizontal / this._aspectRatioVertical;
         
-        const canvas = Kernel.getInstance().canvasContext.canvas;
-        
-        if((canvas.width / widthRatio) > canvas.height)
+        if((this._canvas.width / widthRatio) > this._canvas.height)
         {
-            height = canvas.height
+            height = this._canvas.height
             width = height * widthRatio;
         } else {
-            height = canvas.width / widthRatio;
-            width = canvas.width;
+            height = this._canvas.width / widthRatio;
+            width = this._canvas.width;
         }
         
-        const x = (canvas.width - width) / 2;
-        const y = (canvas.height - height) / 2;
+        const x = (this._canvas.width - width) / 2;
+        const y = (this._canvas.height - height) / 2;
         
         this._positions.canvas = { x, y, width, height };
     }
@@ -184,7 +199,7 @@ export default class Camera implements ICamera {
      */
     drawEmptySpaceColor():void
     {
-        const ctx = Kernel.getInstance().canvasContext;
+        const ctx = this._canvas.getContext("2d");
         
         ctx.fillStyle = this._emptySpaceColor;
         ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -196,7 +211,7 @@ export default class Camera implements ICamera {
      */
     drawLetterbox():void
     {
-        const ctx = Kernel.getInstance().canvasContext;
+        const ctx = this._canvas.getContext("2d");
         
         ctx.fillStyle = this._letterBoxColor;
         ctx.beginPath();
@@ -238,9 +253,8 @@ export default class Camera implements ICamera {
      */
     setCameraPosition(x:number, y:number):void
     {
-        const settings = Kernel.getInstance().settings;
-        const centerX = settings.unitsWithinCameraX / 2;
-        const centerY = settings.unitsWithinCameraY / 2;
+        const centerX = this._unitsWithinCameraX / 2;
+        const centerY = this._unitsWithinCameraY / 2;
         
         this._positions.drawSpace.x = x - centerX;
         this._positions.drawSpace.y = y - centerY;
