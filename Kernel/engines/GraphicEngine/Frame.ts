@@ -1,6 +1,5 @@
 import Kernel from '../../Kernel';
 import IFrame from './IFrame';
-import ILightMask from './ILightMask';
 
 /**
  * A single area of a level
