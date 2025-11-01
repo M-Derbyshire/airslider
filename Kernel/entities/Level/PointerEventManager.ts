@@ -7,6 +7,11 @@ import IPointerEventManager from "./IPointerEventManager";
  */
 export default class PointerEventManager implements IPointerEventManager {
 	/**
+	 * The canvas that the game is being drawn on
+	 */
+	private _canvas:HTMLCanvasElement;
+	
+	/**
 	 * The registered entities that are able to handle click events
 	 */
 	private _subjects:ISubject[];
@@ -37,8 +42,13 @@ export default class PointerEventManager implements IPointerEventManager {
 	 */
 	private _moveEventCallback:(e:MouseEvent)=>void;
 	
-	constructor()
+	/**
+	 * Constructor
+	 * @param canvas the canvas that the game is being drawn on
+	 */
+	constructor(canvas:HTMLCanvasElement)
 	{
+		this._canvas = canvas;
 		this._subjects = [];
 		this._canvasPointerX = 0;
 		this._canvasPointerY = 0;
@@ -57,7 +67,6 @@ export default class PointerEventManager implements IPointerEventManager {
 			this._canvasPointerY = pointerY;
 		};
 		
-		const canvas = Kernel.getInstance().canvasContext.canvas;
 		canvas.addEventListener("click", this._clickEventCallback);
 		canvas.addEventListener("touchStart", this._clickEventCallback);
 		canvas.addEventListener("mousemove", this._moveEventCallback);
@@ -105,10 +114,9 @@ export default class PointerEventManager implements IPointerEventManager {
 	 * Removes the event listeners from the canvas
 	 */
 	removeEventHandlers():void {
-		const canvas = Kernel.getInstance().canvasContext.canvas;
-		canvas.removeEventListener("click", this._clickEventCallback);
-		canvas.removeEventListener("touchStart", this._clickEventCallback);
-		canvas.removeEventListener("mousemove", this._moveEventCallback);
+		this._canvas.removeEventListener("click", this._clickEventCallback);
+		this._canvas.removeEventListener("touchStart", this._clickEventCallback);
+		this._canvas.removeEventListener("mousemove", this._moveEventCallback);
 	}
 	
 	/**

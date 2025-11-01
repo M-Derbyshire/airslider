@@ -313,7 +313,7 @@ export default class Kernel implements IKernel {
         level.load(
             frameManager, 
             new EventManager(),
-            new PointerEventManager()
+            new PointerEventManager(this._canvasContext.canvas)
         );
         
         const loadedModels = level.getModels();
