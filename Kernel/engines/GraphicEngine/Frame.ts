@@ -1,3 +1,5 @@
+import IDrawDimensions from './IDrawDimensions';
+import IDrawPositions from './IDrawPositions';
 import IFrame from './IFrame';
 import IGraphicEngine from './IGraphicEngine';
 
@@ -10,25 +12,63 @@ export default class Frame implements IFrame {
     private _lightMask:HTMLImageElement|null = null;
     private _lightMaskLuminosity:number = 1; // the light mask's luminosity (1 is the lightest, 0 is the darkest)
     
+    private _calculatedDrawPositionsAndDimensions:IDrawDimensions&IDrawPositions = null; // Stores the actual positions/dimensions to draw the frame with
+    private _x:number; // The x position (in units) of the frame in the level
+    private _y:number; // The y position (in units) of the frame in the level
+    private _width:number; // The width (in units) of the frame
+    private _height:number; // The height (in units) of the frame
+    
     /**
      * The x position (in units) of the frame in the level
      */
-    x: number;
+    get x():number
+    {
+        return this._x;
+    }
+    set x(val:number)
+    {
+        this._calculatedDrawPositionsAndDimensions = null;
+        this._x = val;
+    }
     
     /**
      * The y position (in units) of the frame in the level
      */
-    y: number;
+    get y():number
+    {
+        return this._y;
+    }
+    set y(val:number)
+    {
+        this._calculatedDrawPositionsAndDimensions = null;
+        this._y = val;
+    }
     
     /**
      * The width (in units) of the frame
      */
-    width: number;
+    get width():number
+    {
+        return this._width;
+    }
+    set width(val:number)
+    {
+        this._calculatedDrawPositionsAndDimensions = null;
+        this._width = val;
+    }
     
     /**
      * The height (in units) of the frame
      */
-    height: number;
+    get height():number
+    {
+        return this._height;
+    }
+    set height(val:number)
+    {
+        this._calculatedDrawPositionsAndDimensions = null;
+        this._height = val;
+    }
     
     /**
      * Constructor
@@ -39,10 +79,10 @@ export default class Frame implements IFrame {
      */
     constructor(x:number, y:number, width:number, height:number)
     {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        this._x = x;
+        this._y = y;
+        this._width = width;
+        this._height = height;
     }
     
     /**
@@ -82,19 +122,14 @@ export default class Frame implements IFrame {
      */
     drawFront(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void
     {
-        if(this._lightMask !== null)
-        {
-            const { x, y, width, height } = graphicEngine.getUnscaledDrawPositionsAndDimensions({
-                x: this.x,
-                y: this.y,
-                width: this.width,
-                height: this.height
-            });
-            
-            canvasCtx.globalAlpha = 1 - this._lightMaskLuminosity;
-            canvasCtx.drawImage(this._lightMask, x, y, width, height);
-            canvasCtx.globalAlpha = 1;
-        }
+        if(!this._lightMask)
+            return;
+        
+        const { x, y, width, height } = this._getActualDrawPositionsAndDimensions(graphicEngine);
+        
+        canvasCtx.globalAlpha = 1 - this._lightMaskLuminosity;
+        canvasCtx.drawImage(this._lightMask, x, y, width, height);
+        canvasCtx.globalAlpha = 1;
     }
     
     /**
@@ -106,12 +141,7 @@ export default class Frame implements IFrame {
     {
         if(!this._background && !this._backgroundColor) return;
         
-        const { x, y, width, height } = graphicEngine.getUnscaledDrawPositionsAndDimensions({
-            x: this.x,
-            y: this.y,
-            width: this.width,
-            height: this.height
-        });
+        const { x, y, width, height } = this._getActualDrawPositionsAndDimensions(graphicEngine);
         
         if(this._backgroundColor != null)
         {
@@ -123,5 +153,23 @@ export default class Frame implements IFrame {
         {
             canvasCtx.drawImage(this._background, x, y, width, height);
         }
+    }
+    
+    /**
+     * Calculates the actual draw positions/dimensions, to be used when drawing the frame
+     * @param graphicEngine The graphic engine for the level
+     * @returns The dimensions and positions to use when drawing the frame
+     */
+    private _getActualDrawPositionsAndDimensions(graphicEngine:IGraphicEngine):IDrawDimensions&IDrawPositions
+    {
+        if(!this._calculatedDrawPositionsAndDimensions)
+            this._calculatedDrawPositionsAndDimensions = graphicEngine.getUnscaledDrawPositionsAndDimensions({
+                x: this._x,
+                y: this._y,
+                width: this._width,
+                height: this._height
+            });
+        
+        return this._calculatedDrawPositionsAndDimensions;
     }
 }
