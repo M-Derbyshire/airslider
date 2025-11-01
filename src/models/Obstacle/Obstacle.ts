@@ -3,7 +3,7 @@ import ASLevel from "../../levels/ASLevel/ASLevel";
 import ASModel from "../ASModel/ASModel";
 import Tarian from "../Tarian/Tarian";
 import UnitHelper from "../../../Kernel/utils/UnitHelper";
-import IHitBox from "../../../Kernel/entities/Model/IHitBox";
+import { IHitBox } from "../../../Kernel/entities/Model/IModel";
 
 /**
  * Base class for obstacles, that move down the track to hit the player

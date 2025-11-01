@@ -2,8 +2,7 @@ import Kernel from '../../../Kernel/Kernel';
 import MainHUD from '../../HUDs/MainHUD/MainHUD';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
-import IHitBox from '../../../Kernel/entities/Model/IHitBox';
-import IModel from '../../../Kernel/entities/Model/IModel';
+import IModel, { IHitBox } from '../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 
 /**

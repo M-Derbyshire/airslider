@@ -1,9 +1,8 @@
 import Kernel from '../../../../Kernel/Kernel';
 import ASLevel from '../../../levels/ASLevel/ASLevel';
-import IModel from '../../../../Kernel/entities/Model/IModel';
+import IModel, { IHitBox } from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
-import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
 
 /**
  * The ghost monster

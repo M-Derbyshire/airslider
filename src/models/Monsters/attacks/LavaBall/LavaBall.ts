@@ -2,7 +2,7 @@ import Kernel from '../../../../../Kernel/Kernel';
 import ASModel from '../../../ASModel/ASModel';
 import IModelAnimationsManager from '../../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Tarian from '../../../Tarian/Tarian';
-import IHitBox from '../../../../../Kernel/entities/Model/IHitBox';
+import { IHitBox } from '../../../../../Kernel/entities/Model/IModel';
 
 /**
  * The Dragon's lava ball attack

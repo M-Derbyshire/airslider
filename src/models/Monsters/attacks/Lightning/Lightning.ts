@@ -1,7 +1,7 @@
 import Kernel from '../../../../../Kernel/Kernel';
 import ASModel from '../../../ASModel/ASModel';
 import IModelAnimationsManager from '../../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
-import IHitBox from '../../../../../Kernel/entities/Model/IHitBox';
+import { IHitBox } from '../../../../../Kernel/entities/Model/IModel';
 
 /**
  * The lighting attack used by the ElectricSeahorse

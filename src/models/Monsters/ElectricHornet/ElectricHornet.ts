@@ -1,5 +1,5 @@
 import Kernel from '../../../../Kernel/Kernel';
-import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
+import { IHitBox } from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import ASLevel from '../../../levels/ASLevel/ASLevel';
 import Monster from '../../Monster/Monster';

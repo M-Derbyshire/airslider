@@ -1,6 +1,5 @@
-import IModel from './IModel';
+import IModel, { IHitBox } from './IModel';
 import IModelAnimationsManager from './ModelAnimationsManager/IModelAnimationsManager';
-import IHitBox from './IHitBox';
 import Kernel from '../../Kernel';
 import { ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
 import UnitHelper from '../../utils/UnitHelper';
