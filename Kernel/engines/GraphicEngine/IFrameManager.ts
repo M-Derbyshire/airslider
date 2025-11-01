@@ -12,22 +12,20 @@ export default interface IFrameManager {
     setFrames(frames:IFrame[]):void;
     
     /**
-     * Determines which frames should be drawn, and stores that info in the manager's internal 
-     * state
+     * Gets the frames ready to be drawn
+     * @param graphicEngine The graphic engine for the level
      */
-    determineFramesToDraw():void;
+    prepareFramesForDrawing(graphicEngine:IGraphicEngine):void;
     
     /**
      * Draws the background-related elements of all of the frames that need to be drawn
      * @param canvasCtx The context used to draw on the game's canvas
-     * @param graphicEngine The graphic engine for the level
      */
-    drawFramesBack(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void;
+    drawFramesBack(canvasCtx:CanvasRenderingContext2D):void;
     
     /**
      * Draws the foreground-related elements of all of the frames that need to be drawn
      * @param canvasCtx The context used to draw on the game's canvas
-     * @param graphicEngine The graphic engine for the level
      */
-    drawFramesFront(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void;
+    drawFramesFront(canvasCtx:CanvasRenderingContext2D):void;
 };

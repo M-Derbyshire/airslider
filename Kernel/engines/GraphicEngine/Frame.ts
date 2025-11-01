@@ -114,16 +114,29 @@ export default class Frame implements IFrame {
     }
     
     /**
-     * Draws the foreground-related elements of the frame (such as the light mask)
-     * @param canvasCtx The context used to draw on the game's canvas
+     * Calculates and stores the positions/dimensions to draw the frame with
      * @param graphicEngine The graphic engine for the level
      */
-    drawFront(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void
+    calculateDrawPositionsAndDimensions(graphicEngine:IGraphicEngine):void
+    {
+        this._calculatedDrawPositionsAndDimensions = graphicEngine.getUnscaledDrawPositionsAndDimensions({
+            x: this._x,
+            y: this._y,
+            width: this._width,
+            height: this._height
+        });
+    }
+    
+    /**
+     * Draws the foreground-related elements of the frame (such as the light mask)
+     * @param canvasCtx The context used to draw on the game's canvas
+     */
+    drawFront(canvasCtx:CanvasRenderingContext2D):void
     {
         if(!this._lightMask)
             return;
         
-        const { x, y, width, height } = this._getActualDrawPositionsAndDimensions(graphicEngine);
+        const { x, y, width, height } = this._calculatedDrawPositionsAndDimensions;
         
         canvasCtx.globalAlpha = 1 - this._lightMaskLuminosity;
         canvasCtx.drawImage(this._lightMask, x, y, width, height);
@@ -133,13 +146,12 @@ export default class Frame implements IFrame {
     /**
      * Draws the background-related elements of the frame (such as the background image)
      * @param canvasCtx The context used to draw on the game's canvas
-     * @param graphicEngine The graphic engine for the level
      */
-    drawBack(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void
+    drawBack(canvasCtx:CanvasRenderingContext2D):void
     {
         if(!this._background && !this._backgroundColor) return;
         
-        const { x, y, width, height } = this._getActualDrawPositionsAndDimensions(graphicEngine);
+        const { x, y, width, height } = this._calculatedDrawPositionsAndDimensions;
         
         if(this._backgroundColor != null)
         {
@@ -151,23 +163,5 @@ export default class Frame implements IFrame {
         {
             canvasCtx.drawImage(this._background, x, y, width, height);
         }
-    }
-    
-    /**
-     * Calculates the actual draw positions/dimensions, to be used when drawing the frame
-     * @param graphicEngine The graphic engine for the level
-     * @returns The dimensions and positions to use when drawing the frame
-     */
-    private _getActualDrawPositionsAndDimensions(graphicEngine:IGraphicEngine):IDrawDimensions&IDrawPositions
-    {
-        if(!this._calculatedDrawPositionsAndDimensions)
-            this._calculatedDrawPositionsAndDimensions = graphicEngine.getUnscaledDrawPositionsAndDimensions({
-                x: this._x,
-                y: this._y,
-                width: this._width,
-                height: this._height
-            });
-        
-        return this._calculatedDrawPositionsAndDimensions;
     }
 }

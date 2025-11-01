@@ -45,16 +45,20 @@ export default interface IFrame {
     setLightMaskImage(image:HTMLImageElement, luminosity:number):void;
     
     /**
-     * Draws the foreground-related elements of the frame (such as the light mask)
-     * @param canvasCtx The context used to draw on the game's canvas
+     * Calculates and stores the positions/dimensions to draw the frame with
      * @param graphicEngine The graphic engine for the level
      */
-    drawFront(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void;
+    calculateDrawPositionsAndDimensions(graphicEngine:IGraphicEngine):void;
+    
+    /**
+     * Draws the foreground-related elements of the frame (such as the light mask)
+     * @param canvasCtx The context used to draw on the game's canvas
+     */
+    drawFront(canvasCtx:CanvasRenderingContext2D):void;
     
     /**
      * Draws the background-related elements of the frame (such as the background image)
      * @param canvasCtx The context used to draw on the game's canvas
-     * @param graphicEngine The graphic engine for the level
      */
-    drawBack(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void;
+    drawBack(canvasCtx:CanvasRenderingContext2D):void;
 };

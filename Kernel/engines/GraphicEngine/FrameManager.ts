@@ -36,10 +36,38 @@ export default class FrameManager implements IFrameManager {
     }
     
     /**
+     * Gets the frames ready to be drawn
+     * @param graphicEngine The graphic engine for the level
+     */
+    prepareFramesForDrawing(graphicEngine:IGraphicEngine):void
+    {
+        this._determineFramesToDraw();
+        this._framesToBeDrawn.forEach((frame) => frame.calculateDrawPositionsAndDimensions(graphicEngine));
+    }
+    
+    /**
+     * Draws the background-related elements of all of the frames that need to be drawn
+     * @param canvasCtx The context used to draw on the game's canvas
+     */
+    drawFramesBack(canvasCtx:CanvasRenderingContext2D):void
+    {
+        this._framesToBeDrawn.forEach((frame) => frame.drawBack(canvasCtx));
+    }
+    
+    /**
+     * Draws the foreground-related elements of all of the frames that need to be drawn
+     * @param canvasCtx The context used to draw on the game's canvas
+     */
+    drawFramesFront(canvasCtx:CanvasRenderingContext2D):void
+    {
+        this._framesToBeDrawn.forEach((frame) => frame.drawFront(canvasCtx));
+    }
+    
+    /**
      * Determines which frames should be drawn, and stores that info in the manager's internal 
      * state
      */
-    determineFramesToDraw():void
+    private _determineFramesToDraw():void
     {
         this._framesToBeDrawn = this._frames.filter((frame) => this._camera.isOnCamera(
             frame.x, 
@@ -47,25 +75,5 @@ export default class FrameManager implements IFrameManager {
             frame.width, 
             frame.height
         ));
-    }
-    
-    /**
-     * Draws the background-related elements of all of the frames that need to be drawn
-     * @param canvasCtx The context used to draw on the game's canvas
-     * @param graphicEngine The graphic engine for the level
-     */
-    drawFramesBack(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void
-    {
-        this._framesToBeDrawn.forEach((frame) => frame.drawBack(canvasCtx, graphicEngine));
-    }
-    
-    /**
-     * Draws the foreground-related elements of all of the frames that need to be drawn
-     * @param canvasCtx The context used to draw on the game's canvas
-     * @param graphicEngine The graphic engine for the level
-     */
-    drawFramesFront(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void
-    {
-        this._framesToBeDrawn.forEach((frame) => frame.drawFront(canvasCtx, graphicEngine));
     }
 }
