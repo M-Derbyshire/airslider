@@ -14,6 +14,8 @@ export default class GraphicEngine implements IGraphicEngine {
     private _lastFrameCanvasWidth:number; // The pixel width of the canvas element, during the last draw
     private _lastFrameCanvasHeight:number; // The pixel height of the canvas element, during the last draw
     
+    private _canvasCtx:CanvasRenderingContext2D; // The 2D context from the HTML canvas element
+    
     /**
      * The camera for the level
      */
@@ -23,11 +25,13 @@ export default class GraphicEngine implements IGraphicEngine {
      * Constructor
      * @param camera The level's camera
      * @param frameManager The level's frame manager
+     * @param canvasCtx The 2D context from the HTML canvas element
      */
-    constructor(camera:ICamera, frameManager:IFrameManager)
+    constructor(camera:ICamera, frameManager:IFrameManager, canvasCtx:CanvasRenderingContext2D)
     {
         this.camera = camera;
         this._frameManager = frameManager;
+        this._canvasCtx = canvasCtx;
         
         this._lastFrameCanvasWidth = 0;
         this._lastFrameCanvasHeight = 0;
@@ -41,7 +45,7 @@ export default class GraphicEngine implements IGraphicEngine {
     run():void
     {
         const kernel = Kernel.getInstance();
-        const canvas = kernel.canvasContext.canvas;
+        const canvas = this._canvasCtx.canvas;
         
         // Need to do this, rather than using an event listener, as the onResize listener
         // doesn't react to a change of canvas size if the size is set in percentages.
@@ -49,14 +53,14 @@ export default class GraphicEngine implements IGraphicEngine {
             this._handleCanvasSizeChange();
         
         // Clear everything on the game canvas
-        kernel.canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        this._canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
         
         // Prepare to draw
         this._frameManager.prepareFramesForDrawing(this);
         
         // Draw the elements that are behind the models
         this.camera.drawBack();
-        this._frameManager.drawFramesBack(kernel.canvasContext);
+        this._frameManager.drawFramesBack(this._canvasCtx);
         kernel.level.drawBack();
         
         // Now the models
@@ -64,7 +68,7 @@ export default class GraphicEngine implements IGraphicEngine {
         
         //Finally, draw everything that needs to be drawn on top of the models
         kernel.level.drawFront();
-        this._frameManager.drawFramesFront(kernel.canvasContext);
+        this._frameManager.drawFramesFront(this._canvasCtx);
         kernel.level.HUD.draw();
         this.camera.drawFront();
         
@@ -113,17 +117,16 @@ export default class GraphicEngine implements IGraphicEngine {
         }
         
         // Setup style and alignment properties
-        const ctx = Kernel.getInstance().canvasContext;
-        ctx.font = `${textContent.style} ${height}px ${textContent.font}`;
-        ctx.fillStyle = textContent.color;
-        ctx.textAlign = textContent.alignment;
+        this._canvasCtx.font = `${textContent.style} ${height}px ${textContent.font}`;
+        this._canvasCtx.fillStyle = textContent.color;
+        this._canvasCtx.textAlign = textContent.alignment;
         
         // Split the text into the individual lines
         const lines = textContent.content.split("\n");
         
         // Draw the lines of text
         lines.forEach(line => {
-            ctx.fillText(line, x, y);
+            this._canvasCtx.fillText(line, x, y);
             y += (height + lineGap);
         });
     }
@@ -229,16 +232,15 @@ export default class GraphicEngine implements IGraphicEngine {
     private _fpsMeter():void
     {
         const kernel = Kernel.getInstance();
-        const ctx = kernel.canvasContext;
         
         const fps = Math.round(kernel.fps * 100) / 100; // 2 decimal places
         
         const fontSize = 30;
-        ctx.font = fontSize + "px Arial";
-        ctx.fillStyle = kernel.settings.fpsDisplayColor;
-        ctx.textAlign = "left";
+        this._canvasCtx.font = fontSize + "px Arial";
+        this._canvasCtx.fillStyle = kernel.settings.fpsDisplayColor;
+        this._canvasCtx.textAlign = "left";
         
-        ctx.fillText(`FPS: ${fps}`, 10, (10 + fontSize));
+        this._canvasCtx.fillText(`FPS: ${fps}`, 10, (10 + fontSize));
     }
     
     /**
@@ -247,7 +249,7 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     private _canvasSizeHasChanged():boolean
     {
-        const canvas = Kernel.getInstance().canvasContext.canvas;
+        const canvas = this._canvasCtx.canvas;
         const computedStyles = window.getComputedStyle(canvas);
         
         //slice() is used here to remove the "px"

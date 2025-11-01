@@ -480,7 +480,7 @@ export default class Kernel implements IKernel {
 	private _initialiseAllEngines(level:ILevel, loadedModels:IModel[], camera:ICamera, frameManager:IFrameManager):ILevelEngines
 	{
 		const gameEngine = new GameEngine(level, loadedModels);
-        const graphicEngine = new GraphicEngine(camera, frameManager);
+        const graphicEngine = new GraphicEngine(camera, frameManager, this._canvasContext);
         const soundEngine = new SoundEngine();
         
         return { gameEngine, graphicEngine, soundEngine };
