@@ -3,8 +3,7 @@ import IAnimation from './IAnimation';
 import IAnimationDetails from './IAnimationDetails';
 import IModelAnimationsManager, { AnimationsObject } from './IModelAnimationsManager';
 import Kernel from '../../../Kernel';
-import IDrawPositions from '../../../engines/GraphicEngine/IDrawPositions';
-import IDrawDimensions from '../../../engines/GraphicEngine/IDrawDimensions';
+import { IDrawDimensions, IDrawPositions } from "../../../engines/GraphicEngine/IGraphicEngine";
 
 /**
  * Manages a model's animations

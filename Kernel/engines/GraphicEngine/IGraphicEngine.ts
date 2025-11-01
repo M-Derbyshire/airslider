@@ -1,7 +1,4 @@
 import ICamera from "./ICamera";
-import IDrawDimensions from "./IDrawDimensions";
-import IDrawPositions from "./IDrawPositions";
-import ITextContent from "./ITextContent";
 
 /**
  * The engine that controls the drawing to the screen
@@ -58,4 +55,85 @@ export default interface IGraphicEngine {
         unitValues:Partial<IDrawPositions&IDrawDimensions>&{ z:number }, 
         showNegative?:boolean
     ):IDrawPositions&IDrawDimensions;
+};
+
+/**
+ * Represents the dimensions to draw an entity
+ */
+export interface IDrawDimensions {
+    /**
+     * The pixel or unit value for the entity's width
+     */
+    width:number;
+    
+    /**
+     * The pixel or unit value for the entity's height
+     */
+    height:number;
+};
+
+/**
+ * Represents a position to draw an entity
+ */
+export interface IDrawPositions {
+    /**
+     * The pixel or unit value for the entity's X position
+     */
+    x:number;
+    
+    /**
+     * The pixel or unit value for the entity's Y position
+     */
+    y:number;
+};
+
+/**
+ * Details for displaying an entity's text content
+ */
+export interface ITextContent {
+    /**
+     * The text to display
+     */
+    content:string;
+    
+    /**
+     * The x position, in units (relative to the position of the entity), to draw the text
+     */
+    x:number;
+    
+    /**
+     * The y position, in units (relative to the position of the entity), to draw the text
+     */
+    y:number;
+    
+    /**
+     * Determines the font size for the text
+     */
+    size:number;
+    
+    /**
+     * The name of the font to use
+     */
+    font:string;
+    
+    /**
+     * The color of the text
+     */
+    color:string;
+    
+    /**
+     * See the HTML5 Canvas's "font-style", "font-variant" and "font-weight" properties
+     * (CanvasRenderingContext2D.font).
+     */
+    style:string;
+    
+    /**
+     * Used as the HTML5 Canvas's "textAlign" property
+     */
+    alignment:CanvasTextAlign;
+    
+    /**
+     * Determines the size of the gap between each line of text
+     */
+    lineGap:number;
 };

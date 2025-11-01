@@ -1,6 +1,6 @@
 import IHUDComponent from './IHUDComponent';
 import Kernel from '../../Kernel';
-import ITextContent from '../../engines/GraphicEngine/ITextContent';
+import { ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
 import { IEntitySound } from '../types';
 
 /**

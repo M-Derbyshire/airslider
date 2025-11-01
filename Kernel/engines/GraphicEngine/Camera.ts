@@ -1,6 +1,4 @@
-import ICamera from './ICamera';
-import ICameraPositions from './ICameraPositions';
-import ICameraDrawPositionsCalc from './ICameraDrawPositionsCalc';
+import ICamera, { ICameraDrawPositionsCalc, ICameraPositions } from './ICamera';
 import UnitHelper from '../../utils/UnitHelper';
 import ZCalc from '../../utils/ZCalc/ZCalc';
 

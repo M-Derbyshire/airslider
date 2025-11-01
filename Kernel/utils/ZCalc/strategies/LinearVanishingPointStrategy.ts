@@ -1,5 +1,4 @@
-import IDrawDimensions from "../../../engines/GraphicEngine/IDrawDimensions";
-import IDrawPositions from "../../../engines/GraphicEngine/IDrawPositions";
+import { IDrawDimensions, IDrawPositions } from "../../../engines/GraphicEngine/IGraphicEngine";
 import Kernel from "../../../Kernel";
 import UnitHelper from "../../UnitHelper";
 import IZCalcStrategy from "./IZCalcStrategy";

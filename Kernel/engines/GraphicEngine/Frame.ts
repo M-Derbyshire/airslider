@@ -1,7 +1,5 @@
-import IDrawDimensions from './IDrawDimensions';
-import IDrawPositions from './IDrawPositions';
 import IFrame from './IFrame';
-import IGraphicEngine from './IGraphicEngine';
+import IGraphicEngine, { IDrawDimensions, IDrawPositions } from './IGraphicEngine';
 
 /**
  * A single area of a level

@@ -1,5 +1,4 @@
-import IDrawDimensions from "../../../engines/GraphicEngine/IDrawDimensions";
-import IDrawPositions from "../../../engines/GraphicEngine/IDrawPositions";
+import { IDrawDimensions, IDrawPositions } from "../../../engines/GraphicEngine/IGraphicEngine";
 
 /**
  * Represents a strategy that provides behaviours for the z-calculator

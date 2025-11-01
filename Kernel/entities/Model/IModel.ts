@@ -1,4 +1,4 @@
-import ITextContent from "../../engines/GraphicEngine/ITextContent";
+import { ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
 import IHitBox from "./IHitBox";
 import IModelAnimationsManager from "./ModelAnimationsManager/IModelAnimationsManager";
 

@@ -1,9 +1,6 @@
-import IGraphicEngine from './IGraphicEngine';
+import IGraphicEngine, { IDrawPositions, IDrawDimensions, ITextContent } from './IGraphicEngine';
 import ICamera from './ICamera';
 import IFrameManager from './IFrameManager';
-import IDrawPositions from './IDrawPositions';
-import IDrawDimensions from './IDrawDimensions';
-import ITextContent from './ITextContent';
 import Kernel from '../../Kernel';
 import UnitHelper from '../../utils/UnitHelper';
 import ZCalc from '../../utils/ZCalc/ZCalc';
