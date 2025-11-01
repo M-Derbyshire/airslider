@@ -8,6 +8,7 @@ import ControlsInitialiser from './ControlsInitialiser';
 import IFrameManager from '../../engines/GraphicEngine/IFrameManager';
 import IHUD from '../HUD/IHUD';
 import { IEntitySound } from '../types';
+import ICamera from '../../engines/GraphicEngine/ICamera';
 
 /**
  * A level of the game
@@ -90,7 +91,11 @@ export default class Level implements ILevel
         this.eventManager.clearEvents();
         this.registerLevelEvents();
         
-        this._resetCameraPosition();
+        this._resetCameraPosition(
+            kernel.graphicEngine.camera,
+            kernel.settings.unitsWithinCameraX,
+            kernel.settings.unitsWithinCameraY
+        );
         
         this.sounds.forEach(sound => kernel.soundEngine.addSound(sound.key, sound.asset));
         
@@ -148,14 +153,15 @@ export default class Level implements ILevel
     
     /**
      * Places the top-left of the camera at the top-left of the level's space
+     * @param camera the game camera
+     * @param unitsWithinCameraX How many draw-space units are there within the camera's size (on the x axis)?
+     * @param unitsWithinCameraY How many draw-space units are there within the camera's size (on the y axis)?
      */
-    private _resetCameraPosition():void
+    private _resetCameraPosition(camera:ICamera, unitsWithinCameraX:number, unitsWithinCameraY:number):void
     {
-        const kernel = Kernel.getInstance();
-        
-        kernel.graphicEngine.camera.setCameraPosition(
-            kernel.settings.unitsWithinCameraX / 2,
-            kernel.settings.unitsWithinCameraY / 2
+        camera.setCameraPosition(
+            unitsWithinCameraX / 2,
+            unitsWithinCameraY / 2
         );
     }
 }
