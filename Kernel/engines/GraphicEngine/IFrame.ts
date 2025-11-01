@@ -1,3 +1,5 @@
+import IGraphicEngine from "./IGraphicEngine";
+
 /**
  * A single area of a level
  */
@@ -44,11 +46,15 @@ export default interface IFrame {
     
     /**
      * Draws the foreground-related elements of the frame (such as the light mask)
+     * @param canvasCtx The context used to draw on the game's canvas
+     * @param graphicEngine The graphic engine for the level
      */
-    drawFront():void;
+    drawFront(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void;
     
     /**
      * Draws the background-related elements of the frame (such as the background image)
+     * @param canvasCtx The context used to draw on the game's canvas
+     * @param graphicEngine The graphic engine for the level
      */
-    drawBack():void;
+    drawBack(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void;
 };

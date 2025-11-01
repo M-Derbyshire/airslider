@@ -11,5 +11,5 @@ export default {
 	unitsWithinCameraY: 1000,
 	aspectRatioHorizontal: 17,
 	aspectRatioVertical: 9,
-	InitialLevelClass: CoratuneLoadingScreen
+	InitialLevelClass: LarsLoadingScreen
 } as ISettings;

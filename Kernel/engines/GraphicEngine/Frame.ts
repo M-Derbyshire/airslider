@@ -1,5 +1,5 @@
-import Kernel from '../../Kernel';
 import IFrame from './IFrame';
+import IGraphicEngine from './IGraphicEngine';
 
 /**
  * A single area of a level
@@ -77,36 +77,34 @@ export default class Frame implements IFrame {
     
     /**
      * Draws the foreground-related elements of the frame (such as the light mask)
+     * @param canvasCtx The context used to draw on the game's canvas
+     * @param graphicEngine The graphic engine for the level
      */
-    drawFront():void
+    drawFront(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void
     {
         if(this._lightMask !== null)
         {
-            const graphicEngine = Kernel.getInstance().graphicEngine;
-            
             const { x, y, width, height } = graphicEngine.getUnscaledDrawPositionsAndDimensions({
                 x: this.x,
                 y: this.y,
                 width: this.width,
                 height: this.height
             });
-            const ctx = Kernel.getInstance().canvasContext;
             
-            ctx.globalAlpha = 1 - this._lightMaskLuminosity;
-            ctx.drawImage(this._lightMask, x, y, width, height);
-            ctx.globalAlpha = 1;
+            canvasCtx.globalAlpha = 1 - this._lightMaskLuminosity;
+            canvasCtx.drawImage(this._lightMask, x, y, width, height);
+            canvasCtx.globalAlpha = 1;
         }
     }
     
     /**
      * Draws the background-related elements of the frame (such as the background image)
+     * @param canvasCtx The context used to draw on the game's canvas
+     * @param graphicEngine The graphic engine for the level
      */
-    drawBack():void
+    drawBack(canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine):void
     {
         if(!this._background && !this._backgroundColor) return;
-        
-        const graphicEngine = Kernel.getInstance().graphicEngine;
-        const ctx = Kernel.getInstance().canvasContext;
         
         const { x, y, width, height } = graphicEngine.getUnscaledDrawPositionsAndDimensions({
             x: this.x,
@@ -117,13 +115,13 @@ export default class Frame implements IFrame {
         
         if(this._backgroundColor != null)
         {
-            ctx.fillStyle = this._backgroundColor;
-            ctx.fillRect(x, y, width, height);
+            canvasCtx.fillStyle = this._backgroundColor;
+            canvasCtx.fillRect(x, y, width, height);
         }
         
         if(this._background !== null)
         {
-            ctx.drawImage(this._background, x, y, width, height);
+            canvasCtx.drawImage(this._background, x, y, width, height);
         }
     }
 }

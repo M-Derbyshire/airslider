@@ -59,7 +59,7 @@ export default class GraphicEngine implements IGraphicEngine {
         
         // Draw the elements that are behind the models
         this.camera.drawBack();
-        this._frameManager.drawFramesBack();
+        this._frameManager.drawFramesBack(kernel.canvasContext, this);
         kernel.level.drawBack();
         
         // Now the models
@@ -67,7 +67,7 @@ export default class GraphicEngine implements IGraphicEngine {
         
         //Finally, draw everything that needs to be drawn on top of the models
         kernel.level.drawFront();
-        this._frameManager.drawFramesFront();
+        this._frameManager.drawFramesFront(kernel.canvasContext, this);
         kernel.level.HUD.draw();
         this.camera.drawFront();
         
