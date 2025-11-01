@@ -1,7 +1,6 @@
 import Kernel from '../../../Kernel/Kernel';
 import ASModel from '../ASModel/ASModel';
-import IAnimation from '../../../Kernel/entities/Model/ModelAnimationsManager/IAnimation';
-import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
+import IModelAnimationsManager, { IAnimation } from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Tarian from '../Tarian/Tarian';
 import UnitHelper from '../../../Kernel/utils/UnitHelper';
 import { SoundStatus } from '../../../Kernel/engines/SoundEngine/ISoundEngine';

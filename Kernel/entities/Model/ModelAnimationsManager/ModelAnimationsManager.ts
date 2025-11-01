@@ -1,7 +1,5 @@
 import IModel from '../IModel';
-import IAnimation from './IAnimation';
-import IAnimationDetails from './IAnimationDetails';
-import IModelAnimationsManager, { AnimationsObject } from './IModelAnimationsManager';
+import IModelAnimationsManager, { AnimationsObject, IAnimation, IAnimationDetails } from './IModelAnimationsManager';
 import Kernel from '../../../Kernel';
 import { IDrawDimensions, IDrawPositions } from "../../../engines/GraphicEngine/IGraphicEngine";
 

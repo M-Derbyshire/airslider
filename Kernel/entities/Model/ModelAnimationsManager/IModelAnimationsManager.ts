@@ -1,6 +1,4 @@
 import { IDrawDimensions, IDrawPositions } from "../../../engines/GraphicEngine/IGraphicEngine";
-import IAnimation from "./IAnimation";
-import IAnimationDetails from "./IAnimationDetails";
 
 /**
  * Manages a model's animations
@@ -52,4 +50,134 @@ export default interface IModelAnimationsManager {
  */
 export type AnimationsObject = {
     [key:string]: IAnimation;
+};
+
+/**
+ * Represents a model's animation
+ */
+export interface IAnimation {
+    /**
+     * The spritesheet for this animation
+     */
+    spritesheet:HTMLImageElement;
+    
+    /**
+     * The coordinates of the frames on the spritesheet
+     */
+    frameCoordinates:IFrameCoordinates[];
+        
+    /**
+     * The Frames Per Second that this animation should play at
+     */
+    fps:number;
+    
+    /**
+     * How many frames of the game have passed since we last changed the frame of this animation?
+     */
+    waitCount:number;
+    
+    /**
+     * How many frames of the game need to have passed before we can change to the next frame of this animation?
+     */
+    nextCount:number;
+    
+    /**
+     * The index of the current frame for the current animation
+     */
+    currentFrameIndex:number;
+    
+    /**
+     * The height (in units) that this animation should be drawn at
+     */
+    height:number;
+    
+    /**
+     * The width (in units) that this animation should be drawn at
+     */
+    width:number;
+    
+    /**
+     * If the x position of the model needs to change when switching to this animation, it will be changed by this value
+     */
+    xOffset:number;
+    
+    /**
+     * If the y position of the model needs to change when switching to this animation, it will be changed by this value
+     */
+    yOffset:number;
+    
+    /**
+     * If the model should switch to a different animation once this one has finished, this is the name of the model state that uses that animation
+     */
+    nextAnimation:string;
+};
+
+/**
+ * The details required to create a new animation for a model
+ */
+export interface IAnimationDetails {
+    /**
+     * The file path to the spritesheet
+     */
+    sheetPath:string;
+    
+    /**
+     * The Frames Per Second that this animation should play at
+     */
+    fps:number;
+    
+    /**
+     * The width (in units) that this animation should be drawn at
+     */
+    drawWidth:number;
+    
+    /**
+     * The height (in units) that this animation should be drawn at
+     */
+    drawHeight:number;
+    
+    /**
+     * The coordinates of a frame on a spritesheet
+     */
+    frameCoordinates:IFrameCoordinates[];
+    
+    /**
+     * If the x position of the model needs to change when switching to this animation, it will be changed by this value
+     */
+    xOffset?:number;
+    
+    /**
+     * If the y position of the model needs to change when switching to this animation, it will be changed by this value
+     */
+    yOffset?:number;
+    
+    /**
+     * If the model should switch to a different animation once this one has finished, this is the name of the model state that uses that animation
+     */
+    nextAnimation?:string;
+};
+
+/**
+ * The coordinates of a frame on a spritesheet
+ */
+export interface IFrameCoordinates {
+    /**
+     * The x position
+     */
+    x:number;
+    
+    /**
+     * The y position
+     */
+    y:number;
+    
+    /**
+     * The width dimension
+     */
+    width:number;
+    
+    /**
+     * The height dimension
+     */
+    height:number;  
 };

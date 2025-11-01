@@ -1,7 +1,6 @@
 import Kernel from '../../../../Kernel/Kernel';
 import IHitBox from '../../../../Kernel/entities/Model/IHitBox';
-import IAnimation from '../../../../Kernel/entities/Model/ModelAnimationsManager/IAnimation';
-import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
+import IModelAnimationsManager, { IAnimation } from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import ASLevel from '../../../levels/ASLevel/ASLevel';
 import Monster from '../../Monster/Monster';
 import PidgeonSoundController from './PidgeonSoundController';
