@@ -1,13 +1,17 @@
 import IModel from '../IModel';
 import IModelAnimationsManager, { AnimationsObject, IAnimation, IAnimationDetails } from './IModelAnimationsManager';
+import IGraphicEngine, { IDrawDimensions, IDrawPositions } from "../../../engines/GraphicEngine/IGraphicEngine";
+import IAssetHandler from '../../../AssetHandler/IAssetHandler';
 import Kernel from '../../../Kernel';
-import { IDrawDimensions, IDrawPositions } from "../../../engines/GraphicEngine/IGraphicEngine";
 
 /**
  * Manages a model's animations
  */
 export default class ModelAnimationsManager implements IModelAnimationsManager {
     private _model:IModel; // A reference to the model
+    private _assetHandler:IAssetHandler; // The game's asset handler
+    private _canvasCtx:CanvasRenderingContext2D; // The context of the canvas that the game is being drawn on
+    private _graphicEngine:IGraphicEngine; // The graphic engine used by the level
     
     /**
      * The animations created for the model (each animation will be a property -- the property name 
@@ -18,10 +22,16 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     /**
      * Constructor
      * @param model The model that this is used by
+     * @param assetHandler The game's asset handler
+     * @param canvasCtx The context of the canvas that the game is being drawn on
+     * @param graphicEngine The graphic engine used by the level
      */
-    constructor(model:IModel)
+    constructor(model:IModel, assetHandler:IAssetHandler, canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine)
     {
         this._model = model;
+        this._assetHandler = assetHandler;
+        this._canvasCtx = canvasCtx;
+        this._graphicEngine = graphicEngine;
     }
     
     /**
@@ -40,10 +50,8 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         nextAnimation = ""
     }:IAnimationDetails):IAnimation
     {
-        const assetHandler = Kernel.getInstance().assetHandler;
-        
         let anim:IAnimation = {
-			spritesheet: assetHandler.loadImage(sheetPath),
+			spritesheet: this._assetHandler.loadImage(sheetPath),
 			frameCoordinates,
             fps,
             waitCount: 0, // increased when waiting to move to the next frame
@@ -80,7 +88,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         if(drawPositions.height === 0 || drawPositions.width === 0)
             return;
         
-        Kernel.getInstance().canvasContext.drawImage(
+        this._canvasCtx.drawImage(
             this.animations[this._model.state].spritesheet, 
 			nextFrameCoordinates.x,
 			nextFrameCoordinates.y,
@@ -98,7 +106,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     drawText():void
     {
-        Kernel.getInstance().graphicEngine.drawText(
+        this._graphicEngine.drawText(
             this._model.text,
             this._model,
             "scaled"
@@ -110,19 +118,17 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     drawHitBoxes():void
     {
-        const canvasCtx = Kernel.getInstance().canvasContext;
-        
         const boxes = this._model.getHitBoxes();
         
-        const originalStrokeColor = canvasCtx.strokeStyle;
-        canvasCtx.strokeStyle = "red";
+        const originalStrokeColor = this._canvasCtx.strokeStyle;
+        this._canvasCtx.strokeStyle = "red";
         
         boxes.forEach(box => {
             const { x, y, width, height } = this.getDrawPositionsAndDimensions(box);
-            canvasCtx.strokeRect(x, y, width, height);
+            this._canvasCtx.strokeRect(x, y, width, height);
         });
         
-        canvasCtx.strokeStyle = originalStrokeColor;
+        this._canvasCtx.strokeStyle = originalStrokeColor;
     }
     
     /**
@@ -132,7 +138,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
 	getDrawPositionsAndDimensions(originalValues:IDrawPositions&IDrawDimensions&{ z:number }):IDrawPositions&IDrawDimensions
 	{
-        return Kernel.getInstance().graphicEngine.getScaledDrawPositionsAndDimensions(originalValues);
+        return this._graphicEngine.getScaledDrawPositionsAndDimensions(originalValues);
 	}
 	
     /**
@@ -141,7 +147,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     private _getNextFrameCoordinates():IDrawPositions&IDrawDimensions
     {
-        const kernel = Kernel.getInstance();
+        const gameFps = Kernel.getInstance().fps;
         
         const animation = this.animations[this._model.state];
         
@@ -151,15 +157,15 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
             //First, we need to determine how many game-loop frames we need to wait before we move on to the next 
             //frame of this sprite's animation. This is to ensure that the sprite's animation remains consistent
             //if the game's fps changes (It also means that the sprite can have a different fps to the game-loop).
-            animation.nextCount = Math.floor(kernel.fps / animation.fps);
+            animation.nextCount = Math.floor(gameFps / animation.fps);
             
             // Change the frame to the next one, if it is time to
             if(animation.waitCount >= animation.nextCount)
             {
-                if(animation.fps > kernel.fps)
+                if(animation.fps > gameFps)
                     //If the sprite has more frames per second than the current game fps,
                     //skip the necessary amount of frames to make up for that.
-                    currentFrameIndex += Math.floor(animation.fps / kernel.fps);
+                    currentFrameIndex += Math.floor(animation.fps / gameFps);
                 else
                     //If the sprite has less or equal frames per second to the game-loop's fps,
                     //we can just move to the next frame now.

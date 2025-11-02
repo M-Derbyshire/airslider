@@ -436,7 +436,7 @@ export default class Kernel implements IKernel {
     private _loadModels(models:IModel[]):void
 	{
         models.forEach((model, idx) => {
-            const animationsManager = new ModelAnimationsManager(model);
+            const animationsManager = new ModelAnimationsManager(model, this._assetHandler, this._canvasContext, this.graphicEngine);
             
             model.loadedIndex = idx;
             model.load(animationsManager);
