@@ -101,7 +101,7 @@ export default class Tarian extends ASModel {
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,
-                nextAnimation: "lost",
+                onAnimationEnd: () => this.state = "lost",
 				frameCoordinates: [
 					{ x: 0, y: 0, width: 92, height: 119 },
 					{ x: 0, y: 120, width: 92, height: 119 },

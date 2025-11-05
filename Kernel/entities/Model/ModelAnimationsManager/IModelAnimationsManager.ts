@@ -107,9 +107,9 @@ export interface IAnimation {
     yOffset:number;
     
     /**
-     * If the model should switch to a different animation once this one has finished, this is the name of the model state that uses that animation
+     * A callback to call once this animation has ended. If you don't want the animation to be looped, you can use this to change the model's state
      */
-    nextAnimation:string;
+    onAnimationEnd?:()=>void;
 };
 
 /**
@@ -152,9 +152,9 @@ export interface IAnimationDetails {
     yOffset?:number;
     
     /**
-     * If the model should switch to a different animation once this one has finished, this is the name of the model state that uses that animation
+     * A callback to call once this animation has ended. If you don't want the animation to be looped, you can use this to change the model's state
      */
-    nextAnimation?:string;
+    onAnimationEnd?:()=>void;
 };
 
 /**

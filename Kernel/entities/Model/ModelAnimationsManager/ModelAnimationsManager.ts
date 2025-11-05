@@ -45,9 +45,9 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         drawWidth, 
         drawHeight, 
         frameCoordinates, 
+        onAnimationEnd,
         xOffset = 0, 
-        yOffset = 0, 
-        nextAnimation = ""
+        yOffset = 0
     }:IAnimationDetails):IAnimation
     {
         let anim:IAnimation = {
@@ -61,7 +61,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
             width: drawWidth,
             xOffset,
             yOffset,
-            nextAnimation, //used to follow through from one animation into another (this is the name of the next state)
+            onAnimationEnd
         };
         
         return anim;
@@ -151,7 +151,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         
         const animation = this.animations[this._model.state];
         
-        if(animation.frameCoordinates.length > 1 || animation.nextAnimation) {
+        if(animation.frameCoordinates.length > 1 || animation.onAnimationEnd) {
             let currentFrameIndex = animation.currentFrameIndex;
             
             //First, we need to determine how many game-loop frames we need to wait before we move on to the next 
@@ -183,9 +183,10 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
                 //Reset the current animation
                 animation.currentFrameIndex = 0;
                 
-                //If this animation isn't looped, but has another animation to switch to, change the state
-                if(animation.nextAnimation)
-                    this._model.state = animation.nextAnimation;
+                if(animation.onAnimationEnd)
+                    animation.onAnimationEnd();
+                
+                return animation.frameCoordinates[animation.frameCoordinates.length - 1];
             }
         }
 		
