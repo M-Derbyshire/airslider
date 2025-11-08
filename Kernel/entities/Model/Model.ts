@@ -236,13 +236,13 @@ export default class Model implements IModel
      */
     draw():void
     {
-        this.animationManager.drawNextFrame();
+        this.animationManager.drawNextFrame(this.state, this);
         
         if(this.text.content)
-            this.animationManager.drawText();
+            this.animationManager.drawText(this.text, this);
         
         if(this.drawHitBoxes)
-            this.animationManager.drawHitBoxes();
+            this.animationManager.drawHitBoxes(this.getHitBoxes());
     }
     
     /**

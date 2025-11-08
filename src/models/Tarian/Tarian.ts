@@ -97,7 +97,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             breaking: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath, 
+                sheetPath: spritesheetPath,
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,

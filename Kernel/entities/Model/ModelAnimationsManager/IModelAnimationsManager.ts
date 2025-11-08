@@ -1,4 +1,5 @@
-import { IDrawDimensions, IDrawPositions } from "../../../engines/GraphicEngine/IGraphicEngine";
+import { IDrawDimensions, IDrawPositions, ITextContent } from "../../../engines/GraphicEngine/IGraphicEngine";
+import { IHitBox } from "../IModel";
 
 /**
  * Manages a model's animations
@@ -24,25 +25,30 @@ export default interface IModelAnimationsManager {
     
     /**
      * Draws the correct frame of the animation (moving to the next frame if it's time to do so)
+     * @param animationName the name of the animation to draw
+     * @param modelCoordinates the model's current coordinates, including its Z-axis position
      */
-    drawNextFrame():void;
+    drawNextFrame(animationName:string, modelCoordinates:originalModelCoordinates):void;
     
     /**
      * Draws the text content of the linked model
+     * @param text the text content, and the details required to draw it
+     * @param modelPosition the x/y/z values (in units) of the model
      */
-    drawText():void;
+    drawText(textContent:ITextContent, modelPosition:IDrawPositions&{z:number}):void;
     
     /**
      * Draws the model's hit boxes
+     * @param hitBoxes the hit boxes to draw
      */
-    drawHitBoxes():void;
+    drawHitBoxes(hitBoxes:IHitBox[]):void;
     
     /**
      * Calculates the positions/dimensions to draw the model (or hit box)
-     * @param originalValues the model's current coordinates, along with the model's z position
+     * @param modelCoordinates the model's current coordinates, along with the model's z position
      * @returns The correct positions/dimensions to draw the sprite at
      */
-	getDrawPositionsAndDimensions(originalValues:IDrawPositions&IDrawDimensions&{ z:number }):IDrawPositions&IDrawDimensions
+	getDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates):IDrawPositions&IDrawDimensions
 };
 
 /**
@@ -51,6 +57,11 @@ export default interface IModelAnimationsManager {
 export type AnimationsObject = {
     [key:string]: IAnimation;
 };
+
+/**
+ * The original coordinates of the model, before scaling/positioning/etc
+ */
+export type originalModelCoordinates = IDrawPositions&IDrawDimensions&{ z:number };
 
 /**
  * Represents a model's animation
