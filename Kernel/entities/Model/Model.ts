@@ -8,7 +8,7 @@ import { IEntitySound } from '../types';
 /**
  * An object in the game (such as a character, monster, power-up, etc)
  */
-export default class Model implements IModel 
+export default class Model implements IModel
 {
     protected animationManager:IModelAnimationsManager;
     protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
@@ -16,8 +16,6 @@ export default class Model implements IModel
     protected hitBoxDrawColor:string; // If this is set to a color string, we'll draw the boxes from this.getHitBoxes() with that color
     
     private _state:string; // The current "state" of the model. This is also the name of the animation to use when drawing
-    private _active:boolean; // Is this model currently active?
-    private _display:boolean; // Should this model be displayed?
     
     private _x:number; // The x position (in units) of the model
     private _y:number; // The y position (in units) of the model
@@ -25,8 +23,6 @@ export default class Model implements IModel
     private _xSpeed:number; // The speed of the model, on the x axis
     private _ySpeed:number; // The speed of the model, on the y axis
     private _zSpeed:number; // The speed of the model, on the z axis
-    
-    private _loadedIndex:number; // The index of this model in the Kernel's array of models
     
     /**
      * Details for displaying an entity's text content
@@ -58,26 +54,17 @@ export default class Model implements IModel
     /**
      * Is the model currently active?
      */
-    get active() 
-    {
-        return this._active;
-    }
-    set active(newValue)
-    {
-        this._active = newValue;
-    }
+    active:boolean;
     
     /**
      * Should this model be displayed?
      */
-    get display()
-    {
-        return this._display;
-    }
-    set display(newValue)
-    {
-        this._display = newValue;
-    }
+    display:boolean;
+    
+    /**
+     * The index of this model in the Kernel's array of models
+     */
+    loadedIndex:number;
     
     /**
      * The x position of the model (in units)
@@ -152,18 +139,6 @@ export default class Model implements IModel
     }
     
     /**
-     * The index of this model in the Kernel's array of models
-     */
-    get loadedIndex()
-    {
-        return this._loadedIndex;
-    }
-    set loadedIndex(newValue)
-    {
-        this._loadedIndex = newValue;
-    }
-    
-    /**
      * The current state of the model (the name of the state is the same as the name of the animation that should be drawn)
      */
     get state() 
@@ -202,8 +177,8 @@ export default class Model implements IModel
     {
         const soundEngine = Kernel.getInstance().soundEngine;
         
-        this._display = true;
-        this._active = false;
+        this.display = true;
+        this.active = false;
         
         this.text = {
             content: "",
