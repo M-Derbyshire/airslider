@@ -230,8 +230,27 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
         zPosition: number, 
         showNegative?: boolean
     ): IDrawPositions & IDrawDimensions {
+        return {
+            ...this.getDrawPositionValues(pixelValues, zPosition, showNegative),
+            ...this.getDrawDimensionValues(pixelValues, zPosition, showNegative)
+        };
+    }
+    
+    /**
+     * Takes the given X/Y values (in pixels) and calculates the correct values to draw with, based on the 
+     * given Z position
+     * @param pixelValues the original X/Y positions (in pixels)
+     * @param zPosition the Z position of the element being drawn
+     * @param showNegative should the element still be drawn if the Z position is negative?
+     * @returns If the Z position is "out of view", 0 will be returned for all values. Otherwise, the scaled X/Y
+     */
+    getDrawPositionValues(
+        pixelValues:IDrawPositions, 
+        zPosition: number, 
+        showNegative?:boolean
+    ): IDrawPositions {
         if(this._isOutOfView(zPosition, showNegative))
-            return { x: 0, y: 0, width: 0, height: 0 };
+            return { x: 0, y: 0 };
         
         const kernel = Kernel.getInstance();
         
@@ -243,7 +262,27 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
         
         return {
             x: this._position(zPosition, pixelValues.x, positionedVanishPointPixelsX),
-            y: this._position(zPosition, pixelValues.y, positionedVanishPointPixelsY),
+            y: this._position(zPosition, pixelValues.y, positionedVanishPointPixelsY)
+        };
+    }
+    
+    /**
+     * Takes the given Width/Height values (in pixels) and calculates the correct values to draw with, based on the 
+     * given Z position
+     * @param pixelValues the original width/height (in pixels)
+     * @param zPosition the Z position of the element being drawn
+     * @param showNegative should the element still be drawn if the Z position is negative?
+     * @returns If the Z position is "out of view", 0 will be returned for all values. Otherwise, the scaled Width/Height
+     */
+    getDrawDimensionValues(
+        pixelValues:IDrawDimensions, 
+        zPosition: number, 
+        showNegative?:boolean
+    ): IDrawDimensions {
+        if(this._isOutOfView(zPosition, showNegative))
+            return { width: 0, height: 0 };
+        
+        return {
             width: this._dimension(zPosition, pixelValues.width),
             height: this._dimension(zPosition, pixelValues.height)
         };

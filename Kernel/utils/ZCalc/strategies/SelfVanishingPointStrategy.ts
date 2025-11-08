@@ -40,10 +40,10 @@ export default class SelfVanishingPointStrategy implements IZCalcStrategy {
      * @returns If the Z position is "out of view", 0 will be returned for all values. Otherwise, the scaled X/Y/Width/Height
      */
     getDrawValues(pixelValues: IDrawPositions & IDrawDimensions, zPosition: number, showNegative?: boolean): IDrawPositions & IDrawDimensions {
-        const scaledValues = this._linearStrategy.getDrawValues(pixelValues, zPosition, showNegative);
+        const scaledDimensions = this._linearStrategy.getDrawDimensionValues(pixelValues, zPosition, showNegative);
         
-        const widthChange = pixelValues.width - scaledValues.width;
-        const heightChange = pixelValues.height - scaledValues.height;
+        const widthChange = pixelValues.width - scaledDimensions.width;
+        const heightChange = pixelValues.height - scaledDimensions.height;
         
         // We can't use the X/Y from the linearStrategy, as they're aimed at a specific vanishing point.
         // (and we can't change that vanishing point to the sprite's center, because we'd need the 
@@ -54,8 +54,41 @@ export default class SelfVanishingPointStrategy implements IZCalcStrategy {
         return {
             x: newX,
             y: newY,
-            width: scaledValues.width,
-            height: scaledValues.height
+            width: scaledDimensions.width,
+            height: scaledDimensions.height
         };
+    }
+    
+    /**
+     * Takes the given X/Y values (in pixels) and calculates the correct values to draw with, based on the 
+     * given Z position
+     * @param pixelValues the original X/Y positions (in pixels)
+     * @param zPosition the Z position of the element being drawn
+     * @param showNegative should the element still be drawn if the Z position is negative?
+     * @returns If the Z position is "out of view", 0 will be returned for all values. Otherwise, the scaled X/Y
+     */
+    getDrawPositionValues(
+        pixelValues:IDrawPositions, 
+        zPosition: number, 
+        showNegative?:boolean
+    ): IDrawPositions {
+        const msg = "The getDrawPositionValues method of the SelfVanishingPointStrategy class has not been implemented. You should use the getDrawValues method instead";
+        throw new Error(msg);
+    }
+    
+    /**
+     * Takes the given Width/Height values (in pixels) and calculates the correct values to draw with, based on the 
+     * given Z position
+     * @param pixelValues the original width/height (in pixels)
+     * @param zPosition the Z position of the element being drawn
+     * @param showNegative should the element still be drawn if the Z position is negative?
+     * @returns If the Z position is "out of view", 0 will be returned for all values. Otherwise, the scaled Width/Height
+     */
+    getDrawDimensionValues(
+        pixelValues:IDrawDimensions, 
+        zPosition: number, 
+        showNegative?:boolean
+    ): IDrawDimensions {
+        return this._linearStrategy.getDrawDimensionValues(pixelValues, zPosition, showNegative);
     }
 };
