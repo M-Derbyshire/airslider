@@ -3,7 +3,7 @@ import IZCalcStrategy from "./IZCalcStrategy";
 import LinearVanishingPointStrategy from "./LinearVanishingPointStrategy";
 
 /**
- * Strategy for the ZCalc. Scales sprites with the vanishing point being the sprite's center (so the 
+ * Strategy for the ZCalc. Sprites will be scaled with their center being the vanishing point (so the 
  * center position of the sprite won't change)
  */
 export default class SelfVanishingPointStrategy implements IZCalcStrategy {

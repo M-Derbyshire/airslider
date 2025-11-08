@@ -21,8 +21,6 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
 		this._precalculatedScalingMultipliers = [];
     }
     
-    //-------------------------- getters and setters ----------------------------
-    
 	/**
      * The x position (in units) of the vanishing point
      */
@@ -71,7 +69,8 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
 		------------------- Scaled Positions and Dimensions ---------------------
 		
 		This strategy gives us the ability to create simple sprite-scaling games,
-		by providing position/dimension values, based on a given z-axis position.
+		by calculating the correct position/dimension values to draw with, based on a
+        given z-axis position.
         
         The developer can set a vanishing point, with an X and Y position, and sprites 
         can move towards that point (with a straight, direct path) by moving along the 
@@ -107,14 +106,14 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
 		After experimenting with this for a while, I found that the way to solve this was to 
 		decrease the speed of the scaling as the z-position got nearer to the vanishing point.
 		
-		To do this, I found that a curve that was very close to (though not exactly matching) 
-		a factoral was needed to make this work (so -- after a quick drop -- the rate of the 
+		To do this, I found that a speed-change curve that was very close to (though not exactly
+        matching) a factoral was needed to make this work (so, after a quick drop, the rate of the 
 		decrease would slow down and the curve would flatten). This would be difficult to 
-		calculate in a O(1) way, so I decided against calculating this during gameplay.
+		calculate in a O(1) way, so I decided against calculating this during the gameplay.
 		
 		this._precalculateScalingMultipliers() will pre-calculate an array of "multipliers" (one
-		for each position on the z-axis). These multipliers are numbers between 1 and 0, and they 
-		will match the shape of the required curve. They are then used to modify the passed in 
+		for each position on the z-axis). These multipliers are numbers between 1 and 0, and
+        together they make the shape of the required curve. They are then used to modify the passed in 
 		dimension/position values (in this._position() and this._dimension()).
 		
 		During the calculation of the scaling multipliers, a "shrunkDepth" is used. This is 
@@ -165,10 +164,9 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
 	 * @param zPosition the z position of the element being drawn
 	 * @param axisPosition the x or y position
 	 * @param axisVanishPoint the position of the vanishing point on this axis
-	 * @param showNegative should the element still be drawn if the z position is negative?
 	 * @returns the scaled value for the position on the given axis, or 0 if the z position is "out of view"
 	 */
-    private _position(zPosition:number, axisPosition:number, axisVanishPoint:number, showNegative:boolean):number
+    private _position(zPosition:number, axisPosition:number, axisVanishPoint:number):number
     {
         // We need a positive z-index to get the scaler, so if it's negative we'll 
         // flip it, then flip the multiplier later to get a negative position again.
@@ -187,10 +185,9 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
 	 * Takes a z position and a width/height value. Returns the scaled value for the width/height.
 	 * @param zPosition the z position of the element being drawn
 	 * @param dimension the width or height value
-	 * @param showNegative should the element still be drawn if the z position is negative?
 	 * @returns the scaled width/height value, or 0 if the z position is "out of view"
 	 */
-    private _dimension(zPosition:number, dimension:number, showNegative:boolean):number
+    private _dimension(zPosition:number, dimension:number):number
     {
         // We need a positive z-index to get the scaler, so if it's negative we'll flip it 
         // now, then correct the result later.
@@ -245,10 +242,10 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
         const positionedVanishPointPixelsY = kernel.graphicEngine.camera.canvasPositionY + vanishPointPixelsY;
         
         return {
-            x: this._position(zPosition, pixelValues.x, positionedVanishPointPixelsX, showNegative),
-            y: this._position(zPosition, pixelValues.y, positionedVanishPointPixelsY, showNegative),
-            width: this._dimension(zPosition, pixelValues.width, showNegative),
-            height: this._dimension(zPosition, pixelValues.height, showNegative)
+            x: this._position(zPosition, pixelValues.x, positionedVanishPointPixelsX),
+            y: this._position(zPosition, pixelValues.y, positionedVanishPointPixelsY),
+            width: this._dimension(zPosition, pixelValues.width),
+            height: this._dimension(zPosition, pixelValues.height)
         };
     }
 }
