@@ -112,12 +112,13 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     
     /**
      * Draws the model's hit boxes
+     * @param color the color to use when drawing the boxes
      * @param hitBoxes the hit boxes to draw
      */
-    drawHitBoxes(hitBoxes:IHitBox[]):void
+    drawHitBoxes(color:string, hitBoxes:IHitBox[]):void
     {
         const originalStrokeColor = this._canvasCtx.strokeStyle;
-        this._canvasCtx.strokeStyle = "red";
+        this._canvasCtx.strokeStyle = color;
         
         hitBoxes.forEach(box => {
             const { x, y, width, height } = this.getDrawPositionsAndDimensions(box);

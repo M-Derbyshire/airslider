@@ -13,7 +13,7 @@ export default class Model implements IModel
     protected animationManager:IModelAnimationsManager;
     protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
     protected sounds:IEntitySound[]; // Sounds that need to be added to the sound engine, during preparation
-    protected drawHitBoxes:boolean; // If we set this to true, we'll draw the boxes from this.getHitBoxes()
+    protected hitBoxDrawColor:string; // If this is set to a color string, we'll draw the boxes from this.getHitBoxes() with that color
     
     private _state:string; // The current "state" of the model. This is also the name of the animation to use when drawing
     private _active:boolean; // Is this model currently active?
@@ -37,8 +37,6 @@ export default class Model implements IModel
     {
         this.assetsToUnload = [];
         this.sounds = [];
-        
-        this.drawHitBoxes = false;
     }
     
     /**
@@ -241,8 +239,8 @@ export default class Model implements IModel
         if(this.text.content)
             this.animationManager.drawText(this.text, this);
         
-        if(this.drawHitBoxes)
-            this.animationManager.drawHitBoxes(this.getHitBoxes());
+        if(this.hitBoxDrawColor)
+            this.animationManager.drawHitBoxes(this.hitBoxDrawColor, this.getHitBoxes());
     }
     
     /**

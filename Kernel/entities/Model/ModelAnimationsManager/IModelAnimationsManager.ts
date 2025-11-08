@@ -39,9 +39,10 @@ export default interface IModelAnimationsManager {
     
     /**
      * Draws the model's hit boxes
+     * @param color the color to use when drawing the boxes
      * @param hitBoxes the hit boxes to draw
      */
-    drawHitBoxes(hitBoxes:IHitBox[]):void;
+    drawHitBoxes(color:string, hitBoxes:IHitBox[]):void;
     
     /**
      * Calculates the positions/dimensions to draw the model (or hit box)
