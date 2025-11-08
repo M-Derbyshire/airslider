@@ -122,7 +122,7 @@ export default class Kernel implements IKernel {
         this._levelQueue = [];
         
         this._hasError = false;
-        this._errorHandler = new ErrorHandler();
+        this._errorHandler = new ErrorHandler(this._canvasContext);
         this._centralState = new Map<string, any>();
         
         this._currentLevelShouldBeUnloaded = false;

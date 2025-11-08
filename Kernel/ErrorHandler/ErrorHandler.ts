@@ -1,4 +1,3 @@
-import Kernel from "../Kernel";
 import { IErrorHandler } from "./IErrorHandler";
 
 /**
@@ -25,12 +24,23 @@ export default class ErrorHandler implements IErrorHandler {
      */
     private _fontFamily:string;
     
-    constructor() {
+    /**
+     * The context used to draw on the canvas
+     */
+    private _canvasCtx:CanvasRenderingContext2D;
+    
+    /**
+     * Constructor
+     * @param canvasCtx the context used to draw on the canvas
+     */
+    constructor(canvasCtx: CanvasRenderingContext2D) {
         this._backgroundColor = "#330000";
         this._fontColor = "#fbb";
         
         this._fontFamily = "Arial";
         this._relativeFontSize = 20;
+        
+        this._canvasCtx = canvasCtx;
     }
     
     /**
@@ -65,17 +75,18 @@ export default class ErrorHandler implements IErrorHandler {
      * Draws the background for the error display
      */
     private _drawBackground():void {
-        const ctx = Kernel.getInstance().canvasContext;
+        const canvas = this._canvasCtx.canvas;
         
-        ctx.fillStyle = this._backgroundColor;
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        this._canvasCtx.fillStyle = this._backgroundColor;
+        this._canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
     }
     
     /**
      * Draws the text for the error display
      */
     private _drawText():void {
-        const ctx = Kernel.getInstance().canvasContext;
+        const ctx = this._canvasCtx;
+        const canvas = ctx.canvas;
         
         const titleText = "An Error has Occurred";
         const messageText = "Please see the developer console for more details";
@@ -83,8 +94,8 @@ export default class ErrorHandler implements IErrorHandler {
         const baseFontSize = this._getRealFontSize();
         const titleFontSize = baseFontSize * 2;
         
-        const canvasXCenter = ctx.canvas.width / 2;
-        const canvasYCenter = ctx.canvas.height / 2;
+        const canvasXCenter = canvas.width / 2;
+        const canvasYCenter = canvas.height / 2;
         const titleYPos = canvasYCenter * 0.5;
         const messageYPos = canvasYCenter * 1.5;
         
@@ -102,7 +113,7 @@ export default class ErrorHandler implements IErrorHandler {
      * Calculates the desired font size, based on the canvas size
      */
     private _getRealFontSize():number {
-        const canvas = Kernel.getInstance().canvasContext.canvas;
+        const canvas = this._canvasCtx.canvas;
         return this._relativeFontSize * (canvas.width / 1000);
     }
 };
