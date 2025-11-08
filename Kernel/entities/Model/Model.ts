@@ -29,11 +29,20 @@ export default class Model implements IModel
      */
     text:ITextContent;
     
-    constructor()
-    {
-        this.assetsToUnload = [];
-        this.sounds = [];
-    }
+    /**
+     * Is the model currently active?
+     */
+    active:boolean;
+    
+    /**
+     * Should this model be displayed?
+     */
+    display:boolean;
+    
+    /**
+     * The index of this model in the Kernel's array of models
+     */
+    loadedIndex:number;
     
     /**
      * The current width of the model
@@ -50,21 +59,6 @@ export default class Model implements IModel
     {
         return this.animationManager.animations[this._state]?.height ?? 0;
     }
-    
-    /**
-     * Is the model currently active?
-     */
-    active:boolean;
-    
-    /**
-     * Should this model be displayed?
-     */
-    display:boolean;
-    
-    /**
-     * The index of this model in the Kernel's array of models
-     */
-    loadedIndex:number;
     
     /**
      * The x position of the model (in units)
@@ -154,6 +148,12 @@ export default class Model implements IModel
         }
         
         this._state = newValue;
+    }
+    
+    constructor()
+    {
+        this.assetsToUnload = [];
+        this.sounds = [];
     }
     
     /**
