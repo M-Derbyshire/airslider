@@ -234,7 +234,9 @@ export default class Model implements IModel
      */
     draw():void
     {
-        this.animationManager.drawNextFrame(this.state, this);
+        this.animationManager.precalculateDrawPositionsAndDimensions(this);
+        
+        this.animationManager.drawNextFrame(this.state);
         
         if(this.text.content)
             this.animationManager.drawText(this.text, this);
@@ -264,11 +266,12 @@ export default class Model implements IModel
     */
     isPointerOverlapping(pointX:number, pointY:number):boolean
 	{
-		const drawPositions = this.animationManager.getDrawPositionsAndDimensions(this);
+		const { x, y } = this.animationManager.calculatedDrawPositions;
+        const { width, height } = this.animationManager.calculatedDrawDimensions;
 		
 		return (
-			pointX > drawPositions.x && pointX < (drawPositions.x + drawPositions.width) && 
-			pointY > drawPositions.y && pointY < (drawPositions.y + drawPositions.height)
+			pointX > x && pointX < (x + width) && 
+			pointY > y && pointY < (y + height)
 		);
 	}
     

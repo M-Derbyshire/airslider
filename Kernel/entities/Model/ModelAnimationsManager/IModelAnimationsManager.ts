@@ -11,6 +11,16 @@ export default interface IModelAnimationsManager {
     animations:AnimationsObject;
     
     /**
+     * The calculated X/Y pixel values to be used when drawing the model
+     */
+    calculatedDrawPositions:IDrawPositions;
+    
+    /**
+     * The calculated width/height pixel values to be used when drawing the model
+     */
+    calculatedDrawDimensions:IDrawDimensions;
+    
+    /**
      * Creates and returns a new animation (which will then need to be registered with the registerAnimations method)
      * @param animationDetails The details needed to create this animation
      * @returns The newly created animation
@@ -24,11 +34,18 @@ export default interface IModelAnimationsManager {
     registerAnimations(animations:AnimationsObject):void;
     
     /**
-     * Draws the correct frame of the animation (moving to the next frame if it's time to do so)
-     * @param animationName the name of the animation to draw
+     * Calculates and stores the positions/dimensions to use when drawing the animation (these can be accessed via the
+     * calculatedDrawPositions and calculatedDrawDimensions properties)
      * @param modelCoordinates the model's current coordinates, including its Z-axis position
      */
-    drawNextFrame(animationName:string, modelCoordinates:originalModelCoordinates):void;
+    precalculateDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates):void;
+    
+    /**
+     * Draws the correct frame of the animation (moving to the next frame if it's time to do so), using the
+     * positions/dimensions calculated by the precalculateDrawPositionsAndDimensions method
+     * @param animationName the name of the animation to draw
+     */
+    drawNextFrame(animationName:string):void;
     
     /**
      * Draws the text content of the linked model
@@ -43,13 +60,6 @@ export default interface IModelAnimationsManager {
      * @param hitBoxes the hit boxes to draw
      */
     drawHitBoxes(color:string, hitBoxes:IHitBox[]):void;
-    
-    /**
-     * Calculates the positions/dimensions to draw the model (or hit box)
-     * @param modelCoordinates the model's current coordinates, along with the model's z position
-     * @returns The correct positions/dimensions to draw the sprite at
-     */
-	getDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates):IDrawPositions&IDrawDimensions
 };
 
 /**

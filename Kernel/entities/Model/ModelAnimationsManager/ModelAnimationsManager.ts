@@ -19,6 +19,16 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     animations:AnimationsObject;
     
     /**
+     * The calculated X/Y pixel values to be used when drawing the model
+     */
+    calculatedDrawPositions:IDrawPositions;
+    
+    /**
+     * The calculated width/height pixel values to be used when drawing the model
+     */
+    calculatedDrawDimensions:IDrawDimensions;
+    
+    /**
      * Constructor
      * @param assetHandler The game's asset handler
      * @param canvasCtx The context of the canvas that the game is being drawn on
@@ -29,6 +39,16 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         this._assetHandler = assetHandler;
         this._canvasCtx = canvasCtx;
         this._graphicEngine = graphicEngine;
+        
+        this.calculatedDrawPositions = {
+            x: 0,
+            y: 0
+        };
+        
+        this.calculatedDrawDimensions = {
+            width: 0,
+            height: 0
+        };
     }
     
     /**
@@ -74,17 +94,29 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     }
     
     /**
-     * Draws the correct frame of the animation (moving to the next frame if it's time to do so)
-     * @param animationName the name of the animation to draw
+     * Calculates and stores the positions/dimensions to use when drawing the animation (these can be accessed via the
+     * calculatedDrawPositions and calculatedDrawDimensions properties)
      * @param modelCoordinates the model's current coordinates, including its Z-axis position
      */
-    drawNextFrame(animationName:string, modelCoordinates:originalModelCoordinates):void
+    precalculateDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates):void
+    {
+        const { x, y, width, height } = this._getDrawPositionsAndDimensions(modelCoordinates);
+        
+        this.calculatedDrawPositions = { x, y };
+        this.calculatedDrawDimensions = { width, height };
+    }
+    
+    /**
+     * Draws the correct frame of the animation (moving to the next frame if it's time to do so), using the
+     * positions/dimensions calculated by the precalculateDrawPositionsAndDimensions method
+     * @param animationName the name of the animation to draw
+     */
+    drawNextFrame(animationName:string):void
     {
         // We want to call this, even if we don't need to draw the model, so the frame number still gets changed
         const nextFrameCoordinates = this._getNextFrameCoordinates(animationName);
         
-		const drawPositions = this.getDrawPositionsAndDimensions(modelCoordinates);
-        if(drawPositions.height === 0 || drawPositions.width === 0)
+        if(this.calculatedDrawDimensions.height === 0 || this.calculatedDrawDimensions.width === 0)
             return;
         
         this._canvasCtx.drawImage(
@@ -93,10 +125,10 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
 			nextFrameCoordinates.y,
 			nextFrameCoordinates.width,
 			nextFrameCoordinates.height,
-			drawPositions.x,
-			drawPositions.y,
-			drawPositions.width,
-			drawPositions.height
+			this.calculatedDrawPositions.x,
+			this.calculatedDrawPositions.y,
+			this.calculatedDrawDimensions.width,
+			this.calculatedDrawDimensions.height
         );
     }
     
@@ -121,7 +153,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         this._canvasCtx.strokeStyle = color;
         
         hitBoxes.forEach(box => {
-            const { x, y, width, height } = this.getDrawPositionsAndDimensions(box);
+            const { x, y, width, height } = this._getDrawPositionsAndDimensions(box);
             this._canvasCtx.strokeRect(x, y, width, height);
         });
         
@@ -129,11 +161,11 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     }
     
     /**
-     * Calculates the positions/dimensions to draw the model (or hit box)
-     * @param modelCoordinates the model's current coordinates, along with the model's z position
-     * @returns The correct positions/dimensions to draw the sprite at
+     * Calculates the positions/dimensions to use when drawing the model/hitbox
+     * @param modelCoordinates the coordinates (including Z-axis position) of the object to draw
+     * @returns The correct positions/dimensions to use when drawing the object
      */
-	getDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates):IDrawPositions&IDrawDimensions
+	private _getDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates):IDrawPositions&IDrawDimensions
 	{
         return this._graphicEngine.getScaledDrawPositionsAndDimensions(modelCoordinates);
 	}
