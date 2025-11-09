@@ -17,6 +17,7 @@ import ErrorHandler from './ErrorHandler/ErrorHandler';
 import ModelAnimationsManager from './entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 import EventManager from './entities/Level/EventManager';
 import PointerEventManager from './entities/Level/PointerEventManager';
+import IGraphicEngine from './engines/GraphicEngine/IGraphicEngine';
 
 /**
  * This is a singleton that controls the running of the game, and provides other entities with 
@@ -317,9 +318,9 @@ export default class Kernel implements IKernel {
         );
         
         const loadedModels = level.getModels();
-        this._loadModels(loadedModels);
-        
         const engines = this._initialiseAllEngines(level, loadedModels, camera, frameManager); // New engines, set up for this level
+        
+        this._loadModels(loadedModels, engines.graphicEngine);
         
         this._levelQueue.push({ 
             level, 
@@ -431,12 +432,12 @@ export default class Kernel implements IKernel {
     /**
      * Loads the given models
      * @param models the models to be loaded
-     * @param engines the engines used by the level that provided these models
+     * @param graphicEngine the graphic engine that is used by the level that provided these models
      */
-    private _loadModels(models:IModel[]):void
+    private _loadModels(models:IModel[], graphicEngine:IGraphicEngine):void
 	{
         models.forEach((model, idx) => {
-            const animationsManager = new ModelAnimationsManager(this._assetHandler, this._canvasContext, this.graphicEngine);
+            const animationsManager = new ModelAnimationsManager(this._assetHandler, this._canvasContext, graphicEngine);
             
             model.loadedIndex = idx;
             model.load(animationsManager);
