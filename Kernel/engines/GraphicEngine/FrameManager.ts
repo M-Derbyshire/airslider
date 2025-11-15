@@ -1,5 +1,4 @@
 import IFrameManager from './IFrameManager';
-import ICamera from './ICamera';
 import IFrame from './IFrame';
 import IGraphicEngine from './IGraphicEngine';
 
@@ -7,20 +6,14 @@ import IGraphicEngine from './IGraphicEngine';
  * Manages the frames of a level
  */
 export default class FrameManager implements IFrameManager {
-    
-    private _camera:ICamera; // The level's camera
-    
     private _frames:IFrame[]; // All of the frames that are managed by this manager
     private _framesToBeDrawn:IFrame[]; // All of the frames that should currently be drawn (all of the frames currently on screen)
     
     /**
      * Constructor
-     * @param camera The level's camera
      */
-    constructor(camera:ICamera)
+    constructor()
     {
-        this._camera = camera;
-        
         this._frames = [];
         this._framesToBeDrawn = [];
     }
@@ -41,8 +34,8 @@ export default class FrameManager implements IFrameManager {
      */
     prepareFramesForDrawing(graphicEngine:IGraphicEngine):void
     {
-        this._determineFramesToDraw();
-        this._framesToBeDrawn.forEach((frame) => frame.calculateDrawPositionsAndDimensions(graphicEngine));
+        this._frames.forEach((frame) => frame.calculateDrawPositionsAndDimensions(graphicEngine));
+        this._determineFramesToDraw(graphicEngine);
     }
     
     /**
@@ -66,14 +59,15 @@ export default class FrameManager implements IFrameManager {
     /**
      * Determines which frames should be drawn, and stores that info in the manager's internal 
      * state
+     * @param graphicEngine The graphic engine for the level
      */
-    private _determineFramesToDraw():void
+    private _determineFramesToDraw(graphicEngine:IGraphicEngine):void
     {
-        this._framesToBeDrawn = this._frames.filter((frame) => this._camera.isOnCamera(
-            frame.x, 
-            frame.y, 
-            frame.width, 
-            frame.height
+        this._framesToBeDrawn = this._frames.filter((frame) => graphicEngine.camera.isOnCamera(
+            frame.precalculatedDrawPositions.x,
+            frame.precalculatedDrawPositions.y,
+            frame.precalculatedDrawDimensions.width,
+            frame.precalculatedDrawDimensions.height
         ));
     }
 }

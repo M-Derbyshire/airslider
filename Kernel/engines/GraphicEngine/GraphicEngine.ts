@@ -208,21 +208,27 @@ export default class GraphicEngine implements IGraphicEngine {
         
 		// We need to make sure that the models are drawn ordered by the Z position.
 		const zSortedModels = [...loadedModels].sort((a, b) => {
-            const zA = typeof a.z === 'number' ? a.z : 0;
-            const zB = typeof b.z === 'number' ? b.z : 0;
+            const zA = a.z ?? 0;
+            const zB = b.z ?? 0;
             
             return zB - zA;
         });
         
 		zSortedModels.forEach(model => {
-            if(
-                model.active && 
-                model.display && 
-                this.camera.isOnCamera(model.x, model.y, model.width, model.height, model.z)
-            )
-            {
+            if(!model.active || !model.display)
+                return;
+            
+            model.precalculateDrawPositionsAndDimensions();
+            
+            const isOnCamera = this.camera.isOnCamera(
+                model.calculatedDrawPositions.x,
+                model.calculatedDrawPositions.y,
+                model.calculatedDrawDimensions.width,
+                model.calculatedDrawDimensions.height
+            );
+            
+            if(isOnCamera)
                 model.draw();
-            }
 		});
     }
     

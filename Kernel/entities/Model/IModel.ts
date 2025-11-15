@@ -1,4 +1,4 @@
-import { ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
+import { IDrawDimensions, IDrawPositions, ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
 import IModelAnimationsManager from "./ModelAnimationsManager/IModelAnimationsManager";
 
 /**
@@ -56,6 +56,16 @@ export default interface IModel {
     z:number;
     
     /**
+     * The calculated X/Y pixel values to be used when drawing the model
+     */
+    readonly calculatedDrawPositions:IDrawPositions;
+    
+    /**
+     * The calculated width/height pixel values to be used when drawing the model
+     */
+    readonly calculatedDrawDimensions:IDrawDimensions;
+    
+    /**
      * The speed of the model, on the x axis
      */
     xSpeed:number;
@@ -92,7 +102,13 @@ export default interface IModel {
     unload():void;
     
     /**
-     * Draws the model's sprite
+     * Calculates and stores the positions/dimensions to use when drawing the model (these can be accessed via the
+     * calculatedDrawPositions and calculatedDrawDimensions properties)
+     */
+    precalculateDrawPositionsAndDimensions():void;
+    
+    /**
+     * Draws the model's sprite, using the precalculated pixel positions/dimensions
      */
     draw():void;
     

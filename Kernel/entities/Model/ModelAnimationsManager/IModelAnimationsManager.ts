@@ -13,12 +13,12 @@ export default interface IModelAnimationsManager {
     /**
      * The calculated X/Y pixel values to be used when drawing the model
      */
-    calculatedDrawPositions:IDrawPositions;
+    readonly calculatedDrawPositions:IDrawPositions;
     
     /**
      * The calculated width/height pixel values to be used when drawing the model
      */
-    calculatedDrawDimensions:IDrawDimensions;
+    readonly calculatedDrawDimensions:IDrawDimensions;
     
     /**
      * Creates and returns a new animation (which will then need to be registered with the registerAnimations method)

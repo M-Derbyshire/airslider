@@ -66,16 +66,14 @@ export default interface ICamera {
     setColors(emptySpaceColor:string, letterBoxColor:string):void
     
     /**
-     * Based on the given details, is an object currently on camera?
-     * (The draw-space is the total space within the level. These coordinates are given in units)
-     * @param drawSpaceX The x position (in units) of the object
-     * @param drawSpaceY The y position (in units) of the object
-     * @param widthUnits The width (in units) of the object
-     * @param heightUnits The height (in units) of the object
-     * @param zPosition The z position of the object
+     * Based on the given coordinates, is an object currently on camera?
+     * @param x The X-axis position (in pixels) that the object will be drawn at
+     * @param y The Y-axis position (in pixels) that the object will be drawn at
+     * @param width The width (in pixels) that the object will be drawn with
+     * @param height The height (in pixels) that the object will be drawn with
      * @returns true if the object is on camera, false if not
      */
-    isOnCamera(drawSpaceX:number, drawSpaceY:number, widthUnits:number, heightUnits:number, zPosition?:number):boolean;
+    isOnCamera(x:number, y:number, width:number, height:number):boolean;
     
     /**
      * Draws anything that the camera needs to place in the background (such as the empty space color)

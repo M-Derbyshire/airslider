@@ -12,6 +12,9 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     private _canvasCtx:CanvasRenderingContext2D; // The context of the canvas that the game is being drawn on
     private _graphicEngine:IGraphicEngine; // The graphic engine used by the level
     
+    private _calculatedDrawPositions:IDrawPositions; // The calculated X/Y pixel values to be used when drawing the model
+    private _calculatedDrawDimensions:IDrawDimensions; // The calculated width/height pixel values to be used when drawing the model
+    
     /**
      * The animations created for the model (each animation will be a property -- the property name 
      * is the model state for that animation)
@@ -21,12 +24,18 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     /**
      * The calculated X/Y pixel values to be used when drawing the model
      */
-    calculatedDrawPositions:IDrawPositions;
+    get calculatedDrawPositions():IDrawPositions
+    {
+        return this._calculatedDrawPositions;
+    }
     
     /**
      * The calculated width/height pixel values to be used when drawing the model
      */
-    calculatedDrawDimensions:IDrawDimensions;
+    get calculatedDrawDimensions():IDrawDimensions
+    {
+        return this._calculatedDrawDimensions;
+    }
     
     /**
      * Constructor
@@ -40,12 +49,12 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         this._canvasCtx = canvasCtx;
         this._graphicEngine = graphicEngine;
         
-        this.calculatedDrawPositions = {
+        this._calculatedDrawPositions = {
             x: 0,
             y: 0
         };
         
-        this.calculatedDrawDimensions = {
+        this._calculatedDrawDimensions = {
             width: 0,
             height: 0
         };
@@ -102,8 +111,8 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     {
         const { x, y, width, height } = this._getDrawPositionsAndDimensions(modelCoordinates);
         
-        this.calculatedDrawPositions = { x, y };
-        this.calculatedDrawDimensions = { width, height };
+        this._calculatedDrawPositions = { x, y };
+        this._calculatedDrawDimensions = { width, height };
     }
     
     /**
@@ -116,7 +125,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         // We want to call this, even if we don't need to draw the model, so the frame number still gets changed
         const nextFrameCoordinates = this._getNextFrameCoordinates(animationName);
         
-        if(this.calculatedDrawDimensions.height === 0 || this.calculatedDrawDimensions.width === 0)
+        if(this._calculatedDrawDimensions.height === 0 || this._calculatedDrawDimensions.width === 0)
             return;
         
         this._canvasCtx.drawImage(
@@ -125,10 +134,10 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
 			nextFrameCoordinates.y,
 			nextFrameCoordinates.width,
 			nextFrameCoordinates.height,
-			this.calculatedDrawPositions.x,
-			this.calculatedDrawPositions.y,
-			this.calculatedDrawDimensions.width,
-			this.calculatedDrawDimensions.height
+			this._calculatedDrawPositions.x,
+			this._calculatedDrawPositions.y,
+			this._calculatedDrawDimensions.width,
+			this._calculatedDrawDimensions.height
         );
     }
     

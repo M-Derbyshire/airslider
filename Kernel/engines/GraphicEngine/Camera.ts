@@ -145,34 +145,20 @@ export default class Camera implements ICamera {
     }
     
     /**
-     * Based on the given details, is an object currently on camera?
-     * (The draw-space is the total space within the level. These coordinates are given in units)
-     * @param drawSpaceX The x position (in units) of the object
-     * @param drawSpaceY The y position (in units) of the object
-     * @param widthUnits The width (in units) of the object
-     * @param heightUnits The height (in units) of the object
-     * @param zPosition The z position of the object
+     * Based on the given coordinates, is an object currently on camera?
+     * @param x The X-axis position (in pixels) that the object will be drawn at
+     * @param y The Y-axis position (in pixels) that the object will be drawn at
+     * @param width The width (in pixels) that the object will be drawn with
+     * @param height The height (in pixels) that the object will be drawn with
      * @returns true if the object is on camera, false if not
      */
-    isOnCamera(drawSpaceX:number, drawSpaceY:number, widthUnits:number, heightUnits:number, zPosition:number = 0):boolean
-    {
-        const unscaledX = UnitHelper.xUnit(this.unitCameraPositionCalc.x(drawSpaceX)) + this._positions.canvas.x;
-        const unscaledY = UnitHelper.yUnit(this.unitCameraPositionCalc.y(drawSpaceY)) + this._positions.canvas.y;
-        const unscaledWidth = UnitHelper.xUnit(widthUnits);
-        const unscaledHeight = UnitHelper.yUnit(heightUnits);
-        
-        const scaledValues = ZCalc.getDrawValues({
-            x: unscaledX,
-            y: unscaledY,
-            width: unscaledWidth,
-            height: unscaledHeight
-        }, zPosition);
-        
+    isOnCamera(x:number, y:number, width:number, height:number):boolean
+    {   
         return (
-            (scaledValues.x + scaledValues.width >= this._positions.canvas.x &&
-                scaledValues.x <= this._positions.canvas.x + this._positions.canvas.width) &&
-            (scaledValues.y + scaledValues.height >= this._positions.canvas.y &&
-                scaledValues.y <= this._positions.canvas.y + this._positions.canvas.height)
+            (x + width >= this._positions.canvas.x &&
+                x <= this._positions.canvas.x + this._positions.canvas.width) &&
+            (y + height >= this._positions.canvas.y &&
+                y <= this._positions.canvas.y + this._positions.canvas.height)
         );
     }
     

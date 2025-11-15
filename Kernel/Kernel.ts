@@ -309,7 +309,7 @@ export default class Kernel implements IKernel {
             unitsWithinCameraY
         );
         
-		const frameManager = new FrameManager(camera);
+		const frameManager = new FrameManager();
         
         level.load(
             frameManager, 

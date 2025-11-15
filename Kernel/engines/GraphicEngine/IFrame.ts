@@ -1,4 +1,4 @@
-import IGraphicEngine from "./IGraphicEngine";
+import IGraphicEngine, { IDrawDimensions, IDrawPositions } from "./IGraphicEngine";
 
 /**
  * A single area of a level
@@ -23,6 +23,16 @@ export default interface IFrame {
      * The height (in units) of the frame
      */
     height:number;
+    
+    /**
+     * The precalculated positions that will be used when drawing the frame
+     */
+    readonly precalculatedDrawPositions:IDrawPositions;
+    
+    /**
+     * The precalculated dimensions that will be used when drawing the frame
+     */
+    readonly precalculatedDrawDimensions:IDrawDimensions;
     
     /**
      * Sets the background color for the frame

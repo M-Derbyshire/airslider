@@ -1,7 +1,7 @@
 import IModel, { IHitBox } from './IModel';
 import IModelAnimationsManager from './ModelAnimationsManager/IModelAnimationsManager';
 import Kernel from '../../Kernel';
-import { ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
+import { IDrawDimensions, IDrawPositions, ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
 import UnitHelper from '../../utils/UnitHelper';
 import { IEntitySound } from '../types';
 
@@ -94,6 +94,22 @@ export default class Model implements IModel
     set z(newValue)
     {
         this._z = newValue;
+    }
+    
+    /**
+     * The calculated X/Y pixel values to be used when drawing the model
+     */
+    get calculatedDrawPositions():IDrawPositions
+    {
+        return this.animationManager.calculatedDrawPositions;
+    }
+    
+    /**
+     * The calculated width/height pixel values to be used when drawing the model
+     */
+    get calculatedDrawDimensions():IDrawDimensions
+    {
+        return this.animationManager.calculatedDrawDimensions;
     }
     
     /**
@@ -205,12 +221,19 @@ export default class Model implements IModel
     }
     
     /**
-     * Draws the model
+     * Calculates and stores the positions/dimensions to use when drawing the model (these can be accessed via the
+     * calculatedDrawPositions and calculatedDrawDimensions properties)
+     */
+    precalculateDrawPositionsAndDimensions():void
+    {
+        this.animationManager.precalculateDrawPositionsAndDimensions(this);
+    }
+    
+    /**
+     * Draws the model's sprite, using the precalculated pixel positions/dimensions
      */
     draw():void
     {
-        this.animationManager.precalculateDrawPositionsAndDimensions(this);
-        
         this.animationManager.drawNextFrame(this.state);
         
         if(this.text.content)

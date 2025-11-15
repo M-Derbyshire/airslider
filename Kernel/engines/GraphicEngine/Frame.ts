@@ -69,6 +69,24 @@ export default class Frame implements IFrame {
     }
     
     /**
+     * The precalculated positions that will be used when drawing the frame
+     */
+    get precalculatedDrawPositions():IDrawPositions
+    {
+        const { x, y } = this._calculatedDrawPositionsAndDimensions;
+        return { x, y };
+    }
+    
+    /**
+     * The precalculated dimensions that will be used when drawing the frame
+     */
+    get precalculatedDrawDimensions():IDrawDimensions
+    {
+        const { width, height } = this._calculatedDrawPositionsAndDimensions;
+        return { width, height };
+    }
+    
+    /**
      * Constructor
      * @param x the x position (in units) of the frame in the level
      * @param y the y position (in units) of the frame in the level
