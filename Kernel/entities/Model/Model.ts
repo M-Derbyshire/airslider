@@ -241,6 +241,7 @@ export default class Model implements IModel
     */
     isPointerOverlapping(pointX:number, pointY:number):boolean
 	{
+        // To improve performance, we're using the coordinates from the previous frame
 		const { x, y } = this.animationManager.calculatedDrawPositions;
         const { width, height } = this.animationManager.calculatedDrawDimensions;
 		
