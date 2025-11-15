@@ -21,9 +21,13 @@ export default class Level implements ILevel
     protected frameManager:IFrameManager; // The frame manager for the level
     
     protected eventManager:IEventManager; // Manages the event monitoring for a level (not including mouse clicks or screen touches)
-    protected pointerEventManager:IPointerEventManager; // Manages any events relating to mouse clicks or screen touches
     
     protected controlsInitialiser:IControlsInitialiser; // Handles the initialising of the game's controls
+    
+    /**
+     * Manages any events relating to mouse clicks or screen touches
+     */
+    pointerEventManager:IPointerEventManager;
     
     /**
      * The Heads Up Display for the level

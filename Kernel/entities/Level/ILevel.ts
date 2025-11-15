@@ -3,11 +3,17 @@ import PointerEventManager from "./PointerEventManager";
 import EventManager from "./EventManager";
 import IHUD from "../HUD/IHUD";
 import IFrameManager from "../../engines/GraphicEngine/IFrameManager";
+import IPointerEventManager from "./IPointerEventManager";
 
 /**
  * A level of the game
  */
 export default interface ILevel {
+    /**
+     * Manages any events relating to mouse clicks or screen touches
+     */
+    pointerEventManager:IPointerEventManager;
+    
     /**
      * The Heads Up Display for the level
      */
