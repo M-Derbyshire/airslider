@@ -252,6 +252,9 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
         if(this._isOutOfView(zPosition, showNegative))
             return { x: 0, y: 0 };
         
+        if(Math.round(zPosition) === 0)
+            return pixelValues;
+        
         const kernel = Kernel.getInstance();
         
         const vanishPointPixelsX = UnitHelper.xUnit(this._vanishingPointX);
@@ -281,6 +284,9 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
     ): IDrawDimensions {
         if(this._isOutOfView(zPosition, showNegative))
             return { width: 0, height: 0 };
+        
+        if(Math.round(zPosition) === 0)
+            return pixelValues;
         
         return {
             width: this._dimension(zPosition, pixelValues.width),
