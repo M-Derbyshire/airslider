@@ -1,5 +1,5 @@
 import Level from '../../../Kernel/entities/Level/Level';
-import EventManager from '../../../Kernel/entities/Level/EventManager';
+import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
 import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import ILevel from '../../../Kernel/entities/Level/ILevel';
 import LoadingScreenHUD from '../../HUDs/LoadingScreenHUD/LoadingScreenHUD';
@@ -27,16 +27,16 @@ export default class LoadingScreen extends Level
     /**
      * Loads and sets up the level
      * @param frameManager The frame manager for the level
-     * @param eventManager Manages the event monitoring for a level
+     * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
 	load(
         frameManager:IFrameManager,
-        eventManager:EventManager,
+        modelEventManager:IModelEventManager,
         pointerEventManager:PointerEventManager
     ):void
 	{
-		super.load(frameManager, eventManager, pointerEventManager);
+		super.load(frameManager, modelEventManager, pointerEventManager);
         
         const settings = Kernel.getInstance().settings;
         const assetHandler = Kernel.getInstance().assetHandler;

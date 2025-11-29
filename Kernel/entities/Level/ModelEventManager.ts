@@ -1,13 +1,13 @@
-import IEventManager, { IEvent, IEventRegistrationDetails } from './IEventManager';
+import IModelEventManager, { IModelEvent, IModelEventRegistrationDetails } from './IModelEventManager';
 import IModel from '../Model/IModel';
 import Kernel from '../../Kernel';
 
 /**
- * Manages the event monitoring for a level (doesn't include touch/mouse events)
+ * Manages the event monitoring between models
  */
-export default class EventManager implements IEventManager
+export default class EventManager implements IModelEventManager
 {
-    private _events:IEvent[];
+    private _events:IModelEvent[];
     
     constructor()
     {
@@ -20,7 +20,7 @@ export default class EventManager implements IEventManager
      * if the event has occurred between them.
      * @param event The details of an event to be registered
      */
-    registerEvent(event:IEventRegistrationDetails):void
+    registerEvent(event:IModelEventRegistrationDetails):void
     {
         const class1Models:IModel[] = [];
         const class2Models:IModel[] = [];
@@ -42,7 +42,7 @@ export default class EventManager implements IEventManager
      * Registers multiple event checks. See registerEvent method for more details
      * @param events The details of the events to be registered
      */
-    registerEventsArray(events:IEventRegistrationDetails[]):void
+    registerEventsArray(events:IModelEventRegistrationDetails[]):void
     {
         events.forEach(e => this.registerEvent(e));
     }

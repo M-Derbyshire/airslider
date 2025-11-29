@@ -15,7 +15,7 @@ import IFrameManager from './engines/GraphicEngine/IFrameManager';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';
 import ErrorHandler from './ErrorHandler/ErrorHandler';
 import ModelAnimationsManager from './entities/Model/ModelAnimationsManager/ModelAnimationsManager';
-import EventManager from './entities/Level/EventManager';
+import ModelEventManager from './entities/Level/ModelEventManager';
 import PointerEventManager from './entities/Level/PointerEventManager';
 import IGraphicEngine from './engines/GraphicEngine/IGraphicEngine';
 
@@ -313,7 +313,7 @@ export default class Kernel implements IKernel {
         
         level.load(
             frameManager, 
-            new EventManager(),
+            new ModelEventManager(),
             new PointerEventManager(this._canvasContext.canvas)
         );
         

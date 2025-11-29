@@ -1,11 +1,10 @@
 import ASLevel from '../ASLevel/ASLevel';
 import ASModel from '../../models/ASModel/ASModel';
 import Kernel from '../../../Kernel/Kernel';
-import NeonusLoadingScreen from '../LoadingScreens/NeonusLoadingScreen/NeonusLoadingScreen';
 import GangMember from '../../models/Obstacles/GangMember/GangMember';
 import IntroGangMember from '../../models/Obstacles/IntroObstacles/IntroGangMember/IntroGangMember';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
-import IEventManager from '../../../Kernel/entities/Level/IEventManager';
+import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
 import NeonPidgeon from '../../models/Monsters/NeonPidgeon/NeonPidgeon';
@@ -86,16 +85,16 @@ export default class Neonus extends ASLevel<GangMember>
     /**
      * Loads and sets up the level
      * @param frameManager The frame manager for the level
-     * @param eventManager Manages the event monitoring for a level
+     * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
     load(
         frameManager:IFrameManager,
-        eventManager:IEventManager,
+        modelEventManager:IModelEventManager,
         pointerEventManager:IPointerEventManager
     ):void
     {
-        super.load(frameManager, eventManager, pointerEventManager);
+        super.load(frameManager, modelEventManager, pointerEventManager);
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

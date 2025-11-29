@@ -1,4 +1,4 @@
-import IEventManager from './IEventManager';
+import IModelEventManager from './IModelEventManager';
 import IPointerEventManager from './IPointerEventManager';
 import IModel from '../Model/IModel';
 import ILevel from './ILevel';
@@ -20,7 +20,7 @@ export default class Level implements ILevel
     
     protected frameManager:IFrameManager; // The frame manager for the level
     
-    protected eventManager:IEventManager; // Manages the event monitoring for a level (not including mouse clicks or screen touches)
+    protected modelEventManager:IModelEventManager; // Manages the event monitoring between models
     
     protected controlsInitialiser:IControlsInitialiser; // Handles the initialising of the game's controls
     
@@ -51,18 +51,18 @@ export default class Level implements ILevel
     /**
      * Loads and sets up the level
      * @param frameManager The frame manager for the level
-     * @param eventManager Manages the event monitoring for a level (not including mouse clicks or screen touches)
+     * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
     load(
         frameManager:IFrameManager,
-        eventManager:IEventManager,
+        modelEventManager:IModelEventManager,
         pointerEventManager:IPointerEventManager
     ):void
     {   
         this.frameManager = frameManager;
         
-        this.eventManager = eventManager;
+        this.modelEventManager = modelEventManager;
         this.pointerEventManager = pointerEventManager;
         
         this.controlsInitialiser.initialiseControls();
@@ -92,7 +92,7 @@ export default class Level implements ILevel
         
         this.pointerEventManager.removePointerEventSubjects();
         
-        this.eventManager.clearEvents();
+        this.modelEventManager.clearEvents();
         this.registerLevelEvents();
         
         this._resetCameraPosition(
@@ -111,7 +111,7 @@ export default class Level implements ILevel
      */
     checkForEvents():void
     {
-        this.eventManager.checkForEvents();
+        this.modelEventManager.checkForEvents();
     }
     
     /**

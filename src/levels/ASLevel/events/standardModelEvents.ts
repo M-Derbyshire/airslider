@@ -1,4 +1,4 @@
-import { IEventRegistrationDetails } from "../../../../Kernel/entities/Level/IEventManager";
+import { IModelEventRegistrationDetails } from "../../../../Kernel/entities/Level/IModelEventManager";
 import IModel from "../../../../Kernel/entities/Model/IModel";
 import LavaBall from "../../../models/Monsters/attacks/LavaBall/LavaBall";
 import Lightning from "../../../models/Monsters/attacks/Lightning/Lightning";
@@ -19,7 +19,7 @@ import neonPidgeonOverlappingEventCheck from "./checks/neonPidgeonOverlappingEve
 import zCollisionEventCheck from "./checks/zCollisionEventCheck";
 
 // This contains the details of all the model events for the game
-const standardModelEvents:IEventRegistrationDetails[] = [
+const standardModelEvents:IModelEventRegistrationDetails[] = [
     { 
         check: zCollisionEventCheck,
         class1: Tarian,

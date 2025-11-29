@@ -1,4 +1,4 @@
-import { eventCheck, eventReactionCallback } from "../../../../../Kernel/entities/Level/IEventManager";
+import { eventCheck, eventReactionCallback } from "../../../../../Kernel/entities/Level/IModelEventManager";
 import IModel from "../../../../../Kernel/entities/Model/IModel";
 
 /**

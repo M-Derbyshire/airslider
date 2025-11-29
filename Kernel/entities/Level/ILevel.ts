@@ -1,6 +1,6 @@
 import IModel from "../Model/IModel";
 import PointerEventManager from "./PointerEventManager";
-import EventManager from "./EventManager";
+import IModelEventManager from "./IModelEventManager";
 import IHUD from "../HUD/IHUD";
 import IFrameManager from "../../engines/GraphicEngine/IFrameManager";
 import IPointerEventManager from "./IPointerEventManager";
@@ -27,12 +27,12 @@ export default interface ILevel {
     /**
      * Loads and sets up the level
      * @param frameManager The frame manager for the level
-     * @param eventManager Manages the event monitoring for a level (not including mouse clicks or screen touches)
+     * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
     load(
         frameManager:IFrameManager, 
-        eventManager:EventManager,
+        modelEventManager:IModelEventManager,
         pointerEventManager:PointerEventManager
     ):void;
     

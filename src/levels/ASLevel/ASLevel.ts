@@ -23,7 +23,7 @@ import MusicManager from './MusicManager';
 import standardModelEvents from './events/standardModelEvents';
 import UnitHelper from '../../../Kernel/utils/UnitHelper';
 import ZCalc from '../../../Kernel/utils/ZCalc/ZCalc';
-import IEventManager from '../../../Kernel/entities/Level/IEventManager';
+import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import Obstacle from '../../models/Obstacle/Obstacle';
 
@@ -194,16 +194,16 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     /**
      * Loads and sets up the level
      * @param frameManager The frame manager for the level
-     * @param eventManager Manages the event monitoring for a level
+     * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
 	load(
         frameManager:IFrameManager,
-        eventManager:IEventManager,
+        modelEventManager:IModelEventManager,
         pointerEventManager:IPointerEventManager
     ):void
 	{
-		super.load(frameManager, eventManager, pointerEventManager);
+		super.load(frameManager, modelEventManager, pointerEventManager);
         
         this.groundManager = new LevelGroundManager();
         this.finishFlagsManager = new LevelGroundManager(false); 
@@ -345,7 +345,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
 	protected registerLevelEvents():void
 	{
         super.registerLevelEvents();
-        this.eventManager.registerEventsArray(standardModelEvents);
+        this.modelEventManager.registerEventsArray(standardModelEvents);
 	}
     
     /**

@@ -1,22 +1,22 @@
 import IModel from "../Model/IModel";
 
 /**
- * Manages the event monitoring for a level (doesn't include touch/mouse events)
+ * Manages the event monitoring between models
  */
-export default interface IEventManager {
+export default interface IModelEventManager {
     /**
      * Registers a new event check. All models that are instances of the 2 given classes will be collected. When the 
      * event check is ran, each model of the first class will be checked against each model of the second class, to see 
      * if the event has occurred between them.
      * @param event The details of an event to be registered
      */
-    registerEvent(event:IEventRegistrationDetails):void;
+    registerEvent(event:IModelEventRegistrationDetails):void;
     
     /**
      * Registers multiple event checks. See registerEvent method for more details
      * @param events The details of the events to be registered
      */
-    registerEventsArray(events:IEventRegistrationDetails[]):void;
+    registerEventsArray(events:IModelEventRegistrationDetails[]):void;
     
     /**
      * Removes all the registered event checks
@@ -47,7 +47,7 @@ export type eventCheck = (modelA:IModel, modelB:IModel, reactionCallback:eventRe
 /**
  * The details that are needed to register an event with an IEventManager
  */
-export interface IEventRegistrationDetails {
+export interface IModelEventRegistrationDetails {
     /**
      * The function that checks for this event (and then may call the action methods on the models involved)
      */
@@ -75,7 +75,7 @@ export interface IEventRegistrationDetails {
 /**
  * The data that's required to check for occurrences of an event that can occur between 2 types of model
  */
-export interface IEvent {
+export interface IModelEvent {
     /**
      * The function that checks for this event (and then may call the "reaction" callback, if the event occurs)
      */
