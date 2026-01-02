@@ -8,6 +8,6 @@
         "moduleResolution": "node",
     },
     "exclude": [
-        "scaff_templates"
+        "scaff_files"
     ]
 }
