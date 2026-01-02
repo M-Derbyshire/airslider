@@ -1,0 +1,35 @@
+{
+    "commands": [
+        {
+            "name": "baseLevel",
+            "templateDirectoryPath": "templates/base",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "level.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "level",
+            "templateDirectoryPath": "templates",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "level.ts"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "children": []
+}

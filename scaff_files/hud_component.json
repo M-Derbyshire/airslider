@@ -1,0 +1,35 @@
+{
+    "commands": [
+        {
+            "name": "baseHUDComponent",
+            "templateDirectoryPath": "templates/base",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "hudComponent.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "HUDComponent",
+            "templateDirectoryPath": "templates",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "hudComponent.ts"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "children": []
+}

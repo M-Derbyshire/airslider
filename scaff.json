@@ -1,0 +1,9 @@
+{
+    "commands": [],
+    "children": [
+        "scaff_files/hud_component.json",
+        "scaff_files/hud.json",
+        "scaff_files/level.json",
+        "scaff_files/model.json"
+    ]
+}

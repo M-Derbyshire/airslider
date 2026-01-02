@@ -1,13 +1,13 @@
-import Level from '../../../Kernel/entities/Level/Level';
+import {: baseClass :} from '../{: baseClass :}/{: baseClass :}';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
-import IEventManager from '../../../Kernel/entities/Level/IEventManager';
+import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
 
 /**
- * A base Level class
+ * A class for a Level
  */
-export default class {: name :} extends Level
+export default class {: name :} extends {: baseClass :}
 {
     constructor()
 	{
@@ -24,7 +24,7 @@ export default class {: name :} extends Level
     {
         const superModels = super.getModels();
         
-        // Create any models needed for all levels here
+        // Create any models needed for the level here
         
         return [
             ...superModels,
@@ -35,16 +35,16 @@ export default class {: name :} extends Level
     /**
      * Loads and sets up the level
      * @param frameManager The frame manager for the level
-     * @param eventManager Manages the event monitoring for a level
+     * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      */
 	load(
         frameManager:IFrameManager,
-        eventManager:IEventManager,
+        modelEventManager:IModelEventManager,
         pointerEventManager:IPointerEventManager
     ):void
 	{
-		super.load(frameManager, eventManager, pointerEventManager);
+		super.load(frameManager, modelEventManager, pointerEventManager);
         
         // Handle loading any assets here
         
@@ -100,8 +100,7 @@ export default class {: name :} extends Level
 	{
         super.registerLevelEvents();
         
-		//These are the events that are valid across all levels
-        this.eventManager.registerEventsArray([
+        this.modelEventManager.registerEventsArray([
             // Register any model events here (e.g. collisions)
         ]);
 	}

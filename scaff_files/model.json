@@ -1,0 +1,35 @@
+{
+    "commands": [
+        {
+            "name": "baseModel",
+            "templateDirectoryPath": "templates/base",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "model.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "model",
+            "templateDirectoryPath": "templates",
+            "directories": [
+                {
+                    "name": "{: name :}",
+                    "files": [
+                        {
+                            "name": "{: name :}.ts",
+                            "templatePath": "model.ts"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "children": []
+}
