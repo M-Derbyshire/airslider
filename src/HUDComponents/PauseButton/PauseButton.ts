@@ -82,8 +82,5 @@ export default class PauseButton extends ASHUDComponent {
     onClick()
     {
         Kernel.getInstance().toggleGamePause();
-        
-        // After the level has been restarted, the pause button won't unpause after a pause
-        // (and if the game was paused when retry was clicked, the game won't stop unpausing -- unless you change tabs)
     }
 };
