@@ -1,7 +1,6 @@
 import Level from '../../../Kernel/entities/Level/Level';
 import WarningScreenTexts from '../../HUDs/WarningScreenTexts/WarningScreenTexts';
 import Kernel from '../../../Kernel/Kernel';
-import { KernelStatus } from '../../../Kernel/IKernel';
 import ForurnLoadingScreen from '../LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen';
 
 /**
@@ -20,6 +19,8 @@ Player discretion is advised.`;
     constructor()
 	{
 		super();
+        
+        this.isPauseable = false;
         
         this.HUD = new WarningScreenTexts(
             this._titleText, 
@@ -41,19 +42,5 @@ Player discretion is advised.`;
         
         kernel.graphicEngine.camera.setColors(this._backgroundColor, "#000000");
         kernel.loadLevel(new ForurnLoadingScreen());
-    }
-    
-    /**
-     * Runs the level's actions.
-     */
-    act():void
-    {
-        super.act();
-        
-        const kernel = Kernel.getInstance();
-        
-        // We don't want this level to pause (e.g. on the browser changing to another tab)
-        if(kernel.status === KernelStatus.PrePaused)
-            kernel.toggleGamePause();
     }
 };
