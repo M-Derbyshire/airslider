@@ -2,6 +2,8 @@ import ASHUD from "../ASHUD/ASHUD";
 import TextOnlyButton from "../../HUDComponents/UI-Components/TextOnlyButton/TextOnlyButton";
 import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import ASHUDComponent from "../../HUDComponents/ASHUDComponent/ASHUDComponent";
+import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
+import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 
 /**
  * Displays text for a warning screen
@@ -9,6 +11,7 @@ import ASHUDComponent from "../../HUDComponents/ASHUDComponent/ASHUDComponent";
 export default class WarningScreenTexts extends ASHUD
 {
     private _continueButton:ASHUDComponent;
+    private _fullscreenButton:ASHUDComponent|null; // The fullscreen toggle button (if the feature is available)
     
     /**
      * Constructor
@@ -72,6 +75,13 @@ export default class WarningScreenTexts extends ASHUD
             body,
             this._continueButton
         ];
+        
+        this._fullscreenButton = null;
+        if(FullscreenHelper.isFeatureAvailable())
+        {
+            this._fullscreenButton = new FullscreenButton(920, 25, 65, 100);
+            this.components.push(this._fullscreenButton);
+        }
     }
     
     /**
@@ -82,5 +92,8 @@ export default class WarningScreenTexts extends ASHUD
         super.prepare();
         
         this.pointerEventManager.addPointerEventSubject(this._continueButton);
+        
+        if(this._fullscreenButton)
+            this.pointerEventManager.addPointerEventSubject(this._fullscreenButton);
     }
 };

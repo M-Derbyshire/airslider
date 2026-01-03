@@ -1,11 +1,16 @@
 import ASHUD from "../ASHUD/ASHUD";
 import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
+import IHUDComponent from "../../../Kernel/entities/HUDComponent/IHUDComponent";
+import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
+import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 
 /**
  * A HUD for the credits screen
  */
 export default class CreditsHUD extends ASHUD
 {
+    private _fullscreenButton:IHUDComponent|null; // The fullscreen toggle button (if the feature is available)
+    
     constructor()
     {
         super();
@@ -95,5 +100,23 @@ http://scripts.sil.org/OFL`,
             courierPrimeFont,
             jostFont
         );
+        
+        this._fullscreenButton = null;
+        if(FullscreenHelper.isFeatureAvailable())
+        {
+            this._fullscreenButton = new FullscreenButton(920, 25, 65, 100);
+            this.components.push(this._fullscreenButton);
+        }
+    }
+    
+    /**
+     * Prepares the HUD before the level starts (triggers the same on any HUD components)
+     */
+    prepare():void
+    {
+        super.prepare();
+        
+        if(this._fullscreenButton)
+            this.pointerEventManager.addPointerEventSubject(this._fullscreenButton);
     }
 };
