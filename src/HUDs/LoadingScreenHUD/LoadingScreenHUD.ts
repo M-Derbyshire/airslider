@@ -3,6 +3,8 @@ import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import TextButton from "../../HUDComponents/UI-Components/TextButton/TextButton";
 import IHUDComponent from "../../../Kernel/entities/HUDComponent/IHUDComponent";
 import Kernel from "../../../Kernel/Kernel";
+import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
+import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 
 /**
  * HUD for all the loading screens
@@ -11,6 +13,7 @@ export default class LoadingScreenHUD extends ASHUD
 {
     private _loadingTextDisplay:IHUDComponent; // The "Loading..." text component
     private _continueButton:IHUDComponent; // The button used to start the loaded level
+    private _fullscreenButton:IHUDComponent|null; // The fullscreen toggle button (if the feature is available)
     
     constructor()
     {
@@ -51,6 +54,13 @@ export default class LoadingScreenHUD extends ASHUD
             this._continueButton
         ];
         
+        this._fullscreenButton = null;
+        if(FullscreenHelper.isFeatureAvailable())
+        {
+            this._fullscreenButton = new FullscreenButton(920, 25, 65, 100);
+            this.components.push(this._fullscreenButton);
+        }
+        
         this.setLevelHasLoaded(false);
     }
     
@@ -62,6 +72,9 @@ export default class LoadingScreenHUD extends ASHUD
         super.prepare();
         
         this.pointerEventManager.addPointerEventSubject(this._continueButton);
+        
+        if(this._fullscreenButton)
+            this.pointerEventManager.addPointerEventSubject(this._fullscreenButton);
     }
     
     /**
