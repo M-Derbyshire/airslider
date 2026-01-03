@@ -26,21 +26,6 @@ export default class CreditsHUD extends ASHUD
             `Designed/Developed by:
 Matthew Stuart Derbyshire`,
             500,
-            100,
-            fontSize,
-            fontName,
-            fontColor,
-            fontStyle,
-            fontAlign,
-            lineGap
-        );
-        
-        const testersText = new TextOnly(
-            `Playtesters:
-Name 1
-Name 2
-Name 3`,
-            500,
             250,
             fontSize,
             fontName,
@@ -53,7 +38,7 @@ Name 3`,
         const fontTitle = new TextOnly(
             `Fonts Used:`,
             500,
-            470,
+            420,
             fontSize * 1.5,
             fontName,
             fontColor,
@@ -68,7 +53,7 @@ This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
 https://openfontlicense.org`,
             500,
-            525,
+            475,
             fontSize * 0.75,
             fontName,
             fontColor,
@@ -84,7 +69,7 @@ This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
 http://scripts.sil.org/OFL`,
             500,
-            700,
+            650,
             fontSize * 0.75,
             fontName,
             fontColor,
@@ -95,7 +80,6 @@ http://scripts.sil.org/OFL`,
         
         this.components.push(
             devText,
-            testersText,
             fontTitle,
             courierPrimeFont,
             jostFont
