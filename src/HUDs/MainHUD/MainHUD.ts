@@ -7,6 +7,8 @@ import PauseButton from '../../HUDComponents/PauseButton/PauseButton';
 import Dialog from '../../HUDComponents/UI-Components/Dialog/Dialog';
 import TextButton from '../../HUDComponents/UI-Components/TextButton/TextButton';
 import Kernel from '../../../Kernel/Kernel';
+import FullscreenButton from '../../HUDComponents/FullscreenButton/FullscreenButton';
+import FullscreenHelper from '../../../Kernel/utils/FullscreenHelper';
 
 export default class MainHUD extends ASHUD
 {
@@ -20,6 +22,7 @@ export default class MainHUD extends ASHUD
     private _retryLevelButton:TextButton;
     
     private _pauseButton:PauseButton;
+    private _fullscreenButton:FullscreenButton|null; // The fullscreen toggle button (if the feature is available)
     
     load(pointerEventManager:IPointerEventManager):void
     {
@@ -79,6 +82,13 @@ export default class MainHUD extends ASHUD
         this.components.push(this._retryLevelButton);
         this.components.push(this._pauseButton);
         this.components.push(new HealthDisplay(25, 25, 150, 200));
+        
+        this._fullscreenButton = null;
+        if(FullscreenHelper.isFeatureAvailable())
+        {
+            this._fullscreenButton = new FullscreenButton(850, 25, 65, 100);
+            this.components.push(this._fullscreenButton);
+        }
     }
     
     /**
@@ -91,6 +101,9 @@ export default class MainHUD extends ASHUD
         this.pointerEventManager.addPointerEventSubject(this._pauseButton, true);
         this.pointerEventManager.addPointerEventSubject(this._nextLevelButton, true);
         this.pointerEventManager.addPointerEventSubject(this._retryLevelButton, true);
+        
+        if(this._fullscreenButton)
+            this.pointerEventManager.addPointerEventSubject(this._fullscreenButton, true);
     }
     
     /**
