@@ -9,6 +9,8 @@ export default class Credits extends Level
     constructor()
 	{
 		super();
+		
+		this.isPauseable = false;
         
         this.HUD = new CreditsHUD();
 	}
