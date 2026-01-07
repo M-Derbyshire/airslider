@@ -1,6 +1,5 @@
 import ASHUD from "../ASHUD/ASHUD";
 import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
-import IHUDComponent from "../../../Kernel/entities/HUDComponent/IHUDComponent";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 
@@ -9,7 +8,7 @@ import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenBut
  */
 export default class CreditsHUD extends ASHUD
 {
-    private _fullscreenButton:IHUDComponent|null; // The fullscreen toggle button (if the feature is available)
+    private _fullscreenButton:FullscreenButton|null; // The fullscreen toggle button (if the feature is available)
     
     constructor()
     {
@@ -101,6 +100,12 @@ http://scripts.sil.org/OFL`,
         super.prepare();
         
         if(this._fullscreenButton)
-            this.pointerEventManager.addPointerEventSubject(this._fullscreenButton);
+            this.pointerEventManager.addPointerEventSubject(
+                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y),
+                () => this._fullscreenButton.active,
+                () => this._fullscreenButton.onClick(),
+                null,
+                true
+            );
     }
 };

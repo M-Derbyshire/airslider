@@ -3,14 +3,21 @@
  */
 export default interface IPointerEventManager {
     /**
-     * Adds an object (if valid) to the list of objects that should react to mouse pointer events.
-	 * The object must be considered a valid pointer-event subject, or an error will be thrown
-     * (to be valid, it must have an "isPointerOverlapping" method, and either an "onClick" or an "onHover" method).
-	 * This will not re-add a subject that it already holds a reference to.
-     * @param subject an object that should react to a pointer event
+     * Registers callback functions that handle pointer events for a subject.
+     * @param isPointerOverlapping callback function that determines if the pointer is overlapping the subject. The
+     * pointer X/Y parameters are the positions on the canvas, not on the screen
+     * @param isActive callback function that determines if the subject is active
+     * @param onClick callback function that should be called when the subject is clicked
+     * @param onHover callback function that should be called when the pointer is hovering over the subject
      * @param isActiveWhenPaused should pointer events for this subject still be active when the game is paused?
      */
-    addPointerEventSubject(subject:any, isActiveWhenPaused?:boolean):void;
+    addPointerEventSubject(
+        isPointerOverlapping:(canvasPointerX:number, canvasPointerY:number)=>boolean,
+        isActive:()=>boolean,
+        onClick?:()=>void,
+        onHover?:()=>void,
+        isActiveWhenPaused?:boolean
+    ):void;
     
     /**
      * Unregisters all of the event subjects

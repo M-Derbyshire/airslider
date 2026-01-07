@@ -98,12 +98,38 @@ export default class MainHUD extends ASHUD
     {
         super.prepare();
         
-        this.pointerEventManager.addPointerEventSubject(this._pauseButton, true);
-        this.pointerEventManager.addPointerEventSubject(this._nextLevelButton, true);
-        this.pointerEventManager.addPointerEventSubject(this._retryLevelButton, true);
+        this.pointerEventManager.addPointerEventSubject(
+            (x, y) => this._pauseButton.isPointerOverlapping(x, y),
+            () => this._pauseButton.active,
+            () => this._pauseButton.onClick(),
+            null,
+            true
+        );
+        
+        this.pointerEventManager.addPointerEventSubject(
+            (x, y) => this._nextLevelButton.isPointerOverlapping(x, y),
+            () => this._nextLevelButton.active,
+            () => this._nextLevelButton.onClick(),
+            () => this._nextLevelButton.onHover(),
+            true
+        );
+        
+        this.pointerEventManager.addPointerEventSubject(
+            (x, y) => this._retryLevelButton.isPointerOverlapping(x, y),
+            () => this._retryLevelButton.active,
+            () => this._retryLevelButton.onClick(),
+            () => this._retryLevelButton.onHover(),
+            true
+        );
         
         if(this._fullscreenButton)
-            this.pointerEventManager.addPointerEventSubject(this._fullscreenButton, true);
+            this.pointerEventManager.addPointerEventSubject(
+                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y),
+                () => this._fullscreenButton.active,
+                () => this._fullscreenButton.onClick(),
+                null,
+                true
+            );
     }
     
     /**

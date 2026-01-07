@@ -12,7 +12,7 @@ export default class PointerEventManager implements IPointerEventManager {
 	private _canvas:HTMLCanvasElement;
 	
 	/**
-	 * The registered entities that are able to handle click events
+	 * The callbacks registered for entities that are able to handle click events (and extra configuration settings)
 	 */
 	private _subjects:ISubject[];
 	
@@ -25,12 +25,6 @@ export default class PointerEventManager implements IPointerEventManager {
 	 * The Y position (on the canvas, not the screen) of the mouse pointer
 	 */
 	private _canvasPointerY:number;
-	
-	/**
-	 * The error message to use when given an entity that is not a 
-	 * valid pointer-event subject
-	 */
-	private _invalidSubjectErrorMessage:string;
 	
 	/**
 	 * The callback to run when a click event occurs.
@@ -53,18 +47,16 @@ export default class PointerEventManager implements IPointerEventManager {
 		this._canvasPointerX = 0;
 		this._canvasPointerY = 0;
 		
-		this._invalidSubjectErrorMessage = 'The given subject object is not a valid pointer-event subject. A pointer-event subject must have an "isPointerOverlapping" method, and either an "onClick" or an "onHover" method';
-		
-		this._clickEventCallback = (e:MouseEvent) => {
-			this._moveEventCallback(e); // Make sure the pointer x/y are set
-			this._onPointerEventCallback("onClick");
-		};
-		
 		this._moveEventCallback = (e:MouseEvent) => {
 			const { pointerX, pointerY } = this._getPointerPositions(e);
 			
 			this._canvasPointerX = pointerX;
 			this._canvasPointerY = pointerY;
+		};
+		
+		this._clickEventCallback = (e:MouseEvent) => {
+			this._moveEventCallback(e); // Make sure the pointer X/Y are set
+			this._onPointerEventCallback(PointerAction.onClick);
 		};
 		
 		canvas.addEventListener("click", this._clickEventCallback);
@@ -73,20 +65,30 @@ export default class PointerEventManager implements IPointerEventManager {
 	}
 	
 	/**
-     * Adds an object (if valid) to the list of objects that should react to mouse pointer events.
-	 * The object must be considered a valid pointer-event subject, or an error will be thrown
-     * (to be valid, it must have an "isPointerOverlapping" method, and either an "onClick" or an "onHover" method).
-	 * This will not re-add a subject that it already holds a reference to.
-     * @param subject an object that should react to a pointer event
+     * Registers callback functions that handle pointer events for a subject.
+     * @param isPointerOverlapping callback function that determines if the pointer is overlapping the subject. The
+     * pointer X/Y parameters are the positions on the canvas, not on the screen
+     * @param isActive callback function that determines if the subject is active
+     * @param onClick callback function that should be called when the subject is clicked
+     * @param onHover callback function that should be called when the pointer is hovering over the subject
      * @param isActiveWhenPaused should pointer events for this subject still be active when the game is paused?
      */
-    addPointerEventSubject(subject:any, isActiveWhenPaused:boolean = false):void
+    addPointerEventSubject(
+        isPointerOverlapping:(canvasPointerX:number, canvasPointerY:number)=>boolean,
+		isActive:()=>boolean,
+        onClick?:()=>void,
+        onHover?:()=>void,
+        isActiveWhenPaused?:boolean
+    ):void
 	{
-		if(!this._isValidEventSubject(subject))
-			throw new Error(this._invalidSubjectErrorMessage);
+		if(!onClick && !onHover)
+			return;
 		
 		this._subjects.push({
-			entity: subject,
+			isPointerOverlapping,
+			isActive,
+			onClick,
+			onHover,
 			configuration: {
 				isActiveWhenPaused
 			}
@@ -103,11 +105,11 @@ export default class PointerEventManager implements IPointerEventManager {
     
     /**
      * Checks the pointer-event subjects to see if any are being hovered over, and triggers 
-     * their "onHover" methods.
+     * their "onHover" callbacks.
      */
     checkForHoverEvents():void
 	{
-		this._onPointerEventCallback("onHover");
+		this._onPointerEventCallback(PointerAction.onHover);
 	}
 	
 	/**
@@ -120,58 +122,34 @@ export default class PointerEventManager implements IPointerEventManager {
 	}
 	
 	/**
-	 * Determines if a given object is a valid pointer-event subject
-	 * @param subject an object that may be a valid pointer-event subject
-	 * @returns true if the object is a valid subject, otherwise false
-	 */
-	private _isValidEventSubject(subject:any):boolean
-	{
-		return (
-			subject && 
-			typeof subject === 'object' && 
-			typeof subject.isPointerOverlapping === "function" && 
-			(
-				typeof subject.onClick === "function" || 
-				typeof subject.onHover === "function"
-			) && 
-			!this._subjects.includes(subject)
-		);
-	}
-	
-	/**
 	 * A callback function, to be triggered by mouse/touch event listeners.
-	 * This triggers the given method on any affected subjects.
-	 * @param actionMethodName the name of the method on the subject, to call 
-	 * if an event occurs (e.g. onClick)
+	 * This triggers the action for any affected subjects.
+	 * @param action the action callback to call if an event occurs
 	 */
-	private _onPointerEventCallback(actionMethodName:string):void
+	private _onPointerEventCallback(action:PointerAction):void
 	{
 		const kernel = Kernel.getInstance();
 		
 		this._subjects.forEach(subject => {
-			const { entity, configuration } = subject;
-			
-			const entityIsPaused =
+			const subjectIsPaused =
 				kernel.status === KernelStatus.Paused
-				&& !configuration.isActiveWhenPaused;
+				&& !subject.configuration.isActiveWhenPaused;
 			
-			const entityIsClickable = 
-				!entityIsPaused
-				&& entity.active
-				&& typeof entity[actionMethodName] === "function";
+			const subjectCanReactToEvents = 
+				!subjectIsPaused
+				&& subject.isActive();
 			
-			const pointerIsOver = entity.isPointerOverlapping(this._canvasPointerX, this._canvasPointerY);
+			if(!subjectCanReactToEvents)
+				return;
 			
-			if(entityIsClickable && pointerIsOver)
+			if(subject.isPointerOverlapping(this._canvasPointerX, this._canvasPointerY))
 			{
-				const kernelStatus = kernel.status;
-				
-				entity[actionMethodName]();
-				
-				const kernelStatusHasChanged = kernel.status !== kernelStatus;
-				
-				if(!kernelStatusHasChanged && kernel.status === KernelStatus.Paused)
-					kernel.toggleGamePause();
+				switch (action) {
+					case PointerAction.onClick:
+						subject.onClick?.();
+					case PointerAction.onHover:
+						subject.onHover?.();
+				}
 			}
 		});
 	}
@@ -203,9 +181,28 @@ export default class PointerEventManager implements IPointerEventManager {
  */
 interface ISubject {
 	/**
-	 * The subject object
+	 * Callback function that determines if the pointer is overlapping the subject
+	 * @param canvasPointerX the X position (on the canvas, not the screen) of the mouse pointer
+	 * @param canvasPointerY the Y position (on the canvas, not the screen) of the mouse pointer
+	 * @returns true if the pointer is overlapping the subject, false if not
 	 */
-    entity:any;
+	isPointerOverlapping:(canvasPointerX:number, canvasPointerY:number)=>boolean;
+	
+	/**
+	 * Callback function that determines if the subject is active
+	 * @returns true if the subject is active, false if not
+	 */
+	isActive:()=>boolean;
+	
+	/**
+	 * Callback function that should be called when the subject is clicked
+	 */
+	onClick:()=>void;
+	
+	/**
+	 * Callback function that should be called when the pointer is hovering over the subject
+	 */
+	onHover:()=>void;
 	
 	/**
 	 * The configuration settings for this subject
@@ -217,3 +214,11 @@ interface ISubject {
 		isActiveWhenPaused:boolean;
 	}
 }
+
+/**
+ * The actions that can be triggered in response to a pointer event
+ */
+enum PointerAction {
+	onClick,
+	onHover
+};

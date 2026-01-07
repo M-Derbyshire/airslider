@@ -1,7 +1,6 @@
 import ASHUD from "../ASHUD/ASHUD";
 import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import TextButton from "../../HUDComponents/UI-Components/TextButton/TextButton";
-import IHUDComponent from "../../../Kernel/entities/HUDComponent/IHUDComponent";
 import Kernel from "../../../Kernel/Kernel";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
@@ -11,9 +10,9 @@ import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenBut
  */
 export default class LoadingScreenHUD extends ASHUD
 {
-    private _loadingTextDisplay:IHUDComponent; // The "Loading..." text component
-    private _continueButton:IHUDComponent; // The button used to start the loaded level
-    private _fullscreenButton:IHUDComponent|null; // The fullscreen toggle button (if the feature is available)
+    private _loadingTextDisplay:TextOnly; // The "Loading..." text component
+    private _continueButton:TextButton; // The button used to start the loaded level
+    private _fullscreenButton:FullscreenButton|null; // The fullscreen toggle button (if the feature is available)
     
     constructor()
     {
@@ -71,10 +70,22 @@ export default class LoadingScreenHUD extends ASHUD
     {
         super.prepare();
         
-        this.pointerEventManager.addPointerEventSubject(this._continueButton);
+        this.pointerEventManager.addPointerEventSubject(
+            (x, y) => this._continueButton.isPointerOverlapping(x, y),
+            () => this._continueButton.active,
+            () => this._continueButton.onClick(),
+            () => this._continueButton.onHover(),
+            true
+        );
         
         if(this._fullscreenButton)
-            this.pointerEventManager.addPointerEventSubject(this._fullscreenButton);
+            this.pointerEventManager.addPointerEventSubject(
+                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y),
+                () => this._fullscreenButton.active,
+                () => this._fullscreenButton.onClick(),
+                null,
+                true
+            );
     }
     
     /**

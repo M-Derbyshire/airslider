@@ -1,7 +1,6 @@
 import ASHUD from "../ASHUD/ASHUD";
 import TextOnlyButton from "../../HUDComponents/UI-Components/TextOnlyButton/TextOnlyButton";
 import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
-import ASHUDComponent from "../../HUDComponents/ASHUDComponent/ASHUDComponent";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 
@@ -10,8 +9,8 @@ import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenBut
  */
 export default class WarningScreenTexts extends ASHUD
 {
-    private _continueButton:ASHUDComponent;
-    private _fullscreenButton:ASHUDComponent|null; // The fullscreen toggle button (if the feature is available)
+    private _continueButton:TextOnlyButton;
+    private _fullscreenButton:FullscreenButton|null; // The fullscreen toggle button (if the feature is available)
     
     /**
      * Constructor
@@ -91,9 +90,21 @@ export default class WarningScreenTexts extends ASHUD
     {
         super.prepare();
         
-        this.pointerEventManager.addPointerEventSubject(this._continueButton);
+        this.pointerEventManager.addPointerEventSubject(
+            (x, y) => this._continueButton.isPointerOverlapping(x, y),
+            () => this._continueButton.active,
+            () => this._continueButton.onClick(),
+            null,
+            true
+        );
         
         if(this._fullscreenButton)
-            this.pointerEventManager.addPointerEventSubject(this._fullscreenButton);
+            this.pointerEventManager.addPointerEventSubject(
+                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y),
+                () => this._fullscreenButton.active,
+                () => this._fullscreenButton.onClick(),
+                null,
+                true
+            );
     }
 };

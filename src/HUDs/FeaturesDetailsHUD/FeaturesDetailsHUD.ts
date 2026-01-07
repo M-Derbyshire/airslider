@@ -1,6 +1,5 @@
 import ASHUD from "../ASHUD/ASHUD";
 import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
-import IHUDComponent from "../../../Kernel/entities/HUDComponent/IHUDComponent";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import TextOnlyButton from "../../HUDComponents/UI-Components/TextOnlyButton/TextOnlyButton";
 
@@ -9,8 +8,8 @@ import TextOnlyButton from "../../HUDComponents/UI-Components/TextOnlyButton/Tex
  */
 export default class FeaturesDetailsHUD extends ASHUD
 {
-    private _fullscreenButton:IHUDComponent; // The fullscreen toggle button
-    private _continueButton:IHUDComponent; // Used to move on to the next level/menu
+    private _fullscreenButton:FullscreenButton; // The fullscreen toggle button
+    private _continueButton:TextOnlyButton; // Used to move on to the next level/menu
     
     /**
      * Constructor
@@ -70,7 +69,20 @@ fullscreen button in the top-right of the screen`,
     {
         super.prepare();
         
-        this.pointerEventManager.addPointerEventSubject(this._continueButton);
-        this.pointerEventManager.addPointerEventSubject(this._fullscreenButton);
+        this.pointerEventManager.addPointerEventSubject(
+            (x, y) => this._continueButton.isPointerOverlapping(x, y),
+            () => this._continueButton.active,
+            () => this._continueButton.onClick(),
+            null,
+            true
+        );
+        
+        this.pointerEventManager.addPointerEventSubject(
+            (x, y) => this._fullscreenButton.isPointerOverlapping(x, y),
+            () => this._fullscreenButton.active,
+            () => this._fullscreenButton.onClick(),
+            null,
+            true
+        );
     }
 };
