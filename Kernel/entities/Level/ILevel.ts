@@ -1,5 +1,4 @@
 import IModel from "../Model/IModel";
-import PointerEventManager from "./PointerEventManager";
 import IModelEventManager from "./IModelEventManager";
 import IHUD from "../HUD/IHUD";
 import IFrameManager from "../../engines/GraphicEngine/IFrameManager";
@@ -9,11 +8,6 @@ import IPointerEventManager from "./IPointerEventManager";
  * A level of the game
  */
 export default interface ILevel {
-    /**
-     * Manages any events relating to mouse clicks or screen touches
-     */
-    pointerEventManager:IPointerEventManager;
-    
     /**
      * The Heads Up Display for the level
      */
@@ -33,7 +27,7 @@ export default interface ILevel {
     load(
         frameManager:IFrameManager, 
         modelEventManager:IModelEventManager,
-        pointerEventManager:PointerEventManager
+        pointerEventManager:IPointerEventManager
     ):void;
     
     /**
@@ -47,9 +41,14 @@ export default interface ILevel {
     prepare():void;
     
     /**
-     * Runs the registered event checks
+     * Runs the registered model event checks
      */
     checkForEvents():void;
+    
+    /**
+     * Triggers a check for any hover events
+     */
+    checkForHoverEvents():void
     
     /**
      * Creates and returns any models that will be used in the level

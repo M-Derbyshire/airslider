@@ -380,7 +380,7 @@ export default class Kernel implements IKernel {
                 this._status = KernelStatus.Paused;
             
             // This should always be ran, even if the game is paused
-            this.level.pointerEventManager.checkForHoverEvents();
+            this.level.checkForHoverEvents();
             
             if(this._currentLevelShouldBeUnloaded)
             {

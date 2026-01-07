@@ -23,11 +23,7 @@ export default class Level implements ILevel
     protected modelEventManager:IModelEventManager; // Manages the event monitoring between models
     
     protected controlsInitialiser:IControlsInitialiser; // Handles the initialising of the game's controls
-    
-    /**
-     * Manages any events relating to mouse clicks or screen touches
-     */
-    pointerEventManager:IPointerEventManager;
+    protected pointerEventManager:IPointerEventManager; // Manages any events relating to mouse clicks or screen touches
     
     /**
      * The Heads Up Display for the level
@@ -107,12 +103,20 @@ export default class Level implements ILevel
     }
     
     /**
-     * Runs the registered event checks
+     * Runs the registered model event checks
      */
     checkForEvents():void
     {
         this.modelEventManager.checkForEvents();
     }
+    
+    /**
+     * Triggers a check for any hover events
+     */
+    checkForHoverEvents():void
+	{
+		this.pointerEventManager.checkForHoverEvents();
+	}
     
     /**
      * Creates and returns any models that will be used in the level
