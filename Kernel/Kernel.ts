@@ -365,9 +365,6 @@ export default class Kernel implements IKernel {
             this._fps = this._getNewFps(currentDateTime);
             this._updateTotalTime(currentDateTime);
             
-            // This should always be ran, even if the game is paused
-            this.level.pointerEventManager.checkForHoverEvents();
-            
             if(this._status !== KernelStatus.Paused)
             {
                 if(this._status !== KernelStatus.PrePaused)
@@ -381,6 +378,9 @@ export default class Kernel implements IKernel {
             
             if(this._status === KernelStatus.PrePaused)
                 this._status = KernelStatus.Paused;
+            
+            // This should always be ran, even if the game is paused
+            this.level.pointerEventManager.checkForHoverEvents();
             
             if(this._currentLevelShouldBeUnloaded)
             {
