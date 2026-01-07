@@ -105,7 +105,7 @@ export default class Level implements ILevel
     /**
      * Runs the registered model event checks
      */
-    checkForEvents():void
+    checkForModelEvents():void
     {
         this.modelEventManager.checkForEvents();
     }

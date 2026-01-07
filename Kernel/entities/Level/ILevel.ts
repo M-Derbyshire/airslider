@@ -43,7 +43,7 @@ export default interface ILevel {
     /**
      * Runs the registered model event checks
      */
-    checkForEvents():void;
+    checkForModelEvents():void;
     
     /**
      * Triggers a check for any hover events
