@@ -440,11 +440,11 @@ export default class NeonPidgeon extends Monster {
     // Events------------------------------------------------------------
     
     /**
-     * Any extra event checks specific to this model
+     * Runs any extra event checks specific to this model
      */
-    protected extraEvents():void
+    checkForExtraEvents():void
     {
-        super.extraEvents();
+        super.checkForExtraEvents();
         
         if(this.hasHitGround() && this.state === "falling")
             this.hitEventAction();

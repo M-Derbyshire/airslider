@@ -287,8 +287,13 @@ export default class ElectricHornet extends Monster {
         this.nextAction();
     }
     
-    extraEvents():void
+    /**
+     * Runs any extra event checks specific to this model
+     */
+    checkForExtraEvents():void
     {
+        super.checkForExtraEvents();
+        
         const thisBottom = this.y + this.height;
         const attackYLimit = this.playerModel.y + 50;
         

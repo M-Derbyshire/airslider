@@ -413,8 +413,13 @@ export default class Tarian extends ASModel {
     
     // Events -----------------------------------------------------------------
 	
-    extraEvents():void
+    /**
+     * Runs any extra event checks specific to this model
+     */
+    checkForExtraEvents():void
     {
+        super.checkForExtraEvents();
+        
         const level = (Kernel.getInstance().level as ASLevel);
         
         // Check for leaving the game area

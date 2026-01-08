@@ -49,11 +49,11 @@ export default class {: name :} extends {: baseClass :}
     }
     
     /**
-     * Any extra event checks relevant to all models
+     * Runs any extra event checks specific to this model
      */
-    protected extraEvents():void
+    checkForExtraEvents():void
     {
-        super.extraEvents();
+        super.checkForExtraEvents();
         
         // Check for (and handle) any extra events that could happen on the model
     }

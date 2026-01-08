@@ -91,7 +91,7 @@ export default class IntroGangMember extends GangMember implements IIntroObstacl
     }
     
     // Overriding this, as we don't want to react to the obstacle leaving the game area
-    extraEvents():void {}
+    checkForExtraEvents():void {}
     
     /**
      * Sets the correct speeds and behaviours, based on the current Z-axis position

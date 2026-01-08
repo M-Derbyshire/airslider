@@ -104,7 +104,7 @@ export default class IntroSnake extends Snake implements IIntroObstacle
     }
     
     // Overriding this, as we don't want to react to the snake leaving the game area
-    extraEvents():void {}
+    checkForExtraEvents():void {}
     
     /**
      * Handles the "entrance" movement actions

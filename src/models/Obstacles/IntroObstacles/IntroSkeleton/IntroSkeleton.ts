@@ -101,7 +101,7 @@ export default class IntroSkeleton extends Skeleton implements IIntroObstacle
     }
     
     // Overriding this, as we don't want to react to the skeleton leaving the game area
-    extraEvents():void {}
+    checkForExtraEvents():void {}
     
     /**
      * Handles the "entrance" movement actions

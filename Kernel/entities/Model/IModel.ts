@@ -113,7 +113,7 @@ export default interface IModel {
     draw():void;
     
     /**
-     * Runs any extra event checks specific to this model. These checks should be ran by the extraEvents() method
+     * Runs any extra event checks specific to this model
      */
     checkForExtraEvents():void;
     

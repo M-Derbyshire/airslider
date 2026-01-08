@@ -244,17 +244,9 @@ export default class Model implements IModel
     }
     
     /**
-     * Runs any extra event checks specific to this model. These checks should be ran by the extraEvents() method
+     * Runs any extra event checks specific to this model
      */
-    checkForExtraEvents():void
-    {
-        this.extraEvents();
-    }
-    
-    /**
-     * Any extra event checks specific to this model
-     */
-    protected extraEvents():void {}
+    checkForExtraEvents():void {}
     
     /**
     * Determines if the mouse pointer is overlapping this model.

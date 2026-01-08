@@ -49,5 +49,5 @@ export default class IntroJellyfish extends Jellyfish implements IIntroObstacle
     }
     
     // Overriding this, as we don't want to react to the obstacle being outside the game area
-    extraEvents():void {}
+    checkForExtraEvents():void {}
 };

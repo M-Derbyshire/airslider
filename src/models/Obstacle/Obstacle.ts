@@ -219,8 +219,13 @@ export default class Obstacle extends ASModel
         this.hasCollidedWithPlayer = true;
     }
     
-    extraEvents():void
+    /**
+     * Runs any extra event checks specific to this model
+     */
+    checkForExtraEvents():void
     {
+        super.checkForExtraEvents();
+        
         const level = (Kernel.getInstance().level as ASLevel);
         
         // Check for leaving the game area

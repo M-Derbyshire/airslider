@@ -143,11 +143,11 @@ export default class LavaBall extends ASModel {
     }
     
     /**
-     * Any extra event checks specific to this model
+     * Runs any extra event checks specific to this model
      */
-    protected extraEvents():void
+    checkForExtraEvents():void
     {
-        super.extraEvents();
+        super.checkForExtraEvents();
         
         if(this.hasHitGround())
             this.hitEventAction();

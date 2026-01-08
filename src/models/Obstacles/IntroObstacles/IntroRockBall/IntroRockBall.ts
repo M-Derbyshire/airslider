@@ -75,7 +75,7 @@ export default class IntroRockBall extends RockBall implements IIntroObstacle
     }
     
     // Overriding this, as we don't want to react to the obstacle being outside the game area
-    extraEvents():void {}
+    checkForExtraEvents():void {}
     
     /**
      * Undoes the changes to the Z-axis position that were made by the base obstacle class
