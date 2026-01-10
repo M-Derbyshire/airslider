@@ -12,7 +12,6 @@ import IModel from '../../../Kernel/entities/Model/IModel';
 import ASModel from '../../models/ASModel/ASModel';
 import TarianExplosion from '../../models/TarianExplosion/TarianExplosion';
 import { CentralStateKey } from '../CentralStateKey';
-import ILevel from '../../../Kernel/entities/Level/ILevel';
 import RacerManager from './RacerManager';
 import Kernel from '../../../Kernel/Kernel';
 import LinearVanishingPointStrategy from '../../../Kernel/utils/ZCalc/strategies/LinearVanishingPointStrategy';
@@ -81,6 +80,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     protected player:Tarian;
     
     private _currentPlayerMoveKey:string; // The key currently being pressed to control the player
+    private _pauseToggleKeyIsPressed:boolean; // Is the key used to toggle the pause currently pressed?
     
     // Level speed management
     levelMoving:boolean; // Is the player moving forwards?
@@ -172,6 +172,9 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         this._retryLevelDialogDelayMS = 2000;
         
         this._permanentSectionTimeShiftSecs = 0;
+        
+        this._currentPlayerMoveKey = "";
+        this._pauseToggleKeyIsPressed = false;
 	}
     
     /**
@@ -369,6 +372,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         super.registerLevelEvents();
         this.modelEventManager.registerEventsArray(standardModelEvents);
         this._setupPlayerControls();
+        this._setupKeyboardPauseToggle();
 	}
     
     /**
@@ -399,6 +403,28 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
                 this.player.state = "forward";
                 this._currentPlayerMoveKey = "";
             }
+        });
+    }
+    
+    /**
+     * Sets up the handlers that allow the player to toggle the pause
+     * with the keyboard
+     */
+    private _setupKeyboardPauseToggle():void
+    {
+        const pauseToggleKey = " ";
+        
+        this.keyboardEventManager.addKeyDownEventCallback((e:KeyboardEvent) => {
+            if(!this._pauseToggleKeyIsPressed && e.key === pauseToggleKey)
+            {
+                Kernel.getInstance().toggleGamePause();
+                this._pauseToggleKeyIsPressed = true;
+            }
+        });
+        
+        this.keyboardEventManager.addKeyUpEventCallback((e:KeyboardEvent) => {
+            if(e.key === pauseToggleKey)
+                this._pauseToggleKeyIsPressed = false;
         });
     }
     
