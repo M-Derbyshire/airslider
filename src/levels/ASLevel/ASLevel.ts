@@ -479,10 +479,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         const msStart = shiftedSecsStart * 1000;
         const isTimeToRunSection = kernel.totalLevelActiveMilliseconds >= msStart;
         
-        const playerModelIdx = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
-        const playerModel = kernel.loadedModels[playerModelIdx] as Tarian;
-        const playerInLosingState = playerModel.health === 0;
-        
+        const playerInLosingState = this.player.health === 0;
         if(!isTimeToRunSection || playerInLosingState)
             return;
         
