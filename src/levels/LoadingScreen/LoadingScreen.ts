@@ -33,7 +33,7 @@ export default class LoadingScreen extends Level
 	{
 		super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
-        this.HUD = new LoadingScreenHUD();
+        this.HUD = new LoadingScreenHUD(pointerEventManager);
         this.isPauseable = false;
 	}
     

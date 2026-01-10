@@ -147,7 +147,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         this.zCalcStrategy = new LinearVanishingPointStrategy();
         
-        this.HUD = new MainHUD();
+        this.HUD = new MainHUD(pointerEventManager);
 		
 		this.roadManager = new LevelRoadManager();
         this.roadColor = "#A5A5A5";

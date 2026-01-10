@@ -28,6 +28,6 @@ export default class Credits extends Level
 		
 		this.isPauseable = false;
         
-        this.HUD = new CreditsHUD();
+        this.HUD = new CreditsHUD(pointerEventManager);
 	}
 };

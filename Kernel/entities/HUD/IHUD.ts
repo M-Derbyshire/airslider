@@ -1,14 +1,11 @@
-import IPointerEventManager from "../Level/IPointerEventManager";
-
 /**
  * A level's Heads Up Display
  */
 export default interface IHUD {
     /**
      * Loads the HUD
-     * @param pointerEventManager the level's PointerEventManager
      */
-    load(pointerEventManager:IPointerEventManager):void;
+    load():void;
     
     /**
      * Loads the HUD's components 

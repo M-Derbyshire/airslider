@@ -2,6 +2,7 @@ import ASHUD from "../ASHUD/ASHUD";
 import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import TextOnlyButton from "../../HUDComponents/UI-Components/TextOnlyButton/TextOnlyButton";
+import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
 
 /**
  * A HUD for the feature-details screen
@@ -13,11 +14,12 @@ export default class FeaturesDetailsHUD extends ASHUD
     
     /**
      * Constructor
+     * @param pointerEventManager the level's PointerEventManager
      * @param onContinue a callback that will be called when the user clicks to continue
      */
-    constructor(onContinue:()=>void)
+    constructor(pointerEventManager:IPointerEventManager, onContinue:()=>void)
     {
-        super();
+        super(pointerEventManager);
         
         const fontName = "Arial";
         const fontColor = "white";

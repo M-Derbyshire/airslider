@@ -3,6 +3,7 @@ import TextOnlyButton from "../../HUDComponents/UI-Components/TextOnlyButton/Tex
 import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
+import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
 
 /**
  * Displays text for a warning screen
@@ -14,6 +15,7 @@ export default class WarningScreenTexts extends ASHUD
     
     /**
      * Constructor
+     * @param pointerEventManager the level's PointerEventManager
      * @param titleText the title for the warning
      * @param bodyText the body of the warning
      * @param continueText the text to be clicked by the player to continue
@@ -21,6 +23,7 @@ export default class WarningScreenTexts extends ASHUD
      * @param onContinue a callback that will be called when the user clicks to continue
      */
     constructor(
+        pointerEventManager:IPointerEventManager,
         titleText:string, 
         bodyText:string, 
         continueText:string,
@@ -28,7 +31,7 @@ export default class WarningScreenTexts extends ASHUD
         onContinue:()=>void
     )
     {
-        super();
+        super(pointerEventManager);
         
         const fontName = "Arial";
         

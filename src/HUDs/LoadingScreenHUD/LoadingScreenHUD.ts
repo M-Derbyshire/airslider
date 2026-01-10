@@ -4,6 +4,7 @@ import TextButton from "../../HUDComponents/UI-Components/TextButton/TextButton"
 import Kernel from "../../../Kernel/Kernel";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
+import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
 
 /**
  * HUD for all the loading screens
@@ -14,9 +15,13 @@ export default class LoadingScreenHUD extends ASHUD
     private _continueButton:TextButton; // The button used to start the loaded level
     private _fullscreenButton:FullscreenButton|null; // The fullscreen toggle button (if the feature is available)
     
-    constructor()
+    /**
+     * Constructor
+     * @param pointerEventManager the level's PointerEventManager
+     */
+    constructor(pointerEventManager:IPointerEventManager)
     {
-        super();
+        super(pointerEventManager);
         
         const fontName = "Arial";
         const fontSize = 50;

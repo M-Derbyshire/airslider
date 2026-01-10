@@ -2,6 +2,7 @@ import ASHUD from "../ASHUD/ASHUD";
 import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
+import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
 
 /**
  * A HUD for the credits screen
@@ -10,9 +11,13 @@ export default class CreditsHUD extends ASHUD
 {
     private _fullscreenButton:FullscreenButton|null; // The fullscreen toggle button (if the feature is available)
     
-    constructor()
+    /**
+     * Constructor
+     * @param pointerEventManager the level's PointerEventManager
+     */
+    constructor(pointerEventManager:IPointerEventManager)
     {
-        super();
+        super(pointerEventManager);
         
         const fontName = "Arial";
         const fontColor = "white";

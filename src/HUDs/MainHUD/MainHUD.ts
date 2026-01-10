@@ -24,9 +24,13 @@ export default class MainHUD extends ASHUD
     private _pauseButton:PauseButton;
     private _fullscreenButton:FullscreenButton|null; // The fullscreen toggle button (if the feature is available)
     
-    load(pointerEventManager:IPointerEventManager):void
+    /**
+     * Constructor
+     * @param pointerEventManager the level's PointerEventManager
+     */
+    constructor(pointerEventManager:IPointerEventManager)
     {
-        super.load(pointerEventManager);
+        super(pointerEventManager);
         
         this._damageFlash = new DamageFlash();
         this._lowHealthFlash = new LowHealthFlash();

@@ -35,7 +35,7 @@ export default class FeaturesDetails extends Level
         this.isPauseable = false;
         
         const onContinue = () => Kernel.getInstance().unloadCurrentLevel();
-        this.HUD = new FeaturesDetailsHUD(onContinue);
+        this.HUD = new FeaturesDetailsHUD(pointerEventManager, onContinue);
     }
     
     /**

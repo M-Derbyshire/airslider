@@ -16,9 +16,12 @@ export default class HUD implements IHUD
     
     /**
      * Constructor
+     * @param pointerEventManager the level's PointerEventManager
      */
-    constructor()
+    constructor(pointerEventManager:IPointerEventManager)
     {
+        this.pointerEventManager = pointerEventManager;
+        
         this.components = [];
         this.assetsToUnload = [];
         this.sounds = [];
@@ -26,12 +29,8 @@ export default class HUD implements IHUD
     
     /**
      * Loads the HUD
-     * @param pointerEventManager the level's PointerEventManager
      */
-    load(pointerEventManager:IPointerEventManager):void
-    {
-		this.pointerEventManager = pointerEventManager;
-    }
+    load():void {}
     
     /**
      * Loads the HUD's components 

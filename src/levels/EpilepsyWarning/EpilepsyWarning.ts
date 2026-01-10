@@ -43,6 +43,7 @@ Player discretion is advised.`;
         this.isPauseable = false;
         
         this.HUD = new WarningScreenTexts(
+            pointerEventManager,
             this._titleText, 
             this._bodyText,
             this._continueText,

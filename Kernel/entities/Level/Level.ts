@@ -8,6 +8,7 @@ import IHUD from '../HUD/IHUD';
 import { IEntitySound } from '../types';
 import ICamera from '../../engines/GraphicEngine/ICamera';
 import IKeyboardEventManager from './IKeyboardEventManager';
+import HUD from '../HUD/HUD';
 
 /**
  * A level of the game
@@ -52,6 +53,7 @@ export default class Level implements ILevel
     )
     {
         this.frameManager = frameManager;
+        this.HUD = new HUD(pointerEventManager);
         
         this.modelEventManager = modelEventManager;
         this.pointerEventManager = pointerEventManager;
@@ -158,7 +160,7 @@ export default class Level implements ILevel
      */
     private _loadHUD():void
     {
-        this.HUD.load(this.pointerEventManager);
+        this.HUD.load();
         this.HUD.loadComponents();
     }
     
