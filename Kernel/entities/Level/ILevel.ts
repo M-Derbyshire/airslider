@@ -3,6 +3,7 @@ import IModelEventManager from "./IModelEventManager";
 import IHUD from "../HUD/IHUD";
 import IFrameManager from "../../engines/GraphicEngine/IFrameManager";
 import IPointerEventManager from "./IPointerEventManager";
+import IKeyboardEventManager from "./IKeyboardEventManager";
 
 /**
  * A level of the game
@@ -23,11 +24,13 @@ export default interface ILevel {
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
      */
     load(
         frameManager:IFrameManager, 
         modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
     ):void;
     
     /**

@@ -15,7 +15,6 @@ import { CentralStateKey } from '../CentralStateKey';
 import ILevel from '../../../Kernel/entities/Level/ILevel';
 import RacerManager from './RacerManager';
 import Kernel from '../../../Kernel/Kernel';
-import ASControlsInitialiser from './ASControlsInitialiser';
 import LinearVanishingPointStrategy from '../../../Kernel/utils/ZCalc/strategies/LinearVanishingPointStrategy';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
@@ -26,6 +25,7 @@ import ZCalc from '../../../Kernel/utils/ZCalc/ZCalc';
 import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import Obstacle from '../../models/Obstacle/Obstacle';
+import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 
 /**
  * The game's base Level class
@@ -74,6 +74,8 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     // Models we want to keep references to
     protected monsters:Monster[];
     protected player:Tarian;
+    
+    private _currentPlayerMoveKey:string; // The key currently being pressed to control the player
     
     // Level speed management
     levelMoving:boolean; // Is the player moving forwards?
@@ -130,8 +132,6 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         this.zCalcStrategy = new LinearVanishingPointStrategy();
         
         this.HUD = new MainHUD();
-        
-        this.controlsInitialiser = new ASControlsInitialiser();
 		
 		this.roadManager = new LevelRoadManager();
         this.roadColor = "#A5A5A5";
@@ -196,14 +196,16 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
      */
 	load(
         frameManager:IFrameManager,
         modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
     ):void
 	{
-		super.load(frameManager, modelEventManager, pointerEventManager);
+		super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         this.groundManager = new LevelGroundManager();
         this.finishFlagsManager = new LevelGroundManager(false); 
@@ -315,7 +317,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
      * Stops the level (and triggers the stop on all models)
      * This may be triggered by the level's closing sequence, or by another entity in the game
      */
-	_stopLevel():void
+	private _stopLevel():void
     {
         this.levelMoving = false;
         Kernel.getInstance().loadedModels.forEach(model => (model as ASModel).levelStopped());
@@ -346,7 +348,39 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
 	{
         super.registerLevelEvents();
         this.modelEventManager.registerEventsArray(standardModelEvents);
+        this._setupPlayerControls();
 	}
+    
+    /**
+     * Sets up the handlers that let the player control their character
+     */
+    private _setupPlayerControls():void
+    {
+        this.keyboardEventManager.addKeyDownEventCallback((e:KeyboardEvent) => {
+            if(this.player.canBeControlled && this._currentPlayerMoveKey !== e.key)
+            {
+                switch(e.key)
+                {
+                    case "ArrowLeft":
+                        this.player.state = "left";
+                        break;
+                    case "ArrowRight":
+                        this.player.state = "right";
+                        break;
+                }
+                
+                this._currentPlayerMoveKey = e.key;
+            }
+        });
+        
+        this.keyboardEventManager.addKeyUpEventCallback((e:KeyboardEvent) => {
+            if(this.player.canBeControlled && this._currentPlayerMoveKey === e.key)
+            {
+                this.player.state = "forward";
+                this._currentPlayerMoveKey = "";
+            }
+        });
+    }
     
     /**
      * Runs a section of the level (if it's time to do so). The initialiseCallback is ran once, then the actCallback 

@@ -13,6 +13,7 @@ import Jellyfish from '../../models/Obstacles/Jellyfish/Jellyfish';
 import CenterLineObstacleManager from '../ASLevel/ObstacleManager/CenterLineObstacleManager';
 import Lightning from '../../models/Monsters/attacks/Lightning/Lightning';
 import ElectricSeahorse from '../../models/Monsters/ElectricSeahorse/ElectricSeahorse';
+import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 
 /**
  * The Coratune level
@@ -91,14 +92,16 @@ export default class Coratune extends ASLevel<Jellyfish>
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
      */
     load(
         frameManager:IFrameManager,
         modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
     ):void
     {
-        super.load(frameManager, modelEventManager, pointerEventManager);
+        super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

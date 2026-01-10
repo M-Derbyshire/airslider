@@ -11,6 +11,7 @@ import NeonPidgeon from '../../models/Monsters/NeonPidgeon/NeonPidgeon';
 import SweepAndAimObstacleManager from '../ASLevel/ObstacleManager/SweepAndAimObstacleManager';
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
 import VevaniaLoadingScreen from '../LoadingScreens/VevaniaLoadingScreen/VevaniaLoadingScreen';
+import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 
 /**
  * The Neonus level
@@ -87,14 +88,16 @@ export default class Neonus extends ASLevel<GangMember>
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
      */
     load(
         frameManager:IFrameManager,
         modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
     ):void
     {
-        super.load(frameManager, modelEventManager, pointerEventManager);
+        super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

@@ -3,12 +3,11 @@ import IPointerEventManager from './IPointerEventManager';
 import IModel from '../Model/IModel';
 import ILevel from './ILevel';
 import Kernel from '../../Kernel';
-import IControlsInitialiser from './IControlsInitialiser';
-import ControlsInitialiser from './ControlsInitialiser';
 import IFrameManager from '../../engines/GraphicEngine/IFrameManager';
 import IHUD from '../HUD/IHUD';
 import { IEntitySound } from '../types';
 import ICamera from '../../engines/GraphicEngine/ICamera';
+import IKeyboardEventManager from './IKeyboardEventManager';
 
 /**
  * A level of the game
@@ -22,7 +21,7 @@ export default class Level implements ILevel
     
     protected modelEventManager:IModelEventManager; // Manages the event monitoring between models
     
-    protected controlsInitialiser:IControlsInitialiser; // Handles the initialising of the game's controls
+    protected keyboardEventManager:IKeyboardEventManager; // Manages any keyboard events
     protected pointerEventManager:IPointerEventManager; // Manages any events relating to mouse clicks or screen touches
     
     /**
@@ -40,8 +39,6 @@ export default class Level implements ILevel
         this.assetsToUnload = [];
         this.sounds = [];
         this.isPauseable = true;
-        
-        this.controlsInitialiser = new ControlsInitialiser();
     }
     
     /**
@@ -49,19 +46,20 @@ export default class Level implements ILevel
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
      */
     load(
         frameManager:IFrameManager,
         modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
     ):void
     {   
         this.frameManager = frameManager;
         
         this.modelEventManager = modelEventManager;
         this.pointerEventManager = pointerEventManager;
-        
-        this.controlsInitialiser.initialiseControls();
+        this.keyboardEventManager = keyboardEventManager;
         
         this._loadHUD();
     }
@@ -72,10 +70,11 @@ export default class Level implements ILevel
     unload():void
     {
         const assetHandler = Kernel.getInstance().assetHandler;
-        
         this.assetsToUnload.forEach(asset => assetHandler.releaseAsset(asset));
+        
         this.pointerEventManager.removeEventHandlers();
-        this.controlsInitialiser.unregisterEventListeners();
+        this.keyboardEventManager.removeEventHandlers();
+        
         this.HUD.unload();
     }
     
@@ -87,8 +86,9 @@ export default class Level implements ILevel
         const kernel = Kernel.getInstance();
         
         this.pointerEventManager.removePointerEventSubjects();
-        
+        this.keyboardEventManager.removeKeyboardEventCallbacks();
         this.modelEventManager.clearEvents();
+        
         this.registerLevelEvents();
         
         this._resetCameraPosition(

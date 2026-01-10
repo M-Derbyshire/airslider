@@ -7,6 +7,7 @@ import Kernel from '../../../Kernel/Kernel';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
 import { KernelStatus } from '../../../Kernel/IKernel';
+import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 
 /**
  * A base class for loading screens
@@ -29,14 +30,16 @@ export default class LoadingScreen extends Level
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
      */
 	load(
         frameManager:IFrameManager,
         modelEventManager:IModelEventManager,
-        pointerEventManager:PointerEventManager
+        pointerEventManager:PointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
     ):void
 	{
-		super.load(frameManager, modelEventManager, pointerEventManager);
+		super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         const settings = Kernel.getInstance().settings;
         const assetHandler = Kernel.getInstance().assetHandler;

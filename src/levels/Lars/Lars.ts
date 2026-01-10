@@ -12,6 +12,7 @@ import IntroRockBall from '../../models/Obstacles/IntroObstacles/IntroRockBall/I
 import SweepingObstacleManager from '../ASLevel/ObstacleManager/SweepingObstacleManager';
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
 import NeonusLoadingScreen from '../LoadingScreens/NeonusLoadingScreen/NeonusLoadingScreen';
+import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 
 /**
  * The Lars level
@@ -79,14 +80,16 @@ export default class Lars extends ASLevel<RockBall>
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
      */
 	load(
         frameManager:IFrameManager,
         modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
     ):void
 	{
-		super.load(frameManager, modelEventManager, pointerEventManager);
+		super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

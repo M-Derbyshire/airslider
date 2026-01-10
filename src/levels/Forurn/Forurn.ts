@@ -12,6 +12,7 @@ import IntroSnake from '../../models/Obstacles/IntroObstacles/IntroSnake/IntroSn
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
 import SideGroupsObstacleManager from '../ASLevel/ObstacleManager/SideGroupsObstacleManager';
 import LarsLoadingScreen from '../LoadingScreens/LarsLoadingScreen/LarsLoadingScreen';
+import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 
 /**
  * The Forurn level
@@ -70,14 +71,16 @@ export default class Forurn extends ASLevel<Snake>
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
      */
 	load(
         frameManager:IFrameManager,
         modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
     ):void
 	{
-		super.load(frameManager, modelEventManager, pointerEventManager);
+		super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

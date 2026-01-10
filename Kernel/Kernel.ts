@@ -18,6 +18,7 @@ import ModelAnimationsManager from './entities/Model/ModelAnimationsManager/Mode
 import ModelEventManager from './entities/Level/ModelEventManager';
 import PointerEventManager from './entities/Level/PointerEventManager';
 import IGraphicEngine from './engines/GraphicEngine/IGraphicEngine';
+import KeyboardEventManager from './entities/Level/KeyboardEventManager';
 
 /**
  * This is a singleton that controls the running of the game, and provides other entities with 
@@ -314,7 +315,8 @@ export default class Kernel implements IKernel {
         level.load(
             frameManager, 
             new ModelEventManager(),
-            new PointerEventManager(this._canvasContext.canvas)
+            new PointerEventManager(this._canvasContext.canvas),
+            new KeyboardEventManager()
         );
         
         const loadedModels = level.getModels();

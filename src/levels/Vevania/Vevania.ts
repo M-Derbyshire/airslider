@@ -12,6 +12,7 @@ import Ghost from '../../models/Monsters/Ghost/Ghost';
 import SweepingObstacleManager from '../ASLevel/ObstacleManager/SweepingObstacleManager';
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
 import CoratuneLoadingScreen from '../LoadingScreens/CoratuneLoadingScreen/CoratuneLoadingScreen';
+import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 
 /**
  * The Vevania level
@@ -106,14 +107,16 @@ export default class Vevania extends ASLevel<Skeleton>
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
      */
     load(
         frameManager:IFrameManager,
         modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
     ):void
     {
-        super.load(frameManager, modelEventManager, pointerEventManager);
+        super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

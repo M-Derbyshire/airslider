@@ -2,6 +2,7 @@ import {: baseClass :} from '../{: baseClass :}/{: baseClass :}';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
+import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
 
 /**
@@ -37,14 +38,16 @@ export default class {: name :} extends {: baseClass :}
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
      */
 	load(
         frameManager:IFrameManager,
         modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
     ):void
 	{
-		super.load(frameManager, modelEventManager, pointerEventManager);
+		super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         // Handle loading any assets here
         
