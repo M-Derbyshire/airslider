@@ -26,6 +26,11 @@ import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManage
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import Obstacle from '../../models/Obstacle/Obstacle';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
+import LoadingScreen from '../LoadingScreen/LoadingScreen';
+import FrameManager from '../../../Kernel/engines/GraphicEngine/FrameManager';
+import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
+import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
+import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager';
 
 /**
  * The game's base Level class
@@ -101,7 +106,6 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     
     private _nextLevelDialogDelayMS:number; // The delay between the level being completed, and the next-level dialog being displayed
     private _retryLevelDialogDelayMS:number; // The delay between the level loss sequence ending, and the retry-level dialog being displayed
-    protected NextLevelLoadingScreen:new()=>ILevel; // The class of the loading screen for the next level
     
     // Music management
     protected musicFilePaths:string[]; // File paths to the music a level can load (one will be picked by the MusicManager)
@@ -125,9 +129,21 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     private _signStartingZPosition:number; // Where on the z axis does the startSign start, and the finishSign end?
     protected finishFlagsManager:LevelGroundManager; // Manages the flags at the end of the level
     
-	constructor()
+    /**
+     * Constructor
+     * @param frameManager The frame manager for the level
+     * @param modelEventManager Manages the event monitoring between models
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
+     */
+    constructor(
+        frameManager:IFrameManager,
+        modelEventManager:IModelEventManager,
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
+    )
 	{
-		super();
+		super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         this.zCalcStrategy = new LinearVanishingPointStrategy();
         
@@ -192,20 +208,11 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     }
 	
     /**
-     * Loads and sets up the level
-     * @param frameManager The frame manager for the level
-     * @param modelEventManager Manages the event monitoring between models
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
-     * @param keyboardEventManager Manages any keyboard events
+     * Loads the level's assets
      */
-	load(
-        frameManager:IFrameManager,
-        modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager,
-        keyboardEventManager:IKeyboardEventManager
-    ):void
+	load():void
 	{
-		super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
+		super.load();
         
         this.groundManager = new LevelGroundManager();
         this.finishFlagsManager = new LevelGroundManager(false); 
@@ -311,6 +318,19 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     {
         this.stoppedForlossAtMS = Kernel.getInstance().totalLevelActiveMilliseconds;
         this._stopLevel();
+    }
+    
+    /**
+     * Constructs the loading screen for the next level
+     */
+    protected getNextLevelLoadingScreen():LoadingScreen
+    {
+        return new LoadingScreen(
+            new FrameManager(),
+            new ModelEventManager(),
+            new PointerEventManager(Kernel.getInstance().canvasContext.canvas),
+            new KeyboardEventManager()
+        );
     }
     
     /**
@@ -490,7 +510,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
             this.finishFlagsActive = true;
             
             // Start the loading of the next level's loading screen
-            kernel.loadLevel(new this.NextLevelLoadingScreen());
+            kernel.loadLevel(this.getNextLevelLoadingScreen());
         }
         
         this._levelClosing(msStart);

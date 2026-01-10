@@ -1,4 +1,5 @@
 import ILevel from "../Kernel/entities/Level/ILevel";
+import IKernel from "../Kernel/IKernel";
 
 /**
  * The settings for the game
@@ -47,7 +48,7 @@ export default interface ISettings {
 	aspectRatioVertical:number;
     
     /**
-     * The class of the initial level
+     * A function that will construct the initial level of the game
      */
-	InitialLevelClass:new()=>ILevel;
+	getInitialLevel:(kernel:IKernel)=>ILevel;
 };

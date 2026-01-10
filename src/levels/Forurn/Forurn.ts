@@ -13,6 +13,11 @@ import { IPattern } from '../ASLevel/ObstaclePatternManager';
 import SideGroupsObstacleManager from '../ASLevel/ObstacleManager/SideGroupsObstacleManager';
 import LarsLoadingScreen from '../LoadingScreens/LarsLoadingScreen/LarsLoadingScreen';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
+import FrameManager from '../../../Kernel/engines/GraphicEngine/FrameManager';
+import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager';
+import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
+import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
+import LoadingScreen from '../LoadingScreen/LoadingScreen';
 
 /**
  * The Forurn level
@@ -22,11 +27,21 @@ export default class Forurn extends ASLevel<Snake>
     private _introSnake:IntroSnake; // Used to introduce the "snake" obstacle to the player
     private _snakes:Snake[]; // The Snake obstacles that the level will use
     
-    constructor()
+    /**
+     * Constructor
+     * @param frameManager The frame manager for the level
+     * @param modelEventManager Manages the event monitoring between models
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
+     */
+    constructor(
+        frameManager:IFrameManager,
+        modelEventManager:IModelEventManager,
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
+    )
 	{
-		super();
-        
-        this.NextLevelLoadingScreen = LarsLoadingScreen;
+		super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         // We only want the first track as the music for this level
         this.musicFilePaths = this.musicFilePaths.filter(path => path.endsWith("airslider_track_1.mp3"));
@@ -67,20 +82,11 @@ export default class Forurn extends ASLevel<Snake>
     }
     
     /**
-     * Loads and sets up the level
-     * @param frameManager The frame manager for the level
-     * @param modelEventManager Manages the event monitoring between models
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
-     * @param keyboardEventManager Manages any keyboard events
+     * Loads the level's assets
      */
-	load(
-        frameManager:IFrameManager,
-        modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager,
-        keyboardEventManager:IKeyboardEventManager
-    ):void
+	load():void
 	{
-		super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
+		super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
@@ -159,6 +165,19 @@ export default class Forurn extends ASLevel<Snake>
         
         // Run the closing sequence
         this.levelEndSection(231);
+    }
+    
+    /**
+     * Constructs the loading screen for the next level
+     */
+    protected getNextLevelLoadingScreen():LoadingScreen
+    {
+        return new LarsLoadingScreen(
+            new FrameManager(),
+            new ModelEventManager(),
+            new PointerEventManager(Kernel.getInstance().canvasContext.canvas),
+            new KeyboardEventManager()
+        );
     }
     
     /**

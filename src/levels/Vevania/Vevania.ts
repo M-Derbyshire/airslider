@@ -13,6 +13,11 @@ import SweepingObstacleManager from '../ASLevel/ObstacleManager/SweepingObstacle
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
 import CoratuneLoadingScreen from '../LoadingScreens/CoratuneLoadingScreen/CoratuneLoadingScreen';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
+import FrameManager from '../../../Kernel/engines/GraphicEngine/FrameManager';
+import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager';
+import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
+import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
+import LoadingScreen from '../LoadingScreen/LoadingScreen';
 
 /**
  * The Vevania level
@@ -31,11 +36,21 @@ export default class Vevania extends ASLevel<Skeleton>
     
     private _homingPatternZGap:number; // The gap (on the Z-axis) between the homing skeletons
     
-    constructor()
+    /**
+     * Constructor
+     * @param frameManager The frame manager for the level
+     * @param modelEventManager Manages the event monitoring between models
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
+     */
+    constructor(
+        frameManager:IFrameManager,
+        modelEventManager:IModelEventManager,
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
+    )
     {
-        super();
-        
-        this.NextLevelLoadingScreen = CoratuneLoadingScreen;
+        super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         this.roadColor = "#525950";
         
@@ -103,20 +118,11 @@ export default class Vevania extends ASLevel<Skeleton>
     }
     
     /**
-     * Loads and sets up the level
-     * @param frameManager The frame manager for the level
-     * @param modelEventManager Manages the event monitoring between models
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
-     * @param keyboardEventManager Manages any keyboard events
+     * Loads the level's assets
      */
-    load(
-        frameManager:IFrameManager,
-        modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager,
-        keyboardEventManager:IKeyboardEventManager
-    ):void
+    load():void
     {
-        super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
@@ -207,6 +213,19 @@ export default class Vevania extends ASLevel<Skeleton>
         
         // Run the closing sequence
         this.levelEndSection(288);
+    }
+    
+    /**
+     * Constructs the loading screen for the next level
+     */
+    protected getNextLevelLoadingScreen():LoadingScreen
+    {
+        return new CoratuneLoadingScreen(
+            new FrameManager(),
+            new ModelEventManager(),
+            new PointerEventManager(Kernel.getInstance().canvasContext.canvas),
+            new KeyboardEventManager()
+        );
     }
     
     /**

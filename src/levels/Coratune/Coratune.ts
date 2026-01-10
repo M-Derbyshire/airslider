@@ -14,6 +14,11 @@ import CenterLineObstacleManager from '../ASLevel/ObstacleManager/CenterLineObst
 import Lightning from '../../models/Monsters/attacks/Lightning/Lightning';
 import ElectricSeahorse from '../../models/Monsters/ElectricSeahorse/ElectricSeahorse';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
+import FrameManager from '../../../Kernel/engines/GraphicEngine/FrameManager';
+import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager';
+import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
+import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
+import LoadingScreen from '../LoadingScreen/LoadingScreen';
 
 /**
  * The Coratune level
@@ -30,11 +35,21 @@ export default class Coratune extends ASLevel<Jellyfish>
     
     private _homingJellyfishInitialXSpeed:number; // The initial X speed for the homing jellyfish
     
-    constructor()
+    /**
+     * Constructor
+     * @param frameManager The frame manager for the level
+     * @param modelEventManager Manages the event monitoring between models
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
+     */
+    constructor(
+        frameManager:IFrameManager,
+        modelEventManager:IModelEventManager,
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
+    )
     {
-        super();
-        
-        this.NextLevelLoadingScreen = CoratuneLoadingScreen;
+        super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         this.roadColor = "#789994";
         
@@ -88,20 +103,11 @@ export default class Coratune extends ASLevel<Jellyfish>
     }
     
     /**
-     * Loads and sets up the level
-     * @param frameManager The frame manager for the level
-     * @param modelEventManager Manages the event monitoring between models
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
-     * @param keyboardEventManager Manages any keyboard events
+     * Loads the level's assets
      */
-    load(
-        frameManager:IFrameManager,
-        modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager,
-        keyboardEventManager:IKeyboardEventManager
-    ):void
+    load():void
     {
-        super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
@@ -246,6 +252,19 @@ export default class Coratune extends ASLevel<Jellyfish>
         
         if(this.finishFlagsManager.groundIsBeingRemoved)
             this._finishFlagsBuoyManager.removeGround();
+    }
+    
+    /**
+     * Constructs the loading screen for the next level
+     */
+    protected getNextLevelLoadingScreen():LoadingScreen
+    {
+        return new CoratuneLoadingScreen(
+            new FrameManager(),
+            new ModelEventManager(),
+            new PointerEventManager(Kernel.getInstance().canvasContext.canvas),
+            new KeyboardEventManager()
+        );
     }
     
     /**

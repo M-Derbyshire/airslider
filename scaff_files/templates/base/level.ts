@@ -10,9 +10,21 @@ import IModel from '../../../Kernel/entities/Model/IModel';
  */
 export default class {: name :} extends Level
 {
-    constructor()
+    /**
+     * Constructor
+     * @param frameManager The frame manager for the level
+     * @param modelEventManager Manages the event monitoring between models
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
+     */
+    constructor(
+        frameManager:IFrameManager,
+        modelEventManager:IModelEventManager,
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
+    )
 	{
-		super();
+		super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         // Handle construction here
 	}
@@ -34,20 +46,11 @@ export default class {: name :} extends Level
     }
     
     /**
-     * Loads and sets up the level
-     * @param frameManager The frame manager for the level
-     * @param modelEventManager Manages the event monitoring between models
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
-     * @param keyboardEventManager Manages any keyboard events
+     * Loads the level's assets
      */
-	load(
-        frameManager:IFrameManager,
-        modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager,
-        keyboardEventManager:IKeyboardEventManager
-    ):void
+	load():void
 	{
-		super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
+		super.load();
         
         // Handle loading any assets here
         

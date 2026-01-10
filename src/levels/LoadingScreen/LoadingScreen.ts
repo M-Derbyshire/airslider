@@ -1,6 +1,5 @@
 import Level from '../../../Kernel/entities/Level/Level';
 import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
-import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import ILevel from '../../../Kernel/entities/Level/ILevel';
 import LoadingScreenHUD from '../../HUDs/LoadingScreenHUD/LoadingScreenHUD';
 import Kernel from '../../../Kernel/Kernel';
@@ -8,6 +7,7 @@ import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
 import { KernelStatus } from '../../../Kernel/IKernel';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
+import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 
 /**
  * A base class for loading screens
@@ -15,31 +15,34 @@ import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEvent
 export default class LoadingScreen extends Level
 {
     protected backgroundImagePath:string; // The path to the background image asset
-    protected LevelToLoad:new()=>ILevel; // The class of the level to be loaded
+    protected levelToLoad:ILevel; // The level to be loaded
     
-    constructor()
+    /**
+     * Constructor
+     * @param frameManager The frame manager for the level
+     * @param modelEventManager Manages the event monitoring between models
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
+     */
+    constructor(
+        frameManager:IFrameManager,
+        modelEventManager:IModelEventManager,
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
+    )
 	{
-		super();
+		super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         this.HUD = new LoadingScreenHUD();
         this.isPauseable = false;
 	}
     
     /**
-     * Loads and sets up the level
-     * @param frameManager The frame manager for the level
-     * @param modelEventManager Manages the event monitoring between models
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
-     * @param keyboardEventManager Manages any keyboard events
+     * Loads the level's assets
      */
-	load(
-        frameManager:IFrameManager,
-        modelEventManager:IModelEventManager,
-        pointerEventManager:PointerEventManager,
-        keyboardEventManager:IKeyboardEventManager
-    ):void
+	load():void
 	{
-		super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
+		super.load();
         
         const settings = Kernel.getInstance().settings;
         const assetHandler = Kernel.getInstance().assetHandler;
@@ -63,7 +66,7 @@ export default class LoadingScreen extends Level
     {
         super.prepare();
         
-        Kernel.getInstance().loadLevel(new this.LevelToLoad());
+        Kernel.getInstance().loadLevel(this.levelToLoad);
     }
     
     /**

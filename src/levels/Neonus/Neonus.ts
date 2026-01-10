@@ -12,6 +12,11 @@ import SweepAndAimObstacleManager from '../ASLevel/ObstacleManager/SweepAndAimOb
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
 import VevaniaLoadingScreen from '../LoadingScreens/VevaniaLoadingScreen/VevaniaLoadingScreen';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
+import FrameManager from '../../../Kernel/engines/GraphicEngine/FrameManager';
+import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager';
+import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
+import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
+import LoadingScreen from '../LoadingScreen/LoadingScreen';
 
 /**
  * The Neonus level
@@ -26,11 +31,21 @@ export default class Neonus extends ASLevel<GangMember>
     private _staticGangMembers:GangMember[];
     private _sweepingGangMembers:GangMember[];
     
-    constructor()
+    /**
+     * Constructor
+     * @param frameManager The frame manager for the level
+     * @param modelEventManager Manages the event monitoring between models
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
+     */
+    constructor(
+        frameManager:IFrameManager,
+        modelEventManager:IModelEventManager,
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
+    )
     {
-        super();
-        
-        this.NextLevelLoadingScreen = VevaniaLoadingScreen;
+        super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         this.roadColor = "#899699";
         this.obstacleManagers = [
@@ -84,20 +99,11 @@ export default class Neonus extends ASLevel<GangMember>
     }
     
     /**
-     * Loads and sets up the level
-     * @param frameManager The frame manager for the level
-     * @param modelEventManager Manages the event monitoring between models
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
-     * @param keyboardEventManager Manages any keyboard events
+     * Loads the level's assets
      */
-    load(
-        frameManager:IFrameManager,
-        modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager,
-        keyboardEventManager:IKeyboardEventManager
-    ):void
+    load():void
     {
-        super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
@@ -180,6 +186,19 @@ export default class Neonus extends ASLevel<GangMember>
         
         // Run the closing sequence
         this.levelEndSection(223);
+    }
+    
+    /**
+     * Constructs the loading screen for the next level
+     */
+    protected getNextLevelLoadingScreen():LoadingScreen
+    {
+        return new VevaniaLoadingScreen(
+            new FrameManager(),
+            new ModelEventManager(),
+            new PointerEventManager(Kernel.getInstance().canvasContext.canvas),
+            new KeyboardEventManager()
+        );
     }
     
     /**

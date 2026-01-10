@@ -17,8 +17,6 @@ export default class Level implements ILevel
     protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
     protected sounds:IEntitySound[]; // Sounds that need to be added to the sound engine, during preparation
     
-    protected frameManager:IFrameManager; // The frame manager for the level
-    
     protected modelEventManager:IModelEventManager; // Manages the event monitoring between models
     
     protected keyboardEventManager:IKeyboardEventManager; // Manages any keyboard events
@@ -30,37 +28,45 @@ export default class Level implements ILevel
     HUD:IHUD;
     
     /**
+     * The frame manager for the level
+     */
+    frameManager:IFrameManager;
+    
+    /**
      * Can this level be paused?
      */
     isPauseable:boolean;
     
-    constructor()
-    {
-        this.assetsToUnload = [];
-        this.sounds = [];
-        this.isPauseable = true;
-    }
-    
     /**
-     * Loads and sets up the level
+     * Constructor
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
      * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
      * @param keyboardEventManager Manages any keyboard events
      */
-    load(
+    constructor(
         frameManager:IFrameManager,
         modelEventManager:IModelEventManager,
         pointerEventManager:IPointerEventManager,
         keyboardEventManager:IKeyboardEventManager
-    ):void
-    {   
+    )
+    {
         this.frameManager = frameManager;
         
         this.modelEventManager = modelEventManager;
         this.pointerEventManager = pointerEventManager;
         this.keyboardEventManager = keyboardEventManager;
         
+        this.assetsToUnload = [];
+        this.sounds = [];
+        this.isPauseable = true;
+    }
+    
+    /**
+     * Loads the level's assets
+     */
+    load():void
+    {   
         this._loadHUD();
     }
     
@@ -111,7 +117,7 @@ export default class Level implements ILevel
     }
     
     /**
-     * Triggers a check for any hover events
+     * Triggers a check for any pointer hover events
      */
     checkForHoverEvents():void
 	{

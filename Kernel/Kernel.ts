@@ -3,7 +3,6 @@ import GameEngine from './engines/GameEngine/GameEngine';
 import GraphicEngine from './engines/GraphicEngine/GraphicEngine';
 import SoundEngine from './engines/SoundEngine/SoundEngine';
 import Camera from './engines/GraphicEngine/Camera';
-import FrameManager from './engines/GraphicEngine/FrameManager';
 import fonts from '../src/fonts/fonts';
 import IKernel, { KernelStatus, ILoadedLevel, ILevelEngines } from './IKernel';
 import ISettings from '../settings/ISettings';
@@ -15,10 +14,7 @@ import IFrameManager from './engines/GraphicEngine/IFrameManager';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';
 import ErrorHandler from './ErrorHandler/ErrorHandler';
 import ModelAnimationsManager from './entities/Model/ModelAnimationsManager/ModelAnimationsManager';
-import ModelEventManager from './entities/Level/ModelEventManager';
-import PointerEventManager from './entities/Level/PointerEventManager';
 import IGraphicEngine from './engines/GraphicEngine/IGraphicEngine';
-import KeyboardEventManager from './entities/Level/KeyboardEventManager';
 
 /**
  * This is a singleton that controls the running of the game, and provides other entities with 
@@ -295,6 +291,10 @@ export default class Kernel implements IKernel {
      */
     loadLevel(level:ILevel):void
     {
+        level.load();
+        
+        const loadedModels = level.getModels();
+        
 		const {
             aspectRatioHorizontal,
             aspectRatioVertical,
@@ -310,17 +310,7 @@ export default class Kernel implements IKernel {
             unitsWithinCameraY
         );
         
-		const frameManager = new FrameManager();
-        
-        level.load(
-            frameManager, 
-            new ModelEventManager(),
-            new PointerEventManager(this._canvasContext.canvas),
-            new KeyboardEventManager()
-        );
-        
-        const loadedModels = level.getModels();
-        const engines = this._initialiseAllEngines(level, loadedModels, camera, frameManager); // New engines, set up for this level
+        const engines = this._initialiseAllEngines(level, loadedModels, camera); // New engines, set up for this level
         
         this._loadModels(loadedModels, engines.graphicEngine);
         
@@ -409,8 +399,8 @@ export default class Kernel implements IKernel {
             this._assetHandler.loadFont(key, fontPath);
         });
         
-        const InitialLevelClass = this.settings.InitialLevelClass;
-        this.loadLevel(new InitialLevelClass());
+        const initialLevel = this.settings.getInitialLevel(this);
+        this.loadLevel(initialLevel);
         
         this._prepareKernelForLevelStart();
     }
@@ -480,13 +470,12 @@ export default class Kernel implements IKernel {
      * @param level the level
      * @param loadedModels the models created/used by the level
      * @param camera The level's camera
-     * @param frameManager Manages the frames of a level
      * @returns The new instances of all engines
      */
-	private _initialiseAllEngines(level:ILevel, loadedModels:IModel[], camera:ICamera, frameManager:IFrameManager):ILevelEngines
+	private _initialiseAllEngines(level:ILevel, loadedModels:IModel[], camera:ICamera):ILevelEngines
 	{
 		const gameEngine = new GameEngine(level, loadedModels);
-        const graphicEngine = new GraphicEngine(camera, frameManager, this._canvasContext);
+        const graphicEngine = new GraphicEngine(camera, level.frameManager, this._canvasContext);
         const soundEngine = new SoundEngine();
         
         return { gameEngine, graphicEngine, soundEngine };

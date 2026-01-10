@@ -1,9 +1,6 @@
 import IModel from "../Model/IModel";
-import IModelEventManager from "./IModelEventManager";
 import IHUD from "../HUD/IHUD";
 import IFrameManager from "../../engines/GraphicEngine/IFrameManager";
-import IPointerEventManager from "./IPointerEventManager";
-import IKeyboardEventManager from "./IKeyboardEventManager";
 
 /**
  * A level of the game
@@ -15,23 +12,19 @@ export default interface ILevel {
     readonly HUD:IHUD;
     
     /**
+     * The frame manager for the level
+     */
+    readonly frameManager:IFrameManager;
+    
+    /**
      * Can this level be paused?
      */
     isPauseable:boolean;
     
     /**
-     * Loads and sets up the level
-     * @param frameManager The frame manager for the level
-     * @param modelEventManager Manages the event monitoring between models
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
-     * @param keyboardEventManager Manages any keyboard events
+     * Loads the level's assets
      */
-    load(
-        frameManager:IFrameManager, 
-        modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager,
-        keyboardEventManager:IKeyboardEventManager
-    ):void;
+    load():void;
     
     /**
      * Unloads any assets used by the level, and clears up anything else
@@ -49,7 +42,7 @@ export default interface ILevel {
     checkForModelEvents():void;
     
     /**
-     * Triggers a check for any hover events
+     * Triggers a check for any pointer hover events
      */
     checkForHoverEvents():void
     

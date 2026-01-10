@@ -13,6 +13,11 @@ import SweepingObstacleManager from '../ASLevel/ObstacleManager/SweepingObstacle
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
 import NeonusLoadingScreen from '../LoadingScreens/NeonusLoadingScreen/NeonusLoadingScreen';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
+import FrameManager from '../../../Kernel/engines/GraphicEngine/FrameManager';
+import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager';
+import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
+import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
+import LoadingScreen from '../LoadingScreen/LoadingScreen';
 
 /**
  * The Lars level
@@ -23,11 +28,21 @@ export default class Lars extends ASLevel<RockBall>
     private _sweepingRockBalls:RockBall[]; // The sweeping Rock Ball obstacles that the level will use (not for patterns)
     private _staticRockBalls:RockBall[]; // The Rock Ball obstacles to use when creating patterns
     
-    constructor()
+    /**
+     * Constructor
+     * @param frameManager The frame manager for the level
+     * @param modelEventManager Manages the event monitoring between models
+     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param keyboardEventManager Manages any keyboard events
+     */
+    constructor(
+        frameManager:IFrameManager,
+        modelEventManager:IModelEventManager,
+        pointerEventManager:IPointerEventManager,
+        keyboardEventManager:IKeyboardEventManager
+    )
 	{
-		super();
-        
-        this.NextLevelLoadingScreen = NeonusLoadingScreen;
+		super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
         this.roadColor = "#9E8C8C";
         this.obstacleManagers = [
@@ -76,20 +91,11 @@ export default class Lars extends ASLevel<RockBall>
     }
     
     /**
-     * Loads and sets up the level
-     * @param frameManager The frame manager for the level
-     * @param modelEventManager Manages the event monitoring between models
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
-     * @param keyboardEventManager Manages any keyboard events
+     * Loads the level's assets
      */
-	load(
-        frameManager:IFrameManager,
-        modelEventManager:IModelEventManager,
-        pointerEventManager:IPointerEventManager,
-        keyboardEventManager:IKeyboardEventManager
-    ):void
+	load():void
 	{
-		super.load(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
+		super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
@@ -176,6 +182,19 @@ export default class Lars extends ASLevel<RockBall>
         
         // Run the closing sequence
         this.levelEndSection(249);
+    }
+    
+    /**
+     * Constructs the loading screen for the next level
+     */
+    protected getNextLevelLoadingScreen():LoadingScreen
+    {
+        return new NeonusLoadingScreen(
+            new FrameManager(),
+            new ModelEventManager(),
+            new PointerEventManager(Kernel.getInstance().canvasContext.canvas),
+            new KeyboardEventManager()
+        );
     }
     
     /**
