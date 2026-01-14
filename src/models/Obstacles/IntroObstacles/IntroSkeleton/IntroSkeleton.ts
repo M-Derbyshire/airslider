@@ -1,3 +1,4 @@
+import IModelAnimationsManager from "../../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager";
 import Kernel from "../../../../../Kernel/Kernel";
 import ASLevel from "../../../../levels/ASLevel/ASLevel";
 import Skeleton from "../../Skeleton/Skeleton";
@@ -38,9 +39,9 @@ export default class IntroSkeleton extends Skeleton implements IIntroObstacle
     // Which edge of the level should this skeleton start on?
     private _startPosition:skeletonStartPosition;
     
-    constructor(startPosition:skeletonStartPosition)
+    constructor(startPosition:skeletonStartPosition, modelAnimationsManager:IModelAnimationsManager)
     {
-        super("static", 0, 0);
+        super(modelAnimationsManager, "static", 0, 0);
         
         this._maxSweepCount = 3;
         this._sweepingStartZPosition = 70;

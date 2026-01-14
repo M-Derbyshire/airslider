@@ -18,10 +18,11 @@ export default class ElectricSeahorse extends Monster {
      * Constructor
      * @param leftLightningModel The lightning attack, for the left side
      * @param rightLightningModel The lightning attack, for the right side
+     * @param modelAnimationsManager manages the animations for the model
      */
-    constructor(leftLightningModel:Lightning, rightLightningModel:Lightning)
+    constructor(leftLightningModel:Lightning, rightLightningModel:Lightning, modelAnimationsManager:IModelAnimationsManager)
     {
-        super();
+        super(modelAnimationsManager);
         
         this._leftLightningModel = leftLightningModel;
         this._rightLightningModel = rightLightningModel;
@@ -29,9 +30,9 @@ export default class ElectricSeahorse extends Monster {
         this._wingSoundKey = "/models/monsters/ElectricSeahorse/sounds/flap.mp3";
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

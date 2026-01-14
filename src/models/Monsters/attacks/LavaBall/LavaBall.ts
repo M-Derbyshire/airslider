@@ -15,18 +15,19 @@ export default class LavaBall extends ASModel {
     /**
      * Constructor
      * @param playerModel The player's model
+     * @param modelAnimationsManager manages the animations for the model
      */
-    constructor(playerModel:Tarian)
+    constructor(playerModel:Tarian, modelAnimationsManager:IModelAnimationsManager)
     {
-        super();
+        super(modelAnimationsManager);
         
         this.playerModel = playerModel;
         this.damageDealt = 10;
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

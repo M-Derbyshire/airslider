@@ -1,5 +1,4 @@
 import { IDrawDimensions, IDrawPositions, ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
-import IModelAnimationsManager from "./ModelAnimationsManager/IModelAnimationsManager";
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)
@@ -86,10 +85,9 @@ export default interface IModel {
     act():void;
     
     /**
-     * Loads and sets up the model 
-     * @param animationManager The animation manager for the model
+     * Loads the assets for the model
      */
-    load(animationManager:IModelAnimationsManager):void;
+    load():void;
     
     /**
      * Prepares the model, before the gameplay starts

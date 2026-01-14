@@ -1,3 +1,4 @@
+import IModelAnimationsManager from "../../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager";
 import Kernel from "../../../../../Kernel/Kernel";
 import ASLevel from "../../../../levels/ASLevel/ASLevel";
 import Jellyfish from "../../Jellyfish/Jellyfish";
@@ -14,10 +15,11 @@ export default class IntroJellyfish extends Jellyfish implements IIntroObstacle
     
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      */
-    constructor()
+    constructor(modelAnimationsManager:IModelAnimationsManager)
     {
-        super("static", 0, 0);
+        super(modelAnimationsManager, "static", 0, 0);
     }
     
     prepare():void {

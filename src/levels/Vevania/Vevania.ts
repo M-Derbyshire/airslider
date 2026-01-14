@@ -18,6 +18,7 @@ import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager'
 import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
+import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 
 /**
  * The Vevania level
@@ -80,14 +81,14 @@ export default class Vevania extends ASLevel<Skeleton>
         const models = super.getModels() as ASModel[];
         
         this._introSkeletons = [
-            new IntroSkeleton("left"),
-            new IntroSkeleton("right")
+            new IntroSkeleton("left", new ModelAnimationsManager()),
+            new IntroSkeleton("right", new ModelAnimationsManager())
         ];
         models.push(...this._introSkeletons);
         
         this.monsters = [
-            new Ghost(this.player, "left"),
-            new Ghost(this.player, "right")
+            new Ghost(this.player, "left", new ModelAnimationsManager()),
+            new Ghost(this.player, "right", new ModelAnimationsManager())
         ];
         models.push(...this.monsters);
         
@@ -97,10 +98,10 @@ export default class Vevania extends ASLevel<Skeleton>
         
         const sweepSpeed = 1000;
         for(let i = 0; i < sweepingCount; i++)
-            this._sweepingSkeletons.push(new Skeleton("sweep", sweepSpeed, 0));
+            this._sweepingSkeletons.push(new Skeleton(new ModelAnimationsManager(), "sweep", sweepSpeed, 0));
         
         for(let i = 0; i < staticCount; i++)
-            this._staticSkeletons.push(new Skeleton("static", 0, 0));
+            this._staticSkeletons.push(new Skeleton(new ModelAnimationsManager(), "static", 0, 0));
         
         models.push(...this._sweepingSkeletons);
         models.push(...this._staticSkeletons);
@@ -110,7 +111,7 @@ export default class Vevania extends ASLevel<Skeleton>
         const homingZStart = 150;
         const homingXSpeed = 400;
         for(let i = 0; i < homingCount; i++)
-            this._homingSkeletons.push(new Skeleton("home", homingXSpeed, homingZStart, this.player));
+            this._homingSkeletons.push(new Skeleton(new ModelAnimationsManager(), "home", homingXSpeed, homingZStart, this.player));
         
         models.push(...this._homingSkeletons);
         

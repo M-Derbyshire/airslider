@@ -6,12 +6,13 @@ export default class GangMember extends Obstacle
 {
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      * @param mode The obstacle's mode
      * @param speedX The X-axis speed of the obstacle. This needs to be quite high (1000-2000+) for sweeping
      */
-    constructor(mode:"static"|"sweep", speedX:number)
+    constructor(modelAnimationsManager:IModelAnimationsManager, mode:"static"|"sweep", speedX:number)
     {
-        super(mode, 0, speedX, null);
+        super(modelAnimationsManager, mode, 0, speedX, null);
         
         this.damageDealt = 2;
         this.speedModifier = 3;
@@ -19,9 +20,9 @@ export default class GangMember extends Obstacle
         this.state = "forward";
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

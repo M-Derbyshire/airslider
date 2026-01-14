@@ -166,8 +166,14 @@ export default class Model implements IModel
         this._state = newValue;
     }
     
-    constructor()
+    /**
+     * Constructor
+     * @param modelAnimationsManager manages the animations for the model
+     */
+    constructor(modelAnimationsManager:IModelAnimationsManager)
     {
+        this.animationManager = modelAnimationsManager;
+        
         this.assetsToUnload = [];
         this.sounds = [];
     }
@@ -178,13 +184,9 @@ export default class Model implements IModel
     act():void {}
     
     /**
-     * Loads everything for the model 
-     * @param animationManager The animation manager for the model
+     * Loads the assets for the model
      */
-    load(animationManager:IModelAnimationsManager):void 
-    {
-        this.animationManager = animationManager;
-    }
+    load():void {}
     
     /**
      * Prepares the model, before the gameplay of the level starts

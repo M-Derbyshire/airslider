@@ -1,6 +1,7 @@
 import Model from '../../../Kernel/entities/Model/Model';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import Kernel from '../../../Kernel/Kernel';
+import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 
 /**
  * The game's base Model class
@@ -12,9 +13,13 @@ export default class ASModel extends Model
     
     protected spritesheet:HTMLImageElement; // The spritesheet for the model
     
-	constructor()
+	/**
+     * Constructor
+     * @param modelAnimationsManager manages the animations for the model
+     */
+    constructor(modelAnimationsManager:IModelAnimationsManager)
 	{
-		super();
+		super(modelAnimationsManager);
         
 		this.damageDealt = 0;
         this.canBeControlled = false;

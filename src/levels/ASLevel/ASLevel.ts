@@ -30,6 +30,7 @@ import FrameManager from '../../../Kernel/engines/GraphicEngine/FrameManager';
 import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
 import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager';
+import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 
 /**
  * The game's base Level class
@@ -187,13 +188,13 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         const centralState = Kernel.getInstance().centralState;
         
-        this.player = new Tarian();
+        this.player = new Tarian(new ModelAnimationsManager());
         centralState.set(CentralStateKey.PlayerModelIndex, stdModels.length);
         this.obstacleManagers.forEach(om => om.setPlayerModel(this.player));
         
-        this.startSign = new Sign("", this._signStartingZPosition, -1, true);
-        this._startSignDisplay = new SignDisplay(this.startSign);
-        this.finishSign = new Sign("FINISH", null, this._signStartingZPosition, false);
+        this.startSign = new Sign(new ModelAnimationsManager(), "", this._signStartingZPosition, -1, true);
+        this._startSignDisplay = new SignDisplay(new ModelAnimationsManager(), this.startSign);
+        this.finishSign = new Sign(new ModelAnimationsManager(), "FINISH", null, this._signStartingZPosition, false);
         
         this.groundManager.setDistancedModels([this.startSign, this.finishSign]);
         
@@ -202,7 +203,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         return [
             ...stdModels,
             this.player,
-            new TarianExplosion(this.player),
+            new TarianExplosion(new ModelAnimationsManager(), this.player),
             this.startSign,
             this._startSignDisplay,
             this.finishSign,

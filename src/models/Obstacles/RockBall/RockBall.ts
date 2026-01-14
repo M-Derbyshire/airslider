@@ -6,12 +6,13 @@ export default class RockBall extends Obstacle
 {
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      * @param mode The obstacle's mode
      * @param speedX The x speed of the obstacle. This needs to be quite high (1000-2000+) for sweeping
      */
-    constructor(mode:"static"|"sweep", speedX:number)
+    constructor(modelAnimationsManager:IModelAnimationsManager, mode:"static"|"sweep", speedX:number)
     {
-        super(mode, 0, speedX, null);
+        super(modelAnimationsManager, mode, 0, speedX, null);
         
         this.damageDealt = 2;
         this.state = "spin";
@@ -21,9 +22,9 @@ export default class RockBall extends Obstacle
         this.bounceDeceleration = 500;
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

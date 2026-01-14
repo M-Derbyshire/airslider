@@ -17,6 +17,7 @@ import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager'
 import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
+import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 
 /**
  * The Neonus level
@@ -65,14 +66,14 @@ export default class Neonus extends ASLevel<GangMember>
     {
         const models = super.getModels() as ASModel[];
         
-        const higherPidgeon = new NeonPidgeon();
-        const lowerPidgeon = new NeonPidgeon(higherPidgeon);
+        const higherPidgeon = new NeonPidgeon(new ModelAnimationsManager());
+        const lowerPidgeon = new NeonPidgeon(new ModelAnimationsManager(), higherPidgeon);
         this.monsters = [higherPidgeon, lowerPidgeon];
         models.push(...this.monsters);
         
-        const leftIntroGangMember = new IntroGangMember(false);
-        const rightIntroGangMember = new IntroGangMember(false);
-        const leadIntroGangMember = new IntroGangMember(true, leftIntroGangMember, rightIntroGangMember);
+        const leftIntroGangMember = new IntroGangMember(new ModelAnimationsManager(), false);
+        const rightIntroGangMember = new IntroGangMember(new ModelAnimationsManager(), false);
+        const leadIntroGangMember = new IntroGangMember(new ModelAnimationsManager(), true, leftIntroGangMember, rightIntroGangMember);
         
         this._introGangMembers = [
             leftIntroGangMember,
@@ -87,10 +88,10 @@ export default class Neonus extends ASLevel<GangMember>
         const sweepingXSpeed = 1000;
         
         for(let i = 0; i < sweepingCount; i++)
-            this._sweepingGangMembers.push(new GangMember("sweep", sweepingXSpeed));
+            this._sweepingGangMembers.push(new GangMember(new ModelAnimationsManager(), "sweep", sweepingXSpeed));
         
         for(let i = 0; i < staticCount; i++)
-            this._staticGangMembers.push(new GangMember("static", 0));
+            this._staticGangMembers.push(new GangMember(new ModelAnimationsManager(), "static", 0));
         
         models.push(...this._sweepingGangMembers);
         models.push(...this._staticGangMembers);

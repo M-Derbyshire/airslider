@@ -1,3 +1,4 @@
+import ModelAnimationsManager from "../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager";
 import Kernel from "../../../Kernel/Kernel";
 import Racer from "../../models/Racer/Racer";
 import { RacerColor } from "../../models/Racer/RacerColor";
@@ -141,9 +142,9 @@ export default class RacerManager
         const levelQuarter = this._levelWidth / 4;
         const zPosition = 70;
         
-        const leftRacer = new Racer(this._getRandomColor(), zPosition, levelQuarter);
-        const centerRacer = new Racer(this._getRandomColor(), zPosition + 10, levelQuarter * 2);
-        const rightRacer = new Racer(this._getRandomColor(), zPosition, levelQuarter * 3);
+        const leftRacer = new Racer(new ModelAnimationsManager(), this._getRandomColor(), zPosition, levelQuarter);
+        const centerRacer = new Racer(new ModelAnimationsManager(), this._getRandomColor(), zPosition + 10, levelQuarter * 2);
+        const rightRacer = new Racer(new ModelAnimationsManager(), this._getRandomColor(), zPosition, levelQuarter * 3);
         
         this._frontRacers = [
             leftRacer,
@@ -160,8 +161,8 @@ export default class RacerManager
         const levelQuarter = this._levelWidth / 4;
         const zPosition = 10;
         
-        const leftRacer = new Racer(this._getRandomColor(), zPosition, levelQuarter);
-        const rightRacer = new Racer(this._getRandomColor(), zPosition, levelQuarter * 3);
+        const leftRacer = new Racer(new ModelAnimationsManager(), this._getRandomColor(), zPosition, levelQuarter);
+        const rightRacer = new Racer(new ModelAnimationsManager(), this._getRandomColor(), zPosition, levelQuarter * 3);
         
         this._backRacers = [
             leftRacer,

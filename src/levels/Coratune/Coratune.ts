@@ -19,6 +19,7 @@ import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager'
 import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
+import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 
 /**
  * The Coratune level
@@ -69,7 +70,7 @@ export default class Coratune extends ASLevel<Jellyfish>
     {
         const models = super.getModels() as ASModel[];
         
-        this._introJellyfish = new IntroJellyfish();
+        this._introJellyfish = new IntroJellyfish(new ModelAnimationsManager());
         models.push(this._introJellyfish);
         
         // Setup the obstacles for the pattern and obstacle-manager
@@ -79,23 +80,25 @@ export default class Coratune extends ASLevel<Jellyfish>
         this._homingJellyfishInitialXSpeed = 450;
         
         for(let i = 0; i < centerHomingJellyfishCount; i++)
-            this._centerHomingJellyfish.push(new Jellyfish("home", this._homingJellyfishInitialXSpeed, homingZStart, this.player));
+            this._centerHomingJellyfish.push(
+                new Jellyfish(new ModelAnimationsManager(), "home", this._homingJellyfishInitialXSpeed, homingZStart, this.player)
+            );
         
         for(let i = 0; i < sidesHomingJellyfishCount; i++)
             this._sidesHomingJellyfish.push(
-                new Jellyfish("home", this._homingJellyfishInitialXSpeed, homingZStart, this.player)
+                new Jellyfish(new ModelAnimationsManager(), "home", this._homingJellyfishInitialXSpeed, homingZStart, this.player)
             );
         
         models.push(...this._centerHomingJellyfish);
         models.push(...this._sidesHomingJellyfish);
         
         // Setup the monster
-        const lighting1 = new Lightning();
-        const lighting2 = new Lightning();
+        const lighting1 = new Lightning(new ModelAnimationsManager());
+        const lighting2 = new Lightning(new ModelAnimationsManager());
         
         this.monsters = [
-            new ElectricSeahorse(lighting1, lighting2),
-            new ElectricSeahorse(lighting1, lighting2)
+            new ElectricSeahorse(lighting1, lighting2, new ModelAnimationsManager()),
+            new ElectricSeahorse(lighting1, lighting2, new ModelAnimationsManager())
         ];
         models.push(lighting1, lighting2, ...this.monsters);
         

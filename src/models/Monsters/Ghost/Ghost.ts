@@ -30,19 +30,20 @@ export default class Ghost extends Monster {
     
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      */
-    constructor(playerModel:IModel, startPosition:ghostStartPosition)
+    constructor(playerModel:IModel, startPosition:ghostStartPosition, modelAnimationsManager:IModelAnimationsManager)
     {
-        super();
+        super(modelAnimationsManager);
         
         this._damageDealtOriginal = 5;
         this._playerModel = playerModel;
         this._startPosition = startPosition;
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

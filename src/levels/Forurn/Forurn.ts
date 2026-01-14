@@ -18,6 +18,7 @@ import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager'
 import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
+import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 
 /**
  * The Forurn level
@@ -61,7 +62,7 @@ export default class Forurn extends ASLevel<Snake>
         const models = super.getModels() as ASModel[];
         
         // Setup the monster
-        const monster = new ElectricHornet();
+        const monster = new ElectricHornet(new ModelAnimationsManager());
         this.monsters = [monster];
         models.push(monster);
         
@@ -70,12 +71,12 @@ export default class Forurn extends ASLevel<Snake>
         
         const snakes:Obstacle[] = [];
         for(let i = 0; i < totalSnakeCount; i++)
-            snakes.push(new Snake());
+            snakes.push(new Snake(new ModelAnimationsManager()));
         
         models.push(...snakes);
         this._snakes = snakes;
         
-        this._introSnake = new IntroSnake();
+        this._introSnake = new IntroSnake(new ModelAnimationsManager());
         models.push(this._introSnake);
         
         return models;

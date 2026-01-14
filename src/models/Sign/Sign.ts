@@ -50,14 +50,21 @@ export default class Sign extends ASModel
     
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      * @param displayText Text to display on the sign
      * @param startPosition The starting z position of the sign (if this is null, it should be set to the vanishing point depth in prepare())
      * @param targetPosition The z position that the sign should stop moving at
      * @param active Should the sign be active initially?
      */
-    constructor(displayText:string, startPosition:number|null, targetPosition:number, active:boolean)
+    constructor(
+        modelAnimationsManager:IModelAnimationsManager,
+        displayText:string,
+        startPosition:number|null,
+        targetPosition:number,
+        active:boolean
+    )
     {
-        super();
+        super(modelAnimationsManager);
         
         this._textToDisplay = displayText;
         
@@ -67,9 +74,9 @@ export default class Sign extends ASModel
         this._initialActiveStatus = active;
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

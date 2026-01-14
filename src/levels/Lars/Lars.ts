@@ -18,6 +18,7 @@ import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager'
 import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
 import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
+import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 
 /**
  * The Lars level
@@ -59,9 +60,9 @@ export default class Lars extends ASLevel<RockBall>
         const models = super.getModels() as ASModel[];
         
         // Setup the monster
-        const lavaBall1 = new LavaBall(this.player);
-        const lavaBall2 = new LavaBall(this.player);
-        const monster = new BabyDragon(lavaBall1, lavaBall2);
+        const lavaBall1 = new LavaBall(this.player, new ModelAnimationsManager());
+        const lavaBall2 = new LavaBall(this.player, new ModelAnimationsManager());
+        const monster = new BabyDragon(lavaBall1, lavaBall2, new ModelAnimationsManager());
         this.monsters = [monster];
         models.push(monster);
         models.push(lavaBall1, lavaBall2);
@@ -74,17 +75,20 @@ export default class Lars extends ASLevel<RockBall>
         const sweepingXSpeed = 1000;
         
         for(let i = 0; i < totalStaticBallCount; i++)
-            staticBalls.push(new RockBall("static", 0));
+            staticBalls.push(new RockBall(new ModelAnimationsManager(), "static", 0));
         
         for(let i = 0; i < totalSweepingBallCount; i++)
-            sweepingBalls.push(new RockBall("sweep", sweepingXSpeed));
+            sweepingBalls.push(new RockBall(new ModelAnimationsManager(), "sweep", sweepingXSpeed));
         
         models.push(...staticBalls);
         this._staticRockBalls = staticBalls;
         models.push(...sweepingBalls);
         this._sweepingRockBalls = sweepingBalls;
         
-        this._introRockBalls = [new IntroRockBall("left"), new IntroRockBall("right")];
+        this._introRockBalls = [
+            new IntroRockBall("left", new ModelAnimationsManager()),
+            new IntroRockBall("right", new ModelAnimationsManager())
+        ];
         models.push(...this._introRockBalls);
         
         return models;

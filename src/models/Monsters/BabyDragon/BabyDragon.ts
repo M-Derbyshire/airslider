@@ -22,10 +22,11 @@ export default class BabyDragon extends Monster
      * Constructor
      * @param lavaBall1 The model of the first lava ball
      * @param lavaBall2 The model of the second lava ball
+     * @param modelAnimationsManager manages the animations for the model
      */
-    constructor(lavaBall1:LavaBall, lavaBall2:LavaBall)
+    constructor(lavaBall1:LavaBall, lavaBall2:LavaBall, modelAnimationsManager:IModelAnimationsManager)
     {
-        super();
+        super(modelAnimationsManager);
         
         this._lavaBalls = [lavaBall1, lavaBall2];
         
@@ -41,9 +42,9 @@ export default class BabyDragon extends Monster
             : this._nextLavaBallIndex + 1;
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

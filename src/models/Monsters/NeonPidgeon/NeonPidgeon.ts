@@ -37,11 +37,12 @@ export default class NeonPidgeon extends Monster {
     
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      * @param higherPidgeon The pidgeon that will be above this pidgeon (if this pidgeon is the lower one)
      */
-    constructor(higherPidgeon?:NeonPidgeon)
+    constructor(modelAnimationsManager:IModelAnimationsManager, higherPidgeon?:NeonPidgeon)
     {
-        super();
+        super(modelAnimationsManager);
         
         this._higherPidgeonModel = higherPidgeon;
         
@@ -57,9 +58,9 @@ export default class NeonPidgeon extends Monster {
             : this._lowerPidgeonSteadyY;
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

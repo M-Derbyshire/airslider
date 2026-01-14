@@ -1,3 +1,4 @@
+import IModelAnimationsManager from "../../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager";
 import Kernel from "../../../../../Kernel/Kernel";
 import ASLevel from "../../../../levels/ASLevel/ASLevel";
 import RockBall from "../../RockBall/RockBall";
@@ -24,10 +25,11 @@ export default class IntroRockBall extends RockBall implements IIntroObstacle
     /**
      * Constructor
      * @param side which side of the level should this ball come from?
+     * @param modelAnimationsManager manages the animations for the model
      */
-    constructor(side:rockBallEntranceSide)
+    constructor(side:rockBallEntranceSide, modelAnimationsManager:IModelAnimationsManager)
     {
-        super("static", 0);
+        super(modelAnimationsManager, "static", 0);
         
         this._side = side;
         this._exitZSpeed = 20;

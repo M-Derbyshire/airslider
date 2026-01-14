@@ -20,11 +20,12 @@ export default class SignDisplay extends ASModel
     
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      * @param sign the Sign that this display is "attached" to
      */
-    constructor(sign:Sign)
+    constructor(modelAnimationsManager:IModelAnimationsManager, sign:Sign)
     {
-        super();
+        super(modelAnimationsManager);
         
         this._sign = sign;
         
@@ -35,9 +36,9 @@ export default class SignDisplay extends ASModel
         this._startBeepKey = "/models/SignDisplay/sounds/countdown_go.mp3";
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

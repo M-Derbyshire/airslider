@@ -4,6 +4,7 @@ import ASModel from "../ASModel/ASModel";
 import Tarian from "../Tarian/Tarian";
 import UnitHelper from "../../../Kernel/utils/UnitHelper";
 import { IHitBox } from "../../../Kernel/entities/Model/IModel";
+import IModelAnimationsManager from "../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager";
 
 /**
  * Base class for obstacles, that move down the track to hit the player
@@ -72,15 +73,22 @@ export default class Obstacle extends ASModel
     
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      * @param mode The obstacle's mode
      * @param homingZStart At what z position should the homing movement begin (in "home" mode)?
      * @param speedX The x speed of the obstacle. This needs to be quite high (1000-2000+) for sweeping, but 
      * much less for the homing
      * @param playerModel The player model. This can be null, as it is only needed for "home" mode
      */
-    constructor(mode:obstacleModes, homingZStart?:number, speedX:number = 0, playerModel:Tarian|null = null)
+    constructor(
+        modelAnimationsManager:IModelAnimationsManager,
+        mode:obstacleModes,
+        homingZStart?:number,
+        speedX:number = 0,
+        playerModel:Tarian|null = null
+    )
     {
-        super();
+        super(modelAnimationsManager);
         
         this._mode = mode;
         

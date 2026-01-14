@@ -43,16 +43,20 @@ export default class Tarian extends ASModel {
     private _accl:number; // The x speed accelaration
     private _deaccl:number; // The x speed de-accelaration
     
-    constructor()
+    /**
+     * Constructor
+     * @param modelAnimationsManager manages the animations for the model
+     */
+    constructor(modelAnimationsManager:IModelAnimationsManager)
     {
-        super();
+        super(modelAnimationsManager);
         
         this._lostZSpeed = 35; 
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

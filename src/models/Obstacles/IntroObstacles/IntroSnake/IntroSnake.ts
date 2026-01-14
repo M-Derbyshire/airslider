@@ -1,3 +1,4 @@
+import IModelAnimationsManager from "../../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager";
 import Kernel from "../../../../../Kernel/Kernel";
 import UnitHelper from "../../../../../Kernel/utils/UnitHelper";
 import ASLevel from "../../../../levels/ASLevel/ASLevel";
@@ -41,9 +42,13 @@ export default class IntroSnake extends Snake implements IIntroObstacle
     private _maxDriftCount:number;
     private _currentDriftCount:number;
     
-    constructor()
+    /**
+     * Constructor
+     * @param modelAnimationsManager manages the animations for the model
+     */
+    constructor(modelAnimationsManager:IModelAnimationsManager)
     {
-        super();
+        super(modelAnimationsManager);
         
         this._entranceXSpeed = 250;
         this._entranceZSpeed = 200;

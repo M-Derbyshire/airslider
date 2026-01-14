@@ -6,20 +6,23 @@ import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimati
  */
 export default class {: name :} extends Model
 {
-    constructor()
+    /**
+     * Constructor
+     * @param modelAnimationsManager manages the animations for the model
+     */
+    constructor(modelAnimationsManager:IModelAnimationsManager)
 	{
-		super();
+		super(modelAnimationsManager);
         
 		// Handle construction here
 	}
     
     /**
-     * Loads everything for the model 
-     * @param animationManager The animation manager for the model
+     * Loads the assets for the model
      */
-    load(animationManager:IModelAnimationsManager):void 
+    load():void 
     {
-        super.load(animationManager)
+        super.load()
         
         // Handle loading any assets here
         

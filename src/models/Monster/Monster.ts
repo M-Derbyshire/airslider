@@ -1,3 +1,4 @@
+import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Kernel from '../../../Kernel/Kernel';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import { CentralStateKey } from '../../levels/CentralStateKey';
@@ -41,10 +42,11 @@ export default class Monster extends ASModel {
     
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      */
-    constructor()
+    constructor(modelAnimationsManager:IModelAnimationsManager)
     {
-        super();
+        super(modelAnimationsManager);
         
         this.actions = [];
     }

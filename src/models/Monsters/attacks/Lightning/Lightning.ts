@@ -1,6 +1,5 @@
 import Kernel from '../../../../../Kernel/Kernel';
 import ASModel from '../../../ASModel/ASModel';
-import IModelAnimationsManager from '../../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import { IHitBox } from '../../../../../Kernel/entities/Model/IModel';
 
 /**
@@ -13,9 +12,9 @@ export default class Lightning extends ASModel {
     private _damageValue:number; // this.damageDealt is calculated every frame using this (see the act() method)
     private _hitBoxGracePadding:number; // this is used to decrease the width of the hitbox, to allow some overlap
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

@@ -20,10 +20,11 @@ export default class TarianExplosion extends ASModel {
     
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      * @param playerModel The model of the player
      */
-    constructor(playerModel:Tarian) {
-        super();
+    constructor(modelAnimationsManager:IModelAnimationsManager, playerModel:Tarian) {
+        super(modelAnimationsManager);
         
         this._player = playerModel;
         
@@ -35,9 +36,9 @@ export default class TarianExplosion extends ASModel {
         this._alarmSoundKey = "/models/TarianExplosion/sounds/alarm.mp3";
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

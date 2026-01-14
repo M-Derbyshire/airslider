@@ -15,13 +15,14 @@ export default class Racer extends ASModel
     
     /**
      * Constructor
-     * 
+     * @param modelAnimationsManager manages the animations for the model
+     * @param color the color of the racer
      * @param zPosition The initial z position of the model
      * @param xCenterPosition The x position that the model should be initially centered at
      */
-    constructor(color:RacerColor, zPosition:number, xCenterPosition:number)
+    constructor(modelAnimationsManager:IModelAnimationsManager, color:RacerColor, zPosition:number, xCenterPosition:number)
 	{
-		super();
+		super(modelAnimationsManager);
         
         this._color = color;
         this._initialXCenter = xCenterPosition;
@@ -29,12 +30,11 @@ export default class Racer extends ASModel
 	}
     
     /**
-     * Loads everything for the model 
-     * @param animationManager The animation manager for the model
+     * Loads the assets for the model
      */
-    load(animationManager:IModelAnimationsManager):void 
+    load():void 
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

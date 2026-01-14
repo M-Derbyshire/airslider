@@ -7,18 +7,19 @@ export default class Snake extends Obstacle
 {
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      */
-    constructor()
+    constructor(modelAnimationsManager:IModelAnimationsManager)
     {
-        super("static", 0, 0, null);
+        super(modelAnimationsManager, "static", 0, 0, null);
         
         this.damageDealt = 2;
         this.state = "slither";
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

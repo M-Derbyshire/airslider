@@ -1,3 +1,4 @@
+import IModelAnimationsManager from "../../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager";
 import Kernel from "../../../../../Kernel/Kernel";
 import ASLevel from "../../../../levels/ASLevel/ASLevel";
 import GangMember from "../../GangMember/GangMember";
@@ -29,9 +30,14 @@ export default class IntroGangMember extends GangMember implements IIntroObstacl
     
     private _sweepingXSpeed:number; // The speed of the X-axis movement, when the model is sweeping
     
-    constructor(isLeader:boolean, leftFollower?:IntroGangMember, rightFollower?:IntroGangMember)
+    constructor(
+        modelAnimationsManager:IModelAnimationsManager,
+        isLeader:boolean,
+        leftFollower?:IntroGangMember,
+        rightFollower?:IntroGangMember
+    )
     {
-        super("static", 0);
+        super(modelAnimationsManager, "static", 0);
         
         this._isLeader = isLeader;
         

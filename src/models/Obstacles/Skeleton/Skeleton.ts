@@ -7,14 +7,21 @@ export default class Skeleton extends Obstacle
 {
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      * @param mode The obstacle's mode
      * @param speedX The X-axis speed of the obstacle. This needs to be quite high (1000-2000+) for sweeping
      * @param homingZStart At what Z-axis position should the homing movement begin (in "home" mode)?
      * @param playerModel The player model. This can be null, as it is only needed for "home" mode
      */
-    constructor(mode:obstacleModes, speedX:number, homingZStart:number, playerModel:Tarian|null = null)
+    constructor(
+        modelAnimationsManager:IModelAnimationsManager,
+        mode:obstacleModes,
+        speedX:number,
+        homingZStart:number,
+        playerModel:Tarian|null = null
+    )
     {
-        super(mode, homingZStart, speedX, playerModel);
+        super(modelAnimationsManager, mode, homingZStart, speedX, playerModel);
         
         this.damageDealt = 2;
         this.state = "moving";
@@ -24,9 +31,9 @@ export default class Skeleton extends Obstacle
         this.bounceDeceleration = 250;
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

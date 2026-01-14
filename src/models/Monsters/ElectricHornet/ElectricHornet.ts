@@ -18,19 +18,20 @@ export default class ElectricHornet extends Monster {
     
     /**
      * Constructor
+     * @param modelAnimationsManager manages the animations for the model
      */
-    constructor()
+    constructor(modelAnimationsManager:IModelAnimationsManager)
     {
-        super();
+        super(modelAnimationsManager);
         
         this.damageDealt = 10;
         
         this._buzzSoundKey = "/models/monsters/ElectricHornet/sounds/buzz.mp3";
     }
     
-    load(animationManager:IModelAnimationsManager):void
+    load():void
     {
-        super.load(animationManager);
+        super.load();
         
         const assetHandler = Kernel.getInstance().assetHandler;
         

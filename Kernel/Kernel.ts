@@ -12,7 +12,6 @@ import IModel from './entities/Model/IModel';
 import ICamera from './engines/GraphicEngine/ICamera';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';
 import ErrorHandler from './ErrorHandler/ErrorHandler';
-import ModelAnimationsManager from './entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 
 /**
  * This is a singleton that controls the running of the game, and provides other entities with 
@@ -429,10 +428,8 @@ export default class Kernel implements IKernel {
     private _loadModels(models:IModel[]):void
 	{
         models.forEach((model, idx) => {
-            const animationsManager = new ModelAnimationsManager();
-            
             model.loadedIndex = idx;
-            model.load(animationsManager);
+            model.load();
         });
 	}
     
