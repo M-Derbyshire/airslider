@@ -10,11 +10,9 @@ import IAssetHandler from './AssetHandler/IAssetHandler';
 import ILevel from './entities/Level/ILevel';
 import IModel from './entities/Model/IModel';
 import ICamera from './engines/GraphicEngine/ICamera';
-import IFrameManager from './engines/GraphicEngine/IFrameManager';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';
 import ErrorHandler from './ErrorHandler/ErrorHandler';
 import ModelAnimationsManager from './entities/Model/ModelAnimationsManager/ModelAnimationsManager';
-import IGraphicEngine from './engines/GraphicEngine/IGraphicEngine';
 
 /**
  * This is a singleton that controls the running of the game, and provides other entities with 
@@ -312,7 +310,7 @@ export default class Kernel implements IKernel {
         
         const engines = this._initialiseAllEngines(level, loadedModels, camera); // New engines, set up for this level
         
-        this._loadModels(loadedModels, engines.graphicEngine);
+        this._loadModels(loadedModels);
         
         this._levelQueue.push({ 
             level, 
@@ -427,12 +425,11 @@ export default class Kernel implements IKernel {
     /**
      * Loads the given models
      * @param models the models to be loaded
-     * @param graphicEngine the graphic engine that is used by the level that provided these models
      */
-    private _loadModels(models:IModel[], graphicEngine:IGraphicEngine):void
+    private _loadModels(models:IModel[]):void
 	{
         models.forEach((model, idx) => {
-            const animationsManager = new ModelAnimationsManager(this._assetHandler, this._canvasContext, graphicEngine);
+            const animationsManager = new ModelAnimationsManager();
             
             model.loadedIndex = idx;
             model.load(animationsManager);

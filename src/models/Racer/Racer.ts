@@ -1,6 +1,7 @@
 import ASModel from '../ASModel/ASModel';
 import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import { RacerColor } from './RacerColor';
+import Kernel from '../../../Kernel/Kernel';
 
 /**
  * A racer on the track
@@ -35,7 +36,10 @@ export default class Racer extends ASModel
     {
         super.load(animationManager);
         
+        const assetHandler = Kernel.getInstance().assetHandler;
+        
         const spritesheetPath = "/models/Racer/anim/racers-spritesheet.png";
+        this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
         // All the frames share the same width/height.
         const frameWidth = 92;
@@ -54,7 +58,7 @@ export default class Racer extends ASModel
         
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath, 
+                spritesheet: this.spritesheet,
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,

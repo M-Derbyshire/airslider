@@ -139,9 +139,9 @@ export interface IAnimation {
  */
 export interface IAnimationDetails {
     /**
-     * The file path to the spritesheet
+     * The spritesheet for this animation
      */
-    sheetPath:string;
+    spritesheet:HTMLImageElement;
     
     /**
      * The Frames Per Second that this animation should play at

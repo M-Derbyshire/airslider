@@ -10,6 +10,8 @@ export default class ASModel extends Model
     damageDealt:number; // If this model can do damage to the player, this is how much health is lost
     canBeControlled:boolean; // Can this model be controlled?
     
+    protected spritesheet:HTMLImageElement; // The spritesheet for the model
+    
 	constructor()
 	{
 		super();

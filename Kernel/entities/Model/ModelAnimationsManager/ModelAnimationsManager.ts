@@ -8,10 +8,6 @@ import { IHitBox } from '../IModel';
  * Manages a model's animations
  */
 export default class ModelAnimationsManager implements IModelAnimationsManager {
-    private _assetHandler:IAssetHandler; // The game's asset handler
-    private _canvasCtx:CanvasRenderingContext2D; // The context of the canvas that the game is being drawn on
-    private _graphicEngine:IGraphicEngine; // The graphic engine used by the level
-    
     private _calculatedDrawPositions:IDrawPositions; // The calculated X/Y pixel values to be used when drawing the model
     private _calculatedDrawDimensions:IDrawDimensions; // The calculated width/height pixel values to be used when drawing the model
     
@@ -39,16 +35,9 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     
     /**
      * Constructor
-     * @param assetHandler The game's asset handler
-     * @param canvasCtx The context of the canvas that the game is being drawn on
-     * @param graphicEngine The graphic engine used by the level
      */
-    constructor(assetHandler:IAssetHandler, canvasCtx:CanvasRenderingContext2D, graphicEngine:IGraphicEngine)
+    constructor()
     {
-        this._assetHandler = assetHandler;
-        this._canvasCtx = canvasCtx;
-        this._graphicEngine = graphicEngine;
-        
         this._calculatedDrawPositions = {
             x: 0,
             y: 0
@@ -66,7 +55,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      * @returns The newly created animation
      */
     createAnimation({
-        sheetPath, 
+        spritesheet, 
         fps, 
         drawWidth, 
         drawHeight, 
@@ -77,7 +66,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     }:IAnimationDetails):IAnimation
     {
         let anim:IAnimation = {
-			spritesheet: this._assetHandler.loadImage(sheetPath),
+			spritesheet,
 			frameCoordinates,
             fps,
             waitCount: 0, // increased when waiting to move to the next frame
@@ -128,7 +117,9 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         if(this._calculatedDrawDimensions.height === 0 || this._calculatedDrawDimensions.width === 0)
             return;
         
-        this._canvasCtx.drawImage(
+        const canvasCtx = Kernel.getInstance().canvasContext;
+        
+        canvasCtx.drawImage(
             this.animations[animationName].spritesheet, 
 			nextFrameCoordinates.x,
 			nextFrameCoordinates.y,
@@ -148,7 +139,8 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     drawText(textContent:ITextContent, modelPosition:IDrawPositions&{z:number}):void
     {
-        this._graphicEngine.drawText(textContent, modelPosition, "scaled");
+        const graphicEngine = Kernel.getInstance().graphicEngine;
+        graphicEngine.drawText(textContent, modelPosition, "scaled");
     }
     
     /**
@@ -158,15 +150,17 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     drawHitBoxes(color:string, hitBoxes:IHitBox[]):void
     {
-        const originalStrokeColor = this._canvasCtx.strokeStyle;
-        this._canvasCtx.strokeStyle = color;
+        const canvasCtx = Kernel.getInstance().canvasContext;
+        
+        const originalStrokeColor = canvasCtx.strokeStyle;
+        canvasCtx.strokeStyle = color;
         
         hitBoxes.forEach(box => {
             const { x, y, width, height } = this._getDrawPositionsAndDimensions(box);
-            this._canvasCtx.strokeRect(x, y, width, height);
+            canvasCtx.strokeRect(x, y, width, height);
         });
         
-        this._canvasCtx.strokeStyle = originalStrokeColor;
+        canvasCtx.strokeStyle = originalStrokeColor;
     }
     
     /**
@@ -176,7 +170,8 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
 	private _getDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates):IDrawPositions&IDrawDimensions
 	{
-        return this._graphicEngine.getScaledDrawPositionsAndDimensions(modelCoordinates);
+        const graphicEngine = Kernel.getInstance().graphicEngine;
+        return graphicEngine.getScaledDrawPositionsAndDimensions(modelCoordinates);
 	}
 	
     /**

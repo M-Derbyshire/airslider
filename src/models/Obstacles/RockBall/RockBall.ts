@@ -29,6 +29,7 @@ export default class RockBall extends Obstacle
         
         const spritesheetPath = "/models/Obstacles/RockBall/anim/rockball-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
+        this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
         const coordinateDiameter = 300;
         const drawDiameter = 100;
@@ -44,14 +45,14 @@ export default class RockBall extends Obstacle
         
         this.animationManager.registerAnimations({
             broken: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: brokenFrameCoordinates,
                 fps: 1,
                 drawWidth: drawDiameter,
                 drawHeight: drawDiameter
             }),
             spin: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: this._getSpinAnimationFrameCoordinates(coordinateDiameter),
                 fps: 15,
                 drawWidth: drawDiameter,

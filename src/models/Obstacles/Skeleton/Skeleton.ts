@@ -32,6 +32,7 @@ export default class Skeleton extends Obstacle
         
         const spritesheetPath = "/models/Obstacles/Skeleton/anim/skeleton-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
+        this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
         const coordinateWidth = 200;
         const coordinateHeight = 451;
@@ -40,7 +41,7 @@ export default class Skeleton extends Obstacle
         
         this.animationManager.registerAnimations({
             broken: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: [
                     {
                         x: 0,
@@ -54,7 +55,7 @@ export default class Skeleton extends Obstacle
                 drawHeight
             }),
             moving: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: this._getMovingAnimationFrameCoordinates(coordinateWidth, coordinateHeight),
                 fps: 12,
                 drawWidth,

@@ -24,6 +24,7 @@ export default class Snake extends Obstacle
         
         const spritesheetPath = "/models/Obstacles/Snake/anim/snake-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
+        this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
         const coordinateWidth = 200;
         const coordinateHeight = 476;
@@ -68,14 +69,14 @@ export default class Snake extends Obstacle
         
         this.animationManager.registerAnimations({
             slither: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: slitherFrameCoordinates,
                 fps: 24,
                 drawWidth,
                 drawHeight
             }),
             dead: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: deadFrameCoordinates,
                 fps: 1,
                 drawWidth,

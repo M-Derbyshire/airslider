@@ -27,6 +27,7 @@ export default class GangMember extends Obstacle
         
         const spritesheetPath = "/models/Obstacles/GangMember/anim/spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
+        this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
         // There are 2 states: "forward" and "fallen"
         const forwardCoordinateWidth = 94;
@@ -77,14 +78,14 @@ export default class GangMember extends Obstacle
         
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: forwardFrameCoordinates,
                 fps: 24,
                 drawWidth: forwardDrawWidth,
                 drawHeight: forwardDrawHeight
             }),
             fallen: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: fallenFrameCoordinates,
                 fps: 1,
                 drawWidth: fallenDrawWidth,

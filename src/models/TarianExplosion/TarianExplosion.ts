@@ -48,9 +48,12 @@ export default class TarianExplosion extends ASModel {
             asset: alarmSound
         });
         
+        const sheetPath = "/models/TarianExplosion/anim/TarianExplosion.png";
+        this.spritesheet = assetHandler.loadImage(sheetPath);
+        
         // Keeping a reference to this, as we want to change the draw width/height dynamically
         this._animFrame = this.animationManager.createAnimation({
-            sheetPath: "/models/TarianExplosion/anim/TarianExplosion.png", 
+            spritesheet: this.spritesheet, 
             fps: 24,
             drawWidth: 0,
             drawHeight: 0,

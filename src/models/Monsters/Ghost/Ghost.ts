@@ -52,10 +52,11 @@ export default class Ghost extends Monster {
         
         const spritesheetPath = "/models/monsters/Ghost/anim/ghost-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
+        this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
         this.animationManager.registerAnimations({
             normal: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 fps: 24,
                 drawWidth: 175,
                 drawHeight: 170,

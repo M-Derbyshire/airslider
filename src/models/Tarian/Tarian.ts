@@ -54,12 +54,15 @@ export default class Tarian extends ASModel {
     {
         super.load(animationManager);
         
+        const assetHandler = Kernel.getInstance().assetHandler;
+        
         // Not adding this to assetsToUnload, as this is used on every level
         const spritesheetPath = "/models/Tarian/anim/tarian-spritesheet.png";
+        this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath, 
+                spritesheet: this.spritesheet, 
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,
@@ -71,7 +74,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             left: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath, 
+                spritesheet: this.spritesheet,
                 fps: 24, 
                 drawWidth: 170, 
                 drawHeight: 170, 
@@ -84,7 +87,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             right: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath, 
+                spritesheet: this.spritesheet,
                 fps: 24,
                 drawWidth: 170,
                 drawHeight: 170,
@@ -97,7 +100,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             breaking: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,
@@ -129,7 +132,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             lost: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath, 
+                spritesheet: this.spritesheet,
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,

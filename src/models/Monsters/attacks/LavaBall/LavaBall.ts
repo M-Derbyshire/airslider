@@ -35,10 +35,11 @@ export default class LavaBall extends ASModel {
         
         const spritesheetPath = "/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
+        this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
         this.animationManager.registerAnimations({
             drop: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 fps: 24,
                 drawWidth: ballWidth,
                 drawHeight: ballHeight,
@@ -47,7 +48,7 @@ export default class LavaBall extends ASModel {
 				]
             }),
             break: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 fps: 24,
                 drawWidth: ballWidth,
                 drawHeight: ballHeight,
@@ -60,7 +61,7 @@ export default class LavaBall extends ASModel {
 				]
             }),
             none: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 fps: 24,
                 drawWidth: 0,
                 drawHeight: 0,

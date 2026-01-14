@@ -55,6 +55,7 @@ export default class SignDisplay extends ASModel
         });
         
         const sheetPath = "/models/SignDisplay/anim/display_open_spritesheet.png";
+        this.spritesheet = assetHandler.loadImage(sheetPath);
         
         const width = 527;
         const height = 113;
@@ -63,7 +64,7 @@ export default class SignDisplay extends ASModel
         
         this.animationManager.registerAnimations({
             off: this.animationManager.createAnimation({
-                sheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: [
                     { x: 0, y: 0, width, height }
                 ],
@@ -72,7 +73,7 @@ export default class SignDisplay extends ASModel
                 drawHeight
             }),
             one: this.animationManager.createAnimation({
-                sheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: [
                     { x: 0, y: 114, width, height }
                 ],
@@ -81,7 +82,7 @@ export default class SignDisplay extends ASModel
                 drawHeight
             }),
             two: this.animationManager.createAnimation({
-                sheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: [
                     { x: 0, y: 228, width, height }
                 ],
@@ -90,7 +91,7 @@ export default class SignDisplay extends ASModel
                 drawHeight
             }),
             three: this.animationManager.createAnimation({
-                sheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: [
                     { x: 0, y: 342, width, height }
                 ],
@@ -99,7 +100,7 @@ export default class SignDisplay extends ASModel
                 drawHeight
             }),
             go: this.animationManager.createAnimation({
-                sheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: [
                     { x: 0, y: 456, width, height }
                 ],
@@ -108,7 +109,7 @@ export default class SignDisplay extends ASModel
                 drawHeight
             }),
             finished: this.animationManager.createAnimation({
-                sheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: [
                     { x: 0, y: 456, width, height }
                 ],

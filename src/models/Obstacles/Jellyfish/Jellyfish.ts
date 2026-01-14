@@ -29,6 +29,7 @@ export default class Jellyfish extends Obstacle
         
         const spritesheetPath = "/models/Obstacles/Jellyfish/anim/spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
+        this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
         const coordinateWidth = 332;
         const coordinateHeight = 481;
@@ -37,7 +38,7 @@ export default class Jellyfish extends Obstacle
         
         this.animationManager.registerAnimations({
             splatter: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: [
                     {
                         x: 0,
@@ -51,7 +52,7 @@ export default class Jellyfish extends Obstacle
                 drawHeight
             }),
             moving: this.animationManager.createAnimation({
-                sheetPath: spritesheetPath,
+                spritesheet: this.spritesheet,
                 frameCoordinates: this._getMovingAnimationFrameCoordinates(coordinateWidth, coordinateHeight),
                 fps: 30,
                 drawWidth,
