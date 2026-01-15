@@ -63,6 +63,11 @@ export default class Tarian extends ASModel {
         // Not adding this to assetsToUnload, as this is used on every level
         const spritesheetPath = "/models/Tarian/anim/tarian-spritesheet.png";
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
         
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({

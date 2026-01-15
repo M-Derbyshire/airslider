@@ -30,6 +30,15 @@ export default class GangMember extends Obstacle
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
+        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/standard.png";
+        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
+        this.assetsToUnload.push(damageFlashImagePath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
+        
         // There are 2 states: "forward" and "fallen"
         const forwardCoordinateWidth = 94;
         const forwardCoordinateHeight = 120;
@@ -93,10 +102,6 @@ export default class GangMember extends Obstacle
                 drawHeight: fallenDrawHeight
             })
         });
-        
-        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/standard.png";
-        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
-        this.assetsToUnload.push(damageFlashImagePath);
     }
     
     prepare(): void {

@@ -90,6 +90,11 @@ export default interface IModel {
     load():void;
     
     /**
+     * Registers the animations for the model
+     */
+    registerAnimations():void;
+    
+    /**
      * Prepares the model, before the gameplay starts
      */
     prepare():void;

@@ -32,6 +32,16 @@ export default class {: name :} extends Model
     }
     
     /**
+     * Registers the animations for the model
+     */
+    registerAnimations():void
+    {
+        super.registerAnimations();
+        
+        // Register any model animations here, using the this.animationManager.registerAnimations method
+    }
+    
+    /**
      * Prepares the model, before the gameplay of the level starts
      */
     prepare():void

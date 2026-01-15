@@ -32,6 +32,15 @@ export default class RockBall extends Obstacle
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
+        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/fire.png";
+        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
+        this.assetsToUnload.push(damageFlashImagePath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
+        
         const coordinateDiameter = 300;
         const drawDiameter = 100;
         
@@ -60,10 +69,6 @@ export default class RockBall extends Obstacle
                 drawHeight: drawDiameter
             })
         });
-        
-        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/fire.png";
-        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
-        this.assetsToUnload.push(damageFlashImagePath);
     }
     
     act():void

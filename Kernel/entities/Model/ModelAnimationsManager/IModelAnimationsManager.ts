@@ -34,6 +34,11 @@ export default interface IModelAnimationsManager {
     registerAnimations(animations:AnimationsObject):void;
     
     /**
+     * Removes all animations from this manager
+     */
+    clearAllAnimations():void;
+    
+    /**
      * Calculates and stores the positions/dimensions to use when drawing the animation (these can be accessed via the
      * calculatedDrawPositions and calculatedDrawDimensions properties)
      * @param modelCoordinates the model's current coordinates, including its Z-axis position

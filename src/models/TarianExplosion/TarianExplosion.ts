@@ -51,6 +51,11 @@ export default class TarianExplosion extends ASModel {
         
         const sheetPath = "/models/TarianExplosion/anim/TarianExplosion.png";
         this.spritesheet = assetHandler.loadImage(sheetPath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
         
         // Keeping a reference to this, as we want to change the draw width/height dynamically
         this._animFrame = this.animationManager.createAnimation({

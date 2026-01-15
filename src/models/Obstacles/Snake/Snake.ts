@@ -27,6 +27,15 @@ export default class Snake extends Obstacle
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
+        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/standard.png";
+        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
+        this.assetsToUnload.push(damageFlashImagePath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
+        
         const coordinateWidth = 200;
         const coordinateHeight = 476;
         const drawWidth = 200;
@@ -84,10 +93,6 @@ export default class Snake extends Obstacle
                 drawHeight
             })
         });
-        
-        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/standard.png";
-        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
-        this.assetsToUnload.push(damageFlashImagePath);
     }
     
     prepare(): void {

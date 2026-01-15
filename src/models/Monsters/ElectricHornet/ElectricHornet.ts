@@ -47,6 +47,15 @@ export default class ElectricHornet extends Monster {
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
+        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/yellow.png";
+        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
+        this.assetsToUnload.push(damageFlashImagePath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
+        
         this.animationManager.registerAnimations({
             flapping: this.animationManager.createAnimation({
                 spritesheet: this.spritesheet,
@@ -59,10 +68,6 @@ export default class ElectricHornet extends Monster {
 				],
             })
         });
-        
-        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/yellow.png";
-        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
-        this.assetsToUnload.push(damageFlashImagePath);
     }
     
     prepare():void

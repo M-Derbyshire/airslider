@@ -64,9 +64,6 @@ export default class NeonPidgeon extends Monster {
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
-        const fullModelWidth = 337;
-        this._edgeOverflow = fullModelWidth / 2;
-        
         const damageFlashSpritesheet = "/HUDComponents/DamageFlash/images/standard.png";
         this.damageFlashImage = assetHandler.loadImage(damageFlashSpritesheet);
         this.assetsToUnload.push(damageFlashSpritesheet);
@@ -82,6 +79,14 @@ export default class NeonPidgeon extends Monster {
         const spritesheetPath = "/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
+        
+        const fullModelWidth = 337;
+        this._edgeOverflow = fullModelWidth / 2;
         
         this.animationManager.registerAnimations({
             falling: this.animationManager.createAnimation({

@@ -189,11 +189,17 @@ export default class Model implements IModel
     load():void {}
     
     /**
+     * Registers the animations for the model
+     */
+    registerAnimations():void {}
+    
+    /**
      * Prepares the model, before the gameplay of the level starts
      */
     prepare():void
     {
-        const soundEngine = Kernel.getInstance().soundEngine;
+        this.animationManager.clearAllAnimations();
+        this.registerAnimations();
         
         this.display = true;
         this.active = false;
@@ -210,6 +216,7 @@ export default class Model implements IModel
             lineGap: 0
         };
         
+        const soundEngine = Kernel.getInstance().soundEngine;
         this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
     }
     

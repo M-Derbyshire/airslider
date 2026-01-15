@@ -38,6 +38,15 @@ export default class Jellyfish extends Obstacle
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
+        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/standard.png";
+        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
+        this.assetsToUnload.push(damageFlashImagePath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
+        
         const coordinateWidth = 332;
         const coordinateHeight = 481;
         const drawWidth = 100;
@@ -66,10 +75,6 @@ export default class Jellyfish extends Obstacle
                 drawHeight
             })
         });
-        
-        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/standard.png";
-        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
-        this.assetsToUnload.push(damageFlashImagePath);
     }
     
     act():void

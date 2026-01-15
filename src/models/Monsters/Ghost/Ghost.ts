@@ -54,6 +54,11 @@ export default class Ghost extends Monster {
         const spritesheetPath = "/models/monsters/Ghost/anim/ghost-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
         
         this.animationManager.registerAnimations({
             normal: this.animationManager.createAnimation({
@@ -68,7 +73,6 @@ export default class Ghost extends Monster {
 				]
             })
         });
-        
     }
     
     prepare():void

@@ -40,6 +40,11 @@ export default class Racer extends ASModel
         
         const spritesheetPath = "/models/Racer/anim/racers-spritesheet.png";
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
         
         // All the frames share the same width/height.
         const frameWidth = 92;

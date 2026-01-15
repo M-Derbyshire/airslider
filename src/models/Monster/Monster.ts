@@ -72,6 +72,8 @@ export default class Monster extends ASModel {
     
     act():void
     {
+        super.act();
+        
         if(this.entering)
             this.enter();
         else if(this.exiting)

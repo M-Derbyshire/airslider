@@ -47,6 +47,8 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
             width: 0,
             height: 0
         };
+        
+        this.animations = {};
     }
     
     /**
@@ -89,6 +91,14 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
     registerAnimations(animations:AnimationsObject):void
     {
         this.animations = animations;
+    }
+    
+    /**
+     * Removes all animations from this manager
+     */
+    clearAllAnimations():void
+    {
+        this.animations = {};
     }
     
     /**

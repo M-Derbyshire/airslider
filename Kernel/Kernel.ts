@@ -309,7 +309,13 @@ export default class Kernel implements IKernel {
         
         const engines = this._initialiseAllEngines(level, loadedModels, camera); // New engines, set up for this level
         
-        this._loadModels(loadedModels);
+        loadedModels.forEach((model, idx) => {
+            model.loadedIndex = idx;
+            model.load();
+            
+            // Doing this here ensures the models have their width/height available before the level is prepared
+            model.registerAnimations();
+        });
         
         this._levelQueue.push({ 
             level, 
@@ -420,18 +426,6 @@ export default class Kernel implements IKernel {
                 this.toggleGamePause();
         });
     }
-    
-    /**
-     * Loads the given models
-     * @param models the models to be loaded
-     */
-    private _loadModels(models:IModel[]):void
-	{
-        models.forEach((model, idx) => {
-            model.loadedIndex = idx;
-            model.load();
-        });
-	}
     
     /**
      * Gets the kernel ready when a new level is about to start

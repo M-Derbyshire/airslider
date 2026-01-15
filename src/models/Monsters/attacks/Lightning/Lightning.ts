@@ -22,6 +22,15 @@ export default class Lightning extends ASModel {
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
+        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/yellow.png";
+        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
+        this.assetsToUnload.push(damageFlashImagePath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
+        
         this.animationManager.registerAnimations({
             shock: this.animationManager.createAnimation({
                 spritesheet: this.spritesheet,
@@ -35,10 +44,6 @@ export default class Lightning extends ASModel {
 				]
             })
         });
-        
-        const damageFlashImagePath = "/HUDComponents/DamageFlash/images/yellow.png";
-        this.damageFlashImage = assetHandler.loadImage(damageFlashImagePath);
-        this.assetsToUnload.push(damageFlashImagePath);
     }
     
     prepare():void

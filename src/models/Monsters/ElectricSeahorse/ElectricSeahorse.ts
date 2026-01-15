@@ -47,6 +47,11 @@ export default class ElectricSeahorse extends Monster {
         const spritesheetPath = "/models/monsters/ElectricSeahorse/anim/electricSeahorse-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
         
         this.animationManager.registerAnimations({
             move: this.animationManager.createAnimation({
@@ -62,8 +67,6 @@ export default class ElectricSeahorse extends Monster {
 				]
             })
         });
-        
-        this.state = "move";
     }
     
     prepare():void
@@ -75,6 +78,8 @@ export default class ElectricSeahorse extends Monster {
         this.actions = [
             this.move
         ];
+        
+        this.state = "move";
         
         this.startZ = this.playerModel.z;
         this.startY = 10;
@@ -95,7 +100,6 @@ export default class ElectricSeahorse extends Monster {
         this.xSpeed = 1100;
         
         this._lastAnimFrame = 0;
-        this.state = "move";   
     }
     
     // Entering, exiting and reseting-----------------------------------------

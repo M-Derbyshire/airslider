@@ -80,10 +80,15 @@ export default class Sign extends ASModel
         
         const assetHandler = Kernel.getInstance().assetHandler;
         
+        // Not adding spritesheet to assetsToUnload, as this is used by all levels
         const spritesheetPath = "/models/Sign/anim/sign_spritesheet.png";
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
         
-        // Not adding spritesheet to assetsToUnload, as this is used by all levels
         this.animationManager.registerAnimations({
             sign: this.animationManager.createAnimation({
                 spritesheet: this.spritesheet,

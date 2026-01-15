@@ -57,6 +57,11 @@ export default class SignDisplay extends ASModel
         
         const sheetPath = "/models/SignDisplay/anim/display_open_spritesheet.png";
         this.spritesheet = assetHandler.loadImage(sheetPath);
+    }
+    
+    registerAnimations():void
+    {
+        super.registerAnimations();
         
         const width = 527;
         const height = 113;

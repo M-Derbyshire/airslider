@@ -7,7 +7,6 @@ import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManage
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import Kernel from '../../../Kernel/Kernel';
 import Snake from '../../models/Obstacles/Snake/Snake';
-import Obstacle from '../../models/Obstacle/Obstacle';
 import IntroSnake from '../../models/Obstacles/IntroObstacles/IntroSnake/IntroSnake';
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
 import SideGroupsObstacleManager from '../ASLevel/ObstacleManager/SideGroupsObstacleManager';
@@ -69,7 +68,7 @@ export default class Forurn extends ASLevel<Snake>
         // Setup the Snake obstacles
         const totalSnakeCount = 100;
         
-        const snakes:Obstacle[] = [];
+        const snakes:Snake[] = [];
         for(let i = 0; i < totalSnakeCount; i++)
             snakes.push(new Snake(new ModelAnimationsManager()));
         
