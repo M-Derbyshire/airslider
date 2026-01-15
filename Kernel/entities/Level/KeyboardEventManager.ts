@@ -1,3 +1,5 @@
+import { KernelStatus } from "../../IKernel";
+import Kernel from "../../Kernel";
 import IKeyboardEventManager from "./IKeyboardEventManager";
 
 /**
@@ -26,19 +28,35 @@ export default class KeyboardEventManager implements IKeyboardEventManager
     /**
      * Registers a callback function that will be called when a key-down event occurs
      * @param callback the callback to register
+     * @param isActiveWhenPaused should this callback still be triggered when the game is paused?
      */
-    addKeyDownEventCallback(callback:KeyboardEventReciever):void
+    addKeyDownEventCallback(
+        callback:KeyboardEventReciever,
+        isActiveWhenPaused:boolean = false
+    ):void
     {
-        this._keyDownEventCallbacks.push(callback);
+        const callbackToUse = isActiveWhenPaused
+            ? callback
+            : this._getPauseableCallbackWrapper(callback);
+        
+        this._keyDownEventCallbacks.push(callbackToUse);
     }
     
     /**
      * Registers a callback function that will be called when a key-up event occurs
      * @param callback the callback to register
+     * @param isActiveWhenPaused should this callback still be triggered when the game is paused?
      */
-    addKeyUpEventCallback(callback:KeyboardEventReciever):void
+    addKeyUpEventCallback(
+        callback:KeyboardEventReciever,
+        isActiveWhenPaused:boolean = false
+    ):void
     {
-        this._keyUpEventCallbacks.push(callback);
+        const callbackToUse = isActiveWhenPaused
+            ? callback
+            : this._getPauseableCallbackWrapper(callback);
+        
+        this._keyUpEventCallbacks.push(callbackToUse);
     }
     
     /**
@@ -75,6 +93,21 @@ export default class KeyboardEventManager implements IKeyboardEventManager
     private _keyUpEventHandler(e:KeyboardEvent):void
     {
         this._keyUpEventCallbacks.forEach(cb => cb(e));
+    }
+    
+    /**
+     * Wraps the given callback in a wrapper function that will stop it from
+     * being triggered when the game is paused
+     * @param callback the callback to be wrapped
+     * @returns a new callback function that will not trigger the given callback if
+     * the game is paused
+     */
+    private _getPauseableCallbackWrapper(callback:KeyboardEventReciever):KeyboardEventReciever
+    {
+        return (e:KeyboardEvent) => {
+            if(Kernel.getInstance().status !== KernelStatus.Paused)
+                callback(e);
+        };
     }
 };
 

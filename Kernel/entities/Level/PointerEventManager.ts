@@ -90,7 +90,7 @@ export default class PointerEventManager implements IPointerEventManager {
 			onClick,
 			onHover,
 			configuration: {
-				isActiveWhenPaused
+				isActiveWhenPaused: !!isActiveWhenPaused
 			}
 		});
 	}

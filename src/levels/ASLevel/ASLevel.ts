@@ -415,18 +415,24 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     {
         const pauseToggleKey = " ";
         
-        this.keyboardEventManager.addKeyDownEventCallback((e:KeyboardEvent) => {
-            if(!this._pauseToggleKeyIsPressed && e.key === pauseToggleKey)
-            {
-                Kernel.getInstance().toggleGamePause();
-                this._pauseToggleKeyIsPressed = true;
-            }
-        });
+        this.keyboardEventManager.addKeyDownEventCallback(
+            (e:KeyboardEvent) => {
+                if(!this._pauseToggleKeyIsPressed && e.key === pauseToggleKey)
+                {
+                    Kernel.getInstance().toggleGamePause();
+                    this._pauseToggleKeyIsPressed = true;
+                }
+            },
+            true
+        );
         
-        this.keyboardEventManager.addKeyUpEventCallback((e:KeyboardEvent) => {
-            if(e.key === pauseToggleKey)
-                this._pauseToggleKeyIsPressed = false;
-        });
+        this.keyboardEventManager.addKeyUpEventCallback(
+            (e:KeyboardEvent) => {
+                if(e.key === pauseToggleKey)
+                    this._pauseToggleKeyIsPressed = false;
+            },
+            true
+        );
     }
     
     /**
