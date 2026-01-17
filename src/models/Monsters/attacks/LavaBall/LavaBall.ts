@@ -1,8 +1,8 @@
-import Kernel from '../../../../../Kernel/Kernel';
 import ASModel from '../../../ASModel/ASModel';
 import IModelAnimationsManager from '../../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Tarian from '../../../Tarian/Tarian';
 import { IHitBox } from '../../../../../Kernel/entities/Model/IModel';
+import IAssetHandler from '../../../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * The Dragon's lava ball attack
@@ -25,11 +25,13 @@ export default class LavaBall extends ASModel {
         this.damageDealt = 10;
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const spritesheetPath = "/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);

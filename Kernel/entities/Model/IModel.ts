@@ -1,3 +1,4 @@
+import IAssetHandler from "../../AssetHandler/IAssetHandler";
 import { IDrawDimensions, IDrawPositions, ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
 
 /**
@@ -86,8 +87,9 @@ export default interface IModel {
     
     /**
      * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void;
+    load(assetHandler:IAssetHandler):void;
     
     /**
      * Registers the animations for the model

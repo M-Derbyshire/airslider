@@ -1,3 +1,4 @@
+import IAssetHandler from '../../../../Kernel/AssetHandler/IAssetHandler';
 import Kernel from '../../../../Kernel/Kernel';
 import { IHitBox } from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager, { IAnimation } from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
@@ -58,11 +59,13 @@ export default class NeonPidgeon extends Monster {
             : this._lowerPidgeonSteadyY;
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const damageFlashSpritesheet = "/HUDComponents/DamageFlash/images/standard.png";
         this.damageFlashImage = assetHandler.loadImage(damageFlashSpritesheet);

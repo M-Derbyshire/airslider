@@ -1,4 +1,4 @@
-import Kernel from '../../../../Kernel/Kernel';
+import IAssetHandler from '../../../../Kernel/AssetHandler/IAssetHandler';
 import { IHitBox } from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager, { IFrameCoordinates } from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Obstacle from '../../Obstacle/Obstacle';
@@ -17,11 +17,13 @@ export default class Snake extends Obstacle
         this.state = "slither";
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const spritesheetPath = "/models/Obstacles/Snake/anim/snake-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);

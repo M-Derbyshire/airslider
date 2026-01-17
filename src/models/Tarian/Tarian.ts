@@ -4,6 +4,7 @@ import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
 import IModel, { IHitBox } from '../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * The main character of the game, controlled by the player
@@ -54,11 +55,13 @@ export default class Tarian extends ASModel {
         this._lostZSpeed = 35; 
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         // Not adding this to assetsToUnload, as this is used on every level
         const spritesheetPath = "/models/Tarian/anim/tarian-spritesheet.png";

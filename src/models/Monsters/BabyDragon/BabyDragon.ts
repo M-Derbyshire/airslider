@@ -1,3 +1,4 @@
+import IAssetHandler from '../../../../Kernel/AssetHandler/IAssetHandler';
 import Kernel from '../../../../Kernel/Kernel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import ASLevel from '../../../levels/ASLevel/ASLevel';
@@ -42,11 +43,13 @@ export default class BabyDragon extends Monster
             : this._nextLavaBallIndex + 1;
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const wingSound = assetHandler.loadAudio(this._wingSoundKey);
         

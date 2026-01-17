@@ -2,6 +2,7 @@ import Kernel from '../../../Kernel/Kernel';
 import ASModel from '../ASModel/ASModel';
 import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Sign from '../Sign/Sign';
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * A starting light display, to be "attached" to a starting sign
@@ -36,11 +37,13 @@ export default class SignDisplay extends ASModel
         this._startBeepKey = "/models/SignDisplay/sounds/countdown_go.mp3";
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         // Not adding these sounds to assetsToUnload, as every level needs these
         const countdownBeep = assetHandler.loadAudio(this._countdownBeepKey);

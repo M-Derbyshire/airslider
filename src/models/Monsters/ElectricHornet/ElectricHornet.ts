@@ -1,3 +1,4 @@
+import IAssetHandler from '../../../../Kernel/AssetHandler/IAssetHandler';
 import Kernel from '../../../../Kernel/Kernel';
 import { IHitBox } from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
@@ -29,11 +30,13 @@ export default class ElectricHornet extends Monster {
         this._buzzSoundKey = "/models/monsters/ElectricHornet/sounds/buzz.mp3";
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const buzzSound = assetHandler.loadAudio(this._buzzSoundKey);
         

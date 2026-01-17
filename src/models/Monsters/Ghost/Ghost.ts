@@ -3,6 +3,7 @@ import ASLevel from '../../../levels/ASLevel/ASLevel';
 import IModel, { IHitBox } from '../../../../Kernel/entities/Model/IModel';
 import IModelAnimationsManager from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Monster from '../../Monster/Monster';
+import IAssetHandler from '../../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * The ghost monster
@@ -41,11 +42,13 @@ export default class Ghost extends Monster {
         this._startPosition = startPosition;
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const damageFlashSpritesheet = "/HUDComponents/DamageFlash/images/ghost.png";
         this.damageFlashImage = assetHandler.loadImage(damageFlashSpritesheet);

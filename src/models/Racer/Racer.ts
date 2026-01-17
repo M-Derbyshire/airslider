@@ -1,7 +1,7 @@
 import ASModel from '../ASModel/ASModel';
 import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import { RacerColor } from './RacerColor';
-import Kernel from '../../../Kernel/Kernel';
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * A racer on the track
@@ -31,12 +31,11 @@ export default class Racer extends ASModel
     
     /**
      * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void 
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const spritesheetPath = "/models/Racer/anim/racers-spritesheet.png";
         this.spritesheet = assetHandler.loadImage(spritesheetPath);

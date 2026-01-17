@@ -1,6 +1,7 @@
 import Kernel from '../../../../../Kernel/Kernel';
 import ASModel from '../../../ASModel/ASModel';
 import { IHitBox } from '../../../../../Kernel/entities/Model/IModel';
+import IAssetHandler from '../../../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * The lighting attack used by the ElectricSeahorse
@@ -12,11 +13,13 @@ export default class Lightning extends ASModel {
     private _damageValue:number; // this.damageDealt is calculated every frame using this (see the act() method)
     private _hitBoxGracePadding:number; // this is used to decrease the width of the hitbox, to allow some overlap
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const spritesheetPath = "/models/monsters/attacks/Lightning/anim/lightning-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);

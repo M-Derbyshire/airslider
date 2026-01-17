@@ -2,6 +2,7 @@ import Kernel from '../../../Kernel/Kernel';
 import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
 import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * A sign on the track (e.g. the start or finish sign)
@@ -74,11 +75,13 @@ export default class Sign extends ASModel
         this._initialActiveStatus = active;
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         // Not adding spritesheet to assetsToUnload, as this is used by all levels
         const spritesheetPath = "/models/Sign/anim/sign_spritesheet.png";

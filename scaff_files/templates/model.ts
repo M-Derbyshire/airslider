@@ -1,5 +1,6 @@
 import {: baseClass :} from '../{: baseClass :}/{: baseClass :}';
 import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * A class for a Model
@@ -19,12 +20,13 @@ export default class {: name :} extends {: baseClass :}
     
     /**
      * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void 
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
+        super.load(assetHandler);
         
-        // Handle loading any assets here
+        // Handle loading any assets here, using the assetHandler
         
         this.assetsToUnload.push(
             // Any assets that need to be unloaded (when the level is unloaded) should be added here

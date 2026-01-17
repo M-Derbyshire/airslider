@@ -4,6 +4,7 @@ import IModelAnimationsManager, { IAnimation } from '../../../Kernel/entities/Mo
 import Tarian from '../Tarian/Tarian';
 import UnitHelper from '../../../Kernel/utils/UnitHelper';
 import { SoundStatus } from '../../../Kernel/engines/SoundEngine/ISoundEngine';
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * Explosion effect, to be used during Tarian's loss sequence
@@ -36,11 +37,13 @@ export default class TarianExplosion extends ASModel {
         this._alarmSoundKey = "/models/TarianExplosion/sounds/alarm.mp3";
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         // Not adding this to assetsToUnload, as every level needs this
         const alarmSound = assetHandler.loadAudio(this._alarmSoundKey);

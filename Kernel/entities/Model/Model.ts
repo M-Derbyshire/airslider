@@ -4,6 +4,7 @@ import Kernel from '../../Kernel';
 import { IDrawDimensions, IDrawPositions, ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
 import UnitHelper from '../../utils/UnitHelper';
 import { IEntitySound } from '../types';
+import IAssetHandler from '../../AssetHandler/IAssetHandler';
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)
@@ -185,8 +186,9 @@ export default class Model implements IModel
     
     /**
      * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void {}
+    load(assetHandler:IAssetHandler):void {}
     
     /**
      * Registers the animations for the model

@@ -1,4 +1,4 @@
-import Kernel from '../../../../Kernel/Kernel';
+import IAssetHandler from '../../../../Kernel/AssetHandler/IAssetHandler';
 import IModelAnimationsManager, { IFrameCoordinates } from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Obstacle from '../../Obstacle/Obstacle';
 
@@ -20,11 +20,13 @@ export default class GangMember extends Obstacle
         this.state = "forward";
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const spritesheetPath = "/models/Obstacles/GangMember/anim/spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);

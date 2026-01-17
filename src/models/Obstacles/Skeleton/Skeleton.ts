@@ -1,4 +1,4 @@
-import Kernel from '../../../../Kernel/Kernel';
+import IAssetHandler from '../../../../Kernel/AssetHandler/IAssetHandler';
 import IModelAnimationsManager, { IFrameCoordinates } from '../../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import Obstacle, { obstacleModes } from '../../Obstacle/Obstacle';
 import Tarian from '../../Tarian/Tarian';
@@ -31,11 +31,13 @@ export default class Skeleton extends Obstacle
         this.bounceDeceleration = 250;
     }
     
-    load():void
+    /**
+     * Loads the assets for the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const spritesheetPath = "/models/Obstacles/Skeleton/anim/skeleton-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);

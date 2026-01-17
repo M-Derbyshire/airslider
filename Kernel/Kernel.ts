@@ -311,7 +311,7 @@ export default class Kernel implements IKernel {
         
         loadedModels.forEach((model, idx) => {
             model.loadedIndex = idx;
-            model.load();
+            model.load(this._assetHandler);
             
             // Doing this here ensures the models have their width/height available before the level is prepared
             model.registerAnimations();
