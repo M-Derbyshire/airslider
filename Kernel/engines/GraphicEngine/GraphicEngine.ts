@@ -1,9 +1,10 @@
 import IGraphicEngine, { IDrawPositions, IDrawDimensions, ITextContent } from './IGraphicEngine';
 import ICamera from './ICamera';
 import IFrameManager from './IFrameManager';
-import Kernel from '../../Kernel';
 import UnitHelper from '../../utils/UnitHelper';
 import ZCalc from '../../utils/ZCalc/ZCalc';
+import ILevel from '../../entities/Level/ILevel';
+import IModel from '../../entities/Model/IModel';
 
 /**
  * The engine that controls the drawing to the screen
@@ -41,10 +42,14 @@ export default class GraphicEngine implements IGraphicEngine {
     
     /**
      * Triggers the clearing and re-drawing of the screen
+     * @param level the level that needs to be drawn
+     * @param models the models that need to be drawn
+     * @param fps the current fps of the game
+     * @param fpsDisplayColor the color that should be used when displaying the FPS (if
+     * this is not provided, the FPS will not be displayed)
      */
-    run():void
+    run(level:ILevel, models:IModel[], fps:number, fpsDisplayColor?:string):void
     {
-        const kernel = Kernel.getInstance();
         const canvas = this._canvasCtx.canvas;
         
         // Need to do this, rather than using an event listener, as the onResize listener
@@ -61,19 +66,19 @@ export default class GraphicEngine implements IGraphicEngine {
         // Draw the elements that are behind the models
         this.camera.drawBack();
         this._frameManager.drawFramesBack(this._canvasCtx);
-        kernel.level.drawBack();
+        level.drawBack();
         
         // Now the models
-        this._drawModels();
+        this._drawModels(models);
         
         //Finally, draw everything that needs to be drawn on top of the models
-        kernel.level.drawFront();
+        level.drawFront();
         this._frameManager.drawFramesFront(this._canvasCtx);
-        kernel.level.HUD.draw();
+        level.HUD.draw();
         this.camera.drawFront();
         
-        if(kernel.settings.fpsDisplayColor)
-            this._fpsMeter();
+        if(fpsDisplayColor)
+            this._fpsMeter(fps, fpsDisplayColor);
     }
     
     /**
@@ -201,13 +206,12 @@ export default class GraphicEngine implements IGraphicEngine {
     
     /**
      * Trigger the drawing of all of the models, in the correct order
+     * @param models the models to be drawn
      */
-    private _drawModels():void
+    private _drawModels(models:IModel[]):void
     {
-        const loadedModels = Kernel.getInstance().loadedModels;
-        
 		// We need to make sure that the models are drawn ordered by the Z position.
-		const zSortedModels = [...loadedModels].sort((a, b) => {
+		const zSortedModels = [...models].sort((a, b) => {
             const zA = a.z ?? 0;
             const zB = b.z ?? 0;
             
@@ -234,19 +238,19 @@ export default class GraphicEngine implements IGraphicEngine {
     
     /**
      * Draw the Frames Per Second counter
+     * @param fps the current FPS of the game
+     * @param fpsDisplayColor the color to use when displaying the FPS
      */
-    private _fpsMeter():void
+    private _fpsMeter(fps:number, fpsDisplayColor:string):void
     {
-        const kernel = Kernel.getInstance();
-        
-        const fps = Math.round(kernel.fps * 100) / 100; // 2 decimal places
+        const roundedFPS = Math.round(fps * 100) / 100; // 2 decimal places
         
         const fontSize = 30;
         this._canvasCtx.font = fontSize + "px Arial";
-        this._canvasCtx.fillStyle = kernel.settings.fpsDisplayColor;
+        this._canvasCtx.fillStyle = fpsDisplayColor;
         this._canvasCtx.textAlign = "left";
         
-        this._canvasCtx.fillText(`FPS: ${fps}`, 10, (10 + fontSize));
+        this._canvasCtx.fillText(`FPS: ${roundedFPS}`, 10, (10 + fontSize));
     }
     
     /**

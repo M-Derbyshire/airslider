@@ -371,7 +371,7 @@ export default class Kernel implements IKernel {
                 // This will need to run if we're in the pre-pause state, so we 
                 // can re-draw the UI to match (e.g. drawing a play button 
                 // instead of a pause button)
-                this.graphicEngine.run();
+                this.graphicEngine.run(this.level, this.loadedModels, this.fps, this.settings.fpsDisplayColor);
             }
             
             if(this._status === KernelStatus.PrePaused)

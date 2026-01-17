@@ -1,3 +1,5 @@
+import ILevel from "../../entities/Level/ILevel";
+import IModel from "../../entities/Model/IModel";
 import ICamera from "./ICamera";
 
 /**
@@ -11,8 +13,13 @@ export default interface IGraphicEngine {
     
     /**
      * Triggers the clearing and re-drawing of the screen
+     * @param level the level that needs to be drawn
+     * @param models the models that need to be drawn
+     * @param fps the current fps of the game
+     * @param fpsDisplayColor the color that should be used when displaying the FPS (if
+     * this is not provided, the FPS will not be displayed)
      */
-    run():void;
+    run(level:ILevel, models:IModel[], fps:number, fpsDisplayColor?:string):void;
     
     /**
      * Draws text onto the canvas
