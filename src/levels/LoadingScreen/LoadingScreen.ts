@@ -8,6 +8,7 @@ import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
 import { KernelStatus } from '../../../Kernel/IKernel';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * A base class for loading screens
@@ -39,13 +40,13 @@ export default class LoadingScreen extends Level
     
     /**
      * Loads the level's assets
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-	load():void
+    load(assetHandler:IAssetHandler):void
 	{
-		super.load();
+		super.load(assetHandler);
         
         const settings = Kernel.getInstance().settings;
-        const assetHandler = Kernel.getInstance().assetHandler;
         
         const frame = new Frame(0, 0, settings.unitsWithinCameraX, settings.unitsWithinCameraY);
         

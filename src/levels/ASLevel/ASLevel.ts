@@ -31,6 +31,7 @@ import PointerEventManager from '../../../Kernel/entities/Level/PointerEventMana
 import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
 import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager';
 import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * The game's base Level class
@@ -213,10 +214,11 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
 	
     /**
      * Loads the level's assets
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-	load():void
+    load(assetHandler:IAssetHandler):void
 	{
-		super.load();
+		super.load(assetHandler);
         
         this.groundManager = new LevelGroundManager();
         this.finishFlagsManager = new LevelGroundManager(false); 

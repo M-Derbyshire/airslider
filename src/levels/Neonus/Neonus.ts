@@ -18,6 +18,7 @@ import PointerEventManager from '../../../Kernel/entities/Level/PointerEventMana
 import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
 import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * The Neonus level
@@ -101,12 +102,11 @@ export default class Neonus extends ASLevel<GangMember>
     
     /**
      * Loads the level's assets
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const backgroundImagePath = "/levels/Neonus/images/background.png";
         const lightMaskImagePath = "/levels/Neonus/images/lightmask.png";

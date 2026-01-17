@@ -1,6 +1,7 @@
 import IModel from "../Model/IModel";
 import IHUD from "../HUD/IHUD";
 import IFrameManager from "../../engines/GraphicEngine/IFrameManager";
+import IAssetHandler from "../../AssetHandler/IAssetHandler";
 
 /**
  * A level of the game
@@ -23,8 +24,9 @@ export default interface ILevel {
     
     /**
      * Loads the level's assets
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void;
+    load(assetHandler:IAssetHandler):void;
     
     /**
      * Unloads any assets used by the level, and clears up anything else

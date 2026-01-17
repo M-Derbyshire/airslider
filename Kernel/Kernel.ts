@@ -288,7 +288,7 @@ export default class Kernel implements IKernel {
      */
     loadLevel(level:ILevel):void
     {
-        level.load();
+        level.load(this._assetHandler);
         
         const loadedModels = level.getModels();
         

@@ -9,6 +9,7 @@ import { IEntitySound } from '../types';
 import ICamera from '../../engines/GraphicEngine/ICamera';
 import IKeyboardEventManager from './IKeyboardEventManager';
 import HUD from '../HUD/HUD';
+import IAssetHandler from '../../AssetHandler/IAssetHandler';
 
 /**
  * A level of the game
@@ -66,8 +67,9 @@ export default class Level implements ILevel
     
     /**
      * Loads the level's assets
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void
+    load(assetHandler:IAssetHandler):void
     {   
         this._loadHUD();
     }
