@@ -3,6 +3,7 @@ import Kernel from '../../Kernel';
 import { ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
 import { IEntitySound } from '../types';
 import IAssetHandler from '../../AssetHandler/IAssetHandler';
+import ISoundEngine from '../../engines/SoundEngine/ISoundEngine';
 
 /**
  * A component to be displayed by the Heads Up Display
@@ -53,11 +54,10 @@ export default class HUDComponent implements IHUDComponent
     
     /**
      * Prepares the component before the level starts
+     * @param soundEngine the sound engine for the level
      */
-    prepare():void 
+    prepare(soundEngine:ISoundEngine):void
     {
-        const soundEngine = Kernel.getInstance().soundEngine;
-        
         this.text = {
             content: "",
             x: 0, // In units

@@ -1,4 +1,5 @@
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
 import Kernel from '../../../Kernel/Kernel';
 import UnitHelper from '../../../Kernel/utils/UnitHelper';
 import { CentralStateKey } from '../../levels/CentralStateKey';
@@ -62,8 +63,13 @@ export default class HealthDisplay extends ASHUDComponent
         this._spannerImage = assetHandler.loadImage(`${imagesDirPath}/spanner.png`);
     }
     
-    prepare():void {
-        super.prepare();
+    /**
+     * Prepares the component before the level starts
+     * @param soundEngine the sound engine for the level
+     */
+    prepare(soundEngine:ISoundEngine):void
+    {
+        super.prepare(soundEngine);
         
         // Setup the text positions/dimensions
         this.text = {

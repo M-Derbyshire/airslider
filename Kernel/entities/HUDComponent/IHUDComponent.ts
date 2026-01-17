@@ -1,5 +1,6 @@
 import IAssetHandler from "../../AssetHandler/IAssetHandler";
 import { ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
+import ISoundEngine from "../../engines/SoundEngine/ISoundEngine";
 
 /**
  * A component to be displayed by the Heads Up Display
@@ -60,8 +61,9 @@ export default interface IHUDComponent {
     
     /**
      * Prepares the component before the level starts
+     * @param soundEngine the sound engine for the level
      */
-    prepare():void;
+    prepare(soundEngine:ISoundEngine):void;
     
     /**
      * Is the mouse pointer overlapping this component?

@@ -59,7 +59,7 @@ export default class HUD implements IHUD
      */
     prepare(soundEngine:ISoundEngine):void
     {
-        this.components.forEach(component => component.prepare());
+        this.components.forEach(component => component.prepare(soundEngine));
         
         this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
     }

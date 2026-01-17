@@ -1,3 +1,4 @@
+import ISoundEngine from '../../../../Kernel/engines/SoundEngine/ISoundEngine';
 import Kernel from '../../../../Kernel/Kernel';
 import ASHUDComponent from '../../ASHUDComponent/ASHUDComponent';
 
@@ -62,10 +63,11 @@ export default class TextOnlyButton extends ASHUDComponent
     
     /**
      * Prepares the component before the level starts
+     * @param soundEngine the sound engine for the level
      */
-    prepare():void 
+    prepare(soundEngine:ISoundEngine):void
     {
-        super.prepare();
+        super.prepare(soundEngine);
         
         this.text = {
             content: this._textContent,

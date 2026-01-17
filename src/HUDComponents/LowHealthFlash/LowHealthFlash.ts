@@ -1,4 +1,5 @@
 import IAssetHandler from "../../../Kernel/AssetHandler/IAssetHandler";
+import ISoundEngine from "../../../Kernel/engines/SoundEngine/ISoundEngine";
 import DamageFlash from "../DamageFlash/DamageFlash";
 
 /**
@@ -22,9 +23,13 @@ export default class LowHealthFlash extends DamageFlash
         this.image = assetHandler.loadImage("/HUDComponents/LowHealthFlash/images/damage.png");
     }
     
-    prepare():void 
+    /**
+     * Prepares the component before the level starts
+     * @param soundEngine the sound engine for the level
+     */
+    prepare(soundEngine:ISoundEngine):void
     {
-        super.prepare();
+        super.prepare(soundEngine);
         
         this.active = false;
     }

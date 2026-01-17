@@ -1,3 +1,4 @@
+import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
 import Kernel from '../../../Kernel/Kernel';
 import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
 
@@ -11,9 +12,13 @@ export default class DamageFlash extends ASHUDComponent
     protected flashSpeed:number;
     protected image:HTMLImageElement;
     
-    prepare():void 
+    /**
+     * Prepares the component before the level starts
+     * @param soundEngine the sound engine for the level
+     */
+    prepare(soundEngine:ISoundEngine):void 
     {
-        super.prepare();
+        super.prepare(soundEngine);
         
         this.opacity = 0;
         this.flashSpeed = 4; //change this to change flash speed
