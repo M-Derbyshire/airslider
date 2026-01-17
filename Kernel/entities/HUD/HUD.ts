@@ -3,6 +3,7 @@ import IHUD from './IHUD';
 import Kernel from '../../../Kernel/Kernel';
 import IPointerEventManager from '../Level/IPointerEventManager';
 import { IEntitySound } from '../types';
+import IAssetHandler from '../../AssetHandler/IAssetHandler';
 
 /**
  * A level's Heads Up Display
@@ -29,8 +30,9 @@ export default class HUD implements IHUD
     
     /**
      * Loads the HUD
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void {}
+    load(assetHandler:IAssetHandler):void {}
     
     /**
      * Loads the HUD's components 

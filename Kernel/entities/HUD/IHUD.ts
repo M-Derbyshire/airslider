@@ -1,11 +1,14 @@
+import IAssetHandler from "../../AssetHandler/IAssetHandler";
+
 /**
  * A level's Heads Up Display
  */
 export default interface IHUD {
     /**
      * Loads the HUD
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void;
+    load(assetHandler:IAssetHandler):void;
     
     /**
      * Loads the HUD's components 

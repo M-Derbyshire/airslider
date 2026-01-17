@@ -71,7 +71,7 @@ export default class Level implements ILevel
      */
     load(assetHandler:IAssetHandler):void
     {   
-        this._loadHUD();
+        this._loadHUD(assetHandler);
     }
     
     /**
@@ -159,10 +159,11 @@ export default class Level implements ILevel
     
     /**
      * Loads the level's HUD
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    private _loadHUD():void
+    private _loadHUD(assetHandler:IAssetHandler):void
     {
-        this.HUD.load();
+        this.HUD.load(assetHandler);
         this.HUD.loadComponents();
     }
     
