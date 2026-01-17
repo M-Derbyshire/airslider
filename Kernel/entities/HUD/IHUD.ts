@@ -1,4 +1,5 @@
 import IAssetHandler from "../../AssetHandler/IAssetHandler";
+import ISoundEngine from "../../engines/SoundEngine/ISoundEngine";
 
 /**
  * A level's Heads Up Display
@@ -24,8 +25,9 @@ export default interface IHUD {
     
     /**
      * Prepares the HUD before the level starts (triggers the same on any HUD components)
+     * @param soundEngine the sound engine for the level
      */
-    prepare():void;
+    prepare(soundEngine:ISoundEngine):void;
     
     /**
      * Draws the HUD (triggers the same on any HUD components)

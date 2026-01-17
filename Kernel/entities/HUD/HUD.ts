@@ -1,9 +1,9 @@
 import IHUDComponent from '../../../Kernel/entities/HUDComponent/IHUDComponent';
 import IHUD from './IHUD';
-import Kernel from '../../../Kernel/Kernel';
 import IPointerEventManager from '../Level/IPointerEventManager';
 import { IEntitySound } from '../types';
 import IAssetHandler from '../../AssetHandler/IAssetHandler';
+import ISoundEngine from '../../engines/SoundEngine/ISoundEngine';
 
 /**
  * A level's Heads Up Display
@@ -55,12 +55,12 @@ export default class HUD implements IHUD
     
     /**
      * Prepares the HUD before the level starts (triggers the same on any HUD components)
+     * @param soundEngine the sound engine for the level
      */
-    prepare():void
+    prepare(soundEngine:ISoundEngine):void
     {
         this.components.forEach(component => component.prepare());
         
-        const soundEngine = Kernel.getInstance().soundEngine;
         this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
     }
     

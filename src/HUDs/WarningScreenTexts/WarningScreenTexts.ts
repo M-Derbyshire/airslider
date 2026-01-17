@@ -4,6 +4,7 @@ import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
+import ISoundEngine from "../../../Kernel/engines/SoundEngine/ISoundEngine";
 
 /**
  * Displays text for a warning screen
@@ -88,10 +89,11 @@ export default class WarningScreenTexts extends ASHUD
     
     /**
      * Prepares the HUD before the level starts (triggers the same on any HUD components)
+     * @param soundEngine the sound engine for the level
      */
-    prepare():void
+    prepare(soundEngine:ISoundEngine):void
     {
-        super.prepare();
+        super.prepare(soundEngine);
         
         this.pointerEventManager.addPointerEventSubject(
             (x, y) => this._continueButton.isPointerOverlapping(x, y),

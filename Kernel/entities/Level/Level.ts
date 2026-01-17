@@ -105,7 +105,7 @@ export default class Level implements ILevel
         
         this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
         
-        this.HUD.prepare();
+        this.HUD.prepare(soundEngine);
     }
     
     /**

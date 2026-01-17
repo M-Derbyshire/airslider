@@ -3,6 +3,7 @@ import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import TextOnlyButton from "../../HUDComponents/UI-Components/TextOnlyButton/TextOnlyButton";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
+import ISoundEngine from "../../../Kernel/engines/SoundEngine/ISoundEngine";
 
 /**
  * A HUD for the feature-details screen
@@ -66,10 +67,11 @@ fullscreen button in the top-right of the screen`,
     
     /**
      * Prepares the HUD before the level starts (triggers the same on any HUD components)
+     * @param soundEngine the sound engine for the level
      */
-    prepare():void
+    prepare(soundEngine:ISoundEngine):void
     {
-        super.prepare();
+        super.prepare(soundEngine);
         
         this.pointerEventManager.addPointerEventSubject(
             (x, y) => this._continueButton.isPointerOverlapping(x, y),
