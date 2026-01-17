@@ -19,6 +19,8 @@ import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventMa
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
 import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
+import ICamera from '../../../Kernel/engines/GraphicEngine/ICamera';
 
 /**
  * The Neonus level
@@ -129,10 +131,12 @@ export default class Neonus extends ASLevel<GangMember>
     
     /**
      * Prepares the level, before the gameplay starts
+     * @param soundEngine the sound engine for the level
+     * @param camera the camera for the level
      */
-    prepare():void
+    prepare(soundEngine:ISoundEngine, camera:ICamera)
     {
-        super.prepare();
+        super.prepare(soundEngine, camera);
         
         this.obstacleManagers[0].setCurrentLineCount(this._gangMembersLineCount);
         (this.obstacleManagers[0] as SweepAndAimObstacleManager<GangMember>).setSeperatedObstacleModels(

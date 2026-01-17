@@ -1,5 +1,7 @@
 import FrameManager from '../../../../Kernel/engines/GraphicEngine/FrameManager';
+import ICamera from '../../../../Kernel/engines/GraphicEngine/ICamera';
 import IFrameManager from '../../../../Kernel/engines/GraphicEngine/IFrameManager';
+import ISoundEngine from '../../../../Kernel/engines/SoundEngine/ISoundEngine';
 import IKeyboardEventManager from '../../../../Kernel/entities/Level/IKeyboardEventManager';
 import IModelEventManager from '../../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../../Kernel/entities/Level/IPointerEventManager';
@@ -40,17 +42,19 @@ export default class FeaturesDetails extends Level
     
     /**
      * Prepares the level, before the gameplay starts
+     * @param soundEngine the sound engine for the level
+     * @param camera the camera for the level
      */
-    prepare():void
+    prepare(soundEngine:ISoundEngine, camera:ICamera)
     {
-        super.prepare();
+        super.prepare(soundEngine, camera);
         
         const kernel = Kernel.getInstance();
         
         const nextLevel = new ForurnLoadingScreen(
             new FrameManager(),
             new ModelEventManager(),
-            new PointerEventManager(Kernel.getInstance().canvasContext.canvas),
+            new PointerEventManager(kernel.canvasContext.canvas),
             new KeyboardEventManager()
         );
         kernel.loadLevel(nextLevel);

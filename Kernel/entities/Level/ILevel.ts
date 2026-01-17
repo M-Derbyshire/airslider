@@ -2,6 +2,8 @@ import IModel from "../Model/IModel";
 import IHUD from "../HUD/IHUD";
 import IFrameManager from "../../engines/GraphicEngine/IFrameManager";
 import IAssetHandler from "../../AssetHandler/IAssetHandler";
+import ISoundEngine from "../../engines/SoundEngine/ISoundEngine";
+import ICamera from "../../engines/GraphicEngine/ICamera";
 
 /**
  * A level of the game
@@ -36,8 +38,10 @@ export default interface ILevel {
     
     /**
      * Prepares the level, before the gameplay starts
+     * @param soundEngine the sound engine for the level
+     * @param camera the camera for the level
      */
-    prepare():void;
+    prepare(soundEngine:ISoundEngine, camera:ICamera):void;
     
     /**
      * Runs the registered model event checks

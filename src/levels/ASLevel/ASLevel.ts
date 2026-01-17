@@ -32,6 +32,8 @@ import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventMa
 import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager';
 import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
+import ICamera from '../../../Kernel/engines/GraphicEngine/ICamera';
 
 /**
  * The game's base Level class
@@ -238,22 +240,22 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     
     /**
      * Prepares the level, before the gameplay starts
+     * @param soundEngine the sound engine for the level
+     * @param camera the camera for the level
      */
-    prepare():void
+    prepare(soundEngine:ISoundEngine, camera:ICamera)
     {
-        super.prepare();
-        
-        const settings = Kernel.getInstance().settings;
+        super.prepare(soundEngine, camera);
         
         this.zCalcStrategy.setVanishPoint(
-            settings.unitsWithinCameraX / 2, 
-            settings.unitsWithinCameraY / 2
+            camera.unitsWithinCameraX / 2, 
+            camera.unitsWithinCameraY / 2
         );
         
         ZCalc.setStrategy(this.zCalcStrategy);
         
         this.leftEdge = 0;
-        this.rightEdge = settings.unitsWithinCameraX;
+        this.rightEdge = camera.unitsWithinCameraX;
         
         this._prepareFrame();
         

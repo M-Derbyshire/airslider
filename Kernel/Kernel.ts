@@ -449,7 +449,7 @@ export default class Kernel implements IKernel {
         {
             this.soundEngine.reset();
             
-            this.level.prepare();
+            this.level.prepare(this.soundEngine, this.graphicEngine.camera);
             this.loadedModels.forEach(model => model.prepare());
             
             this._levelQueue[0].hasBeenPrepared = true;

@@ -10,6 +10,8 @@ import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
+import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
+import ICamera from '../../../Kernel/engines/GraphicEngine/ICamera';
 
 /**
  * A level that acts as a photosensitivity warning
@@ -54,19 +56,21 @@ Player discretion is advised.`;
     
     /**
      * Prepares the level, before the gameplay starts
+     * @param soundEngine the sound engine for the level
+     * @param camera the camera for the level
      */
-    prepare():void
+    prepare(soundEngine:ISoundEngine, camera:ICamera)
     {
-        super.prepare();
+        super.prepare(soundEngine, camera);
         
         const kernel = Kernel.getInstance();
         
-        kernel.graphicEngine.camera.setColors(this._backgroundColor, "#000000");
+        camera.setColors(this._backgroundColor, "#000000");
         
         const nextLevel = new ForurnLoadingScreen(
             new FrameManager(),
             new ModelEventManager(),
-            new PointerEventManager(Kernel.getInstance().canvasContext.canvas),
+            new PointerEventManager(kernel.canvasContext.canvas),
             new KeyboardEventManager()
         );
         kernel.loadLevel(nextLevel);

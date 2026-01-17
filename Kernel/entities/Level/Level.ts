@@ -2,7 +2,6 @@ import IModelEventManager from './IModelEventManager';
 import IPointerEventManager from './IPointerEventManager';
 import IModel from '../Model/IModel';
 import ILevel from './ILevel';
-import Kernel from '../../Kernel';
 import IFrameManager from '../../engines/GraphicEngine/IFrameManager';
 import IHUD from '../HUD/IHUD';
 import { IEntitySound } from '../types';
@@ -10,6 +9,7 @@ import ICamera from '../../engines/GraphicEngine/ICamera';
 import IKeyboardEventManager from './IKeyboardEventManager';
 import HUD from '../HUD/HUD';
 import IAssetHandler from '../../AssetHandler/IAssetHandler';
+import ISoundEngine from '../../engines/SoundEngine/ISoundEngine';
 
 /**
  * A level of the game
@@ -90,20 +90,20 @@ export default class Level implements ILevel
     
     /**
      * Prepares the level, before the gameplay starts
+     * @param soundEngine the sound engine for the level
+     * @param camera the camera for the level
      */
-    prepare():void
+    prepare(soundEngine:ISoundEngine, camera:ICamera):void
     {
-        const kernel = Kernel.getInstance();
-        
         this.pointerEventManager.removePointerEventSubjects();
         this.keyboardEventManager.removeKeyboardEventCallbacks();
         this.modelEventManager.clearEvents();
         
         this.registerLevelEvents();
         
-        this._resetCameraPosition(kernel.graphicEngine.camera);
+        this._resetCameraPosition(camera);
         
-        this.sounds.forEach(sound => kernel.soundEngine.addSound(sound.key, sound.asset));
+        this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
         
         this.HUD.prepare();
     }

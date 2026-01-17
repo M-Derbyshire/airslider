@@ -21,6 +21,8 @@ import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventMa
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
 import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
+import ICamera from '../../../Kernel/engines/GraphicEngine/ICamera';
 
 /**
  * The Coratune level
@@ -152,10 +154,12 @@ export default class Coratune extends ASLevel<Jellyfish>
     
     /**
      * Prepares the level, before the gameplay starts
+     * @param soundEngine the sound engine for the level
+     * @param camera the camera for the level
      */
-    prepare():void
+    prepare(soundEngine:ISoundEngine, camera:ICamera)
     {
-        super.prepare();
+        super.prepare(soundEngine, camera);
         
         // Set the buoy image for the bases of the start/finish signs
         this.startSign.setBaseImage(
