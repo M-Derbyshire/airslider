@@ -1,3 +1,4 @@
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 import Kernel from '../../../Kernel/Kernel';
 import UnitHelper from '../../../Kernel/utils/UnitHelper';
 import { CentralStateKey } from '../../levels/CentralStateKey';
@@ -48,11 +49,13 @@ export default class HealthDisplay extends ASHUDComponent
         this._cornerRadiusModifier = 5;
     }
     
-    load():void
+    /**
+     * Loads the component
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
-        
-        const assetHandler = Kernel.getInstance().assetHandler;
+        super.load(assetHandler);
         
         const imagesDirPath = "/HUDComponents/HealthDisplay/images";
         this._borderImage = assetHandler.loadImage(`${imagesDirPath}/lightning-border.png`);

@@ -1,3 +1,4 @@
+import IAssetHandler from "../../../Kernel/AssetHandler/IAssetHandler";
 import Kernel from "../../../Kernel/Kernel";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import ASHUDComponent from "../ASHUDComponent/ASHUDComponent"
@@ -31,11 +32,14 @@ export default class FullscreenButton extends ASHUDComponent {
         this.height = height;
     }
     
-    load():void 
+    /**
+     * Loads the component
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
+        super.load(assetHandler);
         
-        const assetHandler = Kernel.getInstance().assetHandler;
         this._imageSheet = assetHandler.loadImage("/HUDComponents/FullscreenButton/images/button_sheet.png");
     }
     

@@ -1,3 +1,4 @@
+import IAssetHandler from '../../../../Kernel/AssetHandler/IAssetHandler';
 import Kernel from '../../../../Kernel/Kernel';
 import UnitHelper from '../../../../Kernel/utils/UnitHelper';
 import TextOnlyButton from '../TextOnlyButton/TextOnlyButton';
@@ -61,12 +62,12 @@ export default class TextButton extends TextOnlyButton
     
     /**
      * Loads the component
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void 
+    load(assetHandler:IAssetHandler):void 
     {
-        super.load();
+        super.load(assetHandler);
         
-        const assetHandler = Kernel.getInstance().assetHandler;
         this._borderPiecesImage = assetHandler.loadImage("/HUDComponents/UI-Components/TextButton/images/borderPieces.png");
     }
     

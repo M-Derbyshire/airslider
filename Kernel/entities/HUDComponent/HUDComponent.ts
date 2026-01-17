@@ -2,6 +2,7 @@ import IHUDComponent from './IHUDComponent';
 import Kernel from '../../Kernel';
 import { ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
 import { IEntitySound } from '../types';
+import IAssetHandler from '../../AssetHandler/IAssetHandler';
 
 /**
  * A component to be displayed by the Heads Up Display
@@ -74,8 +75,9 @@ export default class HUDComponent implements IHUDComponent
     
     /**
      * Loads the component
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void {}
+    load(assetHandler:IAssetHandler):void {}
     
     /**
      * Unloads any assets that need to be unloaded by the component

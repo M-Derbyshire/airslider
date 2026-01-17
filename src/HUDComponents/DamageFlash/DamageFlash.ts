@@ -11,11 +11,6 @@ export default class DamageFlash extends ASHUDComponent
     protected flashSpeed:number;
     protected image:HTMLImageElement;
     
-    constructor()
-    {
-        super();
-    }
-    
     prepare():void 
     {
         super.prepare();

@@ -164,7 +164,7 @@ export default class Level implements ILevel
     private _loadHUD(assetHandler:IAssetHandler):void
     {
         this.HUD.load(assetHandler);
-        this.HUD.loadComponents();
+        this.HUD.loadComponents(assetHandler);
     }
     
     /**

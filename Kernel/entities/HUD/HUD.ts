@@ -35,11 +35,12 @@ export default class HUD implements IHUD
     load(assetHandler:IAssetHandler):void {}
     
     /**
-     * Loads the HUD's components 
+     * Loads the HUD's components
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    loadComponents():void
+    loadComponents(assetHandler:IAssetHandler):void
     {
-        this.components.forEach(component => component.load());
+        this.components.forEach(component => component.load(assetHandler));
     }
     
     /**

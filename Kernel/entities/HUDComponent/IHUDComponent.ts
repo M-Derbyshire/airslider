@@ -1,3 +1,4 @@
+import IAssetHandler from "../../AssetHandler/IAssetHandler";
 import { ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
 
 /**
@@ -37,8 +38,9 @@ export default interface IHUDComponent {
     
     /**
      * Loads the component
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void; 
+    load(assetHandler:IAssetHandler):void; 
     
     /**
      * Unloads any assets that need to be unloaded by the component

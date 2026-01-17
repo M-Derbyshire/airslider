@@ -1,4 +1,4 @@
-import Kernel from "../../../Kernel/Kernel";
+import IAssetHandler from "../../../Kernel/AssetHandler/IAssetHandler";
 import DamageFlash from "../DamageFlash/DamageFlash";
 
 /**
@@ -11,11 +11,14 @@ export default class LowHealthFlash extends DamageFlash
         super();
     }
     
-    load():void 
+    /**
+     * Loads the component
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
+     */
+    load(assetHandler:IAssetHandler):void
     {
-        super.load();
+        super.load(assetHandler);
         
-        const assetHandler = Kernel.getInstance().assetHandler;
         this.image = assetHandler.loadImage("/HUDComponents/LowHealthFlash/images/damage.png");
     }
     
