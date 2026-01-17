@@ -1,4 +1,5 @@
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
 import Kernel from '../../../Kernel/Kernel';
 import UnitHelper from '../../../Kernel/utils/UnitHelper';
@@ -85,10 +86,16 @@ export default class HealthDisplay extends ASHUDComponent
         }
     }
     
-    draw():void
+    /**
+     * Draws the component
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
+     */
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
+        super.draw(graphicEngine, canvasContext);
+        
         const kernel = Kernel.getInstance();
-        const ctx = kernel.canvasContext;
         
         const playerModelIndex = kernel.centralState.get(CentralStateKey.PlayerModelIndex);
         const health = (kernel.loadedModels[playerModelIndex] as unknown as Tarian).health;
@@ -105,11 +112,11 @@ export default class HealthDisplay extends ASHUDComponent
         else
             color = this._lowHealthColor;
         
-        ctx.globalAlpha = 0.5;
-        ctx.fillStyle = color;
+        canvasContext.globalAlpha = 0.5;
+        canvasContext.fillStyle = color;
         this._drawSpannerBackground(radiusModifierPixels);
         this._drawTextBackground(radiusModifierPixels);
-        ctx.globalAlpha = 1;
+        canvasContext.globalAlpha = 1;
         
         this._drawSpanner();
         this._drawBorder();

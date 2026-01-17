@@ -1,4 +1,5 @@
 import IAssetHandler from "../../../Kernel/AssetHandler/IAssetHandler";
+import IGraphicEngine from "../../../Kernel/engines/GraphicEngine/IGraphicEngine";
 import { KernelStatus } from "../../../Kernel/IKernel";
 import Kernel from "../../../Kernel/Kernel";
 import ASHUDComponent from "../ASHUDComponent/ASHUDComponent"
@@ -43,9 +44,14 @@ export default class PauseButton extends ASHUDComponent {
         this._imageSheet = assetHandler.loadImage("/HUDComponents/PauseButton/images/button_sheet.png");
     }
     
-    draw()
+    /**
+     * Draws the component
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
+     */
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
-        super.draw();
+        super.draw(graphicEngine, canvasContext);
         
         const kernel = Kernel.getInstance();
         
@@ -60,14 +66,14 @@ export default class PauseButton extends ASHUDComponent {
         const sourceYPx = (kernel.status === KernelStatus.Active) ? pauseButtonSourceYPx : playButtonSourceYPx;
         
         // The positions/sizes to actually draw the sprite with
-        const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = graphicEngine.getStaticDrawPositionsAndDimensions({
             x: this.x, 
             y: this.y, 
             width: this.width, 
             height: this.height
         });
         
-        kernel.canvasContext.drawImage(
+        canvasContext.drawImage(
             this._imageSheet,
             0,
             sourceYPx,

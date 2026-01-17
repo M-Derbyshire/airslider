@@ -1,5 +1,5 @@
 import IAssetHandler from "../../../Kernel/AssetHandler/IAssetHandler";
-import Kernel from "../../../Kernel/Kernel";
+import IGraphicEngine from "../../../Kernel/engines/GraphicEngine/IGraphicEngine";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import ASHUDComponent from "../ASHUDComponent/ASHUDComponent"
 
@@ -43,11 +43,14 @@ export default class FullscreenButton extends ASHUDComponent {
         this._imageSheet = assetHandler.loadImage("/HUDComponents/FullscreenButton/images/button_sheet.png");
     }
     
-    draw()
+    /**
+     * Draws the component
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
+     */
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
-        super.draw();
-        
-        const kernel = Kernel.getInstance();
+        super.draw(graphicEngine, canvasContext);
         
         /**
          * The source image should contain multiple button images, stacked vertically.
@@ -60,14 +63,14 @@ export default class FullscreenButton extends ASHUDComponent {
         const sourceYPx = FullscreenHelper.isFullscreen() ? minimiseButtonSourceYPx : maximiseButtonSourceYPx;
         
         // The positions/sizes to actually draw the sprite with
-        const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = graphicEngine.getStaticDrawPositionsAndDimensions({
             x: this.x, 
             y: this.y, 
             width: this.width, 
             height: this.height
         });
         
-        kernel.canvasContext.drawImage(
+        canvasContext.drawImage(
             this._imageSheet,
             0,
             sourceYPx,

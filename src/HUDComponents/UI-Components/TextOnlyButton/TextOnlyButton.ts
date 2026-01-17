@@ -1,5 +1,5 @@
+import IGraphicEngine from '../../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 import ISoundEngine from '../../../../Kernel/engines/SoundEngine/ISoundEngine';
-import Kernel from '../../../../Kernel/Kernel';
 import ASHUDComponent from '../../ASHUDComponent/ASHUDComponent';
 
 /**
@@ -84,28 +84,27 @@ export default class TextOnlyButton extends ASHUDComponent
     
     /**
      * Draws the component
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    draw():void 
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
-        super.draw();
+        super.draw(graphicEngine, canvasContext);
         
         if(this._drawBoundaryBox)
         {
-            const kernel = Kernel.getInstance();
-            const ctx = kernel.canvasContext;
+            const originalStrokeColor = canvasContext.strokeStyle;
+            canvasContext.strokeStyle = "red";
             
-            const originalStrokeColor = ctx.strokeStyle;
-            ctx.strokeStyle = "red";
-            
-            const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({ 
+            const { x, y, width, height } = graphicEngine.getStaticDrawPositionsAndDimensions({ 
                 x: this.x, 
                 y: this.y, 
                 width: this.width, 
                 height: this.height
             });
-            ctx.strokeRect(x, y, width, height);
+            canvasContext.strokeRect(x, y, width, height);
             
-            ctx.strokeStyle = originalStrokeColor;
+            canvasContext.strokeStyle = originalStrokeColor;
         }
     }
     

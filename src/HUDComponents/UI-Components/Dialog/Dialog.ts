@@ -1,3 +1,4 @@
+import IGraphicEngine from '../../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 import ISoundEngine from '../../../../Kernel/engines/SoundEngine/ISoundEngine';
 import Kernel from '../../../../Kernel/Kernel';
 import UnitHelper from '../../../../Kernel/utils/UnitHelper';
@@ -87,18 +88,19 @@ export default class Dialog extends ASHUDComponent
     
     /**
      * Draws the component
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    draw():void 
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
-        super.draw();
+        super.draw(graphicEngine, canvasContext);
         
-        const ctx = Kernel.getInstance().canvasContext;
-        const originalFillColor = ctx.fillStyle;
+        const originalFillColor = canvasContext.fillStyle;
         
-        this._drawBorder(ctx);
-        this._drawBackground(ctx);
+        this._drawBorder(canvasContext);
+        this._drawBackground(canvasContext);
         
-        ctx.fillStyle = originalFillColor;
+        canvasContext.fillStyle = originalFillColor;
     }
     
     /**

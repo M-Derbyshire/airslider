@@ -4,6 +4,7 @@ import IPointerEventManager from '../Level/IPointerEventManager';
 import { IEntitySound } from '../types';
 import IAssetHandler from '../../AssetHandler/IAssetHandler';
 import ISoundEngine from '../../engines/SoundEngine/ISoundEngine';
+import IGraphicEngine from '../../engines/GraphicEngine/IGraphicEngine';
 
 /**
  * A level's Heads Up Display
@@ -66,15 +67,18 @@ export default class HUD implements IHUD
     
     /**
      * Draws the HUD (triggers the same on any HUD components)
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    draw():void
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
         this.components.forEach(component => {
             if(component.active)
             {
-                component.draw();
+                component.draw(graphicEngine, canvasContext);
+                
                 if(component.text.content)
-                    component.drawText();
+                    component.drawText(graphicEngine);
             } 
         });
     }

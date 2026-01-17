@@ -1,4 +1,5 @@
 import IAssetHandler from "../../../Kernel/AssetHandler/IAssetHandler";
+import IGraphicEngine from "../../../Kernel/engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "../../../Kernel/engines/SoundEngine/ISoundEngine";
 import DamageFlash from "../DamageFlash/DamageFlash";
 
@@ -52,9 +53,12 @@ export default class LowHealthFlash extends DamageFlash
      * Draw the flash, and keep it looping.
      * The idea here is to utilise the DamageFlash functionality, but to keep 
      * it going continuously, until stop() is called.
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    draw() {
-        super.draw();
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
+    {
+        super.draw(graphicEngine, canvasContext);
         
         if(this.active && this.opacity <= 0) {
             this.start(this.image);

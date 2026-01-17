@@ -1,3 +1,4 @@
+import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
 import Kernel from '../../../Kernel/Kernel';
 import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
@@ -25,8 +26,15 @@ export default class DamageFlash extends ASHUDComponent
         this.shouldFadeOut = false;
     }
     
-    draw():void
+    /**
+     * Draws the component
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
+     */
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
+        super.draw(graphicEngine, canvasContext);
+        
         const flashSpeed = this._getFPSConsistentSpeed();
 		
         if(this.opacity >= 1)
@@ -45,19 +53,16 @@ export default class DamageFlash extends ASHUDComponent
                 return;
             }
             
-            const kernel = Kernel.getInstance();
-            const ctx = kernel.canvasContext;
-            
-            const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
+            const { x, y, width, height } = graphicEngine.getStaticDrawPositionsAndDimensions({
                 x: 0,
                 y: 0,
-                width: kernel.settings.unitsWithinCameraX,
-                height: kernel.settings.unitsWithinCameraY
+                width: graphicEngine.camera.unitsWithinCameraX,
+                height: graphicEngine.camera.unitsWithinCameraY
             });
             
-            ctx.globalAlpha = this.opacity;
-            ctx.drawImage(this.image, x, y, width, height);
-            ctx.globalAlpha = 1;
+            canvasContext.globalAlpha = this.opacity;
+            canvasContext.drawImage(this.image, x, y, width, height);
+            canvasContext.globalAlpha = 1;
         }
     }
     

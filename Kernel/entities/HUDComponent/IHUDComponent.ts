@@ -1,5 +1,5 @@
 import IAssetHandler from "../../AssetHandler/IAssetHandler";
-import { ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
+import IGraphicEngine, { ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "../../engines/SoundEngine/ISoundEngine";
 
 /**
@@ -51,13 +51,16 @@ export default interface IHUDComponent {
     
     /**
      * Draws the text content setup within this component
+     * @param graphicEngine the graphic engine for the level
      */
-    drawText():void;
+    drawText(graphicEngine:IGraphicEngine):void;
     
     /**
      * Draws the component
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    draw():void;
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void;
     
     /**
      * Prepares the component before the level starts

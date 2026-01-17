@@ -1,4 +1,5 @@
 import IAssetHandler from "../../AssetHandler/IAssetHandler";
+import IGraphicEngine from "../../engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "../../engines/SoundEngine/ISoundEngine";
 
 /**
@@ -31,6 +32,8 @@ export default interface IHUD {
     
     /**
      * Draws the HUD (triggers the same on any HUD components)
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    draw():void;
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void;
 };

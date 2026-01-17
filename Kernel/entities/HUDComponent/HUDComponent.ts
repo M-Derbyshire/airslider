@@ -1,6 +1,6 @@
 import IHUDComponent from './IHUDComponent';
 import Kernel from '../../Kernel';
-import { ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
+import IGraphicEngine, { ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
 import { IEntitySound } from '../types';
 import IAssetHandler from '../../AssetHandler/IAssetHandler';
 import ISoundEngine from '../../engines/SoundEngine/ISoundEngine';
@@ -90,10 +90,11 @@ export default class HUDComponent implements IHUDComponent
     
     /**
      * Draws the text content setup within this component
+     * @param graphicEngine the graphic engine for the level
      */
-    drawText():void
+    drawText(graphicEngine:IGraphicEngine):void
     {
-        Kernel.getInstance().graphicEngine.drawText(
+        graphicEngine.drawText(
             this.text,
             {
                 x: this.x,
@@ -106,8 +107,10 @@ export default class HUDComponent implements IHUDComponent
     
     /**
      * Draws the component
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    draw():void {}
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void {}
 	
     /**
      * Is the mouse pointer overlapping this component?

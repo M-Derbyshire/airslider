@@ -1,4 +1,5 @@
 import IAssetHandler from '../../../../Kernel/AssetHandler/IAssetHandler';
+import IGraphicEngine from '../../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 import Kernel from '../../../../Kernel/Kernel';
 import UnitHelper from '../../../../Kernel/utils/UnitHelper';
 import TextOnlyButton from '../TextOnlyButton/TextOnlyButton';
@@ -73,10 +74,12 @@ export default class TextButton extends TextOnlyButton
     
     /**
      * Draws the component
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    draw():void 
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
-        super.draw();
+        super.draw(graphicEngine, canvasContext);
         
         this._drawBackground();
         this._drawBorder();

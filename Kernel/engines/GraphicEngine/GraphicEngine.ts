@@ -74,7 +74,7 @@ export default class GraphicEngine implements IGraphicEngine {
         //Finally, draw everything that needs to be drawn on top of the models
         level.drawFront();
         this._frameManager.drawFramesFront(this._canvasCtx);
-        level.HUD.draw();
+        level.HUD.draw(this, this._canvasCtx);
         this.camera.drawFront();
         
         if(fpsDisplayColor)
