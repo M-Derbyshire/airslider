@@ -1,5 +1,7 @@
 import {: baseClass :} from '../{: baseClass :}/{: baseClass :}';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
+import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 
 /**
  * A class for a HUDComponent
@@ -30,20 +32,23 @@ export default class {: name :} extends {: baseClass :}
     
     /**
      * Prepares the component before the level starts
+     * @param soundEngine the sound engine for the level
      */
-    prepare():void 
+    prepare(soundEngine:ISoundEngine):void
     {
-        super.prepare();
+        super.prepare(soundEngine);
         
         // Set anything that will need setting/resetting when a level starts/restarts
     }
     
     /**
      * Draws the component
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    draw():void 
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
-        super.draw();
+        super.draw(graphicEngine, canvasContext);
         
         // Do any extra drawing operations here
     }

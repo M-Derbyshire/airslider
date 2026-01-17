@@ -1,6 +1,8 @@
 import HUD from "../../../Kernel/entities/HUD/HUD";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
+import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 
 /**
  * A base class for a Heads Up Display
@@ -36,20 +38,23 @@ export default class {: name :} extends HUD
     
     /**
      * Prepares the HUD before the level starts (triggers the same on any HUD components)
+     * @param soundEngine the sound engine for the level
      */
-    prepare():void
+    prepare(soundEngine:ISoundEngine):void
     {
-        super.prepare();
+        super.prepare(soundEngine);
         
         // Set anything that will need setting/resetting when a level starts/restarts
     }
     
     /**
      * Draws the HUD (triggers the same on any HUD components)
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    draw():void
+    draw(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
-        super.draw();
+        super.draw(graphicEngine, canvasContext);
         
         // Do any extra drawing operations here
     }
