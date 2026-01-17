@@ -1,4 +1,3 @@
-import Kernel from '../../Kernel';
 import ISoundEngine, { SoundStatus } from './ISoundEngine';
 
 /**
@@ -7,11 +6,16 @@ import ISoundEngine, { SoundStatus } from './ISoundEngine';
 export default class SoundEngine implements ISoundEngine {
     private _sounds:Map<string, ISound>;
     
+    private _onErrorCallback:(err:any)=>void;
+    
     /**
      * Constructor
+     * @param onErrorCallback a callback to trigger if an error occurs
      */
-    constructor()
+    constructor(onErrorCallback:(err:any)=>void)
     {
+        this._onErrorCallback = onErrorCallback;
+        
         this._sounds = new Map<string, ISound>();
     }
     
@@ -103,7 +107,7 @@ export default class SoundEngine implements ISoundEngine {
                 // has resolved, an "AbortError" will be thrown. We just
                 // want to catch and swallow it here.
                 if(err.name !== "AbortError")
-                    Kernel.getInstance().handleError(err);
+                    this._onErrorCallback(err);
             });
         
         sound.status = SoundStatus.Playing;

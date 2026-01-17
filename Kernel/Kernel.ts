@@ -467,7 +467,7 @@ export default class Kernel implements IKernel {
 	{
 		const gameEngine = new GameEngine(level, loadedModels);
         const graphicEngine = new GraphicEngine(camera, level.frameManager, this._canvasContext);
-        const soundEngine = new SoundEngine();
+        const soundEngine = new SoundEngine((err:any) => this.handleError(err));
         
         return { gameEngine, graphicEngine, soundEngine };
 	}
