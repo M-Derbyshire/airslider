@@ -18,8 +18,9 @@ export default interface IHUD {
     
     /**
      * Unloads any assets that need to be unloaded by the HUD (triggers the same on any HUD components)
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    unload():void;
+    unload(assetHandler:IAssetHandler):void;
     
     /**
      * Prepares the HUD before the level starts (triggers the same on any HUD components)

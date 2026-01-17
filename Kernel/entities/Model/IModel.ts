@@ -103,8 +103,9 @@ export default interface IModel {
     
     /**
      * Unloads any assets used by the model
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    unload():void;
+    unload(assetHandler:IAssetHandler):void;
     
     /**
      * Calculates and stores the positions/dimensions to use when drawing the model (these can be accessed via the

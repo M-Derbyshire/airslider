@@ -480,8 +480,8 @@ export default class Kernel implements IKernel {
     {
         this.soundEngine.reset();
         
-        this.loadedModels.forEach(model => model.unload());
-        this.level.unload();
+        this.loadedModels.forEach(model => model.unload(this._assetHandler));
+        this.level.unload(this._assetHandler);
         
         this._levelQueue.shift();
         

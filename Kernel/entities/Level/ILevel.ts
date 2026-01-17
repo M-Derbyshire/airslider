@@ -30,8 +30,9 @@ export default interface ILevel {
     
     /**
      * Unloads any assets used by the level, and clears up anything else
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    unload():void;
+    unload(assetHandler:IAssetHandler):void;
     
     /**
      * Prepares the level, before the gameplay starts

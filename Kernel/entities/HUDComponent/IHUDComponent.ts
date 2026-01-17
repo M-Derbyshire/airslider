@@ -44,8 +44,9 @@ export default interface IHUDComponent {
     
     /**
      * Unloads any assets that need to be unloaded by the component
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    unload():void;
+    unload(assetHandler:IAssetHandler):void;
     
     /**
      * Draws the text content setup within this component

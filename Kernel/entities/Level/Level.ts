@@ -76,16 +76,16 @@ export default class Level implements ILevel
     
     /**
      * Unloads any assets used by the level, and clears up anything else
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    unload():void
+    unload(assetHandler:IAssetHandler):void
     {
-        const assetHandler = Kernel.getInstance().assetHandler;
         this.assetsToUnload.forEach(asset => assetHandler.releaseAsset(asset));
         
         this.pointerEventManager.removeEventHandlers();
         this.keyboardEventManager.removeEventHandlers();
         
-        this.HUD.unload();
+        this.HUD.unload(assetHandler);
     }
     
     /**
