@@ -1,4 +1,3 @@
-import Kernel from "../Kernel";
 import { pathToUniqueFilename } from "./deployedFilename";
 import IAssetHandler from "./IAssetHandler";
 import ILoadedAssetData from "./ILoadedAssetData";
@@ -8,6 +7,8 @@ import ILoadedAssetData from "./ILoadedAssetData";
  */
 export default class AssetHandler implements IAssetHandler
 {
+    private _onErrorCallback:(err:any)=>void; // Should be called whenever there is a loading error
+    
     private _assetsDirPath:string; // The path of the assets directory
     private _isHostedLocally:boolean; // Is the game being hosted locally?
     
@@ -23,10 +24,15 @@ export default class AssetHandler implements IAssetHandler
         return this._assetsStillLoading;
     }
     
-    constructor()
+    /**
+     * Constructor
+     * @param onErrorCallback a callback to trigger if there is an error when loading an asset
+     * @param assetsDirUrl the URL of the assets directory (if the game is not being hosted locally)
+     */
+    constructor(onErrorCallback:(err:any)=>void, assetsDirUrl?:string)
     {
-        const assetsDirUrl = Kernel.getInstance().settings.assetsDirUrl;
         this._assetsDirPath = assetsDirUrl ?? this._getLocalAssetsDirPath();
+        this._onErrorCallback = onErrorCallback;
         
         this._isHostedLocally = !assetsDirUrl;
         
@@ -68,8 +74,6 @@ export default class AssetHandler implements IAssetHandler
         if(this._loadedFontPaths.includes(path)) 
             return;
         
-        const kernel = Kernel.getInstance();
-        
         const font = new FontFace(name, `url(${this._prepareAssetPath(path)})`);
         
         font.load()
@@ -79,7 +83,7 @@ export default class AssetHandler implements IAssetHandler
                 fontFaceSet.add(newFont);
                 this._defaultAssetCallback();
             })
-            .catch((err:any) => kernel.handleError(err));
+            .catch((err:any) => this._onErrorCallback(err));
         
         this._assetsStillLoading++;
         this._loadedFontPaths.push(path);
@@ -116,10 +120,7 @@ export default class AssetHandler implements IAssetHandler
             loaded: false
         }; 
         
-        const kernel = Kernel.getInstance();
-        newLoadedAsset.asset.onerror = (err:any) => {
-            kernel.handleError(err);
-        };
+        newLoadedAsset.asset.onerror = (err:any) => this._onErrorCallback(err)
         
         const afterLoadCallback = () => {
             if(!newLoadedAsset.loaded)

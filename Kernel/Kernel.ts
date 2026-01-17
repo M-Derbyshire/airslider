@@ -112,13 +112,16 @@ export default class Kernel implements IKernel {
         this._highestFpsReached = 0;
         this._lastTime = new Date();
         
-        this._assetHandler = new AssetHandler();
-        
         this._levelQueue = [];
         
         this._hasError = false;
         this._errorHandler = new ErrorHandler(this._canvasContext);
         this._centralState = new Map<string, any>();
+        
+        this._assetHandler = new AssetHandler(
+            (err:any) => this.handleError(err),
+            this._settings.assetsDirUrl
+        );
         
         this._currentLevelShouldBeUnloaded = false;
     }
