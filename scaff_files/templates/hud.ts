@@ -1,25 +1,30 @@
 import {: baseClass :} from "../{: baseClass :}/{: baseClass :}";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * A class for a Heads Up Display
  */
 export default class {: name :} extends {: baseClass :}
 {
-    constructor()
+    /**
+     * Constructor
+     * @param pointerEventManager the level's PointerEventManager
+     */
+    constructor(pointerEventManager:IPointerEventManager)
     {
-        super();
+        super(pointerEventManager);
         
         // Handle construction here
     }
     
     /**
      * Loads the HUD
-     * @param pointerEventManager the level's PointerEventManager
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load(pointerEventManager:IPointerEventManager):void
+    load(assetHandler:IAssetHandler):void
     {
-        super.load(pointerEventManager);
+        super.load(assetHandler);
         
         // Handle loading any assets here
         // You should also push any HUDComponents to the this.components array here

@@ -1,4 +1,5 @@
 import HUDComponent from '../../../Kernel/entities/HUDComponent/HUDComponent';
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * A base HUDComponent class
@@ -14,10 +15,11 @@ export default class {: name :} extends HUDComponent
     
     /**
      * Loads the component
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load():void 
+    load(assetHandler:IAssetHandler):void 
     {
-        super.load();
+        super.load(assetHandler);
         
         // Handle loading any assets here
         

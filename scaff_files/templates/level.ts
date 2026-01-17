@@ -4,6 +4,7 @@ import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManage
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
+import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 
 /**
  * A class for a Level
@@ -47,10 +48,11 @@ export default class {: name :} extends {: baseClass :}
     
     /**
      * Loads the level's assets
+     * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-	load():void
+	load(assetHandler:IAssetHandler):void
 	{
-		super.load();
+		super.load(assetHandler);
         
         // Handle loading any assets here
         
