@@ -29,6 +29,18 @@ export default interface ICamera {
      */
     readonly canvasPositionHeight:number;
     
+    /**
+     * How many draw-space units are there within the camera's size (on the x axis)? So, if this value was
+     * 1000, then a model with a width of 1000 would take up the entire screen (assuming its z position was 0)
+     */
+    readonly unitsWithinCameraX:number;
+    
+    /**
+     * How many draw-space units are there within the camera's size (on the y axis)? So, if this value was
+     * 1000, then a model with a height of 1000 would take up the entire screen (assuming its z position was 0)
+     */
+    readonly unitsWithinCameraY:number;
+    
     
     
     /**

@@ -8,8 +8,6 @@ import ZCalc from '../../utils/ZCalc/ZCalc';
 export default class Camera implements ICamera {
     private _aspectRatioHorizontal:number; // The horizontal aspect ratio value (e.g. the "16" in "16:9")
     private _aspectRatioVertical:number; // The vertical aspect ratio value (e.g. the "9" in "16:9")
-    private _unitsWithinCameraX:number; // How many draw-space units are there within the camera's size (on the x axis)? So, if this value was 1000, then a model with a width of 1000 would take up the entire screen (assuming its z position was 0)
-    private _unitsWithinCameraY:number; // How many draw-space units are there within the camera's size (on the y axis)? So, if this value was 1000, then a model with a height of 1000 would take up the entire screen (assuming its z position was 0)
     
     private _canvas:HTMLCanvasElement; // The HTML canvas element where the game is being drawn
     
@@ -19,7 +17,15 @@ export default class Camera implements ICamera {
     private _letterBoxColor:string; // The color of the letterboxing that surrounds the game (depending on the aspect ratio)
     
     // These functions are used to determine where to actually draw something on the canvas (based on camera position)
-    unitCameraPositionCalc:ICameraDrawPositionsCalc; 
+    unitCameraPositionCalc:ICameraDrawPositionsCalc;
+    
+    // How many draw-space units are there within the camera's size (on the x axis)? So, if this value was 1000, then
+    // a model with a width of 1000 would take up the entire screen (assuming its z position was 0)
+    unitsWithinCameraX:number;
+    
+    // How many draw-space units are there within the camera's size (on the y axis)? So, if this value was 1000, then
+    // a model with a height of 1000 would take up the entire screen (assuming its z position was 0)
+    unitsWithinCameraY:number;
     
     /**
      * Constructor
@@ -40,8 +46,8 @@ export default class Camera implements ICamera {
         this._aspectRatioHorizontal = aspectRatioHorizontal;
         this._aspectRatioVertical = aspectRatioVertical;
         
-        this._unitsWithinCameraX = unitsWithinCameraX;
-        this._unitsWithinCameraY = unitsWithinCameraY;
+        this.unitsWithinCameraX = unitsWithinCameraX;
+        this.unitsWithinCameraY = unitsWithinCameraY;
         
         this._canvas = canvas;
         
@@ -237,8 +243,8 @@ export default class Camera implements ICamera {
      */
     setCameraPosition(x:number, y:number):void
     {
-        const centerX = this._unitsWithinCameraX / 2;
-        const centerY = this._unitsWithinCameraY / 2;
+        const centerX = this.unitsWithinCameraX / 2;
+        const centerY = this.unitsWithinCameraY / 2;
         
         this._positions.drawSpace.x = x - centerX;
         this._positions.drawSpace.y = y - centerY;

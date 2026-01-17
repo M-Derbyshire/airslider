@@ -101,11 +101,7 @@ export default class Level implements ILevel
         
         this.registerLevelEvents();
         
-        this._resetCameraPosition(
-            kernel.graphicEngine.camera,
-            kernel.settings.unitsWithinCameraX,
-            kernel.settings.unitsWithinCameraY
-        );
+        this._resetCameraPosition(kernel.graphicEngine.camera);
         
         this.sounds.forEach(sound => kernel.soundEngine.addSound(sound.key, sound.asset));
         
@@ -170,14 +166,12 @@ export default class Level implements ILevel
     /**
      * Places the top-left of the camera at the top-left of the level's space
      * @param camera the game camera
-     * @param unitsWithinCameraX How many draw-space units are there within the camera's size (on the x axis)?
-     * @param unitsWithinCameraY How many draw-space units are there within the camera's size (on the y axis)?
      */
-    private _resetCameraPosition(camera:ICamera, unitsWithinCameraX:number, unitsWithinCameraY:number):void
+    private _resetCameraPosition(camera:ICamera):void
     {
         camera.setCameraPosition(
-            unitsWithinCameraX / 2,
-            unitsWithinCameraY / 2
+            camera.unitsWithinCameraX / 2,
+            camera.unitsWithinCameraY / 2
         );
     }
 }
