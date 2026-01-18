@@ -101,8 +101,6 @@ export default class Level implements ILevel
         
         this.registerLevelEvents();
         
-        this._resetCameraPosition(camera);
-        
         this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
         
         this.HUD.prepare(soundEngine);
@@ -161,17 +159,5 @@ export default class Level implements ILevel
     {
         this.HUD.load(assetHandler);
         this.HUD.loadComponents(assetHandler);
-    }
-    
-    /**
-     * Places the top-left of the camera at the top-left of the level's space
-     * @param camera the game camera
-     */
-    private _resetCameraPosition(camera:ICamera):void
-    {
-        camera.setCameraPosition(
-            camera.unitsWithinCameraX / 2,
-            camera.unitsWithinCameraY / 2
-        );
     }
 }
