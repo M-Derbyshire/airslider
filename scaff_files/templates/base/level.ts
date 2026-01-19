@@ -58,8 +58,12 @@ export default class {: name :} extends Level
         
         // Handle loading any assets here
         
+        this.sounds = [
+            // Any sounds that have been loaded should be added here (as IEntitySound objects)
+        ];
+        
         this.assetsToUnload.push(
-            // Any assets that need to be unloaded (when the level is unloaded) should be added here
+            // The filepaths of any assets that will need to be unloaded (when the level is unloaded) should be added here
         );
 	}
     

@@ -18,6 +18,10 @@ export default class {: name :} extends HUD
         super(pointerEventManager);
         
         // Handle construction here
+        
+        this.components = [
+            // Add any HUD components to this array
+        ];
     }
     
     /**
@@ -29,10 +33,13 @@ export default class {: name :} extends HUD
         super.load(assetHandler);
         
         // Handle loading any assets here
-        // You should also push any HUDComponents to the this.components array here
+        
+        this.sounds = [
+            // Any sounds that have been loaded should be added here (as IEntitySound objects)
+        ];
         
         this.assetsToUnload.push(
-            // Any assets that need to be unloaded (when the level is unloaded) should be added here
+            // The filepaths of any assets that will need to be unloaded (when the level is unloaded) should be added here
         );
     }
     
