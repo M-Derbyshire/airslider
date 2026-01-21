@@ -1,5 +1,5 @@
+import ICamera from "../../../engines/GraphicEngine/ICamera";
 import { IDrawDimensions, IDrawPositions } from "../../../engines/GraphicEngine/IGraphicEngine";
-import Kernel from "../../../Kernel";
 import UnitHelper from "../../UnitHelper";
 import IZCalcStrategy from "./IZCalcStrategy";
 
@@ -220,31 +220,35 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
     /**
      * Takes the given X/Y/Width/Height values (in pixels) and calculates the correct values to draw with, based on the 
      * given Z position
+     * @param camera the camera for the level
      * @param pixelValues the original X/Y positions and width/height (in pixels)
      * @param zPosition the Z position of the element being drawn
      * @param showNegative should the element still be drawn if the Z position is negative?
      * @returns If the Z position is "out of view", 0 will be returned for all values. Otherwise, the scaled X/Y/Width/Height
      */
     getDrawValues(
+        camera:ICamera,
         pixelValues: IDrawPositions & IDrawDimensions, 
         zPosition: number, 
         showNegative?: boolean
     ): IDrawPositions & IDrawDimensions {
         return {
-            ...this.getDrawPositionValues(pixelValues, zPosition, showNegative),
-            ...this.getDrawDimensionValues(pixelValues, zPosition, showNegative)
+            ...this.getDrawPositionValues(camera, pixelValues, zPosition, showNegative),
+            ...this.getDrawDimensionValues(camera, pixelValues, zPosition, showNegative)
         };
     }
     
     /**
      * Takes the given X/Y values (in pixels) and calculates the correct values to draw with, based on the 
      * given Z position
+     * @param camera the camera for the level
      * @param pixelValues the original X/Y positions (in pixels)
      * @param zPosition the Z position of the element being drawn
      * @param showNegative should the element still be drawn if the Z position is negative?
      * @returns If the Z position is "out of view", 0 will be returned for all values. Otherwise, the scaled X/Y
      */
     getDrawPositionValues(
+        camera:ICamera,
         pixelValues:IDrawPositions, 
         zPosition: number, 
         showNegative?:boolean
@@ -255,13 +259,11 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
         if(Math.round(zPosition) === 0)
             return pixelValues;
         
-        const kernel = Kernel.getInstance();
-        
         const vanishPointPixelsX = UnitHelper.xUnit(this._vanishingPointX);
-        const positionedVanishPointPixelsX = kernel.graphicEngine.camera.canvasPositionX + vanishPointPixelsX;
+        const positionedVanishPointPixelsX = camera.canvasPositionX + vanishPointPixelsX;
         
         const vanishPointPixelsY = UnitHelper.yUnit(this._vanishingPointY);
-        const positionedVanishPointPixelsY = kernel.graphicEngine.camera.canvasPositionY + vanishPointPixelsY;
+        const positionedVanishPointPixelsY = camera.canvasPositionY + vanishPointPixelsY;
         
         return {
             x: this._position(zPosition, pixelValues.x, positionedVanishPointPixelsX),
@@ -272,12 +274,14 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
     /**
      * Takes the given Width/Height values (in pixels) and calculates the correct values to draw with, based on the 
      * given Z position
+     * @param camera the camera for the level
      * @param pixelValues the original width/height (in pixels)
      * @param zPosition the Z position of the element being drawn
      * @param showNegative should the element still be drawn if the Z position is negative?
      * @returns If the Z position is "out of view", 0 will be returned for all values. Otherwise, the scaled Width/Height
      */
     getDrawDimensionValues(
+        camera:ICamera,
         pixelValues:IDrawDimensions, 
         zPosition: number, 
         showNegative?:boolean

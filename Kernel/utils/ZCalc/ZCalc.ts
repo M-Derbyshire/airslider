@@ -1,3 +1,4 @@
+import ICamera from "../../engines/GraphicEngine/ICamera";
 import { IDrawDimensions, IDrawPositions } from "../../engines/GraphicEngine/IGraphicEngine";
 import IZCalcStrategy from "./strategies/IZCalcStrategy";
 import NoScalingStrategy from "./strategies/NoScalingStrategy";
@@ -20,17 +21,19 @@ export default class ZCalc
     /**
      * Takes the given X/Y/Width/Height values (in pixels) and calculates the correct values to draw with, based on the 
      * given Z position
+     * @param camera the camera for the level
      * @param pixelValues the original X/Y positions and width/height (in pixels)
      * @param zPosition the Z position of the element being drawn
      * @param showNegative should the element still be drawn if the Z position is negative?
      * @returns If the Z position is "out of view", 0 will be returned for all values. Otherwise, the scaled X/Y/Width/Height
      */
     static getDrawValues(
+        camera:ICamera,
         pixelValues:IDrawPositions&IDrawDimensions, 
         zPosition: number, 
         showNegative?:boolean
     ):IDrawPositions&IDrawDimensions 
     {
-        return this._strategy.getDrawValues(pixelValues, zPosition, showNegative);
+        return this._strategy.getDrawValues(camera, pixelValues, zPosition, showNegative);
     }
 }
