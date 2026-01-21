@@ -66,13 +66,13 @@ export default class GraphicEngine implements IGraphicEngine {
         // Draw the elements that are behind the models
         this.camera.drawBack();
         this._frameManager.drawFramesBack(this._canvasCtx);
-        level.drawBack();
+        level.drawBack(this, this._canvasCtx);
         
         // Now the models
         this._drawModels(models, fps);
         
         //Finally, draw everything that needs to be drawn on top of the models
-        level.drawFront();
+        level.drawFront(this, this._canvasCtx);
         this._frameManager.drawFramesFront(this._canvasCtx);
         level.HUD.draw(this, this._canvasCtx);
         this.camera.drawFront();

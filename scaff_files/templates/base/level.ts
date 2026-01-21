@@ -1,5 +1,6 @@
 import Level from '../../../Kernel/entities/Level/Level';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
+import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
@@ -88,20 +89,24 @@ export default class {: name :} extends Level
     
     /**
      * Draws anything that needs to be in the back (before the models) of the level
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    drawBack():void
+    drawBack(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
-        super.drawBack();
+        super.drawBack(graphicEngine, canvasContext);
         
         // Draw anything that should be in the back of the level (behind the models)
     }
     
     /**
      * Draws anything that needs to be in the front (over the models) of the level
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    drawFront():void
+    drawFront(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
-        super.drawFront();
+        super.drawFront(graphicEngine, canvasContext);
         
         // Draw anything that should be in the front of the level (over the models)
     }

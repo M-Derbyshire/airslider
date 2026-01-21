@@ -21,6 +21,7 @@ import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventMa
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
 import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 
 /**
  * The Coratune level
@@ -245,10 +246,12 @@ export default class Coratune extends ASLevel<Jellyfish>
 
     /**
      * Draws anything that needs to be in the back (before the models) of the level
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    drawBack():void
+    drawBack(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
-        super.drawBack();
+        super.drawBack(graphicEngine, canvasContext);
         
         if(this.finishFlagsActive)
             this._finishFlagsBuoyManager.draw(this.levelSpeed);

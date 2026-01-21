@@ -9,6 +9,7 @@ import IKeyboardEventManager from './IKeyboardEventManager';
 import HUD from '../HUD/HUD';
 import IAssetHandler from '../../AssetHandler/IAssetHandler';
 import ISoundEngine from '../../engines/SoundEngine/ISoundEngine';
+import IGraphicEngine from '../../engines/GraphicEngine/IGraphicEngine';
 
 /**
  * A level of the game
@@ -145,13 +146,17 @@ export default class Level implements ILevel
     
     /**
      * Draws anything that needs to be in the back (behind the models) of the level
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    drawBack():void {}
+    drawBack(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void {}
     
     /**
      * Draws anything that needs to be in the front (over the models) of the level
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    drawFront():void {}
+    drawFront(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void {}
 	
     /**
      * Registers any events that will need to be monitored during gameplay

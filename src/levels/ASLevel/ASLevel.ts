@@ -32,6 +32,7 @@ import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventMa
 import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager';
 import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 
 /**
  * The game's base Level class
@@ -305,10 +306,14 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     }
     
     /**
-     * Draws anything that needs to be in the back (before the models) of the level
+     * Draws anything that needs to be in the back (behind the models) of the level
+     * @param graphicEngine the graphic engine for the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    drawBack():void
+    drawBack(graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
+        super.drawBack(graphicEngine, canvasContext);
+        
         this.groundManager.draw(this.levelSpeed);
         
         if(this.finishFlagsActive)
