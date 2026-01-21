@@ -50,8 +50,9 @@ export default interface ILevel {
     
     /**
      * Runs the registered model event checks
+     * @param models the models for the current level
      */
-    checkForModelEvents():void;
+    checkForModelEvents(models:IModel[]):void;
     
     /**
      * Triggers a check for any pointer hover events

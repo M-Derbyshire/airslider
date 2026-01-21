@@ -5,6 +5,7 @@ import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventMa
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import Kernel from '../../../Kernel/Kernel';
 
 /**
  * A class for a Level
@@ -112,8 +113,11 @@ export default class {: name :} extends {: baseClass :}
 	{
         super.registerLevelEvents();
         
-        this.modelEventManager.registerEventsArray([
-            // Register any model events here (e.g. collisions)
-        ]);
+        this.modelEventManager.registerEventsArray(
+            [
+                // Register any model events here (e.g. collisions)
+            ],
+            Kernel.getInstance().loadedModels
+        );
 	}
 };

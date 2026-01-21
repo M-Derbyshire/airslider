@@ -54,6 +54,6 @@ export default class GameEngine implements IGameEngine {
      */
     private _runEventChecks():void
     {
-        this._level.checkForModelEvents();
+        this._level.checkForModelEvents(this._loadedModels);
     }
 }

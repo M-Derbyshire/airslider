@@ -9,14 +9,16 @@ export default interface IModelEventManager {
      * event check is ran, each model of the first class will be checked against each model of the second class, to see 
      * if the event has occurred between them.
      * @param event The details of an event to be registered
+     * @param models The models for the current level
      */
-    registerEvent(event:IModelEventRegistrationDetails):void;
+    registerEvent(event:IModelEventRegistrationDetails, models:IModel[]):void;
     
     /**
      * Registers multiple event checks. See registerEvent method for more details
      * @param events The details of the events to be registered
+     * @param models The models for the current level
      */
-    registerEventsArray(events:IModelEventRegistrationDetails[]):void;
+    registerEventsArray(events:IModelEventRegistrationDetails[], models:IModel[]):void;
     
     /**
      * Removes all the registered event checks
@@ -25,8 +27,9 @@ export default interface IModelEventManager {
     
     /**
      * Runs the event checks, along with any extra events associated with the level's models
+     * @param models The models for the current level
      */
-    checkForEvents():void;    
+    checkForEvents(models:IModel[]):void;    
 };
 
 

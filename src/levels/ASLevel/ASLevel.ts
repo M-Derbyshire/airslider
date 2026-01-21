@@ -373,7 +373,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
 	protected registerLevelEvents():void
 	{
         super.registerLevelEvents();
-        this.modelEventManager.registerEventsArray(standardModelEvents);
+        this.modelEventManager.registerEventsArray(standardModelEvents, Kernel.getInstance().loadedModels);
         this._setupPlayerControls();
         this._setupKeyboardPauseToggle();
 	}

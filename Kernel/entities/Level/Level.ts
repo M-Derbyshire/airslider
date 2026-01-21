@@ -5,7 +5,6 @@ import ILevel from './ILevel';
 import IFrameManager from '../../engines/GraphicEngine/IFrameManager';
 import IHUD from '../HUD/IHUD';
 import { IEntitySound } from '../types';
-import ICamera from '../../engines/GraphicEngine/ICamera';
 import IKeyboardEventManager from './IKeyboardEventManager';
 import HUD from '../HUD/HUD';
 import IAssetHandler from '../../AssetHandler/IAssetHandler';
@@ -115,10 +114,11 @@ export default class Level implements ILevel
     
     /**
      * Runs the registered model event checks
+     * @param models the models for the current level
      */
-    checkForModelEvents():void
+    checkForModelEvents(models:IModel[]):void
     {
-        this.modelEventManager.checkForEvents();
+        this.modelEventManager.checkForEvents(models);
     }
     
     /**
