@@ -1,5 +1,4 @@
 import IHUDComponent from './IHUDComponent';
-import Kernel from '../../Kernel';
 import IGraphicEngine, { ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
 import { IEntitySound } from '../types';
 import IAssetHandler from '../../AssetHandler/IAssetHandler';
@@ -122,14 +121,15 @@ export default class HUDComponent implements IHUDComponent
      * Is the mouse pointer overlapping this component?
      * @param pointX the x position (within the canvas's space) of the mouse pointer 
      * @param pointY the y position (within the canvas's space) of the mouse pointer
+     * @param graphicEngine the graphic engine for the level
      * @returns true if it is overlapping, false if not
      */
-	isPointerOverlapping(pointX:number, pointY:number):boolean
+	isPointerOverlapping(pointX:number, pointY:number, graphicEngine:Omit<IGraphicEngine, "run">):boolean
 	{
         if(this.width === 0 || this.height === 0)
             return false;
         
-        const { x, y, width, height } = Kernel.getInstance().graphicEngine.getStaticDrawPositionsAndDimensions({
+        const { x, y, width, height } = graphicEngine.getStaticDrawPositionsAndDimensions({
             x: this.x,
             y: this.y,
             width: this.width,

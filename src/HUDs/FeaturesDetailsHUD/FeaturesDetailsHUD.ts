@@ -3,6 +3,7 @@ import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import TextOnlyButton from "../../HUDComponents/UI-Components/TextOnlyButton/TextOnlyButton";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
+import Kernel from "../../../Kernel/Kernel";
 
 /**
  * A HUD for the feature-details screen
@@ -71,8 +72,10 @@ fullscreen button in the top-right of the screen`,
     {
         super.prepare();
         
+        const graphicEngine = Kernel.getInstance().graphicEngine;
+        
         this.pointerEventManager.addPointerEventSubject(
-            (x, y) => this._continueButton.isPointerOverlapping(x, y),
+            (x, y) => this._continueButton.isPointerOverlapping(x, y, graphicEngine),
             () => this._continueButton.active,
             () => this._continueButton.onClick(),
             null,
@@ -80,7 +83,7 @@ fullscreen button in the top-right of the screen`,
         );
         
         this.pointerEventManager.addPointerEventSubject(
-            (x, y) => this._fullscreenButton.isPointerOverlapping(x, y),
+            (x, y) => this._fullscreenButton.isPointerOverlapping(x, y, graphicEngine),
             () => this._fullscreenButton.active,
             () => this._fullscreenButton.onClick(),
             null,

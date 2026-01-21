@@ -3,6 +3,7 @@ import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
+import Kernel from "../../../Kernel/Kernel";
 
 /**
  * A HUD for the credits screen
@@ -106,7 +107,7 @@ http://scripts.sil.org/OFL`,
         
         if(this._fullscreenButton)
             this.pointerEventManager.addPointerEventSubject(
-                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y),
+                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y, Kernel.getInstance().graphicEngine),
                 () => this._fullscreenButton.active,
                 () => this._fullscreenButton.onClick(),
                 null,

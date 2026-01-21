@@ -102,8 +102,10 @@ export default class MainHUD extends ASHUD
     {
         super.prepare();
         
+        const graphicEngine = Kernel.getInstance().graphicEngine;
+        
         this.pointerEventManager.addPointerEventSubject(
-            (x, y) => this._pauseButton.isPointerOverlapping(x, y),
+            (x, y) => this._pauseButton.isPointerOverlapping(x, y, graphicEngine),
             () => this._pauseButton.active,
             () => this._pauseButton.onClick(),
             null,
@@ -111,7 +113,7 @@ export default class MainHUD extends ASHUD
         );
         
         this.pointerEventManager.addPointerEventSubject(
-            (x, y) => this._nextLevelButton.isPointerOverlapping(x, y),
+            (x, y) => this._nextLevelButton.isPointerOverlapping(x, y, graphicEngine),
             () => this._nextLevelButton.active,
             () => this._nextLevelButton.onClick(),
             () => this._nextLevelButton.onHover(),
@@ -119,7 +121,7 @@ export default class MainHUD extends ASHUD
         );
         
         this.pointerEventManager.addPointerEventSubject(
-            (x, y) => this._retryLevelButton.isPointerOverlapping(x, y),
+            (x, y) => this._retryLevelButton.isPointerOverlapping(x, y, graphicEngine),
             () => this._retryLevelButton.active,
             () => this._retryLevelButton.onClick(),
             () => this._retryLevelButton.onHover(),
@@ -128,7 +130,7 @@ export default class MainHUD extends ASHUD
         
         if(this._fullscreenButton)
             this.pointerEventManager.addPointerEventSubject(
-                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y),
+                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y, graphicEngine),
                 () => this._fullscreenButton.active,
                 () => this._fullscreenButton.onClick(),
                 null,

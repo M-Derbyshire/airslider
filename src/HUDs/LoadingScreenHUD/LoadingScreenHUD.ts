@@ -75,8 +75,10 @@ export default class LoadingScreenHUD extends ASHUD
     {
         super.prepare();
         
+        const graphicEngine = Kernel.getInstance().graphicEngine;
+        
         this.pointerEventManager.addPointerEventSubject(
-            (x, y) => this._continueButton.isPointerOverlapping(x, y),
+            (x, y) => this._continueButton.isPointerOverlapping(x, y, graphicEngine),
             () => this._continueButton.active,
             () => this._continueButton.onClick(),
             () => this._continueButton.onHover(),
@@ -85,7 +87,7 @@ export default class LoadingScreenHUD extends ASHUD
         
         if(this._fullscreenButton)
             this.pointerEventManager.addPointerEventSubject(
-                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y),
+                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y, graphicEngine),
                 () => this._fullscreenButton.active,
                 () => this._fullscreenButton.onClick(),
                 null,

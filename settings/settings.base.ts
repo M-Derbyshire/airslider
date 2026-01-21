@@ -3,7 +3,6 @@ import KeyboardEventManager from '../Kernel/entities/Level/KeyboardEventManager'
 import ModelEventManager from '../Kernel/entities/Level/ModelEventManager';
 import PointerEventManager from '../Kernel/entities/Level/PointerEventManager';
 import IKernel from '../Kernel/IKernel';
-import Kernel from '../Kernel/Kernel';
 import EpilepsyWarning from '../src/levels/EpilepsyWarning/EpilepsyWarning';
 import CoratuneLoadingScreen from '../src/levels/LoadingScreens/CoratuneLoadingScreen/CoratuneLoadingScreen';
 import ForurnLoadingScreen from '../src/levels/LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen';

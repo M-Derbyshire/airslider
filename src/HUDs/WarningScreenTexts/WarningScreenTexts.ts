@@ -4,6 +4,7 @@ import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
+import Kernel from "../../../Kernel/Kernel";
 
 /**
  * Displays text for a warning screen
@@ -93,8 +94,10 @@ export default class WarningScreenTexts extends ASHUD
     {
         super.prepare();
         
+        const graphicEngine = Kernel.getInstance().graphicEngine;
+        
         this.pointerEventManager.addPointerEventSubject(
-            (x, y) => this._continueButton.isPointerOverlapping(x, y),
+            (x, y) => this._continueButton.isPointerOverlapping(x, y, graphicEngine),
             () => this._continueButton.active,
             () => this._continueButton.onClick(),
             null,
@@ -103,7 +106,7 @@ export default class WarningScreenTexts extends ASHUD
         
         if(this._fullscreenButton)
             this.pointerEventManager.addPointerEventSubject(
-                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y),
+                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y, graphicEngine),
                 () => this._fullscreenButton.active,
                 () => this._fullscreenButton.onClick(),
                 null,

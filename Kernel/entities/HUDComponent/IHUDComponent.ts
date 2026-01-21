@@ -77,7 +77,8 @@ export default interface IHUDComponent {
      * Is the mouse pointer overlapping this component?
      * @param pointX the x position (within the canvas's space) of the mouse pointer 
      * @param pointY the y position (within the canvas's space) of the mouse pointer
+     * @param graphicEngine the graphic engine for the level
      * @returns true if it is overlapping, false if not
      */
-    isPointerOverlapping(pointX:number, pointY:number):boolean;
+    isPointerOverlapping(pointX:number, pointY:number, graphicEngine:IGraphicEngine):boolean;
 };
