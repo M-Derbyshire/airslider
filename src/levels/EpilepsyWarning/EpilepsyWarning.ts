@@ -10,8 +10,6 @@ import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
-import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
-import ICamera from '../../../Kernel/engines/GraphicEngine/ICamera';
 
 /**
  * A level that acts as a photosensitivity warning
@@ -56,14 +54,13 @@ Player discretion is advised.`;
     
     /**
      * Prepares the level, before the gameplay starts
-     * @param soundEngine the sound engine for the level
-     * @param camera the camera for the level
      */
-    prepare(soundEngine:ISoundEngine, camera:ICamera)
+    prepare()
     {
-        super.prepare(soundEngine, camera);
+        super.prepare();
         
         const kernel = Kernel.getInstance();
+        const camera = kernel.graphicEngine.camera;
         
         camera.setColors(this._backgroundColor, "#000000");
         

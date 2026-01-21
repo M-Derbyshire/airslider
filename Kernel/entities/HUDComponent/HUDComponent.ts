@@ -54,9 +54,8 @@ export default class HUDComponent implements IHUDComponent
     
     /**
      * Prepares the component before the level starts
-     * @param soundEngine the sound engine for the level
      */
-    prepare(soundEngine:ISoundEngine):void
+    prepare():void
     {
         this.text = {
             content: "",
@@ -69,8 +68,6 @@ export default class HUDComponent implements IHUDComponent
             alignment: "left",
             lineGap: 0
         };
-        
-        this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
     }
     
     /**
@@ -78,6 +75,15 @@ export default class HUDComponent implements IHUDComponent
      * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
     load(assetHandler:IAssetHandler):void {}
+    
+    /**
+     * Registers the sounds used by the component (these should be added to the sounds array during loading)
+     * @param soundEngine the sound engine for the level 
+     */
+    registerSounds(soundEngine:ISoundEngine):void
+    {
+        this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
+    }
     
     /**
      * Unloads any assets that need to be unloaded by the component

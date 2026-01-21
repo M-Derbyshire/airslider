@@ -31,6 +31,13 @@ export default interface ILevel {
     load(assetHandler:IAssetHandler):void;
     
     /**
+     * Registers the sounds used by the level (these should be added to the sounds array during loading). Also
+     * triggers the registration of the HUD's sounds
+     * @param soundEngine the sound engine for the level 
+     */
+    registerSounds(soundEngine:ISoundEngine):void;
+    
+    /**
      * Unloads any assets used by the level, and clears up anything else
      * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
@@ -38,10 +45,8 @@ export default interface ILevel {
     
     /**
      * Prepares the level, before the gameplay starts
-     * @param soundEngine the sound engine for the level
-     * @param camera the camera for the level
      */
-    prepare(soundEngine:ISoundEngine, camera:ICamera):void;
+    prepare():void;
     
     /**
      * Runs the registered model event checks

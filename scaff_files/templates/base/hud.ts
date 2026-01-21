@@ -1,7 +1,6 @@
 import HUD from "../../../Kernel/entities/HUD/HUD";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
-import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
 import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 
 /**
@@ -45,11 +44,10 @@ export default class {: name :} extends HUD
     
     /**
      * Prepares the HUD before the level starts (triggers the same on any HUD components)
-     * @param soundEngine the sound engine for the level
      */
-    prepare(soundEngine:ISoundEngine):void
+    prepare():void
     {
-        super.prepare(soundEngine);
+        super.prepare();
         
         // Set anything that will need setting/resetting when a level starts/restarts
     }

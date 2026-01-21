@@ -16,7 +16,14 @@ export default interface IHUD {
      * Loads the HUD's components
      * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    loadComponents(assetHandler:IAssetHandler):void
+    loadComponents(assetHandler:IAssetHandler):void;
+    
+    /**
+     * Registers the sounds used by the HUD (these should be added to the sounds array during loading). Also
+     * triggers the registration of the component's sounds
+     * @param soundEngine the sound engine for the level 
+     */
+    registerSounds(soundEngine:ISoundEngine):void;
     
     /**
      * Unloads any assets that need to be unloaded by the HUD (triggers the same on any HUD components)
@@ -26,9 +33,8 @@ export default interface IHUD {
     
     /**
      * Prepares the HUD before the level starts (triggers the same on any HUD components)
-     * @param soundEngine the sound engine for the level
      */
-    prepare(soundEngine:ISoundEngine):void;
+    prepare():void;
     
     /**
      * Draws the HUD (triggers the same on any HUD components)

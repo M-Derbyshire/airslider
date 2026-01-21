@@ -312,6 +312,8 @@ export default class Kernel implements IKernel {
         
         const engines = this._initialiseAllEngines(level, loadedModels, camera); // New engines, set up for this level
         
+        level.registerSounds(engines.soundEngine);
+        
         loadedModels.forEach((model, idx) => {
             model.loadedIndex = idx;
             model.load(this._assetHandler);
@@ -449,7 +451,7 @@ export default class Kernel implements IKernel {
         {
             this.soundEngine.reset();
             
-            this.level.prepare(this.soundEngine, this.graphicEngine.camera);
+            this.level.prepare();
             this.loadedModels.forEach(model => model.prepare());
             
             this._levelQueue[0].hasBeenPrepared = true;

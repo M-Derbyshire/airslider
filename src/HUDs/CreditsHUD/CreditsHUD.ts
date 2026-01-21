@@ -3,7 +3,6 @@ import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
-import ISoundEngine from "../../../Kernel/engines/SoundEngine/ISoundEngine";
 
 /**
  * A HUD for the credits screen
@@ -100,11 +99,10 @@ http://scripts.sil.org/OFL`,
     
     /**
      * Prepares the HUD before the level starts (triggers the same on any HUD components)
-     * @param soundEngine the sound engine for the level
      */
-    prepare(soundEngine:ISoundEngine):void
+    prepare():void
     {
-        super.prepare(soundEngine);
+        super.prepare();
         
         if(this._fullscreenButton)
             this.pointerEventManager.addPointerEventSubject(

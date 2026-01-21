@@ -1,6 +1,5 @@
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine';
-import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
 import Kernel from '../../../Kernel/Kernel';
 import UnitHelper from '../../../Kernel/utils/UnitHelper';
 import { CentralStateKey } from '../../levels/CentralStateKey';
@@ -66,11 +65,10 @@ export default class HealthDisplay extends ASHUDComponent
     
     /**
      * Prepares the component before the level starts
-     * @param soundEngine the sound engine for the level
      */
-    prepare(soundEngine:ISoundEngine):void
+    prepare():void
     {
-        super.prepare(soundEngine);
+        super.prepare();
         
         // Setup the text positions/dimensions
         this.text = {

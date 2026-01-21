@@ -5,8 +5,6 @@ import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventMa
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
-import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
-import ICamera from '../../../Kernel/engines/GraphicEngine/ICamera';
 
 /**
  * A class for a Level
@@ -69,12 +67,10 @@ export default class {: name :} extends {: baseClass :}
     
     /**
      * Prepares the level, before the gameplay starts
-     * @param soundEngine the sound engine for the level
-     * @param camera the camera for the level
      */
-    prepare(soundEngine:ISoundEngine, camera:ICamera):void
+    prepare():void
     {
-        super.prepare(soundEngine, camera);
+        super.prepare();
         
         // Set anything that will need setting/resetting when a level starts/restarts
     }

@@ -19,8 +19,6 @@ import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventMa
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
 import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
-import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
-import ICamera from '../../../Kernel/engines/GraphicEngine/ICamera';
 
 /**
  * The Forurn level
@@ -111,12 +109,10 @@ export default class Forurn extends ASLevel<Snake>
     
     /**
      * Prepares the level, before the gameplay starts
-     * @param soundEngine the sound engine for the level
-     * @param camera the camera for the level
      */
-    prepare(soundEngine:ISoundEngine, camera:ICamera)
+    prepare()
     {
-        super.prepare(soundEngine, camera);
+        super.prepare();
         
         const initialSnakeLineCount = 4;
         this.obstacleManagers[0].setObstacleModels(this._snakes);

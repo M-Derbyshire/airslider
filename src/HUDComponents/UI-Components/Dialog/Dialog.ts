@@ -1,5 +1,4 @@
 import IGraphicEngine from '../../../../Kernel/engines/GraphicEngine/IGraphicEngine';
-import ISoundEngine from '../../../../Kernel/engines/SoundEngine/ISoundEngine';
 import Kernel from '../../../../Kernel/Kernel';
 import UnitHelper from '../../../../Kernel/utils/UnitHelper';
 import ASHUDComponent from '../../ASHUDComponent/ASHUDComponent';
@@ -49,11 +48,10 @@ export default class Dialog extends ASHUDComponent
     
     /**
      * Prepares the component before the level starts
-     * @param soundEngine the sound engine for the level
      */
-    prepare(soundEngine:ISoundEngine):void
+    prepare():void
     {
-        super.prepare(soundEngine);
+        super.prepare();
         
         const settings = Kernel.getInstance().settings;
         

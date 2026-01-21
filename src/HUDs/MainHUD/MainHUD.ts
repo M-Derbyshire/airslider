@@ -9,7 +9,6 @@ import TextButton from '../../HUDComponents/UI-Components/TextButton/TextButton'
 import Kernel from '../../../Kernel/Kernel';
 import FullscreenButton from '../../HUDComponents/FullscreenButton/FullscreenButton';
 import FullscreenHelper from '../../../Kernel/utils/FullscreenHelper';
-import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
 
 export default class MainHUD extends ASHUD
 {
@@ -98,11 +97,10 @@ export default class MainHUD extends ASHUD
     
     /**
      * Prepares the HUD before the level starts (triggers the same on any HUD components)
-     * @param soundEngine the sound engine for the level
      */
-    prepare(soundEngine:ISoundEngine):void
+    prepare():void
     {
-        super.prepare(soundEngine);
+        super.prepare();
         
         this.pointerEventManager.addPointerEventSubject(
             (x, y) => this._pauseButton.isPointerOverlapping(x, y),

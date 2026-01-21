@@ -41,7 +41,13 @@ export default interface IHUDComponent {
      * Loads the component
      * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
-    load(assetHandler:IAssetHandler):void; 
+    load(assetHandler:IAssetHandler):void;
+    
+    /**
+     * Registers the sounds used by the component (these should be added to the sounds array during loading)
+     * @param soundEngine the sound engine for the level 
+     */
+    registerSounds(soundEngine:ISoundEngine):void;
     
     /**
      * Unloads any assets that need to be unloaded by the component
@@ -64,9 +70,8 @@ export default interface IHUDComponent {
     
     /**
      * Prepares the component before the level starts
-     * @param soundEngine the sound engine for the level
      */
-    prepare(soundEngine:ISoundEngine):void;
+    prepare():void;
     
     /**
      * Is the mouse pointer overlapping this component?

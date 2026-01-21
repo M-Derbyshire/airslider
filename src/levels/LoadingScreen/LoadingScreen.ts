@@ -9,8 +9,6 @@ import { KernelStatus } from '../../../Kernel/IKernel';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
-import ISoundEngine from '../../../Kernel/engines/SoundEngine/ISoundEngine';
-import ICamera from '../../../Kernel/engines/GraphicEngine/ICamera';
 
 /**
  * A base class for loading screens
@@ -64,12 +62,10 @@ export default class LoadingScreen extends Level
     
     /**
      * Prepares the level, before the gameplay starts
-     * @param soundEngine the sound engine for the level
-     * @param camera the camera for the level
      */
-    prepare(soundEngine:ISoundEngine, camera:ICamera)
+    prepare()
     {
-        super.prepare(soundEngine, camera);
+        super.prepare();
         
         Kernel.getInstance().loadLevel(this.levelToLoad);
     }
