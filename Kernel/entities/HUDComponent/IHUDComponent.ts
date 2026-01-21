@@ -80,5 +80,5 @@ export default interface IHUDComponent {
      * @param graphicEngine the graphic engine for the level
      * @returns true if it is overlapping, false if not
      */
-    isPointerOverlapping(pointX:number, pointY:number, graphicEngine:IGraphicEngine):boolean;
+    isPointerOverlapping(pointX:number, pointY:number, graphicEngine:Omit<IGraphicEngine, "run">):boolean;
 };
