@@ -3,7 +3,6 @@ import IHUD from "../HUD/IHUD";
 import IFrameManager from "../../engines/GraphicEngine/IFrameManager";
 import IAssetHandler from "../../AssetHandler/IAssetHandler";
 import ISoundEngine from "../../engines/SoundEngine/ISoundEngine";
-import ICamera from "../../engines/GraphicEngine/ICamera";
 
 /**
  * A level of the game
