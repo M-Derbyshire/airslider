@@ -1,4 +1,4 @@
-import { IDrawDimensions, IDrawPositions, ITextContent } from "../../../engines/GraphicEngine/IGraphicEngine";
+import IGraphicEngine, { IDrawDimensions, IDrawPositions, ITextContent } from "../../../engines/GraphicEngine/IGraphicEngine";
 import { IHitBox } from "../IModel";
 
 /**
@@ -42,29 +42,35 @@ export default interface IModelAnimationsManager {
      * Calculates and stores the positions/dimensions to use when drawing the animation (these can be accessed via the
      * calculatedDrawPositions and calculatedDrawDimensions properties)
      * @param modelCoordinates the model's current coordinates, including its Z-axis position
+     * @param graphicEngine the graphic engine used by the level
      */
-    precalculateDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates):void;
+    precalculateDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates, graphicEngine:IGraphicEngine):void
     
     /**
      * Draws the correct frame of the animation (moving to the next frame if it's time to do so), using the
      * positions/dimensions calculated by the precalculateDrawPositionsAndDimensions method
      * @param animationName the name of the animation to draw
+     * @param canvasContext the 2D context from the HTML canvas element
+     * @param currentFps the current FPS of the game
      */
-    drawNextFrame(animationName:string):void;
+    drawNextFrame(animationName:string, canvasContext:CanvasRenderingContext2D, currentFps:number):void;
     
     /**
      * Draws the text content of the linked model
      * @param text the text content, and the details required to draw it
      * @param modelPosition the x/y/z values (in units) of the model
+     * @param graphicEngine the graphic engine used by the level
      */
-    drawText(textContent:ITextContent, modelPosition:IDrawPositions&{z:number}):void;
+    drawText(textContent:ITextContent, modelPosition:IDrawPositions&{z:number}, graphicEngine:IGraphicEngine):void;
     
     /**
      * Draws the model's hit boxes
      * @param color the color to use when drawing the boxes
      * @param hitBoxes the hit boxes to draw
+     * @param graphicEngine the graphic engine used by the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    drawHitBoxes(color:string, hitBoxes:IHitBox[]):void;
+    drawHitBoxes(color:string, hitBoxes:IHitBox[], graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void;
 };
 
 /**

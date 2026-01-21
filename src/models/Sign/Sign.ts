@@ -3,6 +3,7 @@ import ASLevel from '../../levels/ASLevel/ASLevel';
 import ASModel from '../ASModel/ASModel';
 import IModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine';
 
 /**
  * A sign on the track (e.g. the start or finish sign)
@@ -150,9 +151,13 @@ export default class Sign extends ASModel
             this.active = false;
     }
     
-    draw():void
+    draw(
+        graphicEngine:IGraphicEngine,
+        canvasContext:CanvasRenderingContext2D,
+        currentFps:number
+    ):void
     {
-        super.draw();
+        super.draw(graphicEngine, canvasContext, currentFps);
         
         if(this._baseImage) {
             this._drawBaseImageOnLeft();

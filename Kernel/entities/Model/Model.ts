@@ -1,6 +1,6 @@
 import IModel, { IHitBox } from './IModel';
 import IModelAnimationsManager from './ModelAnimationsManager/IModelAnimationsManager';
-import { IDrawDimensions, IDrawPositions, ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
+import IGraphicEngine, { IDrawDimensions, IDrawPositions, ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
 import UnitHelper from '../../utils/UnitHelper';
 import { IEntitySound } from '../types';
 import IAssetHandler from '../../AssetHandler/IAssetHandler';
@@ -240,24 +240,32 @@ export default class Model implements IModel
     /**
      * Calculates and stores the positions/dimensions to use when drawing the model (these can be accessed via the
      * calculatedDrawPositions and calculatedDrawDimensions properties)
+     * @param graphicEngine the graphic engine used by the level
      */
-    precalculateDrawPositionsAndDimensions():void
+    precalculateDrawPositionsAndDimensions(graphicEngine:IGraphicEngine):void
     {
-        this.animationManager.precalculateDrawPositionsAndDimensions(this);
+        this.animationManager.precalculateDrawPositionsAndDimensions(this, graphicEngine);
     }
     
     /**
      * Draws the model's sprite, using the precalculated pixel positions/dimensions
+     * @param graphicEngine the graphic engine used by the level
+     * @param canvasContext the 2D context from the HTML canvas element
+     * @param currentFps the current FPS of the game
      */
-    draw():void
+    draw(
+        graphicEngine:IGraphicEngine,
+        canvasContext:CanvasRenderingContext2D,
+        currentFps:number
+    ):void
     {
-        this.animationManager.drawNextFrame(this.state);
+        this.animationManager.drawNextFrame(this.state, canvasContext, currentFps);
         
         if(this.text.content)
-            this.animationManager.drawText(this.text, this);
+            this.animationManager.drawText(this.text, this, graphicEngine);
         
         if(this.hitBoxDrawColor)
-            this.animationManager.drawHitBoxes(this.hitBoxDrawColor, this.getHitBoxes());
+            this.animationManager.drawHitBoxes(this.hitBoxDrawColor, this.getHitBoxes(), graphicEngine, canvasContext);
     }
     
     /**

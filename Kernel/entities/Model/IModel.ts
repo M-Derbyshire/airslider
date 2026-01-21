@@ -1,5 +1,5 @@
 import IAssetHandler from "../../AssetHandler/IAssetHandler";
-import { IDrawDimensions, IDrawPositions, ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
+import IGraphicEngine, { IDrawDimensions, IDrawPositions, ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "../../engines/SoundEngine/ISoundEngine";
 
 /**
@@ -117,13 +117,21 @@ export default interface IModel {
     /**
      * Calculates and stores the positions/dimensions to use when drawing the model (these can be accessed via the
      * calculatedDrawPositions and calculatedDrawDimensions properties)
+     * @param graphicEngine the graphic engine used by the level
      */
-    precalculateDrawPositionsAndDimensions():void;
+    precalculateDrawPositionsAndDimensions(graphicEngine:IGraphicEngine):void;
     
     /**
      * Draws the model's sprite, using the precalculated pixel positions/dimensions
+     * @param graphicEngine the graphic engine used by the level
+     * @param canvasContext the 2D context from the HTML canvas element
+     * @param currentFps the current FPS of the game
      */
-    draw():void;
+    draw(
+        graphicEngine:IGraphicEngine,
+        canvasContext:CanvasRenderingContext2D,
+        currentFps:number
+    ):void;
     
     /**
      * Runs any extra event checks specific to this model

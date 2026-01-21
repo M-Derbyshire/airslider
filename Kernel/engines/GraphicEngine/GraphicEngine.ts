@@ -69,7 +69,7 @@ export default class GraphicEngine implements IGraphicEngine {
         level.drawBack();
         
         // Now the models
-        this._drawModels(models);
+        this._drawModels(models, fps);
         
         //Finally, draw everything that needs to be drawn on top of the models
         level.drawFront();
@@ -207,8 +207,9 @@ export default class GraphicEngine implements IGraphicEngine {
     /**
      * Trigger the drawing of all of the models, in the correct order
      * @param models the models to be drawn
+     * @param currentFps the current FPS of the game
      */
-    private _drawModels(models:IModel[]):void
+    private _drawModels(models:IModel[], currentFps:number):void
     {
 		// We need to make sure that the models are drawn ordered by the Z position.
 		const zSortedModels = [...models].sort((a, b) => {
@@ -222,7 +223,7 @@ export default class GraphicEngine implements IGraphicEngine {
             if(!model.active || !model.display)
                 return;
             
-            model.precalculateDrawPositionsAndDimensions();
+            model.precalculateDrawPositionsAndDimensions(this);
             
             const isOnCamera = this.camera.isOnCamera(
                 model.calculatedDrawPositions.x,
@@ -232,7 +233,7 @@ export default class GraphicEngine implements IGraphicEngine {
             );
             
             if(isOnCamera)
-                model.draw();
+                model.draw(this, this._canvasCtx, currentFps);
 		});
     }
     

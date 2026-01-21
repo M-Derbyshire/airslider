@@ -1,7 +1,5 @@
 import IModelAnimationsManager, { AnimationsObject, IAnimation, IAnimationDetails, originalModelCoordinates } from './IModelAnimationsManager';
 import IGraphicEngine, { IDrawDimensions, IDrawPositions, ITextContent } from "../../../engines/GraphicEngine/IGraphicEngine";
-import IAssetHandler from '../../../AssetHandler/IAssetHandler';
-import Kernel from '../../../Kernel';
 import { IHitBox } from '../IModel';
 
 /**
@@ -105,10 +103,11 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      * Calculates and stores the positions/dimensions to use when drawing the animation (these can be accessed via the
      * calculatedDrawPositions and calculatedDrawDimensions properties)
      * @param modelCoordinates the model's current coordinates, including its Z-axis position
+     * @param graphicEngine the graphic engine used by the level
      */
-    precalculateDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates):void
+    precalculateDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates, graphicEngine:IGraphicEngine):void
     {
-        const { x, y, width, height } = this._getDrawPositionsAndDimensions(modelCoordinates);
+        const { x, y, width, height } = this._getDrawPositionsAndDimensions(modelCoordinates, graphicEngine);
         
         this._calculatedDrawPositions = { x, y };
         this._calculatedDrawDimensions = { width, height };
@@ -118,18 +117,18 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      * Draws the correct frame of the animation (moving to the next frame if it's time to do so), using the
      * positions/dimensions calculated by the precalculateDrawPositionsAndDimensions method
      * @param animationName the name of the animation to draw
+     * @param canvasContext the 2D context from the HTML canvas element
+     * @param currentFps the current FPS of the game
      */
-    drawNextFrame(animationName:string):void
+    drawNextFrame(animationName:string, canvasContext:CanvasRenderingContext2D, currentFps:number):void
     {
         // We want to call this, even if we don't need to draw the model, so the frame number still gets changed
-        const nextFrameCoordinates = this._getNextFrameCoordinates(animationName);
+        const nextFrameCoordinates = this._getNextFrameCoordinates(animationName, currentFps);
         
         if(this._calculatedDrawDimensions.height === 0 || this._calculatedDrawDimensions.width === 0)
             return;
         
-        const canvasCtx = Kernel.getInstance().canvasContext;
-        
-        canvasCtx.drawImage(
+        canvasContext.drawImage(
             this.animations[animationName].spritesheet, 
 			nextFrameCoordinates.x,
 			nextFrameCoordinates.y,
@@ -146,10 +145,10 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      * Draws the text content of the linked model
      * @param text the text content, and the details required to draw it
      * @param modelPosition the x/y/z values (in units) of the model
+     * @param graphicEngine the graphic engine used by the level
      */
-    drawText(textContent:ITextContent, modelPosition:IDrawPositions&{z:number}):void
+    drawText(textContent:ITextContent, modelPosition:IDrawPositions&{z:number}, graphicEngine:IGraphicEngine):void
     {
-        const graphicEngine = Kernel.getInstance().graphicEngine;
         graphicEngine.drawText(textContent, modelPosition, "scaled");
     }
     
@@ -157,42 +156,44 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      * Draws the model's hit boxes
      * @param color the color to use when drawing the boxes
      * @param hitBoxes the hit boxes to draw
+     * @param graphicEngine the graphic engine used by the level
+     * @param canvasContext the 2D context from the HTML canvas element
      */
-    drawHitBoxes(color:string, hitBoxes:IHitBox[]):void
+    drawHitBoxes(color:string, hitBoxes:IHitBox[], graphicEngine:IGraphicEngine, canvasContext:CanvasRenderingContext2D):void
     {
-        const canvasCtx = Kernel.getInstance().canvasContext;
-        
-        const originalStrokeColor = canvasCtx.strokeStyle;
-        canvasCtx.strokeStyle = color;
+        const originalStrokeColor = canvasContext.strokeStyle;
+        canvasContext.strokeStyle = color;
         
         hitBoxes.forEach(box => {
-            const { x, y, width, height } = this._getDrawPositionsAndDimensions(box);
-            canvasCtx.strokeRect(x, y, width, height);
+            const { x, y, width, height } = this._getDrawPositionsAndDimensions(box, graphicEngine);
+            canvasContext.strokeRect(x, y, width, height);
         });
         
-        canvasCtx.strokeStyle = originalStrokeColor;
+        canvasContext.strokeStyle = originalStrokeColor;
     }
     
     /**
      * Calculates the positions/dimensions to use when drawing the model/hitbox
      * @param modelCoordinates the coordinates (including Z-axis position) of the object to draw
+     * @param graphicEngine the graphic engine used by the level
      * @returns The correct positions/dimensions to use when drawing the object
      */
-	private _getDrawPositionsAndDimensions(modelCoordinates:originalModelCoordinates):IDrawPositions&IDrawDimensions
+	private _getDrawPositionsAndDimensions(
+        modelCoordinates:originalModelCoordinates,
+        graphicEngine:IGraphicEngine
+    ):IDrawPositions&IDrawDimensions
 	{
-        const graphicEngine = Kernel.getInstance().graphicEngine;
         return graphicEngine.getScaledDrawPositionsAndDimensions(modelCoordinates);
 	}
 	
     /**
      * Gets the coordinates of the next frame on the spritesheet
      * @param animationName the name of the animation to draw
+     * @param currentFps the current FPS of the game
      * @returns The coordinates of the next frame on the spritesheet
      */
-    private _getNextFrameCoordinates(animationName:string):IDrawPositions&IDrawDimensions
+    private _getNextFrameCoordinates(animationName:string, currentFps:number):IDrawPositions&IDrawDimensions
     {
-        const gameFps = Kernel.getInstance().fps;
-        
         const animation = this.animations[animationName];
         
         if(animation.frameCoordinates.length > 1 || animation.onAnimationEnd) {
@@ -201,15 +202,15 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
             //First, we need to determine how many game-loop frames we need to wait before we move on to the next 
             //frame of this sprite's animation. This is to ensure that the sprite's animation remains consistent
             //if the game's fps changes (It also means that the sprite can have a different fps to the game-loop).
-            animation.nextCount = Math.floor(gameFps / animation.fps);
+            animation.nextCount = Math.floor(currentFps / animation.fps);
             
             // Change the frame to the next one, if it is time to
             if(animation.waitCount >= animation.nextCount)
             {
-                if(animation.fps > gameFps)
+                if(animation.fps > currentFps)
                     //If the sprite has more frames per second than the current game fps,
                     //skip the necessary amount of frames to make up for that.
-                    currentFrameIndex += Math.floor(animation.fps / gameFps);
+                    currentFrameIndex += Math.floor(animation.fps / currentFps);
                 else
                     //If the sprite has less or equal frames per second to the game-loop's fps,
                     //we can just move to the next frame now.
