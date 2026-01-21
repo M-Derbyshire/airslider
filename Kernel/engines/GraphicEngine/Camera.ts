@@ -1,6 +1,4 @@
 import ICamera, { ICameraDrawPositionsCalc, ICameraPositions } from './ICamera';
-import UnitHelper from '../../utils/UnitHelper';
-import ZCalc from '../../utils/ZCalc/ZCalc';
 
 /**
  * A level's camera
@@ -21,11 +19,11 @@ export default class Camera implements ICamera {
     
     // How many draw-space units are there within the camera's size (on the x axis)? So, if this value was 1000, then
     // a model with a width of 1000 would take up the entire screen (assuming its z position was 0)
-    unitsWithinCameraX:number;
+    private _unitsWithinCameraX:number;
     
     // How many draw-space units are there within the camera's size (on the y axis)? So, if this value was 1000, then
     // a model with a height of 1000 would take up the entire screen (assuming its z position was 0)
-    unitsWithinCameraY:number;
+    private _unitsWithinCameraY:number;
     
     /**
      * Constructor
@@ -46,8 +44,8 @@ export default class Camera implements ICamera {
         this._aspectRatioHorizontal = aspectRatioHorizontal;
         this._aspectRatioVertical = aspectRatioVertical;
         
-        this.unitsWithinCameraX = unitsWithinCameraX;
-        this.unitsWithinCameraY = unitsWithinCameraY;
+        this._unitsWithinCameraX = unitsWithinCameraX;
+        this._unitsWithinCameraY = unitsWithinCameraY;
         
         this._canvas = canvas;
         
@@ -113,6 +111,24 @@ export default class Camera implements ICamera {
     get drawSpacePositionY()
     {
         return this._positions.drawSpace.y;
+    }
+    
+    /**
+     * How many draw-space units are there within the camera's size (on the x axis)? So, if this value was 1000, then
+     * a model with a width of 1000 would take up the entire screen (assuming its z position was 0)
+     */
+    get unitsWithinCameraX()
+    {
+        return this._unitsWithinCameraX;
+    }
+    
+    /**
+     * How many draw-space units are there within the camera's size (on the y axis)? So, if this value was 1000, then
+     * a model with a height of 1000 would take up the entire screen (assuming its z position was 0)
+     */
+    get unitsWithinCameraY()
+    {
+        return this._unitsWithinCameraY;
     }
     
     /**
