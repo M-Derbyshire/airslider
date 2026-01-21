@@ -1,10 +1,10 @@
 import IModel, { IHitBox } from './IModel';
 import IModelAnimationsManager from './ModelAnimationsManager/IModelAnimationsManager';
-import Kernel from '../../Kernel';
 import { IDrawDimensions, IDrawPositions, ITextContent } from '../../engines/GraphicEngine/IGraphicEngine';
 import UnitHelper from '../../utils/UnitHelper';
 import { IEntitySound } from '../types';
 import IAssetHandler from '../../AssetHandler/IAssetHandler';
+import ISoundEngine from '../../engines/SoundEngine/ISoundEngine';
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)
@@ -196,6 +196,15 @@ export default class Model implements IModel
     registerAnimations():void {}
     
     /**
+     * Registers the sounds used by the model (these should be added to the sounds array during loading)
+     * @param soundEngine the sound engine for the level 
+     */
+    registerSounds(soundEngine:ISoundEngine):void
+    {
+        this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
+    }
+    
+    /**
      * Prepares the model, before the gameplay of the level starts
      */
     prepare():void
@@ -217,9 +226,6 @@ export default class Model implements IModel
             alignment: "left",
             lineGap: 0
         };
-        
-        const soundEngine = Kernel.getInstance().soundEngine;
-        this.sounds.forEach(sound => soundEngine.addSound(sound.key, sound.asset));
     }
     
     /**

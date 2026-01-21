@@ -318,8 +318,8 @@ export default class Kernel implements IKernel {
             model.loadedIndex = idx;
             model.load(this._assetHandler);
             
-            // Doing this here ensures the models have their width/height available before the level is prepared
-            model.registerAnimations();
+            model.registerAnimations(); // Doing this here so the models have their width/height available before the level is prepared
+            model.registerSounds(engines.soundEngine);
         });
         
         this._levelQueue.push({ 

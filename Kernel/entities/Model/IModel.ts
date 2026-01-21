@@ -1,5 +1,6 @@
 import IAssetHandler from "../../AssetHandler/IAssetHandler";
 import { IDrawDimensions, IDrawPositions, ITextContent } from "../../engines/GraphicEngine/IGraphicEngine";
+import ISoundEngine from "../../engines/SoundEngine/ISoundEngine";
 
 /**
  * An object in the game (such as a character, monster, power-up, etc)
@@ -90,6 +91,12 @@ export default interface IModel {
      * @param assetHandler the game's asset handler (an object that allows you to load images/audio assets)
      */
     load(assetHandler:IAssetHandler):void;
+    
+    /**
+     * Registers the sounds used by the model (these should be added to the sounds array during loading)
+     * @param soundEngine the sound engine for the level 
+     */
+    registerSounds(soundEngine:ISoundEngine):void;
     
     /**
      * Registers the animations for the model
