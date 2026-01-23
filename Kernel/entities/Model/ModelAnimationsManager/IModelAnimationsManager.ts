@@ -8,7 +8,7 @@ export default interface IModelAnimationsManager {
     /**
      * The animations created for the model
      */
-    animations:AnimationsObject;
+    readonly animations:AnimationsObject;
     
     /**
      * The calculated X/Y pixel values to be used when drawing the model

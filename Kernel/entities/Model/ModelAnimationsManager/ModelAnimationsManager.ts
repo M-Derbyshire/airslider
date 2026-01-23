@@ -8,12 +8,16 @@ import { IHitBox } from '../IModel';
 export default class ModelAnimationsManager implements IModelAnimationsManager {
     private _calculatedDrawPositions:IDrawPositions; // The calculated X/Y pixel values to be used when drawing the model
     private _calculatedDrawDimensions:IDrawDimensions; // The calculated width/height pixel values to be used when drawing the model
+    private _animations:AnimationsObject; // The animations created for the model
     
     /**
      * The animations created for the model (each animation will be a property -- the property name 
      * is the model state for that animation)
      */
-    animations:AnimationsObject;
+    get animations():AnimationsObject
+    {
+        return this._animations;
+    }
     
     /**
      * The calculated X/Y pixel values to be used when drawing the model
@@ -46,7 +50,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
             height: 0
         };
         
-        this.animations = {};
+        this._animations = {};
     }
     
     /**
@@ -88,7 +92,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     registerAnimations(animations:AnimationsObject):void
     {
-        this.animations = animations;
+        this._animations = animations;
     }
     
     /**
@@ -96,7 +100,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
      */
     clearAllAnimations():void
     {
-        this.animations = {};
+        this._animations = {};
     }
     
     /**
