@@ -146,42 +146,6 @@ export default interface IModel {
      * @returns An array of box's that can be used for events (e.g. boxes covering a character, for use by collision events)
      */
     getHitBoxes():IHitBox[];
-    
-    /**
-     * Moves the model to the left
-     * @param speed the speed of the movement
-     */
-    moveLeft(speed?:number):void;
-    
-    /**
-     * Moves the model to the right
-     * @param speed the speed of the movement
-     */
-    moveRight(speed?:number):void;
-    
-    /**
-     * Moves the model up
-     * @param speed the speed of the movement
-     */
-    moveUp(speed?:number):void;
-    
-    /**
-     * Moves the model down
-     * @param speed the speed of the movement
-     */
-    moveDown(speed?:number):void;
-    
-    /**
-     * Moves the model further into the distance
-     * @param speed the speed of the movement
-     */
-    moveIn(speed?:number):void;
-    
-    /**
-     * Moves the model closer to the camera
-     * @param speed the speed of the movement
-     */
-    moveOut(speed?:number):void;
 };
 
 /**
