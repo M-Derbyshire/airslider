@@ -22,11 +22,6 @@ export default interface IModel {
     text:ITextContent;
     
     /**
-     * The index of this model in the Kernel's array of models
-     */
-    loadedIndex:number;
-    
-    /**
      * The current state of the model (the name of the state is the same as the name of the animation that should be drawn)
      */
     state:string;

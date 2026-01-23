@@ -314,8 +314,7 @@ export default class Kernel implements IKernel {
         
         level.registerSounds(engines.soundEngine);
         
-        loadedModels.forEach((model, idx) => {
-            model.loadedIndex = idx;
+        loadedModels.forEach((model) => {
             model.load(this._assetHandler);
             
             model.registerAnimations(); // Doing this here so the models have their width/height available before the level is prepared

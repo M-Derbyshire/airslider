@@ -41,11 +41,6 @@ export default class Model implements IModel
     display:boolean;
     
     /**
-     * The index of this model in the Kernel's array of models
-     */
-    loadedIndex:number;
-    
-    /**
      * The current width of the model
      */
     get width() 
