@@ -58,8 +58,6 @@ export default interface ICamera {
      */
     readonly drawSpacePositionY:number;
     
-    
-    
     /**
      * These functions are used to determine where to actually draw something on the canvas (based on camera position)
      */
