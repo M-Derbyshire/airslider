@@ -17,10 +17,14 @@ export default class GraphicEngine implements IGraphicEngine {
     
     private _canvasCtx:CanvasRenderingContext2D; // The 2D context from the HTML canvas element
     
+    private _camera:ICamera; // The camera for the level
+    
     /**
      * The camera for the level
      */
-    camera:ICamera;
+    get camera() {
+        return this._camera;
+    }
     
     /**
      * Constructor
@@ -30,7 +34,7 @@ export default class GraphicEngine implements IGraphicEngine {
      */
     constructor(camera:ICamera, frameManager:IFrameManager, canvasCtx:CanvasRenderingContext2D)
     {
-        this.camera = camera;
+        this._camera = camera;
         this._frameManager = frameManager;
         this._canvasCtx = canvasCtx;
         

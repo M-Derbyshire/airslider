@@ -9,7 +9,7 @@ export default interface IGraphicEngine {
     /**
      * The camera for the level
      */
-    camera:ICamera;
+    readonly camera:ICamera;
     
     /**
      * Triggers the clearing and re-drawing of the screen
