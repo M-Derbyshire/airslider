@@ -15,7 +15,7 @@ export default class Camera implements ICamera {
     private _letterBoxColor:string; // The color of the letterboxing that surrounds the game (depending on the aspect ratio)
     
     // These functions are used to determine where to actually draw something on the canvas (based on camera position)
-    unitCameraPositionCalc:ICameraDrawPositionsCalc;
+    private _unitCameraPositionCalc:ICameraDrawPositionsCalc;
     
     // How many draw-space units are there within the camera's size (on the x axis)? So, if this value was 1000, then
     // a model with a width of 1000 would take up the entire screen (assuming its z position was 0)
@@ -24,6 +24,13 @@ export default class Camera implements ICamera {
     // How many draw-space units are there within the camera's size (on the y axis)? So, if this value was 1000, then
     // a model with a height of 1000 would take up the entire screen (assuming its z position was 0)
     private _unitsWithinCameraY:number;
+    
+    /**
+     * These functions are used to determine where to actually draw something on the canvas (based on camera position)
+     */
+    get unitCameraPositionCalc() {
+        return this._unitCameraPositionCalc;
+    }
     
     /**
      * Constructor
@@ -57,7 +64,7 @@ export default class Camera implements ICamera {
         this._emptySpaceColor = "#000000";
         this._letterBoxColor = "#000000";
         
-        this.unitCameraPositionCalc = {
+        this._unitCameraPositionCalc = {
             x: (xUnit) => (xUnit - this._positions.drawSpace.x),
             y: (yUnit) => (yUnit - this._positions.drawSpace.y)
         };

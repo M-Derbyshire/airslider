@@ -63,7 +63,7 @@ export default interface ICamera {
     /**
      * These functions are used to determine where to actually draw something on the canvas (based on camera position)
      */
-    unitCameraPositionCalc:ICameraDrawPositionsCalc;
+    readonly unitCameraPositionCalc:ICameraDrawPositionsCalc;
     
     /**
      * Sets the camera's width and height to match the game's aspect ratio values
