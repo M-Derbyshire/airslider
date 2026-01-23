@@ -120,8 +120,8 @@ export default class TarianExplosion extends ASModel {
      */
     private _resize():void
     {
-        this._animFrame.width += UnitHelper.speed(this._resizeSpeedX);
-        this._animFrame.height += UnitHelper.speed(this._resizeSpeedY);
+        this._animFrame.width += UnitHelper.consistentSpeed(this._resizeSpeedX);
+        this._animFrame.height += UnitHelper.consistentSpeed(this._resizeSpeedY);
         
         if(this._animFrame.width > this._maxWidth || this._animFrame.height > this._maxHeight)
         {

@@ -259,10 +259,10 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
         if(Math.round(zPosition) === 0)
             return pixelValues;
         
-        const vanishPointPixelsX = UnitHelper.xUnit(this._vanishingPointX);
+        const vanishPointPixelsX = UnitHelper.xUnitsToPixels(this._vanishingPointX);
         const positionedVanishPointPixelsX = camera.canvasPositionX + vanishPointPixelsX;
         
-        const vanishPointPixelsY = UnitHelper.yUnit(this._vanishingPointY);
+        const vanishPointPixelsY = UnitHelper.yUnitsToPixels(this._vanishingPointY);
         const positionedVanishPointPixelsY = camera.canvasPositionY + vanishPointPixelsY;
         
         return {

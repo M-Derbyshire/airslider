@@ -595,12 +595,12 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         {
             if(this.levelSpeedRaw < this.maxLevelSpeedRaw)
             {
-                this.levelSpeedRaw += UnitHelper.speed(this.levelSpeedAccl);
+                this.levelSpeedRaw += UnitHelper.consistentSpeed(this.levelSpeedAccl);
             } else {
                 this.levelSpeedRaw = this.maxLevelSpeedRaw;
             }
             
-            this.levelSpeed = UnitHelper.speed(this.levelSpeedRaw);
+            this.levelSpeed = UnitHelper.consistentSpeed(this.levelSpeedRaw);
         }
         else
         {

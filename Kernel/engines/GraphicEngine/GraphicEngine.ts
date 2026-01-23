@@ -155,10 +155,10 @@ export default class GraphicEngine implements IGraphicEngine {
         
         const pixelValues = { x: 0, y: 0, width: 0, height: 0 };
         
-        if(this._isSetNumber(x)) pixelValues.x = cameraX + UnitHelper.xUnit(x);
-        if(this._isSetNumber(y)) pixelValues.y = cameraY + UnitHelper.yUnit(y);
-        if(this._isSetNumber(width)) pixelValues.width = UnitHelper.xUnit(width);
-        if(this._isSetNumber(height)) pixelValues.height = UnitHelper.yUnit(height)
+        if(this._isSetNumber(x)) pixelValues.x = cameraX + UnitHelper.xUnitsToPixels(x);
+        if(this._isSetNumber(y)) pixelValues.y = cameraY + UnitHelper.yUnitsToPixels(y);
+        if(this._isSetNumber(width)) pixelValues.width = UnitHelper.xUnitsToPixels(width);
+        if(this._isSetNumber(height)) pixelValues.height = UnitHelper.yUnitsToPixels(height)
         
         return pixelValues;
     }

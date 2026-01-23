@@ -18,8 +18,8 @@ export default class LevelRoadManager
         const level = kernel.level as ASLevel;
         const camera = kernel.graphicEngine.camera;
         
-        const vanishPointX = camera.canvasPositionX + UnitHelper.xUnit(level.vanishingPointX);
-        const vanishPointY = camera.canvasPositionY + UnitHelper.yUnit(level.vanishingPointY);
+        const vanishPointX = camera.canvasPositionX + UnitHelper.xUnitsToPixels(level.vanishingPointX);
+        const vanishPointY = camera.canvasPositionY + UnitHelper.yUnitsToPixels(level.vanishingPointY);
         
         const { x, y, width, height } = kernel.graphicEngine.getUnscaledDrawPositionsAndDimensions({
             x: 0,

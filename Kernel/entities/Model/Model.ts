@@ -309,7 +309,7 @@ export default class Model implements IModel
      */
     protected moveLeft(speed = this.xSpeed):void
     {
-        this.x -= UnitHelper.speed(speed);
+        this.x -= UnitHelper.consistentSpeed(speed);
     }
     
     /**
@@ -318,7 +318,7 @@ export default class Model implements IModel
      */
     protected moveRight(speed = this.xSpeed):void
     {
-        this.x += UnitHelper.speed(speed);
+        this.x += UnitHelper.consistentSpeed(speed);
     }
     
     /**
@@ -327,7 +327,7 @@ export default class Model implements IModel
      */
     protected moveUp(speed = this.ySpeed):void
     {
-        this.y -= UnitHelper.speed(speed);
+        this.y -= UnitHelper.consistentSpeed(speed);
     }
     
     /**
@@ -336,7 +336,7 @@ export default class Model implements IModel
      */
     protected moveDown(speed = this.ySpeed):void
     {
-        this.y += UnitHelper.speed(speed);
+        this.y += UnitHelper.consistentSpeed(speed);
     }
     
     /**
@@ -345,7 +345,7 @@ export default class Model implements IModel
      */
     protected moveIn(speed = this.zSpeed):void
     {
-        this.z += UnitHelper.speed(speed);
+        this.z += UnitHelper.consistentSpeed(speed);
     }
     
     /**
@@ -354,6 +354,6 @@ export default class Model implements IModel
      */
     protected moveOut(speed = this.zSpeed):void
     {
-        this.z -= UnitHelper.speed(speed);
+        this.z -= UnitHelper.consistentSpeed(speed);
     }
 }

@@ -115,7 +115,7 @@ export default class TextButton extends TextOnlyButton
             height: this.height
         });
         
-        const cornerRadius = UnitHelper.xUnit(this._cornerRadiusModifier);
+        const cornerRadius = UnitHelper.xUnitsToPixels(this._cornerRadiusModifier);
         
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, cornerRadius);

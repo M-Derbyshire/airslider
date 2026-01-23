@@ -178,7 +178,7 @@ export default class IntroSnake extends Snake implements IIntroObstacle
      */
     private _setSlowingEntranceZSpeed():void
     {
-        const speedChangeForZSlowdown = UnitHelper.speed(23);
+        const speedChangeForZSlowdown = UnitHelper.consistentSpeed(23);
         
         const newSpeed = this.zSpeed - speedChangeForZSlowdown;
         

@@ -8,10 +8,10 @@ export default class UnitHelper
 {
     /**
      * Converts an x value (in units) into the correct pixel value
-     * @param unitVal the x position in units
+     * @param unitValue the x position in units
      * @returns the correct x position on canvas
      */
-    static xUnit(unitValue:number):number
+    static xUnitsToPixels(unitValue:number):number
     {
         const kernel = Kernel.getInstance();
         
@@ -24,10 +24,10 @@ export default class UnitHelper
     
     /**
      * Converts a y value (in units) into the correct pixel value
-     * @param unitVal the y position in units
+     * @param unitValue the y position in units
      * @returns the correct y position on canvas
      */
-    static yUnit(unitValue:number):number
+    static yUnitsToPixels(unitValue:number):number
     {
         const kernel = Kernel.getInstance();
         
@@ -40,12 +40,12 @@ export default class UnitHelper
     
     /**
      * Converts a speed value into another value that remains consistent, regardless of a changing FPS
-     * @param speed the original speed
+     * @param originalSpeed the original speed
      * @returns a more consistent value to be used as the actual speed
      */
-    static speed(speed:number):number
+    static consistentSpeed(originalSpeed:number):number
     {
-        return speed / Kernel.getInstance().fps;
+        return originalSpeed / Kernel.getInstance().fps;
     }
     
     /**

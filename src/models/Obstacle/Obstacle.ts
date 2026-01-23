@@ -183,7 +183,7 @@ export default class Obstacle extends ASModel
         this.moveUp();
         
         // When the ySpeed goes negative, the obstacle will start to come back down
-        const realBounceDeceleration = UnitHelper.speed(this.bounceDeceleration);
+        const realBounceDeceleration = UnitHelper.consistentSpeed(this.bounceDeceleration);
         this.ySpeed -= realBounceDeceleration;
     }
     
@@ -196,7 +196,7 @@ export default class Obstacle extends ASModel
         const level = Kernel.getInstance().level as ASLevel;
         
 		if(!level.levelMoving)
-            this.zSpeed = -(UnitHelper.speed(level.maxLevelSpeedRaw) / this.speedModifier);
+            this.zSpeed = -(UnitHelper.consistentSpeed(level.maxLevelSpeedRaw) / this.speedModifier);
         else
             this.zSpeed = level.levelSpeed / this.speedModifier;
 	}
