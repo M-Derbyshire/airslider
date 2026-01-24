@@ -224,7 +224,19 @@ export default class Kernel implements IKernel {
     
     
     
-    
+    /**
+     * Loads the given level, and adds it to the level queue
+     * @param level the level to load
+     */
+    loadLevel(level:ILevel):void
+    {
+        this._levelQueue.loadLevel(
+            level,
+            this.settings,
+            this.canvasContext,
+            (err:any) => this.handleError(err)
+        );
+    }
     
     /**
      * Marks the current level as ready to be unloaded
@@ -278,20 +290,6 @@ export default class Kernel implements IKernel {
                 this._status = KernelStatus.Active;
             }
         }
-    }
-    
-    /**
-     * Loads the given level, and adds it to the level queue
-     * @param level the level to load
-     */
-    loadLevel(level:ILevel):void
-    {
-        this._levelQueue.loadLevel(
-            level,
-            this.settings,
-            this.canvasContext,
-            (err:any) => this.handleError(err)
-        );
     }
     
     
