@@ -1,17 +1,13 @@
 import AssetHandler from './AssetHandler/AssetHandler';
-import GameEngine from './engines/GameEngine/GameEngine';
-import GraphicEngine from './engines/GraphicEngine/GraphicEngine';
-import SoundEngine from './engines/SoundEngine/SoundEngine';
-import Camera from './engines/GraphicEngine/Camera';
 import fonts from '../src/fonts/fonts';
-import IKernel, { KernelStatus, ILoadedLevel, ILevelEngines } from './IKernel';
+import IKernel, { KernelStatus } from './IKernel';
 import ISettings from '../settings/ISettings';
 import IAssetHandler from './AssetHandler/IAssetHandler';
 import ILevel from './entities/Level/ILevel';
-import IModel from './entities/Model/IModel';
-import ICamera from './engines/GraphicEngine/ICamera';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';
 import ErrorHandler from './ErrorHandler/ErrorHandler';
+import ILevelQueue from './LevelQueue/ILevelQueue';
+import LevelQueue from './LevelQueue/LevelQueue';
 
 /**
  * This is a singleton that controls the running of the game, and provides other entities with 
@@ -66,7 +62,7 @@ export default class Kernel implements IKernel {
     private _highestFpsReached:number; // The highest FPS the game has reached
     private _lastTime:Date; // The date/time that the last frame ran
     
-    private _levelQueue:ILoadedLevel[]; // The queue of levels that have been loaded (or are currently loading)
+    private _levelQueue:ILevelQueue; // Manages the queue of levels
     private _totalLevelActiveMilliseconds:number; // The total amount of milliseconds that the level has not been paused or stopped for any reason
     private _status:KernelStatus; // The current status of the game (e.g. is it playing, paused, or in another state)
     private _soundKeysPlayingBeforeLastPause:string[]; // The sounds that were playing when the game was last paused
@@ -112,8 +108,6 @@ export default class Kernel implements IKernel {
         this._highestFpsReached = 0;
         this._lastTime = new Date();
         
-        this._levelQueue = [];
-        
         this._hasError = false;
         this._errorHandler = new ErrorHandler(this._canvasContext);
         this._centralState = new Map<string, any>();
@@ -123,6 +117,7 @@ export default class Kernel implements IKernel {
             this._settings.assetsDirUrl
         );
         
+        this._levelQueue = new LevelQueue(this._assetHandler);
         this._currentLevelShouldBeUnloaded = false;
     }
     
@@ -173,7 +168,7 @@ export default class Kernel implements IKernel {
      */
     get level()
     {
-        return this._levelQueue[0]?.level;
+        return this._levelQueue.currentLevel;
     }
     
     /**
@@ -181,7 +176,7 @@ export default class Kernel implements IKernel {
      */
     get loadedModels()
     {
-        return (this._levelQueue.length > 0) ? this._levelQueue[0].loadedModels : [];
+        return this._levelQueue.currentModels;
     }
     
     /**
@@ -198,7 +193,7 @@ export default class Kernel implements IKernel {
      */
     get gameEngine()
     {
-        return this._levelQueue[0]?.engines.gameEngine;
+        return this._levelQueue.currentEngines?.gameEngine;
     }
     
     /**
@@ -207,7 +202,7 @@ export default class Kernel implements IKernel {
      */
     get graphicEngine()
     {
-        return this._levelQueue[0]?.engines.graphicEngine;
+        return this._levelQueue.currentEngines?.graphicEngine;
     }
     
     /**
@@ -216,7 +211,7 @@ export default class Kernel implements IKernel {
      */
     get soundEngine()
     {
-        return this._levelQueue[0]?.engines.soundEngine;
+        return this._levelQueue.currentEngines?.soundEngine;
     }
     
     /**
@@ -245,7 +240,7 @@ export default class Kernel implements IKernel {
     restartCurrentLevel():void
     {
         this._prepareKernelForLevelStart();
-        this._levelQueue[0].hasBeenPrepared = false;
+        this._levelQueue.markCurrentLevelAsUnprepared();
     }
     
     
@@ -286,47 +281,17 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Loads the given level, and adds it to the kernel's internal level queue
+     * Loads the given level, and adds it to the level queue
      * @param level the level to load
      */
     loadLevel(level:ILevel):void
     {
-        level.load(this._assetHandler);
-        
-        const loadedModels = level.getModels();
-        
-		const {
-            aspectRatioHorizontal,
-            aspectRatioVertical,
-            unitsWithinCameraX,
-            unitsWithinCameraY
-        } = this.settings;
-        
-		const camera = new Camera(
-            this._canvasContext.canvas,
-            aspectRatioHorizontal,
-            aspectRatioVertical,
-            unitsWithinCameraX,
-            unitsWithinCameraY
+        this._levelQueue.loadLevel(
+            level,
+            this.settings,
+            this.canvasContext,
+            (err:any) => this.handleError(err)
         );
-        
-        const engines = this._initialiseAllEngines(level, loadedModels, camera); // New engines, set up for this level
-        
-        level.registerSounds(engines.soundEngine);
-        
-        loadedModels.forEach((model) => {
-            model.load(this._assetHandler);
-            
-            model.registerAnimations(); // Doing this here so the models have their width/height available before the level is prepared
-            model.registerSounds(engines.soundEngine);
-        });
-        
-        this._levelQueue.push({ 
-            level, 
-            hasBeenPrepared: false, 
-            loadedModels, 
-            engines 
-        });
     }
     
     
@@ -348,18 +313,19 @@ export default class Kernel implements IKernel {
         const currentDateTime = new Date();
         const timeSinceLastFrame = currentDateTime.getTime() - this._lastTime.getTime();
         const fpsLimit = this.settings.fpsLimit ?? 70;
-        const levelHasBeenPrepared = (this._levelQueue.length > 0) ? this._levelQueue[0].hasBeenPrepared : false;
+        const currentLevelHasBeenPrepared = this._levelQueue.currentLevelHasBeenPrepared;
+        
         if (
-            timeSinceLastFrame < (1000 / fpsLimit) || // Are we over the max FPS limit? OR
-            (this._assetHandler.assetsStillLoading > 0 && !levelHasBeenPrepared) // Is the current level still loading assets?
+            timeSinceLastFrame < (1000 / fpsLimit) // Are we over the max FPS limit? OR
+            || (this._assetHandler.assetsStillLoading > 0 && !currentLevelHasBeenPrepared) // Is the current level still loading assets?
         )
         {
             return;
         }
         
         try {
-            if(!levelHasBeenPrepared)
-                this._prepareCurrentLevelAndModels();
+            if(!currentLevelHasBeenPrepared)
+                this._levelQueue.prepareCurrentLevelAndModels();
             
             this._fps = this._getNewFps(currentDateTime);
             this._updateTotalTime(currentDateTime);
@@ -442,51 +408,13 @@ export default class Kernel implements IKernel {
     }
     
     /**
-     * Triggers the preparation for the current level
-     */
-    private _prepareCurrentLevelAndModels():void
-    {
-        if(this.level)
-        {
-            this.soundEngine.reset();
-            
-            this.level.prepare();
-            this.loadedModels.forEach(model => model.prepare());
-            
-            this._levelQueue[0].hasBeenPrepared = true;
-        }
-    }
-    
-	/**
-     * Returns new instances of all engines
-     * @param level the level
-     * @param loadedModels the models created/used by the level
-     * @param camera The level's camera
-     * @returns The new instances of all engines
-     */
-	private _initialiseAllEngines(level:ILevel, loadedModels:IModel[], camera:ICamera):ILevelEngines
-	{
-		const gameEngine = new GameEngine(level, loadedModels);
-        const graphicEngine = new GraphicEngine(camera, level.frameManager, this._canvasContext);
-        const soundEngine = new SoundEngine((err:any) => this.handleError(err));
-        
-        return { gameEngine, graphicEngine, soundEngine };
-	}
-    
-    /**
      * Unloads the current level, triggering the release of any assets that need releasing, and
      * clears up anything else
      */
     private _unloadCurrentLevel():void
     {
-        this.soundEngine.reset();
-        
-        this.loadedModels.forEach(model => model.unload(this._assetHandler));
-        this.level.unload(this._assetHandler);
-        
-        this._levelQueue.shift();
-        
         this._prepareKernelForLevelStart();
+        this._levelQueue.unloadCurrentLevel();
     }
     
     /**

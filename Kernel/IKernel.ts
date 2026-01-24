@@ -73,7 +73,7 @@ export default interface IKernel {
     readonly canvasContext:CanvasRenderingContext2D;
     
     /**
-     * Loads the given level, and adds it to the kernel's internal level queue
+     * Loads the given level, and adds it to the level queue
      * @param level the level to load
      */
     loadLevel(level:ILevel):void;
@@ -124,35 +124,6 @@ export enum KernelStatus {
      */
     Paused
 };
-
-
-
-/**
- * A level that has been loaded, along with the other elements it requires
- */
-export interface ILoadedLevel {
-    /**
-     * The loaded level
-     */
-    level:ILevel;
-    
-    /**
-     * Has this level been prepared? (using the Level.prepare method)
-     */
-    hasBeenPrepared:boolean;
-    
-    /**
-     * The models loaded by the level
-     */
-    loadedModels:IModel[];
-    
-    /**
-     * The engines that will run this level
-     */
-    engines:ILevelEngines;
-};
-
-
 
 /**
  * The engines that will be used to run a level
