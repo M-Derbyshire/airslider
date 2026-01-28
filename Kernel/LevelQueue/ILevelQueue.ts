@@ -1,7 +1,9 @@
 import ISettings from "../../settings/ISettings";
+import IGameEngine from "../engines/GameEngine/IGameEngine";
+import IGraphicEngine from "../engines/GraphicEngine/IGraphicEngine";
+import ISoundEngine from "../engines/SoundEngine/ISoundEngine";
 import ILevel from "../entities/Level/ILevel";
 import IModel from "../entities/Model/IModel";
-import { ILevelEngines } from "../IKernel";
 
 /**
  * Manages the current level, and the levels that are queued up to be ran
@@ -80,4 +82,24 @@ export interface ILoadedLevel {
      * The engines that will run this level
      */
     engines:ILevelEngines;
+};
+
+/**
+ * The engines that will be used to run a level
+ */
+export interface ILevelEngines {
+    /**
+     * The game engine
+     */
+    gameEngine:IGameEngine;
+    
+    /**
+     * The graphic engine
+     */
+    graphicEngine:IGraphicEngine;
+    
+    /**
+     * The sound engine
+     */
+    soundEngine:ISoundEngine;
 };

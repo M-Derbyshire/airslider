@@ -1,6 +1,6 @@
 import IAssetHandler from "../../../Kernel/AssetHandler/IAssetHandler";
 import IGraphicEngine from "../../../Kernel/engines/GraphicEngine/IGraphicEngine";
-import { KernelStatus } from "../../../Kernel/IKernel";
+import { GameLoopStatus } from "../../../Kernel/GameLoopManager/IGameLoopManager";
 import Kernel from "../../../Kernel/Kernel";
 import ASHUDComponent from "../ASHUDComponent/ASHUDComponent"
 
@@ -63,7 +63,7 @@ export default class PauseButton extends ASHUDComponent {
         const pauseButtonSourceYPx = 0;
         const playButtonSourceYPx = buttonSourceDiameter;
         
-        const sourceYPx = (kernel.status === KernelStatus.Active) ? pauseButtonSourceYPx : playButtonSourceYPx;
+        const sourceYPx = (kernel.status === GameLoopStatus.Active) ? pauseButtonSourceYPx : playButtonSourceYPx;
         
         // The positions/sizes to actually draw the sprite with
         const { x, y, width, height } = graphicEngine.getStaticDrawPositionsAndDimensions({

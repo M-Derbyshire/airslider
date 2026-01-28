@@ -1,4 +1,4 @@
-import { KernelStatus } from "../../IKernel";
+import { GameLoopStatus } from "../../GameLoopManager/IGameLoopManager";
 import Kernel from "../../Kernel";
 import IPointerEventManager from "./IPointerEventManager";
 
@@ -132,7 +132,7 @@ export default class PointerEventManager implements IPointerEventManager {
 		
 		this._subjects.forEach(subject => {
 			const subjectIsPaused =
-				kernel.status === KernelStatus.Paused
+				kernel.status === GameLoopStatus.Paused
 				&& !subject.configuration.isActiveWhenPaused;
 			
 			const subjectCanReactToEvents = 

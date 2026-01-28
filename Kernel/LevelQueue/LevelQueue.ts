@@ -7,8 +7,7 @@ import ICamera from "../engines/GraphicEngine/ICamera";
 import SoundEngine from "../engines/SoundEngine/SoundEngine";
 import ILevel from "../entities/Level/ILevel";
 import IModel from "../entities/Model/IModel";
-import { ILevelEngines } from "../IKernel";
-import ILevelQueue, { ILoadedLevel } from "./ILevelQueue";
+import ILevelQueue, { ILevelEngines, ILoadedLevel } from "./ILevelQueue";
 
 /**
  * Manages the current level, and the levels that are queued up to be ran

@@ -1,4 +1,4 @@
-import { KernelStatus } from "../../IKernel";
+import { GameLoopStatus } from "../../GameLoopManager/IGameLoopManager";
 import Kernel from "../../Kernel";
 import IKeyboardEventManager from "./IKeyboardEventManager";
 
@@ -105,7 +105,7 @@ export default class KeyboardEventManager implements IKeyboardEventManager
     private _getPauseableCallbackWrapper(callback:KeyboardEventReciever):KeyboardEventReciever
     {
         return (e:KeyboardEvent) => {
-            if(Kernel.getInstance().status !== KernelStatus.Paused)
+            if(Kernel.getInstance().status !== GameLoopStatus.Paused)
                 callback(e);
         };
     }

@@ -5,6 +5,7 @@ import IGraphicEngine from "./engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "./engines/SoundEngine/ISoundEngine";
 import ISettings from "../settings/ISettings";
 import IAssetHandler from "./AssetHandler/IAssetHandler";
+import { GameLoopStatus } from "./GameLoopManager/IGameLoopManager";
 
 /**
  * This is a singleton that controls the running of the game, and provides other entities with 
@@ -19,7 +20,7 @@ export default interface IKernel {
     /**
      * The current status of the game (e.g. is it playing, or in another state)
      */
-    readonly status:KernelStatus;
+    readonly status:GameLoopStatus;
     
     /**
      * The settings for the game
@@ -98,49 +99,4 @@ export default interface IKernel {
      * @param error the error to handle (this doesn't have to be an instance of Error)
      */
     handleError(error:any):void
-};
-
-
-
-/**
- * Represents the possible statuses of the game's Kernel
- */
-export enum KernelStatus {
-    /**
-     * The game is playing
-     */
-    Active,
-    
-    /**
-     * The game is about to pause.
-     * If the game is paused, it may need to draw things to the screen to 
-     * tell the player (such as changing the "pause" button to a "play" 
-     * button). This status allows that to happen.
-     */
-    PrePaused,
-    
-    /**
-     * The game is paused
-     */
-    Paused
-};
-
-/**
- * The engines that will be used to run a level
- */
-export interface ILevelEngines {
-    /**
-     * The game engine
-     */
-    gameEngine:IGameEngine;
-    
-    /**
-     * The graphic engine
-     */
-    graphicEngine:IGraphicEngine;
-    
-    /**
-     * The sound engine
-     */
-    soundEngine:ISoundEngine;
 };

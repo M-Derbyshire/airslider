@@ -5,10 +5,10 @@ import LoadingScreenHUD from '../../HUDs/LoadingScreenHUD/LoadingScreenHUD';
 import Kernel from '../../../Kernel/Kernel';
 import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import Frame from '../../../Kernel/engines/GraphicEngine/Frame';
-import { KernelStatus } from '../../../Kernel/IKernel';
 import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
+import { GameLoopStatus } from '../../../Kernel/GameLoopManager/IGameLoopManager';
 
 /**
  * A base class for loading screens
@@ -80,7 +80,7 @@ export default class LoadingScreen extends Level
         const kernel = Kernel.getInstance();
         
         // We don't want this level to pause (e.g. on the browser changing to another tab)
-        if(kernel.status === KernelStatus.PrePaused)
+        if(kernel.status === GameLoopStatus.PrePaused)
             kernel.toggleGamePause();
         
         (this.HUD as LoadingScreenHUD).setLevelHasLoaded(kernel.assetHandler.assetsStillLoading === 0);
