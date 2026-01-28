@@ -1,7 +1,7 @@
 import AssetHandler from './AssetHandler/AssetHandler';
 import fonts from '../src/fonts/fonts';
 import IKernel from './IKernel';
-import ISettings from '../settings/ISettings';
+import ISettings, { SettingsWithDefaults } from '../settings/ISettings';
 import IAssetHandler from './AssetHandler/IAssetHandler';
 import ILevel from './entities/Level/ILevel';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';
@@ -56,7 +56,7 @@ export default class Kernel implements IKernel
     }
     // ************************************************************************************
     
-    private _settings:ISettings; // The settings for the game
+    private _settings:SettingsWithDefaults; // The settings for the game
     private _canvasContext:CanvasRenderingContext2D; // The 2D context from the HTML canvas element
     
     private _levelQueue:ILevelQueue; // Manages the queue of levels
@@ -94,7 +94,7 @@ export default class Kernel implements IKernel
             throw new Error("Cannot initialise the game's Kernel without a settings object");
         
         this._canvasContext = canvas.getContext("2d");
-        this._settings = settings;
+        this._settings = this._getSettingsWithDefaults(settings);
         
         this._hasError = false;
         this._errorHandler = new ErrorHandler(this._canvasContext);
@@ -110,8 +110,8 @@ export default class Kernel implements IKernel
             this._levelQueue,
             this._assetHandler,
             (err:any) => this.handleError(err),
-            settings.fpsLimit,
-            settings.fpsDisplayColor
+            this._settings.fpsLimit,
+            this._settings.fpsDisplayColor
         );
         
         this._currentLevelShouldBeUnloaded = false;
@@ -296,6 +296,26 @@ export default class Kernel implements IKernel
         
         const initialLevel = this.settings.getInitialLevel(this);
         this.loadLevel(initialLevel);
+    }
+    
+    /**
+     * Creates a new settings object (based on the given settings object) that has the default
+     * values set for certain properties (assuming those properties were undefined)
+     * @param settings the original settings object
+     * @returns the new settings object, with default values set on certain properties
+     */
+    private _getSettingsWithDefaults(settings:ISettings):SettingsWithDefaults
+    {
+        const newSettings:SettingsWithDefaults = {
+            ...settings,
+            aspectRatioHorizontal: settings.aspectRatioHorizontal ?? 17,
+            aspectRatioVertical: settings.aspectRatioVertical ?? 9,
+            unitsWithinCameraX: settings.unitsWithinCameraX ?? 1000,
+            unitsWithinCameraY: settings.unitsWithinCameraY ?? 1000,
+            fpsLimit: settings.fpsLimit ?? 70
+        };
+        
+        return newSettings;
     }
     
     /**

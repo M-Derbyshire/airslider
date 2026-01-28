@@ -3,7 +3,7 @@ import IModel from "./entities/Model/IModel";
 import IGameEngine from "./engines/GameEngine/IGameEngine";
 import IGraphicEngine from "./engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "./engines/SoundEngine/ISoundEngine";
-import ISettings from "../settings/ISettings";
+import { SettingsWithDefaults } from "../settings/ISettings";
 import IAssetHandler from "./AssetHandler/IAssetHandler";
 import { GameLoopStatus } from "./GameLoopManager/IGameLoopManager";
 
@@ -25,7 +25,7 @@ export default interface IKernel {
     /**
      * The settings for the game
      */
-    readonly settings:ISettings;
+    readonly settings:SettingsWithDefaults;
     
     /**
      * The current Frames Per Second of the game

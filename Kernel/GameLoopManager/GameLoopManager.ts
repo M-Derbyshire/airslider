@@ -37,14 +37,14 @@ export default class GameLoopManager implements IGameLoopManager
         levelQueue:ILevelQueue,
         assetHandler:IAssetHandler,
         onError:(err:any)=>void,
-        fpsLimit?:number,
+        fpsLimit:number,
         fpsDisplayColor?:string
     )
     {
         this._levelQueue = levelQueue;
         this._assetHandler = assetHandler;
         this._onError = onError;
-        this._fpsLimit = fpsLimit ?? 70;
+        this._fpsLimit = fpsLimit;
         this._fpsDisplayColor = fpsDisplayColor;
         
         this._fps = this._fpsLimit;

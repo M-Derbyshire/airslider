@@ -28,27 +28,39 @@ export default interface ISettings {
      * So, if this value was 1000, then a model with a width of 1000 would take up the entire 
      * screen (assuming its z position was 0)
      */
-	unitsWithinCameraX:number;
+	unitsWithinCameraX?:number;
     
     /**
      * How many draw-space units are there within the camera's size (on the y axis)?
      * So, if this value was 1000, then a model with a height of 1000 would take up the entire 
      * screen (assuming its z position was 0)
      */
-    unitsWithinCameraY:number;
+    unitsWithinCameraY?:number;
     
     /**
      * The horizontal size of the camera's aspect ratio (e.g. the 16 in "16:9")
      */
-	aspectRatioHorizontal:number;
+	aspectRatioHorizontal?:number;
     
     /**
      * The vertical size of the camera's aspect ratio (e.g. the 9 in "16:9")
      */
-	aspectRatioVertical:number;
+	aspectRatioVertical?:number;
     
     /**
      * A function that will construct the initial level of the game
      */
 	getInitialLevel:(kernel:IKernel)=>ILevel;
 };
+
+// These are the properties that still need to be optional on the
+// SettingsWithDefaults type (all the others will be required)
+type AlwaysOptionalSettingsKeys = "fpsDisplayColor" | "assetsDirUrl";
+
+/**
+ * The settings for the game, but with certain properties not being
+ * optional
+ */
+export type SettingsWithDefaults =
+  Omit<Required<ISettings>, AlwaysOptionalSettingsKeys> &
+  Pick<Partial<ISettings>, AlwaysOptionalSettingsKeys>;

@@ -12,10 +12,6 @@ import VevaniaLoadingScreen from '../src/levels/LoadingScreens/VevaniaLoadingScr
 import ISettings from './ISettings';
 
 export default {
-	unitsWithinCameraX: 1000,
-	unitsWithinCameraY: 1000,
-	aspectRatioHorizontal: 17,
-	aspectRatioVertical: 9,
 	getInitialLevel: (kernel:IKernel) => new LarsLoadingScreen(
 		new FrameManager(),
 		new ModelEventManager(),

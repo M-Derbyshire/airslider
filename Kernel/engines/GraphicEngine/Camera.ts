@@ -42,10 +42,10 @@ export default class Camera implements ICamera {
      */
     constructor(
         canvas:HTMLCanvasElement,
-        aspectRatioHorizontal:number = 17,
-        aspectRatioVertical:number = 9,
-        unitsWithinCameraX:number = 1000,
-        unitsWithinCameraY:number = 1000
+        aspectRatioHorizontal:number,
+        aspectRatioVertical:number,
+        unitsWithinCameraX:number,
+        unitsWithinCameraY:number
     )
     {
         this._aspectRatioHorizontal = aspectRatioHorizontal;
