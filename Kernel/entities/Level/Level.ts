@@ -16,6 +16,9 @@ import IGraphicEngine from '../../engines/GraphicEngine/IGraphicEngine';
  */
 export default class Level implements ILevel
 {
+    private _hud:IHUD; // The Heads Up Display for the level
+    private _frameManager:IFrameManager; // The frame manager for the level
+    
     protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
     protected sounds:IEntitySound[]; // Sounds that need to be added to the sound engine, during preparation
     
@@ -27,12 +30,22 @@ export default class Level implements ILevel
     /**
      * The Heads Up Display for the level
      */
-    HUD:IHUD;
+    get HUD():IHUD {
+        return this._hud;
+    }
+    protected set HUD(value:IHUD) {
+        this._hud = value;
+    }
     
     /**
      * The frame manager for the level
      */
-    frameManager:IFrameManager;
+    get frameManager():IFrameManager {
+        return this._frameManager;
+    }
+    protected set frameManager(value:IFrameManager) {
+        this._frameManager = value;
+    }
     
     /**
      * Can this level be paused?
