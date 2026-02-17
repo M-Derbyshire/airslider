@@ -158,7 +158,7 @@ export default class Kernel implements IKernel
      */
     get level()
     {
-        return this._levelQueue.currentLevel;
+        return this._levelQueue.currentLevel!;
     }
     
     /**
@@ -183,7 +183,7 @@ export default class Kernel implements IKernel
      */
     get gameEngine()
     {
-        return this._levelQueue.currentEngines?.gameEngine;
+        return this._levelQueue.currentEngines!.gameEngine;
     }
     
     /**
@@ -192,7 +192,7 @@ export default class Kernel implements IKernel
      */
     get graphicEngine()
     {
-        return this._levelQueue.currentEngines?.graphicEngine;
+        return this._levelQueue.currentEngines!.graphicEngine;
     }
     
     /**
@@ -201,7 +201,7 @@ export default class Kernel implements IKernel
      */
     get soundEngine()
     {
-        return this._levelQueue.currentEngines?.soundEngine;
+        return this._levelQueue.currentEngines!.soundEngine;
     }
     
     /**
