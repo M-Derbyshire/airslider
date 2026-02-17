@@ -134,7 +134,7 @@ export default class MusicManager
         
         const soundEngine = Kernel.getInstance().soundEngine;
         
-        const currentVolume = soundEngine.getSoundVolume(this._musicFilePath);
+        const currentVolume = soundEngine.getSoundVolume(this._musicFilePath)!;
         const musicStatus = soundEngine.getSoundStatus(this._musicFilePath);
         const musicIsPlaying = musicStatus === SoundStatus.Playing;
         
@@ -189,7 +189,7 @@ export default class MusicManager
     {
         const soundEngine = Kernel.getInstance().soundEngine;
         
-        const currentVolume = soundEngine.getSoundVolume(this._musicFilePath);
+        const currentVolume = soundEngine.getSoundVolume(this._musicFilePath)!;
         let newVolume = currentVolume + change;
         
         if(newVolume < 0)

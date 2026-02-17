@@ -15,7 +15,7 @@ export default interface ISoundEngine {
      * @returns the current status of the sound, or null if 
      * the sound doesn't exist in the engine's library
      */
-    getSoundStatus(key:string):SoundStatus;
+    getSoundStatus(key:string):SoundStatus|null;
     
     /**
      * Gets the current volume of a sound
@@ -23,7 +23,7 @@ export default interface ISoundEngine {
      * @returns the volume of the sound (a number between 0 and 1), or null if 
      * the sound doesn't exist in the engine's library
      */
-    getSoundVolume(key:string):number;
+    getSoundVolume(key:string):number|null;
     
     /**
      * Changes the volume of a sound

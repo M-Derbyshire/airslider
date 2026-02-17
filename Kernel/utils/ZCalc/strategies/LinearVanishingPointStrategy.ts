@@ -17,6 +17,7 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
     {
         this._vanishingPointX = 0;
         this._vanishingPointY = 0;
+        this._vanishingPointDepth = 0;
 		
 		this._precalculatedScalingMultipliers = [];
     }
@@ -253,7 +254,7 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
         zPosition: number, 
         showNegative?:boolean
     ): IDrawPositions {
-        if(this._isOutOfView(zPosition, showNegative))
+        if(this._isOutOfView(zPosition, !!showNegative))
             return { x: 0, y: 0 };
         
         if(Math.round(zPosition) === 0)
@@ -286,7 +287,7 @@ export default class LinearVanishingPointStrategy implements IZCalcStrategy {
         zPosition: number, 
         showNegative?:boolean
     ): IDrawDimensions {
-        if(this._isOutOfView(zPosition, showNegative))
+        if(this._isOutOfView(zPosition, !!showNegative))
             return { width: 0, height: 0 };
         
         if(Math.round(zPosition) === 0)

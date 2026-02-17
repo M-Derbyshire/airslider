@@ -14,7 +14,7 @@ export default class Credits extends Level
 	 * Constructor
 	 * @param frameManager The frame manager for the level
 	 * @param modelEventManager Manages the event monitoring between models
-	 * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+	 * @param pointerEventManager Manages any events relating to mouse clicks
 	 * @param keyboardEventManager Manages any keyboard events
 	 */
 	constructor(

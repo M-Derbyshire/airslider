@@ -1,5 +1,5 @@
 /**
- * Manages any events relating to mouse clicks or screen touches
+ * Manages any events relating to mouse clicks
  */
 export default interface IPointerEventManager {
     /**

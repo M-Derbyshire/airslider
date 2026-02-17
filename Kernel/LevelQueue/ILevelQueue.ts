@@ -20,7 +20,7 @@ export default interface ILevelQueue
      * The models used by the current level. If there are no levels in the queue, this
      * will be an empty array
      */
-    readonly currentModels?:IModel[];
+    readonly currentModels:IModel[];
     
     /**
      * The engines that are running the current level. If there are no levels in the

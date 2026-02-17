@@ -166,7 +166,7 @@ export default class Kernel implements IKernel
      */
     get loadedModels()
     {
-        return this._levelQueue.currentModels ?? [];
+        return this._levelQueue.currentModels;
     }
     
     /**

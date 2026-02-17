@@ -25,7 +25,7 @@ export default class Level implements ILevel
     protected modelEventManager:IModelEventManager; // Manages the event monitoring between models
     
     protected keyboardEventManager:IKeyboardEventManager; // Manages any keyboard events
-    protected pointerEventManager:IPointerEventManager; // Manages any events relating to mouse clicks or screen touches
+    protected pointerEventManager:IPointerEventManager; // Manages any events relating to mouse clicks
     
     /**
      * The Heads Up Display for the level
@@ -56,7 +56,7 @@ export default class Level implements ILevel
      * Constructor
      * @param frameManager The frame manager for the level
      * @param modelEventManager Manages the event monitoring between models
-     * @param pointerEventManager Manages any events relating to mouse clicks or screen touches
+     * @param pointerEventManager Manages any events relating to mouse clicks
      * @param keyboardEventManager Manages any keyboard events
      */
     constructor(
@@ -66,8 +66,8 @@ export default class Level implements ILevel
         keyboardEventManager:IKeyboardEventManager
     )
     {
-        this.frameManager = frameManager;
-        this.HUD = new HUD(pointerEventManager);
+        this._frameManager = frameManager;
+        this._hud = new HUD(pointerEventManager);
         
         this.modelEventManager = modelEventManager;
         this.pointerEventManager = pointerEventManager;

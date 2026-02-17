@@ -14,21 +14,14 @@ export default class Model implements IModel
     protected animationManager:IModelAnimationsManager;
     protected assetsToUnload:string[]; // File paths of assets that need to be released when this is unloaded
     protected sounds:IEntitySound[]; // Sounds that need to be added to the sound engine, during preparation
-    protected hitBoxDrawColor:string; // If this is set to a color string, we'll draw the boxes from this.getHitBoxes() with that color
+    protected hitBoxDrawColor?:string; // If this is set to a color string, we'll draw the boxes from this.getHitBoxes() with that color
     
     private _state:string; // The current "state" of the model. This is also the name of the animation to use when drawing
-    
-    private _x:number; // The x position (in units) of the model
-    private _y:number; // The y position (in units) of the model
-    private _z:number; // The z position (in units) of the model
-    private _xSpeed:number; // The speed of the model, on the x axis
-    private _ySpeed:number; // The speed of the model, on the y axis
-    private _zSpeed:number; // The speed of the model, on the z axis
     
     /**
      * Details for displaying an entity's text content
      */
-    text:ITextContent;
+    text?:ITextContent;
     
     /**
      * Is the model currently active?
@@ -45,7 +38,7 @@ export default class Model implements IModel
      */
     get width() 
     {
-        return this.animationManager.animations[this._state]?.width ?? 0;
+        return this.animationManager.animations[this._state]?.width;
     }
     
     /**
@@ -53,44 +46,23 @@ export default class Model implements IModel
      */
     get height() 
     {
-        return this.animationManager.animations[this._state]?.height ?? 0;
+        return this.animationManager.animations[this._state]?.height;
     }
     
     /**
      * The x position of the model (in units)
      */
-    get x()
-    {
-        return this._x ?? 0;
-    }
-    set x(newValue)
-    {
-        this._x = newValue;
-    }
+    x:number;
     
     /**
      * The y position of the model (in units)
      */
-    get y()
-    {
-        return this._y ?? 0;
-    }
-    set y(newValue)
-    {
-        this._y = newValue;
-    }
+    y:number;
     
     /**
      * The z position of the model
      */
-    get z()
-    {
-        return this._z ?? 0;
-    }
-    set z(newValue)
-    {
-        this._z = newValue;
-    }
+    z:number
     
     /**
      * The calculated X/Y pixel values to be used when drawing the model
@@ -111,52 +83,31 @@ export default class Model implements IModel
     /**
      * The speed of the model, on the x axis
      */
-    get xSpeed()
-    {
-        return this._xSpeed ?? 0;
-    }
-    set xSpeed(newValue)
-    {
-        this._xSpeed = newValue;
-    }
+    xSpeed:number
     
     /**
      * The speed of the model, on the y axis
      */
-    get ySpeed()
-    {
-        return this._ySpeed ?? 0;
-    }
-    set ySpeed(newValue)
-    {
-        this._ySpeed = newValue;
-    }
+    ySpeed:number
     
     /**
      * The speed of the model, on the z axis
      */
-    get zSpeed()
-    {
-        return this._zSpeed ?? 0;
-    }
-    set zSpeed(newValue)
-    {
-        this._zSpeed = newValue;
-    }
+    zSpeed:number;
     
     /**
      * The current state of the model (the name of the state is the same as the name of the animation that should be drawn)
      */
     get state() 
     {
-        return this._state ?? "";
+        return this._state;
     }
     set state(newValue)
     {
         if(this.animationManager?.animations && this.animationManager.animations[newValue])
         {
-            this._x += this.animationManager.animations[newValue].xOffset;
-            this._y += this.animationManager.animations[newValue].yOffset;
+            this.x += this.animationManager.animations[newValue].xOffset;
+            this.y += this.animationManager.animations[newValue].yOffset;
         }
         
         this._state = newValue;
@@ -172,6 +123,18 @@ export default class Model implements IModel
         
         this.assetsToUnload = [];
         this.sounds = [];
+        
+        this._state = "";
+        
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.xSpeed = 0;
+        this.ySpeed = 0;
+        this.zSpeed = 0;
+        
+        this.display = true;
+        this.active = false;
     }
     
     /**
@@ -256,7 +219,7 @@ export default class Model implements IModel
     {
         this.animationManager.drawNextFrame(this.state, canvasContext, currentFps);
         
-        if(this.text.content)
+        if(this.text?.content)
             this.animationManager.drawText(this.text, this, graphicEngine);
         
         if(this.hitBoxDrawColor)

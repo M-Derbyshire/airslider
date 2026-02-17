@@ -10,7 +10,7 @@ export default class Frame implements IFrame {
     private _lightMask:HTMLImageElement|null = null;
     private _lightMaskLuminosity:number = 1; // the light mask's luminosity (1 is the lightest, 0 is the darkest)
     
-    private _calculatedDrawPositionsAndDimensions:IDrawDimensions&IDrawPositions = null; // Stores the actual positions/dimensions to draw the frame with
+    private _calculatedDrawPositionsAndDimensions:IDrawDimensions&IDrawPositions|null = null; // Stores the actual positions/dimensions to draw the frame with
     private _x:number; // The x position (in units) of the frame in the level
     private _y:number; // The y position (in units) of the frame in the level
     private _width:number; // The width (in units) of the frame
@@ -73,7 +73,7 @@ export default class Frame implements IFrame {
      */
     get precalculatedDrawPositions():IDrawPositions
     {
-        const { x, y } = this._calculatedDrawPositionsAndDimensions;
+        const { x, y } = this._calculatedDrawPositionsAndDimensions!;
         return { x, y };
     }
     
@@ -82,7 +82,7 @@ export default class Frame implements IFrame {
      */
     get precalculatedDrawDimensions():IDrawDimensions
     {
-        const { width, height } = this._calculatedDrawPositionsAndDimensions;
+        const { width, height } = this._calculatedDrawPositionsAndDimensions!;
         return { width, height };
     }
     
@@ -154,7 +154,7 @@ export default class Frame implements IFrame {
         if(!this._lightMask)
             return;
         
-        const { x, y, width, height } = this._calculatedDrawPositionsAndDimensions;
+        const { x, y, width, height } = this._calculatedDrawPositionsAndDimensions!;
         
         canvasCtx.globalAlpha = 1 - this._lightMaskLuminosity;
         canvasCtx.drawImage(this._lightMask, x, y, width, height);
@@ -169,7 +169,7 @@ export default class Frame implements IFrame {
     {
         if(!this._background && !this._backgroundColor) return;
         
-        const { x, y, width, height } = this._calculatedDrawPositionsAndDimensions;
+        const { x, y, width, height } = this._calculatedDrawPositionsAndDimensions!;
         
         if(this._backgroundColor != null)
         {

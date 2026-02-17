@@ -42,7 +42,7 @@ export default class SoundEngine implements ISoundEngine {
      * @returns the current status of the sound, or null if 
      * the sound doesn't exist in the engine's library
      */
-    getSoundStatus(key:string):SoundStatus
+    getSoundStatus(key:string):SoundStatus|null
     {
         const sound = this._sounds.get(key);
         if(!sound)
@@ -57,7 +57,7 @@ export default class SoundEngine implements ISoundEngine {
      * @returns the volume of the sound (a number between 0 and 1), or null if 
      * the sound doesn't exist in the engine's library
      */
-    getSoundVolume(key:string):number
+    getSoundVolume(key:string):number|null
     {
         const sound = this._sounds.get(key);
         if(!sound)
@@ -185,7 +185,7 @@ export default class SoundEngine implements ISoundEngine {
     getPlayingSoundKeys():string[]
     {
         return this.getSoundKeys().filter(key => {
-            const status = this._sounds.get(key).status;
+            const status = this._sounds.get(key)!.status;
             return status === SoundStatus.Playing;
         });
     }

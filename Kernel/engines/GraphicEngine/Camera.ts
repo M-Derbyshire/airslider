@@ -212,7 +212,7 @@ export default class Camera implements ICamera {
      */
     drawEmptySpaceColor():void
     {
-        const ctx = this._canvas.getContext("2d");
+        const ctx = this._canvas.getContext("2d")!;
         
         ctx.fillStyle = this._emptySpaceColor;
         ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -224,7 +224,7 @@ export default class Camera implements ICamera {
      */
     drawLetterbox():void
     {
-        const ctx = this._canvas.getContext("2d");
+        const ctx = this._canvas.getContext("2d")!;
         
         ctx.fillStyle = this._letterBoxColor;
         ctx.beginPath();

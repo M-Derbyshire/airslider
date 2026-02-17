@@ -40,13 +40,18 @@ export default class HUDComponent implements IHUDComponent
     /**
      * The text content to be displayed with the component
      */
-    text:ITextContent;
+    text?:ITextContent;
     
     
     constructor()
     {
         this.assetsToUnload = [];
         this.sounds = [];
+        
+        this.x = 0;
+        this.y = 0;
+        this.width = 0;
+        this.height = 0;
         
         this.active = true;
     }
@@ -99,6 +104,9 @@ export default class HUDComponent implements IHUDComponent
      */
     drawText(graphicEngine:IGraphicEngine):void
     {
+        if(!this.text)
+            return;
+        
         graphicEngine.drawText(
             this.text,
             {

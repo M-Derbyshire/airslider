@@ -155,10 +155,10 @@ export default class GraphicEngine implements IGraphicEngine {
         
         const pixelValues = { x: 0, y: 0, width: 0, height: 0 };
         
-        if(this._isSetNumber(x)) pixelValues.x = cameraX + UnitHelper.xUnitsToPixels(x);
-        if(this._isSetNumber(y)) pixelValues.y = cameraY + UnitHelper.yUnitsToPixels(y);
-        if(this._isSetNumber(width)) pixelValues.width = UnitHelper.xUnitsToPixels(width);
-        if(this._isSetNumber(height)) pixelValues.height = UnitHelper.yUnitsToPixels(height)
+        if(this._isSetNumber(x)) pixelValues.x = cameraX + UnitHelper.xUnitsToPixels(x!);
+        if(this._isSetNumber(y)) pixelValues.y = cameraY + UnitHelper.yUnitsToPixels(y!);
+        if(this._isSetNumber(width)) pixelValues.width = UnitHelper.xUnitsToPixels(width!);
+        if(this._isSetNumber(height)) pixelValues.height = UnitHelper.yUnitsToPixels(height!)
         
         return pixelValues;
     }
@@ -174,8 +174,8 @@ export default class GraphicEngine implements IGraphicEngine {
         const { x, y, width, height } = unitValues;
         
         return this.getStaticDrawPositionsAndDimensions({
-            x: (this._isSetNumber(x)) ? this.camera.unitCameraPositionCalc.x(x) : undefined,
-            y: (this._isSetNumber(y)) ? this.camera.unitCameraPositionCalc.y(y) : undefined,
+            x: (this._isSetNumber(x)) ? this.camera.unitCameraPositionCalc.x(x!) : undefined,
+            y: (this._isSetNumber(y)) ? this.camera.unitCameraPositionCalc.y(y!) : undefined,
             width,
             height
         });

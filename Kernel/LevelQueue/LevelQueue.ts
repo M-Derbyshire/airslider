@@ -1,4 +1,4 @@
-import ISettings from "../../settings/ISettings";
+import { SettingsWithDefaults } from "../../settings/ISettings";
 import IAssetHandler from "../AssetHandler/IAssetHandler";
 import GameEngine from "../engines/GameEngine/GameEngine";
 import Camera from "../engines/GraphicEngine/Camera";
@@ -66,7 +66,7 @@ export default class LevelQueue implements ILevelQueue
      * @param canvasContext the 2D context from the HTML canvas element
      * @param onError a callback that will need to be called if there is any error during gameplay
      */
-    loadLevel(level:ILevel, settings:ISettings, canvasContext:CanvasRenderingContext2D, onError:(err:any)=>void):void
+    loadLevel(level:ILevel, settings:SettingsWithDefaults, canvasContext:CanvasRenderingContext2D, onError:(err:any)=>void):void
     {
         level.load(this._assetHandler);
         

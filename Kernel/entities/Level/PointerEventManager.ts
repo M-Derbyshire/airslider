@@ -3,7 +3,7 @@ import Kernel from "../../Kernel";
 import IPointerEventManager from "./IPointerEventManager";
 
 /**
- * Manages any events relating to mouse clicks or screen touches
+ * Manages any events relating to mouse clicks
  */
 export default class PointerEventManager implements IPointerEventManager {
 	/**
@@ -60,7 +60,6 @@ export default class PointerEventManager implements IPointerEventManager {
 		};
 		
 		canvas.addEventListener("click", this._clickEventCallback);
-		canvas.addEventListener("touchStart", this._clickEventCallback);
 		canvas.addEventListener("mousemove", this._moveEventCallback);
 	}
 	
@@ -117,7 +116,6 @@ export default class PointerEventManager implements IPointerEventManager {
 	 */
 	removeEventHandlers():void {
 		this._canvas.removeEventListener("click", this._clickEventCallback);
-		this._canvas.removeEventListener("touchStart", this._clickEventCallback);
 		this._canvas.removeEventListener("mousemove", this._moveEventCallback);
 	}
 	
@@ -197,12 +195,12 @@ interface ISubject {
 	/**
 	 * Callback function that should be called when the subject is clicked
 	 */
-	onClick:()=>void;
+	onClick?:()=>void;
 	
 	/**
 	 * Callback function that should be called when the pointer is hovering over the subject
 	 */
-	onHover:()=>void;
+	onHover?:()=>void;
 	
 	/**
 	 * The configuration settings for this subject

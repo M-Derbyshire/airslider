@@ -13,15 +13,15 @@ export default class GameLoopManager implements IGameLoopManager
     
     private _fpsLimit:number; // The maximum FPS that the game should run at
     private _fps:number; // The current Frames Per Second of the game
-    private _fpsDisplayColor:string; // If we want to display the FPS counter, what color should the text be?
+    private _fpsDisplayColor?:string; // If we want to display the FPS counter, what color should the text be?
     private _highestFpsReached:number; // The highest FPS the game has reached
     private _lastTime:Date; // The date/time that the last frame ran
     
     // The total amount of milliseconds that the level has not been paused or stopped for any reason
-    private _totalLevelActiveMilliseconds:number;
+    private _totalLevelActiveMilliseconds!:number;
     
-    private _status:GameLoopStatus; // The current status of the game (e.g. is it playing, paused, or in another state)
-    private _soundKeysPlayingBeforeLastPause:string[]; // The keys of the sounds that were playing when the game was last paused
+    private _status!:GameLoopStatus; // The current status of the game (e.g. is it playing, paused, or in another state)
+    private _soundKeysPlayingBeforeLastPause!:string[]; // The keys of the sounds that were playing when the game was last paused
     
     private _onError:(err:any)=>void; // A callback that should be called if there is an error 
     
@@ -87,7 +87,7 @@ export default class GameLoopManager implements IGameLoopManager
             return;
         
         try {
-            const level = this._levelQueue.currentLevel;
+            const level = this._levelQueue.currentLevel!;
             
             if(!this._levelQueue.currentLevelHasBeenPrepared)
             {
@@ -118,8 +118,8 @@ export default class GameLoopManager implements IGameLoopManager
      */
     toggleGamePause():void
     {
-        const level = this._levelQueue.currentLevel;
-        const soundEngine = this._levelQueue.currentEngines.soundEngine;
+        const level = this._levelQueue.currentLevel!;
+        const soundEngine = this._levelQueue.currentEngines!.soundEngine;
         
         if(level.isPauseable)
         {
@@ -178,7 +178,7 @@ export default class GameLoopManager implements IGameLoopManager
      */
     private _runEnginesForFrame():void
     {
-        const { gameEngine, graphicEngine } = this._levelQueue.currentEngines;
+        const { gameEngine, graphicEngine } = this._levelQueue.currentEngines!;
         
         if(this._status !== GameLoopStatus.Paused)
         {
@@ -189,7 +189,7 @@ export default class GameLoopManager implements IGameLoopManager
             // can re-draw the UI to match (e.g. drawing a play button 
             // instead of a pause button)
             graphicEngine.run(
-                this._levelQueue.currentLevel,
+                this._levelQueue.currentLevel!,
                 this._levelQueue.currentModels,
                 this._fps,
                 this._fpsDisplayColor
