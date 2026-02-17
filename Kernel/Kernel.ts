@@ -28,9 +28,10 @@ export default class Kernel implements IKernel
      */
     static getInstance(canvas?:HTMLCanvasElement, settings?:any):IKernel
     {
-        // The Kernel constructor will return the singleton instance
-        // if it has already been created, and if not then it will create it.
-        return new Kernel(canvas, settings);
+        if(!Kernel._instance)
+            Kernel._instance = new Kernel(canvas, settings);
+        
+        return Kernel._instance;
     }
     
     /**
@@ -79,12 +80,6 @@ export default class Kernel implements IKernel
      */
     private constructor(canvas?:HTMLCanvasElement, settings?:ISettings)
     {
-        if(Kernel._instance)
-        {
-            return Kernel._instance;
-        }
-        Kernel._instance = this;
-        
         // While we want the canvas/settings parameters to be optional for the constructor/getInstance() methods (so they're 
         // not needed when we're getting the pre-existing kernel instance), they are still a requirement when initially 
         // constructing the singleton instance.
@@ -93,7 +88,7 @@ export default class Kernel implements IKernel
         if(!settings)
             throw new Error("Cannot initialise the game's Kernel without a settings object");
         
-        this._canvasContext = canvas.getContext("2d");
+        this._canvasContext = canvas.getContext("2d")!;
         this._settings = this._getSettingsWithDefaults(settings);
         
         this._hasError = false;
@@ -171,7 +166,7 @@ export default class Kernel implements IKernel
      */
     get loadedModels()
     {
-        return this._levelQueue.currentModels;
+        return this._levelQueue.currentModels ?? [];
     }
     
     /**
