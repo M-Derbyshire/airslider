@@ -10,7 +10,7 @@ export default class CenterLineObstacleManager<T extends Obstacle> extends Obsta
     /**
      * We only need to calculate the actual positions for the lines once
      */
-    private _calculatedPositions:number[];
+    private _calculatedPositions?:number[];
     
     /**
      * Resets the manager

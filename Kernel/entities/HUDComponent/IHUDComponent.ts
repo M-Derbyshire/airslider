@@ -35,7 +35,7 @@ export default interface IHUDComponent {
     /**
      * The text content to be displayed with the component
      */
-    text?:ITextContent;
+    text:ITextContent;
     
     /**
      * Loads the component

@@ -12,10 +12,10 @@ export default class ElectricHornet extends Monster {
     
     private _buzzSoundKey:string; // The key for the buzzing sound effect
     
-    private _initialDropWait:number; // The amount of milliseconds before the first attack (after entering)
-    private _firstDropTimeMS:number; // The time (in milliseconds) when the attacking should begin
+    private _initialDropWait!:number; // The amount of milliseconds before the first attack (after entering)
+    private _firstDropTimeMS!:number; // The time (in milliseconds) when the attacking should begin
     
-    private _startXSpeed:number; // The initial x speed (not including the entering sequence)
+    private _startXSpeed!:number; // The initial x speed (not including the entering sequence)
     
     /**
      * Constructor
@@ -61,7 +61,7 @@ export default class ElectricHornet extends Monster {
         
         this.animationManager.registerAnimations({
             flapping: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 27,
                 drawWidth: 337,
                 drawHeight: 315,
@@ -88,7 +88,7 @@ export default class ElectricHornet extends Monster {
         this.offScreenUnits = 500;
         this.startY = 200;
         this.startX = level.rightEdge + this.offScreenUnits;
-        this.startZ = this.playerModel.z;
+        this.startZ = this.playerModel?.z ?? 0;
         this.y = this.startY;
         this.x = this.startX;
         this.z = this.startZ;
@@ -100,7 +100,7 @@ export default class ElectricHornet extends Monster {
         this.ySpeed = 1250;
         
         this._initialDropWait = 4000;
-        this._firstDropTimeMS = null;
+        this._firstDropTimeMS = 0;
         
         this.state = "flapping";
     }
@@ -189,7 +189,7 @@ export default class ElectricHornet extends Monster {
     {
         const currentMS = Kernel.getInstance().totalLevelActiveMilliseconds;
         
-        return this.playerModel.health > 0 && currentMS > this._firstDropTimeMS;
+        return this.playerModel!.health > 0 && currentMS > this._firstDropTimeMS;
     }
     
     /**
@@ -213,8 +213,8 @@ export default class ElectricHornet extends Monster {
      */
     private _setHomingMovementDirection()
     {
-        const playerXCenter = (this.playerModel.width / 2) + this.playerModel.x;
-        const playerYCenter = (this.playerModel.height / 2) + this.playerModel.y;
+        const playerXCenter = (this.playerModel!.width / 2) + this.playerModel!.x;
+        const playerYCenter = (this.playerModel!.height / 2) + this.playerModel!.y;
         const thisXCenter = (this.width / 2) + this.x;
         const stingerY = (this.height * 0.9) + this.y;
         
@@ -305,7 +305,7 @@ export default class ElectricHornet extends Monster {
         super.checkForExtraEvents();
         
         const thisBottom = this.y + this.height;
-        const attackYLimit = this.playerModel.y + 50;
+        const attackYLimit = this.playerModel!.y + 50;
         
         // Check for missing the player on an attack
         if(this.isAttacking() && thisBottom > attackYLimit)

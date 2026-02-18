@@ -9,7 +9,7 @@ import { CentralStateKey } from "../CentralStateKey";
 export default class MusicManager
 {
     private _musicFilePath:string; // The filepath of the chosen music for the level
-    private _musicAsset:HTMLAudioElement; // The chosen music audio asset
+    private _musicAsset!:HTMLAudioElement; // The chosen music audio asset
     private _musicMaxVolume:number; // The volume of the music, when it's not fading in/out
     private _fadeInProcessStartedAtMS:number; // The time (milliseconds) that the fade in process started (negative if it hasn't started)
     private _fadeOutProcessStartedAtMS:number; // The time (milliseconds) that the fade out process started (negative if it hasn't started)
@@ -23,6 +23,11 @@ export default class MusicManager
     {
         this._musicFadeSpeedSeconds = 2.5;
         this._musicStartDelayMS = 1500;
+        this._fadeInProcessStartedAtMS = -1;
+        this._fadeOutProcessStartedAtMS = -1;
+        
+        this._musicFilePath = "";
+        this._musicMaxVolume = 0;
     }
     
     /**
@@ -30,7 +35,7 @@ export default class MusicManager
      * @param musicFilePaths File paths to the available music
      * @returns The file path of the selected music (or null, if one couldn't be selected)
      */
-    load(musicFilePaths:string[]):string
+    load(musicFilePaths:string[]):string|null
     {
         const assetHandler = Kernel.getInstance().assetHandler;
         

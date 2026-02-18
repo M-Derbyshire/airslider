@@ -107,10 +107,10 @@ http://scripts.sil.org/OFL`,
         
         if(this._fullscreenButton)
             this.pointerEventManager.addPointerEventSubject(
-                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y, Kernel.getInstance().graphicEngine),
-                () => this._fullscreenButton.active,
-                () => this._fullscreenButton.onClick(),
-                null,
+                (x, y) => this._fullscreenButton!.isPointerOverlapping(x, y, Kernel.getInstance().graphicEngine),
+                () => this._fullscreenButton!.active,
+                () => this._fullscreenButton!.onClick(),
+                undefined,
                 true
             );
     }

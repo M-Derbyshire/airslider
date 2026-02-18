@@ -22,8 +22,8 @@ export default class IntroGangMember extends GangMember implements IIntroObstacl
     
     // If this model is the leader, these will need to be defined. The leading gang-member will control the
     // positions of these gang-members, so that they are following him
-    private _leftFollower:IntroGangMember;
-    private _rightFollower:IntroGangMember;
+    private _leftFollower?:IntroGangMember;
+    private _rightFollower?:IntroGangMember;
     
     // This determines the current behaviour of the (leader) obstacle
     private _status:"inFarDistance"|"inDistance"|"sweeping";
@@ -47,6 +47,9 @@ export default class IntroGangMember extends GangMember implements IIntroObstacl
         
         this._leftFollower = leftFollower;
         this._rightFollower = rightFollower;
+        
+        this._status = "inFarDistance";
+        this._sweepingXSpeed = 0;
     }
     
     prepare(): void
@@ -137,10 +140,10 @@ export default class IntroGangMember extends GangMember implements IIntroObstacl
     private _isGroupLeavingLevelArea():boolean {
         const { leftEdge, rightEdge } = (Kernel.getInstance().level as ASLevel);
         
-        if(this._leftFollower.x < leftEdge)
+        if(this._leftFollower!.x < leftEdge)
             return true;
         
-        const followerRightEdge = this._rightFollower.x + this._rightFollower.width;
+        const followerRightEdge = this._rightFollower!.x + this._rightFollower!.width;
         if(followerRightEdge > rightEdge)
             return true;
         
@@ -163,14 +166,14 @@ export default class IntroGangMember extends GangMember implements IIntroObstacl
         
         const xPositionOverlap = this.width / 5;
         
-        const leftFollowerX = (this.x - this._leftFollower.width) + xPositionOverlap;
+        const leftFollowerX = (this.x - this._leftFollower!.width) + xPositionOverlap;
         const rightFollowerX = (this.x + this.width) - xPositionOverlap;
         
-        if(!this._leftFollower.hasFallen())
-            this._setFollowerPosition(this._leftFollower, leftFollowerX, zPosition);
+        if(!this._leftFollower!.hasFallen())
+            this._setFollowerPosition(this._leftFollower!, leftFollowerX, zPosition);
         
-        if(!this._rightFollower.hasFallen())
-            this._setFollowerPosition(this._rightFollower, rightFollowerX, zPosition);
+        if(!this._rightFollower!.hasFallen())
+            this._setFollowerPosition(this._rightFollower!, rightFollowerX, zPosition);
     }
     
     /**

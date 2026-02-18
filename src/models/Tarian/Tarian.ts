@@ -38,7 +38,7 @@ export default class Tarian extends ASModel {
     
     private _lastSpeedChange:number; // How many milliseconds since the x speed last changed
     
-    private _lostAtTimeMS:number|null; // The time (in milliseconds) when the model entered the "lost" state
+    private _lostAtTimeMS?:number; // The time (in milliseconds) when the model entered the "lost" state
     private _lostZSpeed:number; // The exiting z speed, when the player has lost the level
     
     private _accl:number; // The x speed accelaration
@@ -52,7 +52,13 @@ export default class Tarian extends ASModel {
     {
         super(modelAnimationsManager);
         
-        this._lostZSpeed = 35; 
+        this.topSpeed = 0;
+        this.health = 0;
+        
+        this._lostZSpeed = 35;
+        this._lastSpeedChange = 0;
+        this._accl = 0;
+        this._deaccl = 0;
     }
     
     /**
@@ -74,7 +80,7 @@ export default class Tarian extends ASModel {
         
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet, 
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,
@@ -86,7 +92,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             left: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24, 
                 drawWidth: 170, 
                 drawHeight: 170, 
@@ -99,7 +105,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             right: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 170,
                 drawHeight: 170,
@@ -112,7 +118,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             breaking: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,
@@ -144,7 +150,7 @@ export default class Tarian extends ASModel {
 				]
             }),
             lost: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,
@@ -175,7 +181,7 @@ export default class Tarian extends ASModel {
         this.canBeControlled = false; // Should the directional controls be operational?
         this.state = "forward";
         this.active = true;
-        this._lostAtTimeMS = null;
+        this._lostAtTimeMS = undefined;
         
         this.centerXPosition();
         this.setYPositionFromBottom(this.height);
@@ -309,7 +315,7 @@ export default class Tarian extends ASModel {
         
         if(
             this.z >= -5 && 
-            (this._lostAtTimeMS + 3000) < totalActiveMS
+            (this._lostAtTimeMS! + 3000) < totalActiveMS
         )
         {
             this.zSpeed = -this._lostZSpeed;

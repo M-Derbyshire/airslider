@@ -19,7 +19,7 @@ export default interface IModel {
     /**
      * Details for displaying an entity's text content
      */
-    text?:ITextContent;
+    text:ITextContent;
     
     /**
      * The current state of the model (the name of the state is the same as the name of the animation that should be drawn)

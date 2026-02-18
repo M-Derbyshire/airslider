@@ -25,7 +25,7 @@ import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
  */
 export default class Forurn extends ASLevel<Snake>
 {
-    private _introSnake:IntroSnake; // Used to introduce the "snake" obstacle to the player
+    private _introSnake!:IntroSnake; // Used to introduce the "snake" obstacle to the player
     private _snakes:Snake[]; // The Snake obstacles that the level will use
     
     /**
@@ -51,6 +51,8 @@ export default class Forurn extends ASLevel<Snake>
         this.obstacleManagers = [
             new SideGroupsObstacleManager<Snake>()
         ];
+        
+        this._snakes = [];
 	}
     
     /**
@@ -139,7 +141,7 @@ export default class Forurn extends ASLevel<Snake>
             "randomSnakes",
             37,
             91,
-            null,
+            undefined,
             () => this.obstacleManagers[0].sendObstaclesIfReady()
         );
         
@@ -148,7 +150,7 @@ export default class Forurn extends ASLevel<Snake>
             97,
             152,
             () => this.monsters.forEach(monster => monster.start()),
-            null,
+            undefined,
             () => this.monsters.forEach(monster => monster.stop())
         );
         
@@ -157,7 +159,7 @@ export default class Forurn extends ASLevel<Snake>
             161,
             224,
             () => this.patternManager.start(),
-            null,
+            undefined,
             () => this.patternManager.stop()
         );
         

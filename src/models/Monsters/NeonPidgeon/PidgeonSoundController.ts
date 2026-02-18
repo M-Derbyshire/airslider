@@ -57,7 +57,7 @@ export default class PidgeonSoundController {
      * will return null if none of them are flapping
      * @returns the pidgeon that is flapping (or one of them), or null if none are
      */
-    private _getCurrentlyFlappingPidgeon():NeonPidgeon
+    private _getCurrentlyFlappingPidgeon():NeonPidgeon|null
     {
         if(this._isPidgeonFlapping(this._pidgeon1))
         {

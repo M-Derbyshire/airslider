@@ -68,6 +68,7 @@ export default class Vevania extends ASLevel<Skeleton>
         this._sweepAndAimLineCount = 8;
         this._sweepingSkeletons = [];
         this._staticSkeletons = [];
+        this._introSkeletons = [];
         
         this._homingPatternZGap = 150;
         this._homingSkeletons = [];
@@ -180,7 +181,7 @@ export default class Vevania extends ASLevel<Skeleton>
             "sweepingSkeletons",
             44,
             100,
-            null,
+            undefined,
             () => this._sweepingObstacleManager.sendObstaclesIfReady()
         );
         
@@ -189,7 +190,7 @@ export default class Vevania extends ASLevel<Skeleton>
             108,
             158,
             () => this.monsters.forEach(monster => monster.start()),
-            null,
+            undefined,
             () => this.monsters.forEach(monster => monster.stop())
         );
         
@@ -197,7 +198,7 @@ export default class Vevania extends ASLevel<Skeleton>
             "sweepAndAimSkeletons",
             171,
             221,
-            null,
+            undefined,
             () => this._sweepAndAimObstacleManager.sendObstaclesIfReady()
         );
         
@@ -206,7 +207,7 @@ export default class Vevania extends ASLevel<Skeleton>
             230,
             280,
             () => this.patternManager.start(),
-            null,
+            undefined,
             () => this.patternManager.stop()
         );
         

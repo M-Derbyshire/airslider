@@ -59,7 +59,7 @@ export default class LowHealthFlash extends DamageFlash
         super.draw(graphicEngine, canvasContext);
         
         if(this.active && this.opacity <= 0) {
-            this.start(this.image);
+            this.start(this.image!);
         }
     }
 }

@@ -56,7 +56,7 @@ export default class Jellyfish extends Obstacle
         
         this.animationManager.registerAnimations({
             splatter: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: [
                     {
                         x: 0,
@@ -70,7 +70,7 @@ export default class Jellyfish extends Obstacle
                 drawHeight
             }),
             moving: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: this._getMovingAnimationFrameCoordinates(coordinateWidth, coordinateHeight),
                 fps: 30,
                 drawWidth,

@@ -8,10 +8,10 @@ import IAssetHandler from '../../../../../Kernel/AssetHandler/IAssetHandler';
  */
 export default class Lightning extends ASModel {
     
-    protected damageFlashImage:HTMLImageElement; // The image used by the DamageFlash HUD component
+    protected damageFlashImage!:HTMLImageElement; // The image used by the DamageFlash HUD component
     
-    private _damageValue:number; // this.damageDealt is calculated every frame using this (see the act() method)
-    private _hitBoxGracePadding:number; // this is used to decrease the width of the hitbox, to allow some overlap
+    private _damageValue?:number; // this.damageDealt is calculated every frame using this (see the act() method)
+    private _hitBoxGracePadding?:number; // this is used to decrease the width of the hitbox, to allow some overlap
     
     /**
      * Loads the assets for the model
@@ -36,7 +36,7 @@ export default class Lightning extends ASModel {
         
         this.animationManager.registerAnimations({
             shock: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 12,
                 drawWidth: 30,
                 drawHeight: 850,
@@ -69,7 +69,7 @@ export default class Lightning extends ASModel {
         //However, in this instance, that's not the case, so we need to account for the frame rate.
         //Players can take this damage over multiple frames at a time, and we don't want people taking more damage on higher framerates.
         //Therefore, during the gameplay, the actual damage dealt will be the _damageValue, modified with the frame rate.
-        this.damageDealt = this._damageValue / Kernel.getInstance().fps;
+        this.damageDealt = this._damageValue! / Kernel.getInstance().fps;
     }
     
     /**
@@ -79,10 +79,10 @@ export default class Lightning extends ASModel {
     getHitBoxes():IHitBox[] {
         return [
             {
-                x: this.x + this._hitBoxGracePadding,
+                x: this.x + this._hitBoxGracePadding!,
                 y: this.y,
                 z: this.z,
-                width: this.width - (this._hitBoxGracePadding * 2),
+                width: this.width - (this._hitBoxGracePadding! * 2),
                 height: this.height
             }
         ];

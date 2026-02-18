@@ -9,7 +9,7 @@ import ObstacleManager from "./ObstacleManager";
 export default class SideGroupsObstacleManager<T extends Obstacle> extends ObstacleManager<T>
 {
     // Should the next line of obstacles be placed on the right side of the track?
-	private _placeLineOnRight:boolean;
+	private _placeLineOnRight!:boolean;
 	
 	/**
 	 * Resets the manager

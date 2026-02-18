@@ -81,14 +81,14 @@ export default class Snake extends Obstacle
         
         this.animationManager.registerAnimations({
             slither: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: slitherFrameCoordinates,
                 fps: 24,
                 drawWidth,
                 drawHeight
             }),
             dead: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: deadFrameCoordinates,
                 fps: 1,
                 drawWidth,

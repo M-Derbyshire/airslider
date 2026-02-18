@@ -10,7 +10,7 @@ import IAssetHandler from '../../../../../Kernel/AssetHandler/IAssetHandler';
 export default class LavaBall extends ASModel {
     
     protected playerModel:Tarian; // The player's model
-    protected damageFlashImage:HTMLImageElement; // The image used by the DamageFlash HUD Component
+    protected damageFlashImage!:HTMLImageElement; // The image used by the DamageFlash HUD Component
     
     /**
      * Constructor
@@ -51,7 +51,7 @@ export default class LavaBall extends ASModel {
         
         this.animationManager.registerAnimations({
             drop: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: ballWidth,
                 drawHeight: ballHeight,
@@ -60,7 +60,7 @@ export default class LavaBall extends ASModel {
 				]
             }),
             break: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: ballWidth,
                 drawHeight: ballHeight,
@@ -73,7 +73,7 @@ export default class LavaBall extends ASModel {
 				]
             }),
             none: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 0,
                 drawHeight: 0,

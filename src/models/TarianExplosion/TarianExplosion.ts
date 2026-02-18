@@ -16,7 +16,7 @@ export default class TarianExplosion extends ASModel {
     private _maxWidth:number; // The limit on how wide the explosion can get
     private _resizeSpeedX:number; // The speed that the width increases
     private _resizeSpeedY:number; // The speed that the height increases
-    private _animFrame:IAnimation; // The single frame of the one animation the model uses
+    private _animFrame?:IAnimation; // The single frame of the one animation the model uses
     private _alarmSoundKey:string; // The key for the alarm sound effect that the explosion plays
     
     /**
@@ -62,7 +62,7 @@ export default class TarianExplosion extends ASModel {
         
         // Keeping a reference to this, as we want to change the draw width/height dynamically
         this._animFrame = this.animationManager.createAnimation({
-            spritesheet: this.spritesheet, 
+            spritesheet: this.spritesheet!,
             fps: 24,
             drawWidth: 0,
             drawHeight: 0,
@@ -83,8 +83,8 @@ export default class TarianExplosion extends ASModel {
         this.state = "standard";
         this.active = true;
         
-        this._animFrame.width = 0;
-        this._animFrame.height = 0;
+        this._animFrame!.width = 0;
+        this._animFrame!.height = 0;
     }
     
     act():void
@@ -111,7 +111,7 @@ export default class TarianExplosion extends ASModel {
      */
     private _runSound():void
     {
-        if(this._animFrame.width === 0)
+        if(this._animFrame!.width === 0)
             Kernel.getInstance().soundEngine.playSound(this._alarmSoundKey);
     }
     
@@ -120,13 +120,13 @@ export default class TarianExplosion extends ASModel {
      */
     private _resize():void
     {
-        this._animFrame.width += UnitHelper.consistentSpeed(this._resizeSpeedX);
-        this._animFrame.height += UnitHelper.consistentSpeed(this._resizeSpeedY);
+        this._animFrame!.width += UnitHelper.consistentSpeed(this._resizeSpeedX);
+        this._animFrame!.height += UnitHelper.consistentSpeed(this._resizeSpeedY);
         
-        if(this._animFrame.width > this._maxWidth || this._animFrame.height > this._maxHeight)
+        if(this._animFrame!.width > this._maxWidth || this._animFrame!.height > this._maxHeight)
         {
-            this._animFrame.width = 0;
-            this._animFrame.height = 0;
+            this._animFrame!.width = 0;
+            this._animFrame!.height = 0;
         }
     }
 
@@ -147,7 +147,7 @@ export default class TarianExplosion extends ASModel {
     private _setYPosition():void
     {
         // Place the bottom of the explosion at the bottom of the player
-        this.y = ((this._player.y + this._player.height) - this._animFrame.height) + 25;
+        this.y = ((this._player.y + this._player.height) - this._animFrame!.height) + 25;
     }
 
     /**

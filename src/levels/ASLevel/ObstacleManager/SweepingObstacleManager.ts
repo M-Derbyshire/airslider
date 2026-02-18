@@ -9,7 +9,7 @@ import ObstacleManager from "./ObstacleManager";
 export default class SweepingObstacleManager<T extends Obstacle> extends ObstacleManager<T>
 {
     // Should the obstacle start on the right edge, instead of the left?
-    private _placeObstacleOnRight:boolean;
+    private _placeObstacleOnRight!:boolean;
     
     /**
      * Resets the manager

@@ -7,10 +7,10 @@ import ASHUDComponent from '../ASHUDComponent/ASHUDComponent';
  */
 export default class DamageFlash extends ASHUDComponent
 {
-    protected opacity:number;
-    protected shouldFadeOut:boolean; // Should we be fading out the image, rather than fading in?
-    protected flashSpeed:number;
-    protected image:HTMLImageElement;
+    protected opacity!:number;
+    protected shouldFadeOut!:boolean; // Should we be fading out the image, rather than fading in?
+    protected flashSpeed!:number;
+    protected image?:HTMLImageElement;
     
     /**
      * Prepares the component before the level starts
@@ -59,7 +59,7 @@ export default class DamageFlash extends ASHUDComponent
             });
             
             canvasContext.globalAlpha = this.opacity;
-            canvasContext.drawImage(this.image, x, y, width, height);
+            canvasContext.drawImage(this.image!, x, y, width, height);
             canvasContext.globalAlpha = 1;
         }
     }

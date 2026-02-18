@@ -8,7 +8,7 @@ import ObstacleManager from "./ObstacleManager";
  */
 export default class SweepAndAimObstacleManager<T extends Obstacle> extends ObstacleManager<T>
 {
-    private _nextSweeperPosition:SweeperStartPosition; // Determines the position of the next sweeping obstacle
+    private _nextSweeperPosition!:SweeperStartPosition; // Determines the position of the next sweeping obstacle
     
     /**
      * Resets the manager
@@ -51,7 +51,7 @@ export default class SweepAndAimObstacleManager<T extends Obstacle> extends Obst
                 ? staticModelsCopy.pop()
                 : sweepingModelsCopy.pop();
             
-            orderedObstacles.push(obstacle);
+            orderedObstacles.push(obstacle!);
         }
         
         super.setObstacleModels(orderedObstacles);
@@ -77,10 +77,10 @@ export default class SweepAndAimObstacleManager<T extends Obstacle> extends Obst
         if(nextObstacle.mode === "static")
         {
             const obstacleHalfWidth = nextObstacle.width / 2;
-            const playerHalfWidth = this.playerModel.width / 2;
+            const playerHalfWidth = this.playerModel!.width / 2;
             
             // Center on the player's current position
-            const desiredPosition = (this.playerModel.x + playerHalfWidth) - obstacleHalfWidth;
+            const desiredPosition = (this.playerModel!.x + playerHalfWidth) - obstacleHalfWidth;
             return [desiredPosition];
         }
         else if(this._nextSweeperPosition === SweeperStartPosition.Left)
@@ -102,7 +102,7 @@ export default class SweepAndAimObstacleManager<T extends Obstacle> extends Obst
     {
         // We want to make it more likely that the player will be hit, if
         // they're standing still
-        this.zModifierAbsMax = (this.playerModel.xSpeed === 0) ? 100 : 0;
+        this.zModifierAbsMax = (this.playerModel!.xSpeed === 0) ? 100 : 0;
     }
 }
 

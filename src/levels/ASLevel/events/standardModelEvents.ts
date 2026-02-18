@@ -23,82 +23,82 @@ const standardModelEvents:IModelEventRegistrationDetails[] = [
         check: zCollisionEventCheck,
         class1: Tarian,
         class2: Snake,
-        reactionCallback: (t:Tarian, s:Snake) => {
-            t.zCollisionEventAction(s);
-            s.hitEventAction();
+        reactionCallback: (t, s) => {
+            (t as Tarian).zCollisionEventAction(s);
+            (s as Snake).hitEventAction();
         }
     },
     {
         check: zCollisionEventCheck,
         class1: Tarian,
         class2: IntroSnake,
-        reactionCallback: (t:Tarian, s:IntroSnake) => {
-            t.zCollisionEventAction(s);
-            s.hitEventAction();
+        reactionCallback: (t, s) => {
+            (t as Tarian).zCollisionEventAction(s);
+            (s as IntroSnake).hitEventAction();
         }
     },
     {
         check: zCollisionEventCheck,
         class1: Tarian,
         class2: RockBall,
-        reactionCallback: (t:Tarian, rb:RockBall) => {
-            t.zCollisionEventAction(rb);
-            rb.hitEventAction();
+        reactionCallback: (t, rb) => {
+            (t as Tarian).zCollisionEventAction(rb);
+            (rb as RockBall).hitEventAction();
         }
     },
     {
         check: zCollisionEventCheck,
         class1: Tarian,
         class2: IntroRockBall,
-        reactionCallback: (t:Tarian, rb:IntroRockBall) => {
-            t.zCollisionEventAction(rb);
-            rb.hitEventAction();
+        reactionCallback: (t, rb) => {
+            (t as Tarian).zCollisionEventAction(rb);
+            (rb as IntroRockBall).hitEventAction();
         }
     },
     {
         check: zCollisionEventCheck,
         class1: Tarian,
         class2: GangMember,
-        reactionCallback: (t:Tarian, gm:GangMember) => {
-            t.zCollisionEventAction(gm);
-            gm.hitEventAction();
+        reactionCallback: (t, gm) => {
+            (t as Tarian).zCollisionEventAction(gm);
+            (gm as GangMember).hitEventAction();
         }
     },
     {
         check: zCollisionEventCheck,
         class1: Tarian,
         class2: IntroGangMember,
-        reactionCallback: (t:Tarian, gm:IntroGangMember) => {
-            t.zCollisionEventAction(gm);
-            gm.hitEventAction();
+        reactionCallback: (t, gm) => {
+            (t as Tarian).zCollisionEventAction(gm);
+            (gm as IntroGangMember).hitEventAction();
         }
     },
     {
         check: zCollisionEventCheck,
         class1: Tarian,
         class2: Skeleton,
-        reactionCallback: (t:Tarian, s:Skeleton) => {
-            t.zCollisionEventAction(s);
-            s.hitEventAction();
+        reactionCallback: (t, s) => {
+            (t as Tarian).zCollisionEventAction(s);
+            (s as Skeleton).hitEventAction();
         }
     },
     {
         check: zCollisionEventCheck,
         class1: Tarian,
         class2: Jellyfish,
-        reactionCallback: (t:Tarian, j:Jellyfish) => {
-            t.zCollisionEventAction(j);
-            j.hitEventAction();
+        reactionCallback: (t, j) => {
+            (t as Tarian).zCollisionEventAction(j);
+            (j as Jellyfish).hitEventAction();
         }
     },
     { 
         check: zCollisionEventCheck,
         class1: ElectricHornet,
         class2: Tarian,
-        reactionCallback: (eh:ElectricHornet, t:Tarian) => {
-            if(eh.isAttacking()) {
-                eh.zCollisionEventAction();
-                t.zCollisionEventAction(eh);
+        reactionCallback: (eh, t) => {
+            if((eh as ElectricHornet).isAttacking()) {
+                (eh as ElectricHornet).zCollisionEventAction();
+                (t as Tarian).zCollisionEventAction(eh);
             }
         }
     },
@@ -106,10 +106,10 @@ const standardModelEvents:IModelEventRegistrationDetails[] = [
         check: zCollisionEventCheck,
         class1: NeonPidgeon,
         class2: Tarian,
-        reactionCallback: (np:NeonPidgeon, t:Tarian) => {
-            if(np.isAttacking()) {
-                np.hitEventAction();
-                t.zCollisionEventAction(np);
+        reactionCallback: (np, t) => {
+            if((np as NeonPidgeon).isAttacking()) {
+                (np as NeonPidgeon).hitEventAction();
+                (t as Tarian).zCollisionEventAction(np);
             }
         }
     },
@@ -117,18 +117,18 @@ const standardModelEvents:IModelEventRegistrationDetails[] = [
         check: neonPidgeonOverlappingEventCheck,
         class1: NeonPidgeon,
         class2: Tarian,
-        reactionCallback: (np:NeonPidgeon, _:IModel) => {
-            np.overlappingPlayerXEventAction();
+        reactionCallback: (np, _:IModel) => {
+            (np as NeonPidgeon).overlappingPlayerXEventAction();
         }
     },
     { 
         check: zCollisionEventCheck,
         class1: LavaBall,
         class2: Tarian,
-        reactionCallback: (lb:LavaBall, t:Tarian) => {
+        reactionCallback: (lb, t) => {
             if(lb.state === "drop") {
-                lb.hitEventAction();
-                t.zCollisionEventAction(lb);
+                (lb as LavaBall).hitEventAction();
+                (t as Tarian).zCollisionEventAction(lb);
             }
         }
     },
@@ -136,17 +136,17 @@ const standardModelEvents:IModelEventRegistrationDetails[] = [
         check: zCollisionEventCheck,
         class1: Tarian,
         class2: Ghost,
-        reactionCallback: (t:Tarian, g:Ghost) => {
-            t.zCollisionEventAction(g);
-            g.zCollisionEventAction(t);
+        reactionCallback: (t, g) => {
+            (t as Tarian).zCollisionEventAction(g);
+            (g as Ghost).zCollisionEventAction(t);
         }
     },
     {
         check: zCollisionEventCheck,
         class1: Tarian,
         class2: Lightning,
-        reactionCallback: (t:Tarian, l:Lightning) => {
-            t.zCollisionEventAction(l);
+        reactionCallback: (t, l) => {
+            (t as Tarian).zCollisionEventAction(l);
         }
     },
 ];

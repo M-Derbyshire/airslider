@@ -20,7 +20,7 @@ export default class RacerManager
     private _rightEdge: number; // The right edge of the level's area
     private _levelWidth: number; // The width of the level's area
     
-    private _lastColorChosen: RacerColor; // The last color chosen when setting the racer's color
+    private _lastColorChosen?: RacerColor; // The last color chosen when setting the racer's color
     
     private _overtakingSequenceStarted: boolean; // Has the overtaking sequence started?
     private _overtakingInitialGap: number; // The gap (on the z axis) between the first overtaker, and the screen
@@ -43,6 +43,10 @@ export default class RacerManager
         this._overtakingInitialGap = 1000;
         this._overtakingRacerGap = 100;
         this._overtakingSpeed = 500;
+        this._overtakingSequenceStarted = false;
+        
+        this._frontRacers = [];
+        this._backRacers = [];
     }
     
     /**
@@ -74,8 +78,6 @@ export default class RacerManager
      */
     startOvertakeSequence()
     {
-        const kernel = Kernel.getInstance();
-        
         this._overtakingSequenceStarted = true;
         
         const allRacers = [

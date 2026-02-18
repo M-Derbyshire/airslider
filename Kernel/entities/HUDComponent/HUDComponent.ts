@@ -40,7 +40,7 @@ export default class HUDComponent implements IHUDComponent
     /**
      * The text content to be displayed with the component
      */
-    text?:ITextContent;
+    text!:ITextContent;
     
     
     constructor()
@@ -104,9 +104,6 @@ export default class HUDComponent implements IHUDComponent
      */
     drawText(graphicEngine:IGraphicEngine):void
     {
-        if(!this.text)
-            return;
-        
         graphicEngine.drawText(
             this.text,
             {

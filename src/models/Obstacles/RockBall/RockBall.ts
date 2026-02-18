@@ -57,14 +57,14 @@ export default class RockBall extends Obstacle
         
         this.animationManager.registerAnimations({
             broken: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: brokenFrameCoordinates,
                 fps: 1,
                 drawWidth: drawDiameter,
                 drawHeight: drawDiameter
             }),
             spin: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: this._getSpinAnimationFrameCoordinates(coordinateDiameter),
                 fps: 15,
                 drawWidth: drawDiameter,

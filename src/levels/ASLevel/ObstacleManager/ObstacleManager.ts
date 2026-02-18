@@ -10,35 +10,43 @@ import { generateRandomPositionModifier } from '../utils';
 export default class ObstacleManager<T extends Obstacle>
 {
 	// The model of the player character
-	protected playerModel:IModel;
+	protected playerModel?:IModel;
 	
 	// The edges of the area (in units) that the obstacles can move within
-	protected areaLeftEdge:number;
-	protected areaRightEdge:number;
+	protected areaLeftEdge!:number;
+	protected areaRightEdge!:number;
 	
 	// The level's obstacles.
-	protected obstacles:T[];
+	protected obstacles!:T[];
 	
 	// The width of the obstacles we're working with
-	protected obstacleWidth:number;
+	protected obstacleWidth!:number;
 	
 	// This is the minimum amount of obstacles the manager requires
-	protected minObstacleCount:number;
+	protected minObstacleCount!:number;
 	
 	// This value affects the maximum change that will be made to an obstacle's Z-axis 
 	// position, before it's sent
-	protected zModifierAbsMax:number;
+	protected zModifierAbsMax!:number;
 	
 	// We should only have this amount of lines (of obstacles) on the track at any one time
-	private _lineCount:number;
+	private _lineCount!:number;
 	
 	// The index number of the last obstacle that was sent (if this is negative, none have been sent)
-	private _lastSentObstacleIndex:number;
+	private _lastSentObstacleIndex!:number;
 	
 	/**
 	 * The amount of lines (of obstacles) that can be on the track at any one time
 	 */
 	get currentLineCount() { return this._lineCount }
+	
+	/**
+	 * Constructor
+	 */
+	constructor()
+	{
+		this.reset();
+	}
 	
 	/**
 	 * Resets the manager
@@ -49,9 +57,11 @@ export default class ObstacleManager<T extends Obstacle>
         this.areaRightEdge = 0;
         
 		this.obstacles = [];
+		this.obstacleWidth = this._getObstaclesWidth();
+		this.minObstacleCount = 2;
         
         this._lineCount = 0;
-		this.minObstacleCount = 2;
+		this._lastSentObstacleIndex = -1;
 		
 		this.zModifierAbsMax = 0;
 	}

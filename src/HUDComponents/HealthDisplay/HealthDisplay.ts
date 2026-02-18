@@ -19,12 +19,12 @@ export default class HealthDisplay extends ASHUDComponent
     /**
      * The border image for the component
      */
-    private _borderImage:HTMLImageElement;
+    private _borderImage!:HTMLImageElement;
     
     /**
      * The spanner image
      */
-    private _spannerImage:HTMLImageElement;
+    private _spannerImage!:HTMLImageElement;
     
     /**
      * Affects the radius of the rectangle's corners

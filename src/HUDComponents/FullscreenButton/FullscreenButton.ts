@@ -11,7 +11,7 @@ export default class FullscreenButton extends ASHUDComponent {
     /**
      * The spritesheet image that contains the different buttons
      */
-    private _imageSheet:HTMLImageElement;
+    private _imageSheet!:HTMLImageElement;
     
     /**
      * Constructor

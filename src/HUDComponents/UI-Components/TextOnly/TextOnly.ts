@@ -10,9 +10,9 @@ export default class TextOnly extends ASHUDComponent
     private _fontName: string;
     private _fontSize: number;
     private _color: string;
-    private _style: string;
-    private _alignment: CanvasTextAlign;
-    private _lineGap: number;
+    private _style?: string;
+    private _alignment?: CanvasTextAlign;
+    private _lineGap?: number;
     
     /**
      * Constructor

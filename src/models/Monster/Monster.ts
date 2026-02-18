@@ -9,10 +9,10 @@ import Tarian from '../Tarian/Tarian';
  * Provides functionality used by all monster models
  */
 export default class Monster extends ASModel {
-    damageFlashImage:HTMLImageElement; // Which image should be used by the DamageFlash, in the HUD?
+    damageFlashImage?:HTMLImageElement; // Which image should be used by the DamageFlash, in the HUD?
     damageDealt:number; // How much damage should a collision with this monster do?
     
-    protected playerModel:Tarian; // The player's model
+    protected playerModel?:Tarian; // The player's model
     
     // Actions are methods that make the monster perform a certain behaviour.
     // They are stored in an array, so they can be ran sequentially.
@@ -49,6 +49,22 @@ export default class Monster extends ASModel {
         super(modelAnimationsManager);
         
         this.actions = [];
+        this.currentAction = 0;
+        
+        this.damageDealt = 0;
+        this.fireWeapon = false;
+        
+        this.offScreenUnits = 0;
+        this.startY = 0;
+        this.startX = 0;
+        this.startZ = 0;
+        this.enterXSpeed = 0;
+        this.enterYSpeed = 0;
+        this.exitXSpeed = 0;
+        this.exitYSpeed = 0;
+        
+        this.entering = false;
+        this.exiting = false;
     }
     
     /**

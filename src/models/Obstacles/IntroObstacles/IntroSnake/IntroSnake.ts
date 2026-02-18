@@ -50,10 +50,18 @@ export default class IntroSnake extends Snake implements IIntroObstacle
     {
         super(modelAnimationsManager);
         
+        this._currentMove = "entrance";
+        
         this._entranceXSpeed = 250;
         this._entranceZSpeed = 200;
         
+        this._startZPosition = 0;
+        
+        this._minX = 0;
+        this._maxX = 0;
+        
         this._maxDriftCount = 2;
+        this._currentDriftCount = 0;
         this._steadyStartZPosition = 130;
         this._steadyXSpeed = this._entranceXSpeed;
         this._steadyZSpeed = this._entranceZSpeed / 40;

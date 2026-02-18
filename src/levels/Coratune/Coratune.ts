@@ -28,11 +28,11 @@ import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine
  */
 export default class Coratune extends ASLevel<Jellyfish>
 {
-    private _buoyImage:HTMLImageElement;
-    private _buoyImageDimensions:{ width:number, height:number };
+    private _buoyImage!:HTMLImageElement;
+    private _buoyImageDimensions!:{ width:number, height:number };
     private _finishFlagsBuoyManager:LevelGroundManager; // Draws Buoys in front of the finish flags
     
-    private _introJellyfish:IntroJellyfish;
+    private _introJellyfish!:IntroJellyfish;
     private _centerHomingJellyfish:Jellyfish[]; // The homing jellyfish that are in the center of the track
     private _sidesHomingJellyfish:Jellyfish[]; // The homing jellyfish that are on the sides of the level
     
@@ -58,10 +58,13 @@ export default class Coratune extends ASLevel<Jellyfish>
         
         this._centerHomingJellyfish = [];
         this._sidesHomingJellyfish = [];
+        this._homingJellyfishInitialXSpeed = 450;
         
         this.obstacleManagers = [
             new CenterLineObstacleManager<Jellyfish>()
         ];
+        
+        this._finishFlagsBuoyManager = new LevelGroundManager(false);
     }
     
     /**
@@ -79,7 +82,6 @@ export default class Coratune extends ASLevel<Jellyfish>
         const centerHomingJellyfishCount = 6;
         const sidesHomingJellyfishCount = 7;
         const homingZStart = 150;
-        this._homingJellyfishInitialXSpeed = 450;
         
         for(let i = 0; i < centerHomingJellyfishCount; i++)
             this._centerHomingJellyfish.push(
@@ -132,7 +134,6 @@ export default class Coratune extends ASLevel<Jellyfish>
             height: 150
         };
         
-        this._finishFlagsBuoyManager = new LevelGroundManager(false);
         this._finishFlagsBuoyManager.load(
             buoyImagePath,
             null,
@@ -203,7 +204,7 @@ export default class Coratune extends ASLevel<Jellyfish>
             38,
             88,
             () => this.patternManager.start(),
-            null,
+            undefined,
             () => this.patternManager.stop()
         );
         
@@ -212,7 +213,7 @@ export default class Coratune extends ASLevel<Jellyfish>
             88,
             138,
             () => this.monsters[0].start(),
-            null,
+            undefined,
             () => this.monsters[0].stop()
         );
         
@@ -236,7 +237,7 @@ export default class Coratune extends ASLevel<Jellyfish>
             179,
             229,
             () => this.monsters[1].start(),
-            null,
+            undefined,
             () => this.monsters[1].stop()
         );
         

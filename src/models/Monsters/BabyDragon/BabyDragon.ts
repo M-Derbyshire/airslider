@@ -11,13 +11,13 @@ import LavaBall from '../attacks/LavaBall/LavaBall';
 export default class BabyDragon extends Monster 
 {
     private _lavaBalls:LavaBall[]; // The lava ball models that the dragon will drop onto the player
-    private _nextLavaBallIndex:number; // The "next" lava ball refers to the next one to drop (not the next one to select)
-    private _initialXSpeed:number; // The initial speed of the monster (on the X axis), after the entrance movement
+    private _nextLavaBallIndex?:number; // The "next" lava ball refers to the next one to drop (not the next one to select)
+    private _initialXSpeed?:number; // The initial speed of the monster (on the X axis), after the entrance movement
     private _wingSoundKey:string; // The key for the flapping wings sound effect
     
     // This model's animation runs at a lower framerate to the game. This stores the index of the last frame that was 
     // used. See the act() method for an explanation of how this relates to the sound effect.
-    private _lastAnimFrame:number;
+    private _lastAnimFrame?:number;
     
     /**
      * Constructor
@@ -40,7 +40,7 @@ export default class BabyDragon extends Monster
     private get _altLavaBallIndex() {
         return (this._nextLavaBallIndex === this._lavaBalls.length - 1) 
             ? 0 
-            : this._nextLavaBallIndex + 1;
+            : this._nextLavaBallIndex! + 1;
     }
     
     /**
@@ -70,7 +70,7 @@ export default class BabyDragon extends Monster
         
         this.animationManager.registerAnimations({
             left: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 400,
                 drawHeight: 300,
@@ -88,7 +88,7 @@ export default class BabyDragon extends Monster
 				]
             }),
             right: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 400,
                 drawHeight: 300,
@@ -123,7 +123,7 @@ export default class BabyDragon extends Monster
         this.startY = 10,
         this.offScreenUnits = 500;
         this.startX = level.rightEdge + this.offScreenUnits;
-        this.startZ = this.playerModel.z;
+        this.startZ = this.playerModel?.z ?? 0;
         
         this.x = this.startX;
         this.y = this.startY;
@@ -219,7 +219,7 @@ export default class BabyDragon extends Monster
      */
     private _isAbovePlayer():boolean
     {
-        const player = this.playerModel;
+        const player = this.playerModel!;
         
         // We know the dragon model is wider than the player model
         return (
@@ -237,7 +237,7 @@ export default class BabyDragon extends Monster
      */
     private _shouldChangeDirection(isAbovePlayer:boolean):boolean
     {
-        const player = this.playerModel;
+        const player = this.playerModel!;
         
         return (
             !isAbovePlayer
@@ -262,10 +262,10 @@ export default class BabyDragon extends Monster
      */
 	private _dropBallIfTime():void
 	{
-        if(this.playerModel.lost)
+        if(this.playerModel!.lost)
             return;
         
-        const nextLavaBall = this._lavaBalls[this._nextLavaBallIndex];
+        const nextLavaBall = this._lavaBalls[this._nextLavaBallIndex!];
         const altLavaBall = this._lavaBalls[this._altLavaBallIndex];
         
         const unitsWithinCameraY = Kernel.getInstance().settings.unitsWithinCameraY;
@@ -291,7 +291,7 @@ export default class BabyDragon extends Monster
      */
     private _dropBall():void
     {
-        const ball = this._lavaBalls[this._nextLavaBallIndex];
+        const ball = this._lavaBalls[this._nextLavaBallIndex!];
         
         //center the ball
         let xOffset = -65;

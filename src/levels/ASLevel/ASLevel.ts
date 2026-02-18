@@ -61,10 +61,10 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     }
     
     // Frame management
-    protected frame: Frame;
-    protected backgroundImage: HTMLImageElement;
-    protected lightMaskImage: HTMLImageElement;
-    protected lightMaskLuminosity: number;
+    protected frame!: Frame;
+    protected backgroundImage!: HTMLImageElement;
+    protected lightMaskImage!: HTMLImageElement;
+    protected lightMaskLuminosity!: number;
     
     // Environment management
     protected roadColor: string;
@@ -80,17 +80,17 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     
     // Models we want to keep references to
     protected monsters:Monster[];
-    protected player:Tarian;
+    protected player!:Tarian;
     
     private _currentPlayerMoveKey:string; // The key currently being pressed to control the player
     private _pauseToggleKeyIsPressed:boolean; // Is the key used to toggle the pause currently pressed?
     
     // Level speed management
     levelMoving:boolean; // Is the player moving forwards?
-    levelSpeedRaw:number; // The level speed (before being calculated by the UnitHelper)
-    maxLevelSpeedRaw:number; // The maximum speed (before being calculated by the UnitHelper)
-    levelSpeed:number; // The level speed (after being calculated by the UnitHelper)
-    protected levelSpeedAccl:number; // How quickly does the speed accelerate at the start?
+    levelSpeedRaw!:number; // The level speed (before being calculated by the UnitHelper)
+    maxLevelSpeedRaw!:number; // The maximum speed (before being calculated by the UnitHelper)
+    levelSpeed!:number; // The level speed (after being calculated by the UnitHelper)
+    protected levelSpeedAccl!:number; // How quickly does the speed accelerate at the start?
     
     // Level ending
     
@@ -125,10 +125,10 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     private _permanentSectionTimeShiftSecs:number;
     
     // Models/info for the opening and closing of the level
-    protected startSign:Sign; // The sign at the start of the level
-    private _startSignDisplay:SignDisplay; // The light display on the starting sign
-    protected finishSign:Sign; // The finish sign
-    protected finishFlagsActive:boolean; // Should the flags at the end of the level be active?
+    protected startSign!:Sign; // The sign at the start of the level
+    private _startSignDisplay!:SignDisplay; // The light display on the starting sign
+    protected finishSign!:Sign; // The finish sign
+    protected finishFlagsActive!:boolean; // Should the flags at the end of the level be active?
     private _signStartingZPosition:number; // Where on the z axis does the startSign start, and the finishSign end?
     protected finishFlagsManager:LevelGroundManager; // Manages the flags at the end of the level
     
@@ -155,8 +155,16 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
 		this.roadManager = new LevelRoadManager();
         this.roadColor = "#A5A5A5";
         
+        this.groundManager = new LevelGroundManager();
+        this.finishFlagsManager = new LevelGroundManager(false);
+        
+        this.leftEdge = 0;
+        this.rightEdge = 0;
+        
         this.obstacleManagers = [];
 		this.patternManager = new ObstaclePatternManager<ObstacleType>();
+        
+        this.monsters = [];
         
         this.racerManager = new RacerManager();
         
@@ -178,6 +186,13 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         this._currentPlayerMoveKey = "";
         this._pauseToggleKeyIsPressed = false;
+        
+        this.levelCompletedAtMS = -1;
+        this.stoppedForlossAtMS = -1;
+        
+        this._activeSections = [];
+        this.levelMoving = false;
+        this._setupLevelSpeed();
 	}
     
     /**
@@ -220,9 +235,6 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
     load(assetHandler:IAssetHandler):void
 	{
 		super.load(assetHandler);
-        
-        this.groundManager = new LevelGroundManager();
-        this.finishFlagsManager = new LevelGroundManager(false); 
         
         this.finishFlagsManager.load(
             "/levels/ASLevel/images/finish_flag.png",
@@ -457,7 +469,7 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         id:string, 
         secsStart:number, 
         secsEnd:number, 
-        initialiseCallback?:()=>void, 
+        initialiseCallback?:()=>void,
         actCallback?:()=>void, 
         endCallback?:()=>void
     ) {

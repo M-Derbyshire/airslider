@@ -50,6 +50,10 @@ export default class Lars extends ASLevel<RockBall>
         this.obstacleManagers = [
             new SweepingObstacleManager<RockBall>()
         ];
+        
+        this._introRockBalls = [];
+        this._sweepingRockBalls = [];
+        this._staticRockBalls = [];
 	}
     
     /**
@@ -152,7 +156,7 @@ export default class Lars extends ASLevel<RockBall>
             "sweepingRockBalls1",
             34,
             88,
-            null,
+            undefined,
             () => this.obstacleManagers[0].sendObstaclesIfReady()
         );
         
@@ -161,7 +165,7 @@ export default class Lars extends ASLevel<RockBall>
             95,
             122,
             () => this.patternManager.start(),
-            null,
+            undefined,
             () => this.patternManager.stop()
         );
         
@@ -172,7 +176,7 @@ export default class Lars extends ASLevel<RockBall>
             127,
             177,
             () => this.monsters.forEach(monster => monster.start()),
-            null,
+            undefined,
             () => this.monsters.forEach(monster => monster.stop())
         );
         

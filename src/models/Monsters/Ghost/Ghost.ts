@@ -38,8 +38,18 @@ export default class Ghost extends Monster {
         super(modelAnimationsManager);
         
         this._damageDealtOriginal = 5;
+        this.damageDealt = this._damageDealtOriginal;
+        
         this._playerModel = playerModel;
+        
         this._startPosition = startPosition;
+        this._directionMultiplier = 0;
+        this._exitZSpeed = 0;
+        this._attackingZSpeed = 0;
+        this._maxAttackingXSpeed = 0;
+        
+        this._outLimit = 0;
+        this._inLimit = 0;
     }
     
     /**
@@ -65,7 +75,7 @@ export default class Ghost extends Monster {
         
         this.animationManager.registerAnimations({
             normal: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 175,
                 drawHeight: 170,

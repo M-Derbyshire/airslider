@@ -57,6 +57,7 @@ export default class Neonus extends ASLevel<GangMember>
         this._gangMembersLineCount = 8;
         this._staticGangMembers = [];
         this._sweepingGangMembers = [];
+        this._introGangMembers = [];
     }
     
     /**
@@ -161,7 +162,7 @@ export default class Neonus extends ASLevel<GangMember>
             "gangMembers1",
             43,
             98,
-            null,
+            undefined,
             () => this.obstacleManagers[0].sendObstaclesIfReady()
         );
         
@@ -170,7 +171,7 @@ export default class Neonus extends ASLevel<GangMember>
             107,
             157,
             () => this.monsters.forEach(monster => monster.start()),
-            null,
+            undefined,
             () => this.monsters.forEach(monster => monster.stop())
         );
         
@@ -179,7 +180,7 @@ export default class Neonus extends ASLevel<GangMember>
             166,
             216,
             () => this.patternManager.start(),
-            null,
+            undefined,
             () => this.patternManager.stop()
         );
         

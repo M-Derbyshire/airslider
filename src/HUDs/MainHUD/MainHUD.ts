@@ -108,7 +108,7 @@ export default class MainHUD extends ASHUD
             (x, y) => this._pauseButton.isPointerOverlapping(x, y, graphicEngine),
             () => this._pauseButton.active,
             () => this._pauseButton.onClick(),
-            null,
+            undefined,
             true
         );
         
@@ -130,10 +130,10 @@ export default class MainHUD extends ASHUD
         
         if(this._fullscreenButton)
             this.pointerEventManager.addPointerEventSubject(
-                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y, graphicEngine),
-                () => this._fullscreenButton.active,
-                () => this._fullscreenButton.onClick(),
-                null,
+                (x, y) => this._fullscreenButton!.isPointerOverlapping(x, y, graphicEngine),
+                () => this._fullscreenButton!.active,
+                () => this._fullscreenButton!.onClick(),
+                undefined,
                 true
             );
     }

@@ -15,7 +15,7 @@ export default class LevelGroundManager
 	
 	private _modelsDistantToGround: IModel[]; // Models that we want to keep distant from any ground (on the z-axis)
 	
-	private _groundSettings: IGroundSettings; //The shared data for every piece of ground (on both the left and right sides)
+	private _groundSettings!: IGroundSettings; //The shared data for every piece of ground (on both the left and right sides)
 	private _distanceBetweenImages: number;// The distance between each image on the ground (on the Z-axis)
 	private _groundZPositions:number[]; //The Z-axis positions of every image on the ground
 	
@@ -44,6 +44,11 @@ export default class LevelGroundManager
 		this._modelsDistantToGround = [];
 		
         this._groundZPositions = [];
+		this._groundDrawCount = 0;
+		
+		this._distanceBetweenImages = 0;
+		this._distanceFromLevelRoad = 0;
+		this._yPositionOffset = 0;
     }
 	
 	/**

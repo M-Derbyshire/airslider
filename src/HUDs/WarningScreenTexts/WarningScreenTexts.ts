@@ -100,16 +100,16 @@ export default class WarningScreenTexts extends ASHUD
             (x, y) => this._continueButton.isPointerOverlapping(x, y, graphicEngine),
             () => this._continueButton.active,
             () => this._continueButton.onClick(),
-            null,
+            undefined,
             true
         );
         
         if(this._fullscreenButton)
             this.pointerEventManager.addPointerEventSubject(
-                (x, y) => this._fullscreenButton.isPointerOverlapping(x, y, graphicEngine),
-                () => this._fullscreenButton.active,
-                () => this._fullscreenButton.onClick(),
-                null,
+                (x, y) => this._fullscreenButton!.isPointerOverlapping(x, y, graphicEngine),
+                () => this._fullscreenButton!.active,
+                () => this._fullscreenButton!.onClick(),
+                undefined,
                 true
             );
     }

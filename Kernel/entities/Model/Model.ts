@@ -21,7 +21,7 @@ export default class Model implements IModel
     /**
      * Details for displaying an entity's text content
      */
-    text?:ITextContent;
+    text!:ITextContent;
     
     /**
      * Is the model currently active?
@@ -219,7 +219,7 @@ export default class Model implements IModel
     {
         this.animationManager.drawNextFrame(this.state, canvasContext, currentFps);
         
-        if(this.text?.content)
+        if(this.text.content)
             this.animationManager.drawText(this.text, this, graphicEngine);
         
         if(this.hitBoxDrawColor)

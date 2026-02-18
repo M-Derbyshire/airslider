@@ -35,7 +35,12 @@ export default class IntroRockBall extends RockBall implements IIntroObstacle
         this._exitZSpeed = 20;
         
         this.speedModifier = 2;
+        
         this.maxBounceSpeed = 480;
+        this._maxStandardBounceSpeed = this.maxBounceSpeed;
+        this._standardBounceDeceleration = this.bounceDeceleration;
+        this._bounceCount = 0;
+        this._currentMove = "rise";
     }
     
     prepare():void {

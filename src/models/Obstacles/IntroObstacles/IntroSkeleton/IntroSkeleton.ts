@@ -43,12 +43,18 @@ export default class IntroSkeleton extends Skeleton implements IIntroObstacle
     {
         super(modelAnimationsManager, "static", 0, 0);
         
+        this._currentMove = "entrance";
+        
         this._maxSweepCount = 3;
         this._sweepingStartZPosition = 70;
+        this._currentSweepCount = 0;
         
         this._entranceZSpeed = 10;
         this._sweepingXSpeed = 250;
         this._leaveZSpeed = 15;
+        
+        this._minX = 0;
+        this._maxX = 0;
         
         this._startPosition = startPosition;
         

@@ -86,7 +86,7 @@ export default class ObstaclePatternManager<T extends Obstacle>
 	 */
 	act():void
 	{
-		if(this._patternIsActive() && this._isTimeForNextLineOfPattern())
+		if(this._pattern && this._patternIsActive() && this._isTimeForNextLineOfPattern())
 			this._sendNextLineOfPattern();
 	}
 	
@@ -113,12 +113,12 @@ export default class ObstaclePatternManager<T extends Obstacle>
 	private _sendNextLineOfPattern():void
 	{
 		if(this._linesLeftInSectionCount === 0)
-			this._linesLeftInSectionCount = this._pattern.lineCountPerSection;
+			this._linesLeftInSectionCount = this._pattern!.lineCountPerSection!;
 		
-		const line = this._pattern.positions[this._getNextLineIndex()];
+		const line = this._pattern!.positions[this._getNextLineIndex()];
 		
 		line.forEach((xPos) => {
-			this._setNextModelToStartPosition(xPos, this._pattern.zModifierAbs);
+			this._setNextModelToStartPosition(xPos, this._pattern!.zModifierAbs);
 		});
 		
 		this._linesLeftInSectionCount--;
@@ -157,8 +157,8 @@ export default class ObstaclePatternManager<T extends Obstacle>
 			return true;
 		
 		const gapToNextLine = (this._linesLeftInSectionCount === 0)
-			? this._pattern.zGapBetweenSections
-			: this._pattern.zGap;
+			? this._pattern!.zGapBetweenSections!
+			: this._pattern!.zGap;
 		
 		return (lastModelUsed.startZPosition - gapToNextLine) >= lastModelUsed.z;
 	}
@@ -199,7 +199,7 @@ export default class ObstaclePatternManager<T extends Obstacle>
 	private _getNextLineIndex():number
 	{
 		const nextIndex = this._nextLineToSendIndex;
-		this._nextLineToSendIndex = this._getNextLoopedArrayIndex(nextIndex, this._pattern.positions.length);
+		this._nextLineToSendIndex = this._getNextLoopedArrayIndex(nextIndex, this._pattern!.positions.length);
 		
 		return nextIndex;
 	}

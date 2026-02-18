@@ -15,8 +15,8 @@ import { GameLoopStatus } from '../../../Kernel/GameLoopManager/IGameLoopManager
  */
 export default class LoadingScreen extends Level
 {
-    protected backgroundImagePath:string; // The path to the background image asset
-    protected levelToLoad:ILevel; // The level to be loaded
+    protected backgroundImagePath!:string; // The path to the background image asset
+    protected levelToLoad!:ILevel; // The level to be loaded
     
     /**
      * Constructor

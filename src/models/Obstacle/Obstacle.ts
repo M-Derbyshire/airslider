@@ -14,7 +14,7 @@ export default class Obstacle extends ASModel
     /**
      * The damage flash image for this obstacle's damage (for the HUD damage flash component)
      */
-    damageFlashImage:HTMLImageElement;
+    damageFlashImage?:HTMLImageElement;
     
     /**
      * The position on the Z axis that the obstacle will start its movement from
@@ -92,8 +92,11 @@ export default class Obstacle extends ASModel
         
         this._mode = mode;
         
+        this.startZPosition = 0;
+        this._lowestBouncePosition = 0;
+        
         this._homingTarget = playerModel;
-        this._homingZStart = homingZStart;
+        this._homingZStart = homingZStart ?? 0;
         
         this.hasCollidedWithPlayer = false;
         

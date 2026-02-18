@@ -90,14 +90,14 @@ export default class GangMember extends Obstacle
         
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: forwardFrameCoordinates,
                 fps: 24,
                 drawWidth: forwardDrawWidth,
                 drawHeight: forwardDrawHeight
             }),
             fallen: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: fallenFrameCoordinates,
                 fps: 1,
                 drawWidth: fallenDrawWidth,

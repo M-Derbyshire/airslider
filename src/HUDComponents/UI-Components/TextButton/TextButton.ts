@@ -15,7 +15,7 @@ export default class TextButton extends TextOnlyButton
     private _isHovering:boolean; // Is the user hovering over this button?
     
     private _cornerRadiusModifier:number; // Affects the radius of the button's corners
-    private _borderPiecesImage:HTMLImageElement; // An image containing the individual segments needed to build the border
+    private _borderPiecesImage!:HTMLImageElement; // An image containing the individual segments needed to build the border
     
     /**
      * Constructor

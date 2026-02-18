@@ -59,7 +59,7 @@ export default class Skeleton extends Obstacle
         
         this.animationManager.registerAnimations({
             broken: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: [
                     {
                         x: 0,
@@ -73,7 +73,7 @@ export default class Skeleton extends Obstacle
                 drawHeight
             }),
             moving: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: this._getMovingAnimationFrameCoordinates(coordinateWidth, coordinateHeight),
                 fps: 12,
                 drawWidth,

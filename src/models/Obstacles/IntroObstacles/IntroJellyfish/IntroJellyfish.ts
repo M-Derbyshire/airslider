@@ -20,6 +20,8 @@ export default class IntroJellyfish extends Jellyfish implements IIntroObstacle
     constructor(modelAnimationsManager:IModelAnimationsManager)
     {
         super(modelAnimationsManager, "static", 0, 0);
+        
+        this._endXPosition = 0;
     }
     
     prepare():void {

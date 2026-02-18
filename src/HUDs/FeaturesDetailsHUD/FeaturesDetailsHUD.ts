@@ -78,7 +78,7 @@ fullscreen button in the top-right of the screen`,
             (x, y) => this._continueButton.isPointerOverlapping(x, y, graphicEngine),
             () => this._continueButton.active,
             () => this._continueButton.onClick(),
-            null,
+            undefined,
             true
         );
         
@@ -86,7 +86,7 @@ fullscreen button in the top-right of the screen`,
             (x, y) => this._fullscreenButton.isPointerOverlapping(x, y, graphicEngine),
             () => this._fullscreenButton.active,
             () => this._fullscreenButton.onClick(),
-            null,
+            undefined,
             true
         );
     }

@@ -15,7 +15,7 @@ export default class NeonPidgeon extends Monster {
     private _edgeOverflow:number;
     
     private _flapSoundKey:string; // The key for the wings flapping sound effect
-    private _soundController:PidgeonSoundController; // Controls sound effects for all pidgeons
+    private _soundController?:PidgeonSoundController; // Controls sound effects for all pidgeons
     
     private _higherPidgeonModel?:NeonPidgeon; // the pidgeon that's flying above this one is stored here (If this one is the lower one)
     
@@ -47,10 +47,18 @@ export default class NeonPidgeon extends Monster {
         
         this._higherPidgeonModel = higherPidgeon;
         
+        this._overlapping = false;
+        this._nextDrop = 0;
+        this._dropWaitOffset = 0;
+        this._dropWaitRange = 0;
+        this._initialDropWait = 0;
+        this._dropYSpeed = 0;
+        
         this._flapSoundKey = "/models/monsters/NeonPidgeon/sounds/flap.mp3";
         
         this.damageDealt = 10;
         
+        this._edgeOverflow = 0;
         this._extraOffScreenYPosOffset = 75;
         this._higherPidgeonSteadyY = 150;
         this._lowerPidgeonSteadyY = 250;
@@ -93,7 +101,7 @@ export default class NeonPidgeon extends Monster {
         
         this.animationManager.registerAnimations({
             falling: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 250,
                 drawHeight: 200,
@@ -102,7 +110,7 @@ export default class NeonPidgeon extends Monster {
 				],
             }),
             flapping: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 250,
                 drawHeight: 200,
@@ -118,7 +126,7 @@ export default class NeonPidgeon extends Monster {
 				],
             }),
             rising: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 250,
                 drawHeight: 200,
@@ -315,7 +323,7 @@ export default class NeonPidgeon extends Monster {
             ? (levelCenter - this.width) - xOffsetFromCenter
             : levelCenter + xOffsetFromCenter;
         
-        this.startZ = this.playerModel.z;
+        this.startZ = this.playerModel!.z;
         
         this.y = this.startY;
         this.x = this.startX;

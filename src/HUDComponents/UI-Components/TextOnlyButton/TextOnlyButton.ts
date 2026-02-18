@@ -11,7 +11,7 @@ export default class TextOnlyButton extends ASHUDComponent
     private _fontSize: number;
     private _fontName: string;
     private _textColor: string;
-    private _textStyle: string;
+    private _textStyle?: string;
     private _drawBoundaryBox: boolean;
     
     /**

@@ -32,6 +32,8 @@ export default class SignDisplay extends ASModel
         
         this._finalLightChangeWaitMS = 500; 
         this._lightChangeStartWaitMS = 3000;
+        this._lightChangeWaitMS = 0;
+        this._lastLightChangeMS = 0;
         
         this._countdownBeepKey = "/models/SignDisplay/sounds/countdown_beep.mp3";
         this._startBeepKey = "/models/SignDisplay/sounds/countdown_go.mp3";
@@ -73,7 +75,7 @@ export default class SignDisplay extends ASModel
         
         this.animationManager.registerAnimations({
             off: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: [
                     { x: 0, y: 0, width, height }
                 ],
@@ -82,7 +84,7 @@ export default class SignDisplay extends ASModel
                 drawHeight
             }),
             one: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: [
                     { x: 0, y: 114, width, height }
                 ],
@@ -91,7 +93,7 @@ export default class SignDisplay extends ASModel
                 drawHeight
             }),
             two: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: [
                     { x: 0, y: 228, width, height }
                 ],
@@ -100,7 +102,7 @@ export default class SignDisplay extends ASModel
                 drawHeight
             }),
             three: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: [
                     { x: 0, y: 342, width, height }
                 ],
@@ -109,7 +111,7 @@ export default class SignDisplay extends ASModel
                 drawHeight
             }),
             go: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: [
                     { x: 0, y: 456, width, height }
                 ],
@@ -118,7 +120,7 @@ export default class SignDisplay extends ASModel
                 drawHeight
             }),
             finished: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 frameCoordinates: [
                     { x: 0, y: 456, width, height }
                 ],

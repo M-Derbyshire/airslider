@@ -29,6 +29,8 @@ export default class ElectricSeahorse extends Monster {
         this._rightLightningModel = rightLightningModel;
         
         this._wingSoundKey = "/models/monsters/ElectricSeahorse/sounds/flap.mp3";
+        
+        this._lastAnimFrame = 0;
     }
     
     /**
@@ -58,7 +60,7 @@ export default class ElectricSeahorse extends Monster {
         
         this.animationManager.registerAnimations({
             move: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 12,
                 drawWidth: 500,
                 drawHeight: 187,
@@ -84,7 +86,7 @@ export default class ElectricSeahorse extends Monster {
         
         this.state = "move";
         
-        this.startZ = this.playerModel.z;
+        this.startZ = this.playerModel?.z ?? 0;
         this.startY = 10;
         this.offScreenUnits = 500;
         this.startX = level.rightEdge + this.offScreenUnits;

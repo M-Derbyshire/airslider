@@ -62,7 +62,7 @@ export default class Racer extends ASModel
         
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
-                spritesheet: this.spritesheet,
+                spritesheet: this.spritesheet!,
                 fps: 24,
                 drawWidth: 120,
                 drawHeight: 170,
