@@ -39,7 +39,9 @@ export default class UnitHelper
     }
     
     /**
-     * Converts a speed value into another value that remains consistent, regardless of a changing FPS
+     * Converts a speed value into another value that remains consistent, regardless of a
+     * changing FPS (this is only designed for slight changes in the FPS -- larger
+     * changes will still be noticable)
      * @param originalSpeed the original speed
      * @returns a more consistent value to be used as the actual speed
      */
