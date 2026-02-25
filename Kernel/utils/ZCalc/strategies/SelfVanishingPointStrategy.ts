@@ -10,13 +10,14 @@ import LinearVanishingPointStrategy from "./LinearVanishingPointStrategy";
 export default class SelfVanishingPointStrategy implements IZCalcStrategy {
     private _linearStrategy:LinearVanishingPointStrategy;
     
-    constructor()
+    /**
+     * Constructor
+     * @param linearStrategy a LinearVanishingPointStrategy instance, that will be used in this strategy's
+     * calculations
+     */
+    constructor(linearStrategy:LinearVanishingPointStrategy)
     {
-        const defaultVanishPointDepth = 1000;
-        
-        // The actual width/height scaling calculations are done by a LinearVanishingPointStrategy instance.
-        this._linearStrategy = new LinearVanishingPointStrategy();
-        this._linearStrategy.setVanishPoint(0, 0, defaultVanishPointDepth);
+        this._linearStrategy = linearStrategy;
     }
     
     /**
