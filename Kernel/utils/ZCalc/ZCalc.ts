@@ -11,9 +11,9 @@ export default class ZCalc
     
     /**
      * Changes the strategy to be used
-     * @param strategy the new strategy
+     * @param strategy the new strategy (or undefined, if you want to reset the ZCalc to its default behaviour)
      */
-    static setStrategy(strategy:IZCalcStrategy):void {
+    static setStrategy(strategy:IZCalcStrategy|undefined):void {
         this._strategy = strategy;
     }
     
