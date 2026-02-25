@@ -1,14 +1,13 @@
 import ICamera from "../../engines/GraphicEngine/ICamera";
 import { IDrawDimensions, IDrawPositions } from "../../engines/GraphicEngine/IGraphicEngine";
 import IZCalcStrategy from "./strategies/IZCalcStrategy";
-import NoScalingStrategy from "./strategies/NoScalingStrategy";
 
 /**
  * Provides methods to calculate the correct positions/dimensions for drawing an element, based on its position on the z axis.
  */
 export default class ZCalc
 {
-    private static _strategy:IZCalcStrategy = new NoScalingStrategy();
+    private static _strategy?:IZCalcStrategy;
     
     /**
      * Changes the strategy to be used
@@ -34,6 +33,6 @@ export default class ZCalc
         showNegative?:boolean
     ):IDrawPositions&IDrawDimensions 
     {
-        return this._strategy.getDrawValues(camera, pixelValues, zPosition, showNegative);
+        return this._strategy?.getDrawValues(camera, pixelValues, zPosition, showNegative) || { ...pixelValues };
     }
 }
