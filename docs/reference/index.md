@@ -22,19 +22,19 @@ The `GraphicEngine` is the engine that controls the drawing to the screen. It al
 
 The `SoundEngine` is the engine that controls the sound/music of the game.
 
-# [IDrawDimensions](IDrawDimensions.md)
+## [IDrawDimensions](IDrawDimensions.md)
 
 Represents the dimensions to draw an entity
 
-# [IDrawPositions](IDrawPositions.md)
+## [IDrawPositions](IDrawPositions.md)
 
 Represents a position to draw an entity
 
-# [ITextContent](ITextContent.md)
+## [ITextContent](ITextContent.md)
 
 Details for displaying an entity's text content
 
-# [SoundStatus](../../Kernel/engines/SoundEngine/ISoundEngine.ts)
+## [SoundStatus](../../Kernel/engines/SoundEngine/ISoundEngine.ts)
 
 The `SoundStatus` enum represents the possible statuses of a sound. There are 4 possible statuses:
 - **Playing** - The sound is currently playing
