@@ -4,7 +4,7 @@ import IModel from '../Model/IModel';
 /**
  * Manages the event monitoring between models
  */
-export default class EventManager implements IModelEventManager
+export default class ModelEventManager implements IModelEventManager
 {
     private _events:IModelEvent[];
     
