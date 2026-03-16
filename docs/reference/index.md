@@ -12,12 +12,12 @@ The asset handler is the object that manages the game's image/audio assets. It c
 
 You will use the `AssetHandler` in the `load` methods of your levels/models/HUDs/HUDComponents, to trigger the loading of their assets.
 
-## GraphicEngine
+## [GraphicEngine](GraphicEngine.md)
 *Implements [IGraphicEngine](../../Kernel/engines/GraphicEngine/IGraphicEngine.ts)*
 
 The `GraphicEngine` is the engine that controls the drawing to the screen. It also provides a number of methods that will be useful for when you want to draw things to the screen (such as text, or images that are not sprites of a model)
 
-## SoundEngine
+## [SoundEngine](SoundEngine.md)
 *Implements [ISoundEngine](../../Kernel/engines/SoundEngine/ISoundEngine.ts)*
 
 The `SoundEngine` is the engine that controls the sound/music of the game.
