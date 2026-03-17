@@ -71,3 +71,8 @@ A component to be displayed by the Heads Up Display
 *Implements [ILevel](../../Kernel/entities/Level/ILevel.ts)*
 
 A level of the game
+
+## [Model](Model.md)
+*Implements [IModel](../../Kernel/entities/Model/IModel.ts)*
+
+An object in the game (such as a character, monster, power-up, etc)
