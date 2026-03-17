@@ -46,3 +46,8 @@ The `SoundStatus` enum represents the possible statuses of a sound. There are 4 
 *Implements [ICamera](../../Kernel/GraphicEngine/ICamera.ts)*
 
 The Camera controls what area of the level's space is currently visible.
+
+## Frame
+*Implements [IFrame](../../Kernel/GraphicEngine/IFrame.ts)*
+
+Represents an area of the level
