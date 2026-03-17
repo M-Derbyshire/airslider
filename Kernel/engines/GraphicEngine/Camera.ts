@@ -1,3 +1,4 @@
+import UnitHelper from '../../utils/UnitHelper';
 import ICamera, { ICameraDrawPositionsCalc, ICameraPositions } from './ICamera';
 
 /**
@@ -279,7 +280,7 @@ export default class Camera implements ICamera {
      */
     moveLeft(speed:number):void
     {
-        this._positions.drawSpace.x -= speed;
+        this._positions.drawSpace.x -= UnitHelper.consistentSpeed(speed);
     }
     
     /**
@@ -288,7 +289,7 @@ export default class Camera implements ICamera {
      */
     moveRight(speed:number):void
     {
-        this._positions.drawSpace.x += speed;
+        this._positions.drawSpace.x += UnitHelper.consistentSpeed(speed);
     }
     
     /**
@@ -297,7 +298,7 @@ export default class Camera implements ICamera {
      */
     moveUp(speed:number):void
     {
-        this._positions.drawSpace.y -= speed;
+        this._positions.drawSpace.y -= UnitHelper.consistentSpeed(speed);
     }
     
     /**
@@ -306,6 +307,6 @@ export default class Camera implements ICamera {
      */
     moveDown(speed:number):void
     {
-        this._positions.drawSpace.y += speed;
+        this._positions.drawSpace.y += UnitHelper.consistentSpeed(speed);
     }
 };
