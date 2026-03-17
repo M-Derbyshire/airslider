@@ -57,7 +57,17 @@ Represents an area of the level
 
 Manages the frames of a level
 
-# [HUD](HUD.md)
+## [HUD](HUD.md)
 *Implements [IHUD](../../Kernel/entities/HUD/IHUD.ts)*
 
 A level's Heads Up Display
+
+## [HUDComponent](HUDComponent.md)
+*Implements [IHUDComponent](../../Kernel/entities/HUDComponent/IHUDComponent.ts)*
+
+A component to be displayed by the Heads Up Display
+
+## [Level](Level.md)
+*Implements [ILevel](../../Kernel/entities/Level/ILevel.ts)*
+
+A level of the game
