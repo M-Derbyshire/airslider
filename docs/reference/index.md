@@ -56,3 +56,8 @@ Represents an area of the level
 *Implements [IFrameManager](../../Kernel/GraphicEngine/IFrameManager.ts)*
 
 Manages the frames of a level
+
+# [HUD](HUD.md)
+*Implements [IHUD](../../Kernel/entities/HUD/IHUD.ts)*
+
+A level's Heads Up Display
