@@ -76,3 +76,8 @@ A level of the game
 *Implements [IModel](../../Kernel/entities/Model/IModel.ts)*
 
 An object in the game (such as a character, monster, power-up, etc)
+
+## [KeyboardEventManager](KeyboardEventManager.md)
+*Implements [IKeyboardEventManager](../../Kernel/entities/Level/IKeyboardEventManager.ts)*
+
+Manages any keyboard events
