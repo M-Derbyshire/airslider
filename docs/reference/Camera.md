@@ -1,5 +1,5 @@
 # Camera
-*Implements [ICamera](../../Kernel/GraphicEngine/ICamera.ts)*
+*Implements [ICamera](../../Kernel/engines/GraphicEngine/ICamera.ts)*
 
 The Camera controls what area of the level's space is currently visible.
 

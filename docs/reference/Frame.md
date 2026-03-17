@@ -1,5 +1,5 @@
 # Frame
-*Implements [IFrame](../../Kernel/GraphicEngine/IFrame.ts)*
+*Implements [IFrame](../../Kernel/engines/GraphicEngine/IFrame.ts)*
 
 Represents an area of the level
 

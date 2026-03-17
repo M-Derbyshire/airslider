@@ -1,5 +1,5 @@
 # FrameManager
-*Implements [IFrameManager](../../Kernel/GraphicEngine/IFrameManager.ts)*
+*Implements [IFrameManager](../../Kernel/engines/GraphicEngine/IFrameManager.ts)*
 
 Manages the frames of a level
 

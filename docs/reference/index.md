@@ -43,17 +43,17 @@ The `SoundStatus` enum represents the possible statuses of a sound. There are 4 
 - **ForceLoading** - The sound is currently in a silently playing state, to ensure it is loaded
 
 ## [Camera](Camera.md)
-*Implements [ICamera](../../Kernel/GraphicEngine/ICamera.ts)*
+*Implements [ICamera](../../Kernel/engines/GraphicEngine/ICamera.ts)*
 
 The Camera controls what area of the level's space is currently visible.
 
 ## [Frame](Frame.md)
-*Implements [IFrame](../../Kernel/GraphicEngine/IFrame.ts)*
+*Implements [IFrame](../../Kernel/engines/GraphicEngine/IFrame.ts)*
 
 Represents an area of the level
 
 ## [FrameManager](FrameManager.md)
-*Implements [IFrameManager](../../Kernel/GraphicEngine/IFrameManager.ts)*
+*Implements [IFrameManager](../../Kernel/engines/GraphicEngine/IFrameManager.ts)*
 
 Manages the frames of a level
 
