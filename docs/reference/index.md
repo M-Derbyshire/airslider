@@ -41,3 +41,8 @@ The `SoundStatus` enum represents the possible statuses of a sound. There are 4 
 - **Paused** - The sound is currently paused
 - **Stopped** - The sound is currently stopped (has been reset back to its start)
 - **ForceLoading** - The sound is currently in a silently playing state, to ensure it is loaded
+
+## Camera
+*Implements [ICamera](../../Kernel/GraphicEngine/ICamera.ts)*
+
+The Camera controls what area of the level's space is currently visible.
