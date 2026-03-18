@@ -150,3 +150,7 @@ Contains methods that provide information related to time
 ## [UnitHelper](UnitHelper.md)
 
 Contains methods that perform calculations to convert "unit" values into actual canvas positions/dimensions. Also provides a method for keeping speeds consistent when the FPS changes
+
+## [ISettings](ISettings.md)
+
+The settings for the game
