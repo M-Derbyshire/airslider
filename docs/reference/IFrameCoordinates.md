@@ -1,4 +1,4 @@
-# [IFrameCoordinates](../../Kernel/entities/Model/IModelAnimationsManager.ts)
+# [IFrameCoordinates](../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager.ts)
 
 The coordinates of a frame on a spritesheet
 

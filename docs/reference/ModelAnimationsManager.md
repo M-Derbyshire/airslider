@@ -1,5 +1,5 @@
 # ModelAnimationsManager
-*Implements [IModelAnimationsManager](../../Kernel/entities/Model/IModelAnimationsManager.ts)*
+*Implements [IModelAnimationsManager](../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager.ts)*
 
 Manages a model's animations
 

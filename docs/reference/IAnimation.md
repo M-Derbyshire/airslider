@@ -1,4 +1,4 @@
-# [IAnimation](../../Kernel/entities/Model/IModelAnimationsManager.ts)
+# [IAnimation](../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager.ts)
 
 Represents a model's animation
 

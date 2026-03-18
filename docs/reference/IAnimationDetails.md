@@ -1,4 +1,4 @@
-# [IAnimationDetails](../../Kernel/entities/Model/IModelAnimationsManager.ts)
+# [IAnimationDetails](../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager.ts)
 
 The details required to create a new animation for a model
 

@@ -101,7 +101,7 @@ Manages any events relating to mouse clicks
 Coordinates and dimensions for a model's hit box. A hit box will surround a part of the model, and can be used in events (such as collision detection). Multiple boxes could be used to cover the actual shape of the model's sprite.
 
 ## [ModelAnimationsManager](ModelAnimationsManager.md)
-*Implements [IModelAnimationsManager](../../Kernel/entities/Model/IModelAnimationsManager.ts)*
+*Implements [IModelAnimationsManager](../../Kernel/entities/Model/ModelAnimationsManager/IModelAnimationsManager.ts)*
 
 Manages a model's animations
 
