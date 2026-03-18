@@ -105,18 +105,36 @@ Coordinates and dimensions for a model's hit box. A hit box will surround a part
 
 Manages a model's animations
 
-# [IAnimation](IAnimation.md)
+## [IAnimation](IAnimation.md)
 
 Represents a model's animation
 
-# [IAnimationDetails](IAnimationDetails.md)
+## [IAnimationDetails](IAnimationDetails.md)
 
 The details required to create a new animation for a model
 
-# [IFrameCoordinates](IFrameCoordinates.md)
+## [IFrameCoordinates](IFrameCoordinates.md)
 
 The coordinates of a frame on a spritesheet
 
-# [IEntitySound](IEntitySound.md)
+## [IEntitySound](IEntitySound.md)
 
 A sound belonging to an entity
+
+## [ZCalc](ZCalc.md)
+
+Provides methods to calculate the correct positions/dimensions for drawing an element, based on its position on the z axis.
+
+## [IZCalcStrategy](IZCalcStrategy.md)
+
+Represents a strategy that provides behaviours for the z-calculator
+
+## [LinearVanishingPointStrategy](LinearVanishingPointStrategy.md)
+*Implements [IZCalcStrategy](../../Kernel/utils/ZCalc/strategies/IZCalcStrategy.ts)*
+
+Strategy for the ZCalc. Scales sprites in a direct, straight path towards a set vanishing point
+
+## [SelfVanishingPointStrategy](SelfVanishingPointStrategy.md)
+*Implements [IZCalcStrategy](../../Kernel/utils/ZCalc/strategies/IZCalcStrategy.ts)*
+
+Strategy for the ZCalc. Sprites will be scaled with their center being the vanishing point (so the center position of the sprite won't change)
