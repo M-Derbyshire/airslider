@@ -116,3 +116,7 @@ The details required to create a new animation for a model
 # [IFrameCoordinates](IFrameCoordinates.md)
 
 The coordinates of a frame on a spritesheet
+
+# [IEntitySound](IEntitySound.md)
+
+A sound belonging to an entity
