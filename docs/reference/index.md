@@ -81,3 +81,21 @@ An object in the game (such as a character, monster, power-up, etc)
 *Implements [IKeyboardEventManager](../../Kernel/entities/Level/IKeyboardEventManager.ts)*
 
 Manages any keyboard events
+
+## [ModelEventManager](ModelEventManager.md)
+*Implements [IModelEventManager](../../Kernel/entities/Level/IModelEventManager.ts)*
+
+Manages the event monitoring between models (e.g. collision events)
+
+## [IModelEventRegistrationDetails](IModelEventRegistrationDetails.md)
+
+The details that are needed to register an event with an IModelEventManager
+
+## [PointerEventManager](PointerEventManager.md)
+*Implements [IPointerEventManager](../../Kernel/entities/Level/IPointerEventManager.ts)*
+
+Manages any events relating to mouse clicks
+
+## [IHitBox](IHitBox.md)
+
+Coordinates and dimensions for a model's hit box. A hit box will surround a part of the model, and can be used in events (such as collision detection). Multiple boxes could be used to cover the actual shape of the model's sprite.

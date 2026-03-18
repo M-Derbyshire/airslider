@@ -48,7 +48,7 @@ export type eventCheck = (modelA:IModel, modelB:IModel, reactionCallback:eventRe
 
 
 /**
- * The details that are needed to register an event with an IEventManager
+ * The details that are needed to register an event with an IModelEventManager
  */
 export interface IModelEventRegistrationDetails {
     /**
