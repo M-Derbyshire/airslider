@@ -138,3 +138,15 @@ Strategy for the ZCalc. Scales sprites in a direct, straight path towards a set 
 *Implements [IZCalcStrategy](../../Kernel/utils/ZCalc/strategies/IZCalcStrategy.ts)*
 
 Strategy for the ZCalc. Sprites will be scaled with their center being the vanishing point (so the center position of the sprite won't change)
+
+## [FullscreenHelper](FullscreenHelper.md)
+
+Provides methods that can be used to manage the game's fullscreen mode
+
+## [TimeHelper](TimeHelper.md)
+
+Contains methods that provide information related to time
+
+## [UnitHelper](UnitHelper.md)
+
+Contains methods that perform calculations to convert "unit" values into actual canvas positions/dimensions. Also provides a method for keeping speeds consistent when the FPS changes
