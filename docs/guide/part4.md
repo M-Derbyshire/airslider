@@ -8,6 +8,12 @@ The game's [settings object](../reference/ISettings.md) should contain a callbac
 
 To do this, you will first construct an instance of the level in your current level's code, and add it to the "level queue" using the Kernel's `loadLevel` method. That method will trigger the loading of the level, in the background. Once the level has had time to load, you can then switch to it by calling the Kernel's `unloadCurrentLevel` method (this will remove the current level from the level queue, meaning the next level in the queue will be started). If you want to wait until the next level has finished loading before unloading the current one, you can use the `assetsStillLoading` property of the [AssetHandler](../reference/AssetHandler.md) object (which can be accessed through the Kernel object).
 
+## Level Constructor Parameters
+- A new instance of the [FrameManager](../reference/FrameManager.md) class
+- A new instance of the [ModelEventManager](../reference/ModelEventManager.md) class
+- A new instance of the [PointerEventManager](../reference/PointerEventManager.md) class. The constructor for this will require the game's canvas, which can be accessed through the Kernel object (`kernel.canvasContext.canvas`)
+- A new instance of the [KeyboardEventManager](../reference/KeyboardEventManager.md) class
+
 ## Public Properties
 - **HUD** - This is the HUD entity that is used by the level. You should set this property in your level's constructor. This property has a public getter, but a protected setter.
 - **frameManager** - This manages the frames of the level (explained later). This property has a public getter, but a protected setter.
