@@ -89,3 +89,9 @@ const canvas = document.getElementById("my-canvas") as HTMLCanvasElement;
 
 Kernel.init(canvas, settings);
 ```
+
+## Running/Building the Game
+
+To run the game locally, using the development settings, you should run the `serve:dev` command using NPM.
+
+To build the game for your production environment, you should use the `deploy:prod` NPM command. This will generate the `/build` directory. Inside this directory, you will find the bundled script (that will run the game) and the `/build/assets` directory (This will contain all of the game's assets. E.g. images, sounds, fonts).

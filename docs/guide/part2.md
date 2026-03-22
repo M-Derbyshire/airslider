@@ -35,6 +35,10 @@ There are 6 stages in a level's lifecycle:
 - **Construction** - This is where the level gets constructed. The level's constructor should also create the HUD object (which will create the HUD component objects). Another method that could be considered a part of this stage is the level's `getModels` method (which constructs and returns the models for the level)
 - **Loading** - This handles the loading of the level's assets (such as images and sounds). The assets for the other entity types are also loaded during this stage. This stage will happen in the background, while another level is running.
 - **Preparation** - This is where the level (and the other entities) set any initial values needed for the starting of the level (for example, a character's health may be set to 100%). This stage happens when the level starts, but also when it is restarted (to reset everything).
-- **Action** - This is where the actions of the game occur. E.g. the moving of a character, or a level's "Remaining Time" counter being updated. The event checks also run during this stage (e.g. collision detection).
-- **Drawing** - This is where the game's entities are drawn to the screen. E.g. the level's background, or a frame of a model's sprite animation.
-- **Unloading** - This is where the level (and the models, HUDs and HUD components) unload their assets (e.g. images, sounds). Each entity defines an array of assets that should be unloaded, and any assets that aren't in this array will remain in memory (For example, you may not want to unload the assets for your main character, as those will be used on every level).
+- **Action** - This is where the actions of the game occur. E.g. the moving of a character, or a level's "Remaining Time" counter being updated. The event checks also run during this stage (e.g. collision detection). These actions will be triggered in a loop (the "game loop") continuously.
+- **Drawing** - This is where the game's entities are drawn to the screen. E.g. the level's background, or a frame of a model's sprite animation. This drawing action will be tiggered in a loop (the "game loop") continuously.
+- **Unloading** - This is where the level (and the models, HUDs and HUD components) unload their assets (e.g. images, sounds). Each entity defines an array of assets that should be unloaded, and any assets that aren't in this array will remain in memory (For example, you may not want to unload the assets for your main character, as those will be used on every level). 
+
+## Overriding Entity Methods
+
+When you override an entity's methods, you will want to call the parent's (`super`) method at the start of your method (this ensures that fundamental code is ran).
