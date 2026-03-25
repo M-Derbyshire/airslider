@@ -29,6 +29,18 @@ These are the NPM scripts available:
 - `make:hud:base` - This creates a "base" HUD entity, that extends the `HUD` class
 - `make:hud` - This creates a HUD entity. You will be asked to provide the name of the "base" HUD class that you want this to extend
 
+### Overriding Entity Methods
+
+When you override an entity's methods, you will want to call the parent's (`super`) method at the start of your method (this ensures that fundamental code is ran).
+
+### Loading Entity Assets, Using the Asset Handler
+
+Every entity will have a `load` method. In this method, you will want to load any assets (e.g. images and sounds). You do this using the [AssetHandler](../reference/AssetHandler.md). The asset handler has 2 methods that will be used for this:
+- `loadImage` - Used to load images. This will take the file path to the image, and return the image object
+- `loadAudio` - Used to load sounds/music. This will take the file path to the audio file, and return the audio object
+
+The file paths in your code should start in the `/src` directory. For example: `/models/Racer/anim/racer-spritesheet.png`
+
 ## A Level's Lifecycle
 
 There are 6 stages in a level's lifecycle:
@@ -37,8 +49,4 @@ There are 6 stages in a level's lifecycle:
 - **Preparation** - This is where the level (and the other entities) set any initial values needed for the starting of the level (for example, a character's health may be set to 100%). This stage happens when the level starts, but also when it is restarted (to reset everything).
 - **Action** - This is where the actions of the game occur. E.g. the moving of a character, or a level's "Remaining Time" counter being updated. The event checks also run during this stage (e.g. collision detection). These actions will be triggered in a loop (the "game loop") continuously.
 - **Drawing** - This is where the game's entities are drawn to the screen. E.g. the level's background, or a frame of a model's sprite animation. This drawing action will be tiggered in a loop (the "game loop") continuously.
-- **Unloading** - This is where the level (and the models, HUDs and HUD components) unload their assets (e.g. images, sounds). Each entity defines an array of assets that should be unloaded, and any assets that aren't in this array will remain in memory (For example, you may not want to unload the assets for your main character, as those will be used on every level). 
-
-## Overriding Entity Methods
-
-When you override an entity's methods, you will want to call the parent's (`super`) method at the start of your method (this ensures that fundamental code is ran).
+- **Unloading** - This is where the level (and the models, HUDs and HUD components) unload their assets (e.g. images, sounds). Each entity defines an array of assets that should be unloaded, and any assets that aren't in this array will remain in memory (For example, you may not want to unload the assets for your main character, as those will be used on every level).
