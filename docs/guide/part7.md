@@ -1,4 +1,4 @@
-# HUD Component Entities
+# 7 - HUD Component Entities
 
 [HUDComponents](../reference/HUDComponent.md) are entities that are displayed over the top of the game. They can provide information to the player (e.g. health) or they can give the player a control (e.g. a pause button).
 

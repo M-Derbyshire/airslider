@@ -1,4 +1,4 @@
-# HUD Entities
+# 6 - HUD Entities
 
 A [HUD](../reference/HUD.md) (Heads-Up-Display) is an entity that manages your level's HUD Components. The HUD is a display that is drawn over the top of the game, giving certain information (e.g. health) and controls (e.g. a pause button) to the player.
 
