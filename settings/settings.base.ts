@@ -12,7 +12,7 @@ import VevaniaLoadingScreen from '../src/levels/LoadingScreens/VevaniaLoadingScr
 import ISettings from './ISettings';
 
 export default {
-	getInitialLevel: (kernel:IKernel) => new LarsLoadingScreen(
+	getInitialLevel: (kernel:IKernel) => new ForurnLoadingScreen(
 		new FrameManager(),
 		new ModelEventManager(),
 		new PointerEventManager(kernel.canvasContext.canvas),
