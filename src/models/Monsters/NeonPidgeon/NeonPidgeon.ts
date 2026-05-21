@@ -54,7 +54,7 @@ export default class NeonPidgeon extends Monster {
         this._initialDropWait = 0;
         this._dropYSpeed = 0;
         
-        this._flapSoundKey = "/models/monsters/NeonPidgeon/sounds/flap.mp3";
+        this._flapSoundKey = "/models/Monsters/NeonPidgeon/sounds/flap.mp3";
         
         this.damageDealt = 10;
         
@@ -87,7 +87,7 @@ export default class NeonPidgeon extends Monster {
         });
         this.assetsToUnload.push(this._flapSoundKey);
         
-        const spritesheetPath = "/models/monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png";
+        const spritesheetPath = "/models/Monsters/NeonPidgeon/anim/neonPidgeon-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
     }

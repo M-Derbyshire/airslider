@@ -33,7 +33,7 @@ export default class LavaBall extends ASModel {
     {
         super.load(assetHandler);
         
-        const spritesheetPath = "/models/monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png";
+        const spritesheetPath = "/models/Monsters/attacks/LavaBall/anim/lavaBomb-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
         

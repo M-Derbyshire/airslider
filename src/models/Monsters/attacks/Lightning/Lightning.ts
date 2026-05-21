@@ -21,7 +21,7 @@ export default class Lightning extends ASModel {
     {
         super.load(assetHandler);
         
-        const spritesheetPath = "/models/monsters/attacks/Lightning/anim/lightning-spritesheet.png";
+        const spritesheetPath = "/models/Monsters/attacks/Lightning/anim/lightning-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
         

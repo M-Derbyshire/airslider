@@ -28,7 +28,7 @@ export default class ElectricSeahorse extends Monster {
         this._leftLightningModel = leftLightningModel;
         this._rightLightningModel = rightLightningModel;
         
-        this._wingSoundKey = "/models/monsters/ElectricSeahorse/sounds/flap.mp3";
+        this._wingSoundKey = "/models/Monsters/ElectricSeahorse/sounds/flap.mp3";
         
         this._lastAnimFrame = 0;
     }
@@ -49,7 +49,7 @@ export default class ElectricSeahorse extends Monster {
         });
         this.assetsToUnload.push(this._wingSoundKey);
         
-        const spritesheetPath = "/models/monsters/ElectricSeahorse/anim/electricSeahorse-spritesheet.png";
+        const spritesheetPath = "/models/Monsters/ElectricSeahorse/anim/electricSeahorse-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
     }

@@ -31,7 +31,7 @@ export default class BabyDragon extends Monster
         
         this._lavaBalls = [lavaBall1, lavaBall2];
         
-        this._wingSoundKey = "/models/monsters/BabyDragon/sounds/flap.mp3";
+        this._wingSoundKey = "/models/Monsters/BabyDragon/sounds/flap.mp3";
     }
     
     /**
@@ -59,7 +59,7 @@ export default class BabyDragon extends Monster
         });
         this.assetsToUnload.push(this._wingSoundKey);
         
-        const spritesheetPath = "/models/monsters/BabyDragon/anim/babyDragon-spritesheet.png";
+        const spritesheetPath = "/models/Monsters/BabyDragon/anim/babyDragon-spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
     }

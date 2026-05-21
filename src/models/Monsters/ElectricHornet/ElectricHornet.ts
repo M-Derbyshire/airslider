@@ -27,7 +27,7 @@ export default class ElectricHornet extends Monster {
         
         this.damageDealt = 10;
         
-        this._buzzSoundKey = "/models/monsters/ElectricHornet/sounds/buzz.mp3";
+        this._buzzSoundKey = "/models/Monsters/ElectricHornet/sounds/buzz.mp3";
     }
     
     /**
@@ -46,7 +46,7 @@ export default class ElectricHornet extends Monster {
         });
         this.assetsToUnload.push(this._buzzSoundKey);
         
-        const spritesheetPath = "/models/monsters/ElectricHornet/anim/electricHornet_spritesheet.png";
+        const spritesheetPath = "/models/Monsters/ElectricHornet/anim/electricHornet_spritesheet.png";
         this.assetsToUnload.push(spritesheetPath);
         this.spritesheet = assetHandler.loadImage(spritesheetPath);
         
