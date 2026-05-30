@@ -15,7 +15,7 @@ import { GameLoopStatus } from '../../../Kernel/GameLoopManager/IGameLoopManager
  */
 export default class LoadingScreen extends Level
 {
-    protected backgroundImagePath!:string; // The path to the background image asset
+    protected backgroundImagePath?:string; // The path to the background image asset
     protected levelToLoad!:ILevel; // The level to be loaded
     
     /**
@@ -50,14 +50,16 @@ export default class LoadingScreen extends Level
         
         const frame = new Frame(0, 0, settings.unitsWithinCameraX, settings.unitsWithinCameraY);
         
-        const backgroundImage = assetHandler.loadImage(this.backgroundImagePath);
-        frame.setBackgroundImage(backgroundImage);
-        
-        this.frameManager.setFrames([frame]);
-        
-        this.assetsToUnload.push(
-            this.backgroundImagePath
-        );
+        if(this.backgroundImagePath) {
+            const backgroundImage = assetHandler.loadImage(this.backgroundImagePath);
+            frame.setBackgroundImage(backgroundImage);
+            
+            this.frameManager.setFrames([frame]);
+            
+            this.assetsToUnload.push(
+                this.backgroundImagePath
+            );
+        }
 	}
     
     /**
