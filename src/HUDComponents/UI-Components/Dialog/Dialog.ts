@@ -34,7 +34,7 @@ export default class Dialog extends ASHUDComponent
         this.height = height;
         
         this._titleFontSize = fontSize;
-        this._textColor = "#FDFF00";
+        this._textColor = "#11FFFF";
         this._fontName = "Arial";
         this._textStyle = "bold";
         
