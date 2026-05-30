@@ -1,15 +1,15 @@
-import Level from '../../../Kernel/entities/Level/Level';
-import WarningScreenTexts from '../../HUDs/WarningScreenTexts/WarningScreenTexts';
-import Kernel from '../../../Kernel/Kernel';
-import ForurnLoadingScreen from '../LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen';
-import FrameManager from '../../../Kernel/engines/GraphicEngine/FrameManager';
-import ModelEventManager from '../../../Kernel/entities/Level/ModelEventManager';
-import PointerEventManager from '../../../Kernel/entities/Level/PointerEventManager';
-import KeyboardEventManager from '../../../Kernel/entities/Level/KeyboardEventManager';
-import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
-import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
-import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
-import IKeyboardEventManager from '../../../Kernel/entities/Level/IKeyboardEventManager';
+import Level from '../../../../Kernel/entities/Level/Level';
+import WarningScreenTexts from '../../../HUDs/WarningScreenTexts/WarningScreenTexts';
+import Kernel from '../../../../Kernel/Kernel';
+import ForurnLoadingScreen from '../../LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen';
+import FrameManager from '../../../../Kernel/engines/GraphicEngine/FrameManager';
+import ModelEventManager from '../../../../Kernel/entities/Level/ModelEventManager';
+import PointerEventManager from '../../../../Kernel/entities/Level/PointerEventManager';
+import KeyboardEventManager from '../../../../Kernel/entities/Level/KeyboardEventManager';
+import IFrameManager from '../../../../Kernel/engines/GraphicEngine/IFrameManager';
+import IModelEventManager from '../../../../Kernel/entities/Level/IModelEventManager';
+import IPointerEventManager from '../../../../Kernel/entities/Level/IPointerEventManager';
+import IKeyboardEventManager from '../../../../Kernel/entities/Level/IKeyboardEventManager';
 
 /**
  * A level that acts as a photosensitivity warning
