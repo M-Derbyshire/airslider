@@ -1,7 +1,6 @@
 import Level from '../../../../Kernel/entities/Level/Level';
 import WarningScreenTexts from '../../../HUDs/WarningScreenTexts/WarningScreenTexts';
 import Kernel from '../../../../Kernel/Kernel';
-import ForurnLoadingScreen from '../../LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen';
 import FrameManager from '../../../../Kernel/engines/GraphicEngine/FrameManager';
 import ModelEventManager from '../../../../Kernel/entities/Level/ModelEventManager';
 import PointerEventManager from '../../../../Kernel/entities/Level/PointerEventManager';
@@ -10,6 +9,7 @@ import IFrameManager from '../../../../Kernel/engines/GraphicEngine/IFrameManage
 import IModelEventManager from '../../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../../Kernel/entities/Level/IPointerEventManager';
 import IKeyboardEventManager from '../../../../Kernel/entities/Level/IKeyboardEventManager';
+import FeaturesDetails from '../FeaturesDetails/FeaturesDetails';
 
 /**
  * A level that acts as a photosensitivity warning
@@ -64,7 +64,7 @@ Player discretion is advised.`;
         
         camera.setColors(this._backgroundColor, "#000000");
         
-        const nextLevel = new ForurnLoadingScreen(
+        const nextLevel = new FeaturesDetails(
             new FrameManager(),
             new ModelEventManager(),
             new PointerEventManager(kernel.canvasContext.canvas),
