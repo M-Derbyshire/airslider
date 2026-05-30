@@ -14,7 +14,7 @@ import FeaturesDetails from '../src/levels/Menus/FeaturesDetails/FeaturesDetails
 import ISettings from './ISettings';
 
 export default {
-	getInitialLevel: (kernel:IKernel) => new EpilepsyWarning(
+	getInitialLevel: (kernel:IKernel) => new Credits(
 		new FrameManager(),
 		new ModelEventManager(),
 		new PointerEventManager(kernel.canvasContext.canvas),

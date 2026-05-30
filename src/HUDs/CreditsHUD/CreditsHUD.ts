@@ -4,6 +4,12 @@ import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
 import Kernel from "../../../Kernel/Kernel";
+import FeaturesDetails from "../../levels/Menus/FeaturesDetails/FeaturesDetails";
+import FrameManager from "../../../Kernel/engines/GraphicEngine/FrameManager";
+import ModelEventManager from "../../../Kernel/entities/Level/ModelEventManager";
+import PointerEventManager from "../../../Kernel/entities/Level/PointerEventManager";
+import KeyboardEventManager from "../../../Kernel/entities/Level/KeyboardEventManager";
+import TextButton from "../../HUDComponents/UI-Components/TextButton/TextButton";
 
 /**
  * A HUD for the credits screen
@@ -11,6 +17,7 @@ import Kernel from "../../../Kernel/Kernel";
 export default class CreditsHUD extends ASHUD
 {
     private _fullscreenButton:FullscreenButton|null; // The fullscreen toggle button (if the feature is available)
+    private _backButton:TextButton; // The button to take you back to the main menu
     
     /**
      * Constructor
@@ -82,12 +89,23 @@ http://scripts.sil.org/OFL`,
             fontAlign,
             lineGap
         );
+
+        this._backButton = new TextButton(
+            () => Kernel.getInstance().unloadCurrentLevel(),
+            25,
+            25,
+            80,
+            75,
+            "Back",
+            40
+        );
         
         this.components.push(
             devText,
             fontTitle,
             courierPrimeFont,
-            jostFont
+            jostFont,
+            this._backButton
         );
         
         this._fullscreenButton = null;
@@ -104,10 +122,27 @@ http://scripts.sil.org/OFL`,
     prepare():void
     {
         super.prepare();
+
+        const kernel = Kernel.getInstance();
+
+        kernel.loadLevel(new FeaturesDetails(
+            new FrameManager(),
+            new ModelEventManager(),
+            new PointerEventManager(kernel.canvasContext.canvas),
+            new KeyboardEventManager()
+        ));
+
+        this.pointerEventManager.addPointerEventSubject(
+            (x, y) => this._backButton.isPointerOverlapping(x, y, kernel.graphicEngine),
+            () => this._backButton.active,
+            () => this._backButton.onClick(),
+            undefined,
+            true
+        );
         
         if(this._fullscreenButton)
             this.pointerEventManager.addPointerEventSubject(
-                (x, y) => this._fullscreenButton!.isPointerOverlapping(x, y, Kernel.getInstance().graphicEngine),
+                (x, y) => this._fullscreenButton!.isPointerOverlapping(x, y, kernel.graphicEngine),
                 () => this._fullscreenButton!.active,
                 () => this._fullscreenButton!.onClick(),
                 undefined,
