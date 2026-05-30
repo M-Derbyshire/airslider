@@ -17,6 +17,7 @@ export default class LoadingScreen extends Level
 {
     protected backgroundImagePath?:string; // The path to the background image asset
     protected levelToLoad!:ILevel; // The level to be loaded
+    protected autoContinue:boolean; // Should the screen automatically start the level, once it has loaded?
     
     /**
      * Constructor
@@ -36,6 +37,7 @@ export default class LoadingScreen extends Level
         
         this.HUD = new LoadingScreenHUD(pointerEventManager);
         this.isPauseable = false;
+        this.autoContinue = false;
 	}
     
     /**
@@ -85,6 +87,11 @@ export default class LoadingScreen extends Level
         if(kernel.status === GameLoopStatus.PrePaused)
             kernel.toggleGamePause();
         
-        (this.HUD as LoadingScreenHUD).setLevelHasLoaded(kernel.assetHandler.assetsStillLoading === 0);
+        const levelHasLoaded = kernel.assetHandler.assetsStillLoading === 0;
+
+        (this.HUD as LoadingScreenHUD).setLevelHasLoaded(levelHasLoaded);
+
+        if(this.autoContinue && levelHasLoaded)
+            Kernel.getInstance().unloadCurrentLevel();
     }
 };
