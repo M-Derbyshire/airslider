@@ -4,12 +4,12 @@ import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
 import Kernel from "../../../Kernel/Kernel";
-import FeaturesDetails from "../../levels/Menus/FeaturesDetails/FeaturesDetails";
 import FrameManager from "../../../Kernel/engines/GraphicEngine/FrameManager";
 import ModelEventManager from "../../../Kernel/entities/Level/ModelEventManager";
 import PointerEventManager from "../../../Kernel/entities/Level/PointerEventManager";
 import KeyboardEventManager from "../../../Kernel/entities/Level/KeyboardEventManager";
 import TextButton from "../../HUDComponents/UI-Components/TextButton/TextButton";
+import MainMenu from "../../levels/Menus/MainMenu/MainMenu";
 
 /**
  * A HUD for the credits screen
@@ -125,7 +125,7 @@ http://scripts.sil.org/OFL`,
 
         const kernel = Kernel.getInstance();
 
-        kernel.loadLevel(new FeaturesDetails(
+        kernel.loadLevel(new MainMenu(
             new FrameManager(),
             new ModelEventManager(),
             new PointerEventManager(kernel.canvasContext.canvas),

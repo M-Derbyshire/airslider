@@ -11,10 +11,11 @@ import NeonusLoadingScreen from '../src/levels/LoadingScreens/NeonusLoadingScree
 import VevaniaLoadingScreen from '../src/levels/LoadingScreens/VevaniaLoadingScreen/VevaniaLoadingScreen';
 import Credits from '../src/levels/Menus/Credits/Credits';
 import FeaturesDetails from '../src/levels/Menus/FeaturesDetails/FeaturesDetails';
+import MainMenu from '../src/levels/Menus/MainMenu/MainMenu';
 import ISettings from './ISettings';
 
 export default {
-	getInitialLevel: (kernel:IKernel) => new Credits(
+	getInitialLevel: (kernel:IKernel) => new MainMenu(
 		new FrameManager(),
 		new ModelEventManager(),
 		new PointerEventManager(kernel.canvasContext.canvas),
