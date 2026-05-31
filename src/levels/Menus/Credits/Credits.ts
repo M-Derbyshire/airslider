@@ -3,6 +3,7 @@ import IKeyboardEventManager from '../../../../Kernel/entities/Level/IKeyboardEv
 import IModelEventManager from '../../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../../Kernel/entities/Level/IPointerEventManager';
 import Level from '../../../../Kernel/entities/Level/Level';
+import Kernel from '../../../../Kernel/Kernel';
 import CreditsHUD from '../../../HUDs/CreditsHUD/CreditsHUD';
 
 /**
@@ -29,5 +30,17 @@ export default class Credits extends Level
 		this.isPauseable = false;
         
         this.HUD = new CreditsHUD(pointerEventManager);
+	}
+
+	/**
+	 * Prepares the level, before the gameplay starts
+	 */
+	prepare()
+	{
+		super.prepare();
+
+		const camera = Kernel.getInstance().graphicEngine.camera;
+
+		camera.setColors("#000018", "black");
 	}
 };

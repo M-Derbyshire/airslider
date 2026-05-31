@@ -9,7 +9,7 @@ import ModelEventManager from '../../../../Kernel/entities/Level/ModelEventManag
 import PointerEventManager from '../../../../Kernel/entities/Level/PointerEventManager';
 import Kernel from '../../../../Kernel/Kernel';
 import FeaturesDetailsHUD from '../../../HUDs/FeaturesDetailsHUD/FeaturesDetailsHUD';
-import ForurnLoadingScreen from '../../LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen';
+import MainMenu from '../MainMenu/MainMenu';
 
 /**
  * A level that provides details on different features (e.g. the fullscreen mode)
@@ -46,8 +46,11 @@ export default class FeaturesDetails extends Level
         super.prepare();
         
         const kernel = Kernel.getInstance();
+        const camera = kernel.graphicEngine.camera;
+
+        camera.setColors("#000018", "black");
         
-        const nextLevel = new ForurnLoadingScreen(
+        const nextLevel = new MainMenu(
             new FrameManager(),
             new ModelEventManager(),
             new PointerEventManager(kernel.canvasContext.canvas),
