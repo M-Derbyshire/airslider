@@ -307,7 +307,8 @@ export default class Kernel implements IKernel
             aspectRatioVertical: settings.aspectRatioVertical ?? 9,
             unitsWithinCameraX: settings.unitsWithinCameraX ?? 1000,
             unitsWithinCameraY: settings.unitsWithinCameraY ?? 1000,
-            fpsLimit: settings.fpsLimit ?? 70
+            fpsLimit: settings.fpsLimit ?? 70,
+            isFullscreenEnabled: !!settings.isFullscreenEnabled
         };
         
         return newSettings;

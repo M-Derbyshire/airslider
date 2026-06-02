@@ -16,6 +16,12 @@ export default interface ISettings {
      * The FPS counter is only drawn if this value is truthy
      */
 	fpsDisplayColor?:string;
+
+    /**
+     * Should the fullscreen option be enabled? (this only has an affect if fullscreen is
+     * available in the browser)
+     */
+    isFullscreenEnabled?:boolean;
     
     /**
      * The URL of the assets directory.

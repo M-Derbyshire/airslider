@@ -12,8 +12,9 @@ export default class FullscreenHelper
     static isFeatureAvailable():boolean
     {
         const canvas = this._getCanvasOrNull();
+        const isFullscreenEnabled = Kernel.getInstance().settings.isFullscreenEnabled;
         
-        return !!canvas?.requestFullscreen && document.fullscreenEnabled;
+        return isFullscreenEnabled && !!canvas?.requestFullscreen && document.fullscreenEnabled;
     }
     
     /**
