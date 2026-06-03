@@ -308,7 +308,7 @@ export default class Kernel implements IKernel
             unitsWithinCameraX: settings.unitsWithinCameraX ?? 1000,
             unitsWithinCameraY: settings.unitsWithinCameraY ?? 1000,
             fpsLimit: settings.fpsLimit ?? 70,
-            isFullscreenEnabled: !!settings.isFullscreenEnabled
+            isFullscreenEnabled: settings.isFullscreenEnabled !== false // undefined/null or true === true
         };
         
         return newSettings;

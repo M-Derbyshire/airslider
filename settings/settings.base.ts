@@ -20,6 +20,5 @@ export default {
 		new ModelEventManager(),
 		new PointerEventManager(kernel.canvasContext.canvas),
 		new KeyboardEventManager()
-	),
-	isFullscreenEnabled: true
+	)
 } as ISettings;
