@@ -98,7 +98,7 @@ export default class InstructionsHUD extends ASHUD
             (x, y) => this._startButton.isPointerOverlapping(x, y, kernel.graphicEngine),
             () => this._startButton.active,
             () => this._startButton.onClick(),
-            undefined,
+            () => this._startButton.onHover(),
             true
         );
 

@@ -95,7 +95,7 @@ export default class MainMenuHUD extends ASHUD
             (x, y) => this._startButton.isPointerOverlapping(x, y, kernel.graphicEngine),
             () => this._startButton.active,
             () => this._startButton.onClick(),
-            undefined,
+            () => this._startButton.onHover(),
             true
         );
 
@@ -103,7 +103,7 @@ export default class MainMenuHUD extends ASHUD
             (x, y) => this._creditsButton.isPointerOverlapping(x, y, kernel.graphicEngine),
             () => this._creditsButton.active,
             () => this._creditsButton.onClick(),
-            undefined,
+            () => this._creditsButton.onHover(),
             true
         );
 

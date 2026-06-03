@@ -136,7 +136,7 @@ http://scripts.sil.org/OFL`,
             (x, y) => this._backButton.isPointerOverlapping(x, y, kernel.graphicEngine),
             () => this._backButton.active,
             () => this._backButton.onClick(),
-            undefined,
+            () => this._backButton.onHover(),
             true
         );
         
