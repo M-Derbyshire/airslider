@@ -7,6 +7,7 @@ import IPointerEventManager from "../../../../Kernel/entities/Level/IPointerEven
 import Level from "../../../../Kernel/entities/Level/Level";
 import Kernel from "../../../../Kernel/Kernel";
 import MainMenuHUD from "../../../HUDs/MainMenuHUD/MainMenuHUD";
+import { menu_background_color } from "../sharedValues";
 
 /**
  * The main menu for the game
@@ -55,7 +56,7 @@ export default class MainMenu extends Level
 
         const camera = Kernel.getInstance().graphicEngine.camera;
 
-        camera.setColors("#000018", "black");
+        camera.setColors(menu_background_color, "black");
     }
 
     /**

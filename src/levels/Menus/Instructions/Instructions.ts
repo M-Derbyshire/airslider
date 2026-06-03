@@ -7,6 +7,7 @@ import IPointerEventManager from "../../../../Kernel/entities/Level/IPointerEven
 import Level from "../../../../Kernel/entities/Level/Level";
 import Kernel from "../../../../Kernel/Kernel";
 import InstructionsHUD from "../../../HUDs/InstructionsHUD/InstructionsHUD";
+import { menu_background_color } from "../sharedValues";
 
 /**
  * A menu screen that displays the gameplay instructions
@@ -58,7 +59,7 @@ export default class Instructions extends Level
 
         const camera = Kernel.getInstance().graphicEngine.camera;
 
-        camera.setColors("#000018", "black");
+        camera.setColors(menu_background_color, "black");
     }
 
     /**

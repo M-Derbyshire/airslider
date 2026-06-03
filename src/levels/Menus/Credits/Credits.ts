@@ -5,6 +5,7 @@ import IPointerEventManager from '../../../../Kernel/entities/Level/IPointerEven
 import Level from '../../../../Kernel/entities/Level/Level';
 import Kernel from '../../../../Kernel/Kernel';
 import CreditsHUD from '../../../HUDs/CreditsHUD/CreditsHUD';
+import { menu_background_color } from '../sharedValues';
 
 /**
  * The level for the Credits screen
@@ -41,6 +42,6 @@ export default class Credits extends Level
 
 		const camera = Kernel.getInstance().graphicEngine.camera;
 
-		camera.setColors("#000018", "black");
+		camera.setColors(menu_background_color, "black");
 	}
 };

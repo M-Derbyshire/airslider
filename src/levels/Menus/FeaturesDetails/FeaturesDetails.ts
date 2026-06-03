@@ -10,6 +10,7 @@ import PointerEventManager from '../../../../Kernel/entities/Level/PointerEventM
 import Kernel from '../../../../Kernel/Kernel';
 import FeaturesDetailsHUD from '../../../HUDs/FeaturesDetailsHUD/FeaturesDetailsHUD';
 import MainMenu from '../MainMenu/MainMenu';
+import { menu_background_color } from '../sharedValues';
 
 /**
  * A level that provides details on different features (e.g. the fullscreen mode)
@@ -48,7 +49,7 @@ export default class FeaturesDetails extends Level
         const kernel = Kernel.getInstance();
         const camera = kernel.graphicEngine.camera;
 
-        camera.setColors("#000018", "black");
+        camera.setColors(menu_background_color, "black");
         
         const nextLevel = new MainMenu(
             new FrameManager(),
