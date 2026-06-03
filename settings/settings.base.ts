@@ -13,6 +13,7 @@ import Credits from '../src/levels/Menus/Credits/Credits';
 import FeaturesDetails from '../src/levels/Menus/FeaturesDetails/FeaturesDetails';
 import MainMenu from '../src/levels/Menus/MainMenu/MainMenu';
 import ISettings from './ISettings';
+import Instructions from '../src/levels/Menus/Instructions/Instructions';
 
 export default {
 	getInitialLevel: (kernel:IKernel) => new MainMenu(

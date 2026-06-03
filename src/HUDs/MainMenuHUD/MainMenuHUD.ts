@@ -7,8 +7,8 @@ import Kernel from "../../../Kernel/Kernel";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import TextButton from "../../HUDComponents/UI-Components/TextButton/TextButton";
-import ForurnLoadingScreen from "../../levels/LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen";
 import Credits from "../../levels/Menus/Credits/Credits";
+import Instructions from "../../levels/Menus/Instructions/Instructions";
 import ASHUD from "../ASHUD/ASHUD";
 
 /**
@@ -37,7 +37,7 @@ export default class MainMenuHUD extends ASHUD
 
         this._startButton = new TextButton(
             () => {
-                kernel.loadLevel(new ForurnLoadingScreen(
+                kernel.loadLevel(new Instructions(
                     new FrameManager(),
                     new ModelEventManager(),
                     new PointerEventManager(kernel.canvasContext.canvas),
@@ -83,37 +83,37 @@ export default class MainMenuHUD extends ASHUD
     }
 
     /**
-         * Prepares the HUD before the level starts (triggers the same on any HUD components)
-         */
-        prepare():void
-        {
-            super.prepare();
-    
-            const kernel = Kernel.getInstance();
+     * Prepares the HUD before the level starts (triggers the same on any HUD components)
+     */
+    prepare():void
+    {
+        super.prepare();
 
+        const kernel = Kernel.getInstance();
+
+        this.pointerEventManager.addPointerEventSubject(
+            (x, y) => this._startButton.isPointerOverlapping(x, y, kernel.graphicEngine),
+            () => this._startButton.active,
+            () => this._startButton.onClick(),
+            undefined,
+            true
+        );
+
+        this.pointerEventManager.addPointerEventSubject(
+            (x, y) => this._creditsButton.isPointerOverlapping(x, y, kernel.graphicEngine),
+            () => this._creditsButton.active,
+            () => this._creditsButton.onClick(),
+            undefined,
+            true
+        );
+
+        if(this._fullscreenButton)
             this.pointerEventManager.addPointerEventSubject(
-                (x, y) => this._startButton.isPointerOverlapping(x, y, kernel.graphicEngine),
-                () => this._startButton.active,
-                () => this._startButton.onClick(),
+                (x, y) => this._fullscreenButton!.isPointerOverlapping(x, y, kernel.graphicEngine),
+                () => this._fullscreenButton!.active,
+                () => this._fullscreenButton!.onClick(),
                 undefined,
                 true
             );
-
-            this.pointerEventManager.addPointerEventSubject(
-                (x, y) => this._creditsButton.isPointerOverlapping(x, y, kernel.graphicEngine),
-                () => this._creditsButton.active,
-                () => this._creditsButton.onClick(),
-                undefined,
-                true
-            );
-
-            if(this._fullscreenButton)
-                this.pointerEventManager.addPointerEventSubject(
-                    (x, y) => this._fullscreenButton!.isPointerOverlapping(x, y, kernel.graphicEngine),
-                    () => this._fullscreenButton!.active,
-                    () => this._fullscreenButton!.onClick(),
-                    undefined,
-                    true
-                );
-        }
+    }
 }
