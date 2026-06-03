@@ -18,7 +18,7 @@ export default interface ISettings {
 	fpsDisplayColor?:string;
 
     /**
-     * Should the fullscreen option be enabled? (this only has an affect if fullscreen is
+     * Should the fullscreen option be enabled? (this only has an effect if fullscreen is
      * available in the browser)
      */
     isFullscreenEnabled?:boolean;

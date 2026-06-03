@@ -14,6 +14,12 @@ If this is not provided, the default value will be 70
 
 If we want to display the FPS counter, what color should the text be? The FPS counter is only drawn if this value is truthy
 
+### `isFullscreenEnabled`
+
+Should the fullscreen option be enabled? (this only has an effect if fullscreen is available in the browser).
+
+If this is not provided, the default value will be true
+
 ### `assetsDirUrl`
 
 The URL of the assets directory. If the game is being hosted locally, then this should be left `undefined`
