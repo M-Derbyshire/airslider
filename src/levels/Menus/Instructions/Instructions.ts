@@ -1,18 +1,22 @@
 import IAssetHandler from "../../../../Kernel/AssetHandler/IAssetHandler";
+import FrameManager from "../../../../Kernel/engines/GraphicEngine/FrameManager";
 import IFrameManager from "../../../../Kernel/engines/GraphicEngine/IFrameManager";
 import IGraphicEngine from "../../../../Kernel/engines/GraphicEngine/IGraphicEngine";
 import IKeyboardEventManager from "../../../../Kernel/entities/Level/IKeyboardEventManager";
 import IModelEventManager from "../../../../Kernel/entities/Level/IModelEventManager";
 import IPointerEventManager from "../../../../Kernel/entities/Level/IPointerEventManager";
-import Level from "../../../../Kernel/entities/Level/Level";
+import KeyboardEventManager from "../../../../Kernel/entities/Level/KeyboardEventManager";
+import ModelEventManager from "../../../../Kernel/entities/Level/ModelEventManager";
+import PointerEventManager from "../../../../Kernel/entities/Level/PointerEventManager";
 import Kernel from "../../../../Kernel/Kernel";
 import InstructionsHUD from "../../../HUDs/InstructionsHUD/InstructionsHUD";
-import { menu_background_color } from "../sharedValues";
+import ASMenu from "../../ASMenu/ASMenu";
+import ForurnLoadingScreen from "../../LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen";
 
 /**
  * A menu screen that displays the gameplay instructions
  */
-export default class Instructions extends Level
+export default class Instructions extends ASMenu
 {
     private _arrowKeysImage!:HTMLImageElement; // Image of left/right arrow keys
     private _spacebarImage!:HTMLImageElement; // Image of a spacebar key
@@ -32,8 +36,6 @@ export default class Instructions extends Level
     )
     {
         super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
-
-        this.isPauseable = false;
 
         this.HUD = new InstructionsHUD(pointerEventManager);
     }
@@ -57,9 +59,14 @@ export default class Instructions extends Level
     {
         super.prepare();
 
-        const camera = Kernel.getInstance().graphicEngine.camera;
+        const kernel = Kernel.getInstance();
 
-        camera.setColors(menu_background_color, "black");
+        kernel.loadLevel(new ForurnLoadingScreen(
+            new FrameManager(),
+            new ModelEventManager(),
+            new PointerEventManager(kernel.canvasContext.canvas),
+            new KeyboardEventManager()
+        ));
     }
 
     /**

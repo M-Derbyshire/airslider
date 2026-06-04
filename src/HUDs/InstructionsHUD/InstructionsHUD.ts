@@ -1,14 +1,9 @@
-import FrameManager from "../../../Kernel/engines/GraphicEngine/FrameManager";
 import IPointerEventManager from "../../../Kernel/entities/Level/IPointerEventManager";
-import KeyboardEventManager from "../../../Kernel/entities/Level/KeyboardEventManager";
-import ModelEventManager from "../../../Kernel/entities/Level/ModelEventManager";
-import PointerEventManager from "../../../Kernel/entities/Level/PointerEventManager";
 import Kernel from "../../../Kernel/Kernel";
 import FullscreenHelper from "../../../Kernel/utils/FullscreenHelper";
 import FullscreenButton from "../../HUDComponents/FullscreenButton/FullscreenButton";
 import TextButton from "../../HUDComponents/UI-Components/TextButton/TextButton";
 import TextOnly from "../../HUDComponents/UI-Components/TextOnly/TextOnly";
-import ForurnLoadingScreen from "../../levels/LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen";
 import ASHUD from "../ASHUD/ASHUD";
 
 export default class InstructionsHUD extends ASHUD
@@ -86,13 +81,6 @@ export default class InstructionsHUD extends ASHUD
         super.prepare();
 
         const kernel = Kernel.getInstance();
-
-        kernel.loadLevel(new ForurnLoadingScreen(
-            new FrameManager(),
-            new ModelEventManager(),
-            new PointerEventManager(kernel.canvasContext.canvas),
-            new KeyboardEventManager()
-        ));
 
         this.pointerEventManager.addPointerEventSubject(
             (x, y) => this._startButton.isPointerOverlapping(x, y, kernel.graphicEngine),

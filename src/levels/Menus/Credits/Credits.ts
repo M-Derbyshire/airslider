@@ -2,15 +2,13 @@ import IFrameManager from '../../../../Kernel/engines/GraphicEngine/IFrameManage
 import IKeyboardEventManager from '../../../../Kernel/entities/Level/IKeyboardEventManager';
 import IModelEventManager from '../../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../../Kernel/entities/Level/IPointerEventManager';
-import Level from '../../../../Kernel/entities/Level/Level';
-import Kernel from '../../../../Kernel/Kernel';
 import CreditsHUD from '../../../HUDs/CreditsHUD/CreditsHUD';
-import { menu_background_color } from '../sharedValues';
+import ASMenu from '../../ASMenu/ASMenu';
 
 /**
  * The level for the Credits screen
  */
-export default class Credits extends Level
+export default class Credits extends ASMenu
 {
     /**
 	 * Constructor
@@ -27,21 +25,7 @@ export default class Credits extends Level
 	)
 	{
 		super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
-		
-		this.isPauseable = false;
         
         this.HUD = new CreditsHUD(pointerEventManager);
-	}
-
-	/**
-	 * Prepares the level, before the gameplay starts
-	 */
-	prepare()
-	{
-		super.prepare();
-
-		const camera = Kernel.getInstance().graphicEngine.camera;
-
-		camera.setColors(menu_background_color, "black");
 	}
 };

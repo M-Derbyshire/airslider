@@ -4,18 +4,17 @@ import IKeyboardEventManager from '../../../../Kernel/entities/Level/IKeyboardEv
 import IModelEventManager from '../../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../../Kernel/entities/Level/IPointerEventManager';
 import KeyboardEventManager from '../../../../Kernel/entities/Level/KeyboardEventManager';
-import Level from '../../../../Kernel/entities/Level/Level';
 import ModelEventManager from '../../../../Kernel/entities/Level/ModelEventManager';
 import PointerEventManager from '../../../../Kernel/entities/Level/PointerEventManager';
 import Kernel from '../../../../Kernel/Kernel';
 import FeaturesDetailsHUD from '../../../HUDs/FeaturesDetailsHUD/FeaturesDetailsHUD';
+import ASMenu from '../../ASMenu/ASMenu';
 import MainMenu from '../MainMenu/MainMenu';
-import { menu_background_color } from '../sharedValues';
 
 /**
  * A level that provides details on different features (e.g. the fullscreen mode)
  */
-export default class FeaturesDetails extends Level
+export default class FeaturesDetails extends ASMenu
 {
     /**
      * Constructor
@@ -33,8 +32,6 @@ export default class FeaturesDetails extends Level
     {
         super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
-        this.isPauseable = false;
-        
         const onContinue = () => Kernel.getInstance().unloadCurrentLevel();
         this.HUD = new FeaturesDetailsHUD(pointerEventManager, onContinue);
     }
@@ -47,9 +44,6 @@ export default class FeaturesDetails extends Level
         super.prepare();
         
         const kernel = Kernel.getInstance();
-        const camera = kernel.graphicEngine.camera;
-
-        camera.setColors(menu_background_color, "black");
         
         const nextLevel = new MainMenu(
             new FrameManager(),
