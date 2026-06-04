@@ -7,6 +7,7 @@ import KeyboardEventManager from '../../../../Kernel/entities/Level/KeyboardEven
 import ModelEventManager from '../../../../Kernel/entities/Level/ModelEventManager';
 import PointerEventManager from '../../../../Kernel/entities/Level/PointerEventManager';
 import Kernel from '../../../../Kernel/Kernel';
+import FullscreenHelper from '../../../../Kernel/utils/FullscreenHelper';
 import FeaturesDetailsHUD from '../../../HUDs/FeaturesDetailsHUD/FeaturesDetailsHUD';
 import ASMenu from '../../ASMenu/ASMenu';
 import MainMenu from '../MainMenu/MainMenu';
@@ -32,8 +33,13 @@ export default class FeaturesDetails extends ASMenu
     {
         super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
         
-        const onContinue = () => Kernel.getInstance().unloadCurrentLevel();
-        this.HUD = new FeaturesDetailsHUD(pointerEventManager, onContinue);
+        // We will skip this screen, if the Fullscreen feature isn't available (as that's the only feature
+        // this screen advises on). However, this screen was being displayed for a frame (so it flashes up, then
+        // off), so we don't want to display anything in that situation
+        if(FullscreenHelper.isFeatureAvailable()) {
+            const onContinue = () => Kernel.getInstance().unloadCurrentLevel();
+            this.HUD = new FeaturesDetailsHUD(pointerEventManager, onContinue);
+        }
     }
     
     /**
@@ -52,5 +58,10 @@ export default class FeaturesDetails extends ASMenu
             new KeyboardEventManager()
         );
         kernel.loadLevel(nextLevel);
+
+        // The fullscreen feature is the only one this screen currently advises on.
+        // So, if it's not available, just skip this screen.
+        if(!FullscreenHelper.isFeatureAvailable())
+            kernel.unloadCurrentLevel();
     }
 };

@@ -16,7 +16,7 @@ import ISettings from './ISettings';
 import Instructions from '../src/levels/Menus/Instructions/Instructions';
 
 export default {
-	getInitialLevel: (kernel:IKernel) => new MainMenu(
+	getInitialLevel: (kernel:IKernel) => new EpilepsyWarning(
 		new FrameManager(),
 		new ModelEventManager(),
 		new PointerEventManager(kernel.canvasContext.canvas),
