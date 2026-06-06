@@ -14,6 +14,8 @@ export default class LoadingScreenHUD extends ASHUD
     private _loadingTextDisplay:TextOnly; // The "Loading..." text component
     private _continueButton:TextButton; // The button used to start the loaded level
     private _fullscreenButton:FullscreenButton|null; // The fullscreen toggle button (if the feature is available)
+
+    public isAutoContinue:boolean; // Is the loading screen set to auto continue, or should the continue button be displayed?
     
     /**
      * Constructor
@@ -22,6 +24,8 @@ export default class LoadingScreenHUD extends ASHUD
     constructor(pointerEventManager:IPointerEventManager)
     {
         super(pointerEventManager);
+
+        this.isAutoContinue = false;
         
         const fontName = "Arial";
         const fontSize = 50;
@@ -102,6 +106,6 @@ export default class LoadingScreenHUD extends ASHUD
     setLevelHasLoaded(hasLoaded:boolean)
     {
         this._loadingTextDisplay.active = !hasLoaded;
-        this._continueButton.active = hasLoaded;
+        this._continueButton.active = hasLoaded && !this.isAutoContinue;
     }
 };

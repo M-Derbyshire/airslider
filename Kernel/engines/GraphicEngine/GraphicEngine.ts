@@ -195,7 +195,7 @@ export default class GraphicEngine implements IGraphicEngine {
     {
         const unscaledValues = this.getUnscaledDrawPositionsAndDimensions(unitValues);
         
-        return ZCalc.getDrawValues(this.camera, unscaledValues, unitValues.z, showNegative);;
+        return ZCalc.getDrawValues(this.camera, unscaledValues, unitValues.z, showNegative);
     }
     
     /**

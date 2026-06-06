@@ -14,9 +14,10 @@ import FeaturesDetails from '../src/levels/Menus/FeaturesDetails/FeaturesDetails
 import MainMenu from '../src/levels/Menus/MainMenu/MainMenu';
 import ISettings from './ISettings';
 import Instructions from '../src/levels/Menus/Instructions/Instructions';
+import EndingCutscene from '../src/levels/cutscenes/EndingCutscene/EndingCutscene';
 
 export default {
-	getInitialLevel: (kernel:IKernel) => new EpilepsyWarning(
+	getInitialLevel: (kernel:IKernel) => new CoratuneLoadingScreen(
 		new FrameManager(),
 		new ModelEventManager(),
 		new PointerEventManager(kernel.canvasContext.canvas),

@@ -17,7 +17,15 @@ export default class LoadingScreen extends Level
 {
     protected backgroundImagePath?:string; // The path to the background image asset
     protected levelToLoad!:ILevel; // The level to be loaded
-    protected autoContinue:boolean; // Should the screen automatically start the level, once it has loaded?
+    
+    private _autoContinue:boolean; // Should the screen automatically start the level, once it has loaded?
+    protected get autoContinue(): boolean {
+        return this._autoContinue;
+    }
+    protected set autoContinue(newValue:boolean) {
+        this._autoContinue = newValue;
+        (this.HUD as LoadingScreenHUD).isAutoContinue = newValue;
+    }
     
     /**
      * Constructor
@@ -37,7 +45,7 @@ export default class LoadingScreen extends Level
         
         this.HUD = new LoadingScreenHUD(pointerEventManager);
         this.isPauseable = false;
-        this.autoContinue = false;
+        this._autoContinue = false;
 	}
     
     /**

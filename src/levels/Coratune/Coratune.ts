@@ -5,7 +5,6 @@ import IFrameManager from '../../../Kernel/engines/GraphicEngine/IFrameManager';
 import IModelEventManager from '../../../Kernel/entities/Level/IModelEventManager';
 import IPointerEventManager from '../../../Kernel/entities/Level/IPointerEventManager';
 import IModel from '../../../Kernel/entities/Model/IModel';
-import CoratuneLoadingScreen from '../LoadingScreens/CoratuneLoadingScreen/CoratuneLoadingScreen';
 import LevelGroundManager from '../ASLevel/LevelGroundManager';
 import IntroJellyfish from '../../models/Obstacles/IntroObstacles/IntroJellyfish/IntroJellyfish';
 import { IPattern } from '../ASLevel/ObstaclePatternManager';
@@ -22,6 +21,7 @@ import LoadingScreen from '../LoadingScreen/LoadingScreen';
 import ModelAnimationsManager from '../../../Kernel/entities/Model/ModelAnimationsManager/ModelAnimationsManager';
 import IAssetHandler from '../../../Kernel/AssetHandler/IAssetHandler';
 import IGraphicEngine from '../../../Kernel/engines/GraphicEngine/IGraphicEngine';
+import EndingCutsceneLoadingScreen from '../LoadingScreens/EndingCutsceneLoadingScreen/EndingCutsceneLoadingScreen';
 
 /**
  * The Coratune level
@@ -266,7 +266,7 @@ export default class Coratune extends ASLevel<Jellyfish>
      */
     protected getNextLevelLoadingScreen():LoadingScreen
     {
-        return new CoratuneLoadingScreen(
+        return new EndingCutsceneLoadingScreen(
             new FrameManager(),
             new ModelEventManager(),
             new PointerEventManager(Kernel.getInstance().canvasContext.canvas),
