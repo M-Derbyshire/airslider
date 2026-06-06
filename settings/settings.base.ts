@@ -4,20 +4,10 @@ import ModelEventManager from '../Kernel/entities/Level/ModelEventManager';
 import PointerEventManager from '../Kernel/entities/Level/PointerEventManager';
 import IKernel from '../Kernel/IKernel';
 import EpilepsyWarning from '../src/levels/Menus/EpilepsyWarning/EpilepsyWarning';
-import CoratuneLoadingScreen from '../src/levels/LoadingScreens/CoratuneLoadingScreen/CoratuneLoadingScreen';
-import ForurnLoadingScreen from '../src/levels/LoadingScreens/ForurnLoadingScreen/ForurnLoadingScreen';
-import LarsLoadingScreen from '../src/levels/LoadingScreens/LarsLoadingScreen/LarsLoadingScreen';
-import NeonusLoadingScreen from '../src/levels/LoadingScreens/NeonusLoadingScreen/NeonusLoadingScreen';
-import VevaniaLoadingScreen from '../src/levels/LoadingScreens/VevaniaLoadingScreen/VevaniaLoadingScreen';
-import Credits from '../src/levels/Menus/Credits/Credits';
-import FeaturesDetails from '../src/levels/Menus/FeaturesDetails/FeaturesDetails';
-import MainMenu from '../src/levels/Menus/MainMenu/MainMenu';
 import ISettings from './ISettings';
-import Instructions from '../src/levels/Menus/Instructions/Instructions';
-import EndingCutscene from '../src/levels/cutscenes/EndingCutscene/EndingCutscene';
 
 export default {
-	getInitialLevel: (kernel:IKernel) => new CoratuneLoadingScreen(
+	getInitialLevel: (kernel:IKernel) => new EpilepsyWarning(
 		new FrameManager(),
 		new ModelEventManager(),
 		new PointerEventManager(kernel.canvasContext.canvas),
