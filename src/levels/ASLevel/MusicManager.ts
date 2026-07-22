@@ -104,13 +104,15 @@ export default class MusicManager
      */
     private _chooseMusicPath(musicFilePaths:string[]):string|null
     {
+        const kernel = Kernel.getInstance();
+
         if(!musicFilePaths.length)
             return null;
         
-        if(musicFilePaths.length === 1)
+        if(musicFilePaths.length === 1) {
+            kernel.centralState.set(CentralStateKey.LastMusicSelectedPath, musicFilePaths[0]);
             return musicFilePaths[0];
-        
-        const kernel = Kernel.getInstance();
+        }
         
         // We want to filter out the filepath used by the previous level
         const selectableFilePaths = musicFilePaths.filter(
@@ -125,7 +127,6 @@ export default class MusicManager
         
         const chosenPath = selectableFilePaths[indexToSelect];
         
-        kernel.centralState.set(CentralStateKey.LastMusicSelectedPath, chosenPath);
         return chosenPath;
     }
     
