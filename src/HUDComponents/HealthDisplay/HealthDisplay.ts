@@ -112,14 +112,30 @@ export default class HealthDisplay extends ASHUDComponent
         
         canvasContext.globalAlpha = 0.5;
         canvasContext.fillStyle = color;
-        this._drawSpannerBackground(radiusModifierPixels);
-        this._drawTextBackground(radiusModifierPixels);
+        this._drawSectionsBackgrounds(radiusModifierPixels);
         canvasContext.globalAlpha = 1;
         
         this._drawSpanner();
         this._drawBorder();
         
         this._setText(health);
+    }
+
+    /**
+     * Draws the backgrounds behind the different sections of the display
+     * @param radiusModifierPixels The pixel value for the radius of a background rectangle's corners
+     */
+    private _drawSectionsBackgrounds(radiusModifierPixels:number)
+    {
+        const kernel = Kernel.getInstance();
+        const ctx = kernel.canvasContext;
+
+        ctx.beginPath();
+
+        this._drawSpannerBackground(radiusModifierPixels);
+        this._drawTextBackground(radiusModifierPixels);
+
+        ctx.fill();
     }
     
     /**
@@ -131,18 +147,16 @@ export default class HealthDisplay extends ASHUDComponent
         const kernel = Kernel.getInstance();
         const ctx = kernel.canvasContext;
         
-        const unitWidth = this.width * 0.33;
+        const unitWidth = this.width * 0.34;
         
         const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
-            x: this.x, 
-            y: this.y, 
-            width: unitWidth, 
+            x: this.x,
+            y: this.y,
+            width: unitWidth,
             height: this.height
         });
         
-        ctx.beginPath();
         ctx.roundRect(x, y, width, height, radiusModifierPixels);
-        ctx.fill();
     }
     
     /**
@@ -175,9 +189,7 @@ export default class HealthDisplay extends ASHUDComponent
             0
         ];
         
-        ctx.beginPath();
         ctx.roundRect(x, y, width, height, radiusModifiers);
-        ctx.fill();
     }
     
     /**
