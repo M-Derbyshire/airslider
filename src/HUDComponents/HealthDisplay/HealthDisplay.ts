@@ -147,7 +147,7 @@ export default class HealthDisplay extends ASHUDComponent
         const kernel = Kernel.getInstance();
         const ctx = kernel.canvasContext;
         
-        const unitWidth = this.width * 0.34;
+        const unitWidth = this.width * 0.33;
         
         const { x, y, width, height } = kernel.graphicEngine.getStaticDrawPositionsAndDimensions({
             x: this.x,
