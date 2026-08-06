@@ -287,6 +287,9 @@ export default class ASLevel<ObstacleType extends Obstacle = Obstacle> extends L
         
         this.levelCompletedAtMS = -1;
         this.stoppedForlossAtMS = -1;
+
+        this._currentPlayerMoveKey = "";
+        this._pauseToggleKeyIsPressed = false;
     }
     
     /**
