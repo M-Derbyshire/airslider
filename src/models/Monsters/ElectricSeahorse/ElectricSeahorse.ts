@@ -15,6 +15,8 @@ export default class ElectricSeahorse extends Monster {
     private _wingSoundKey:string; // The key for the flapping wings sound effect
     private _lastAnimFrame:number; // The index of the current frame in the animation (see the act() method for explanation)
     
+    private _hasBeenVisibleOnScreen:boolean; // Has this model been visible on the screen at somepoint during gameplay?
+    
     /**
      * Constructor
      * @param leftLightningModel The lightning attack, for the left side
@@ -31,6 +33,8 @@ export default class ElectricSeahorse extends Monster {
         this._wingSoundKey = "/models/Monsters/ElectricSeahorse/sounds/flap.mp3";
         
         this._lastAnimFrame = 0;
+
+        this._hasBeenVisibleOnScreen = false;
     }
     
     /**
@@ -105,6 +109,8 @@ export default class ElectricSeahorse extends Monster {
         this.xSpeed = 1100;
         
         this._lastAnimFrame = 0;
+
+        this._hasBeenVisibleOnScreen = false;
     }
     
     // Entering, exiting and reseting-----------------------------------------
@@ -117,10 +123,15 @@ export default class ElectricSeahorse extends Monster {
     enter():void
     {
         const level = (Kernel.getInstance().level as ASLevel);
+
+        // This will not be exact, due to the Z position, but it's enough for our purposes
+        if(level.rightEdge > this.x)
+            this._hasBeenVisibleOnScreen = true;
         
         if(level.rightEdge < (this.x + this.width))
         {
-            this.moveLeft(this.enterXSpeed);
+            if(level.levelMoving)
+                this.moveLeft(this.enterXSpeed);
         } else {
             this.entering = false;
             this._setLightningActiveStatus(true);
@@ -169,6 +180,10 @@ export default class ElectricSeahorse extends Monster {
         //In case of player loss
         if(!this.fireWeapon)
             this._setLightningActiveStatus(false);
+
+        // If the player loses before the monster has entered the screen, the monster shouldn't fly off into the distance
+        if(!this._hasBeenVisibleOnScreen)
+            this.z = this.startZ;
     }
     
     /**
