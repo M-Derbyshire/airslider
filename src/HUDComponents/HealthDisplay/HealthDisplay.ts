@@ -132,17 +132,17 @@ export default class HealthDisplay extends ASHUDComponent
 
         ctx.beginPath();
 
-        this._drawSpannerBackground(radiusModifierPixels);
-        this._drawTextBackground(radiusModifierPixels);
+        this._drawSpannerBackgroundRect(radiusModifierPixels);
+        this._drawTextBackgroundRect(radiusModifierPixels);
 
         ctx.fill();
     }
     
     /**
-     * Draws the background behind the spanner image
+     * Draws the background rectangle behind the spanner image
      * @param radiusModifierPixels The pixel value for the radius of the background's corners
      */
-    private _drawSpannerBackground(radiusModifierPixels:number)
+    private _drawSpannerBackgroundRect(radiusModifierPixels:number)
     {
         const kernel = Kernel.getInstance();
         const ctx = kernel.canvasContext;
@@ -160,10 +160,10 @@ export default class HealthDisplay extends ASHUDComponent
     }
     
     /**
-     * Draws the background behind the health text
+     * Draws the background rectangle behind the health text
      * @param radiusModifierPixels The pixel value for the radius of the background's corners
      */
-    private _drawTextBackground(radiusModifierPixels:number)
+    private _drawTextBackgroundRect(radiusModifierPixels:number)
     {
         const kernel = Kernel.getInstance();
         const ctx = kernel.canvasContext;
