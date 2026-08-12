@@ -91,10 +91,6 @@ export default class LoadingScreen extends Level
         
         const kernel = Kernel.getInstance();
         
-        // We don't want this level to pause (e.g. on the browser changing to another tab)
-        if(kernel.status === GameLoopStatus.PrePaused)
-            kernel.toggleGamePause();
-        
         const levelHasLoaded = kernel.assetHandler.assetsStillLoading === 0;
 
         (this.HUD as LoadingScreenHUD).setLevelHasLoaded(levelHasLoaded);
