@@ -12,8 +12,10 @@ import IModel from '../../entities/Model/IModel';
 export default class GraphicEngine implements IGraphicEngine {
     private _frameManager:IFrameManager; // Manages the level's frames
     
-    private _lastFrameCanvasWidth:number; // The pixel width of the canvas element, during the last draw
-    private _lastFrameCanvasHeight:number; // The pixel height of the canvas element, during the last draw
+    private _lastFrameCanvasStyleWidth:number; // The style pixel width of the canvas element, during the last draw
+    private _lastFrameCanvasStyleHeight:number; // The style pixel height of the canvas element, during the last draw
+    private _lastFrameCanvasWidth:number; // The pixel width set on the canvas element, during the last draw
+    private _lastFrameCanvasHeight:number; // The pixel height set on the canvas element, during the last draw
     
     private _canvasCtx:CanvasRenderingContext2D; // The 2D context from the HTML canvas element
     
@@ -38,6 +40,8 @@ export default class GraphicEngine implements IGraphicEngine {
         this._frameManager = frameManager;
         this._canvasCtx = canvasCtx;
         
+        this._lastFrameCanvasStyleWidth = 0;
+        this._lastFrameCanvasStyleHeight = 0;
         this._lastFrameCanvasWidth = 0;
         this._lastFrameCanvasHeight = 0;
         
@@ -268,13 +272,26 @@ export default class GraphicEngine implements IGraphicEngine {
         const computedStyles = window.getComputedStyle(canvas);
         
         //slice() is used here to remove the "px"
-        const currentWidth = Number(computedStyles.width.slice(0, -2));
-        const currentHeight = Number(computedStyles.height.slice(0, -2));
+        const currentStyleWidth = Number(computedStyles.width.slice(0, -2));
+        const currentStyleHeight = Number(computedStyles.height.slice(0, -2));
+
+        const calcSizeHasChanged = (
+            currentStyleWidth !== this._lastFrameCanvasStyleWidth
+            || currentStyleHeight !== this._lastFrameCanvasStyleHeight
+        );
+
+        // On some browsers, it's not enough to check the style values. You also have to check the canvas properties
+        const elemSizeHasChanged = (
+            canvas.width !== this._lastFrameCanvasWidth
+            || canvas.height !== this._lastFrameCanvasHeight
+        );
         
-        if(currentWidth !== this._lastFrameCanvasWidth || currentHeight !== this._lastFrameCanvasHeight)
+        if(calcSizeHasChanged || elemSizeHasChanged)
         {
-            this._lastFrameCanvasWidth = currentWidth;
-            this._lastFrameCanvasHeight = currentHeight;
+            this._lastFrameCanvasStyleWidth = currentStyleWidth;
+            this._lastFrameCanvasStyleHeight = currentStyleHeight;
+            this._lastFrameCanvasWidth = canvas.width;
+            this._lastFrameCanvasHeight = canvas.height;
             
             return true;
         }
