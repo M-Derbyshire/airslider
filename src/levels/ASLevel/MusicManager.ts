@@ -126,7 +126,8 @@ export default class MusicManager
         );
         
         const chosenPath = selectableFilePaths[indexToSelect];
-        
+
+        kernel.centralState.set(CentralStateKey.LastMusicSelectedPath, chosenPath);
         return chosenPath;
     }
     
