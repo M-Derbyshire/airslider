@@ -251,6 +251,6 @@ export default class HealthDisplay extends ASHUDComponent
      */
     private _setText(health:number)
     {
-        this.text.content = `${Math.round(health)}%`;
+        this.text.content = `${Math.ceil(health)}%`;
     }
 }
