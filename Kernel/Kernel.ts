@@ -1,7 +1,7 @@
 import AssetHandler from './AssetHandler/AssetHandler';
 import fonts from '../src/fonts/fonts';
 import IKernel from './IKernel';
-import ISettings, { SettingsWithDefaults } from '../settings/ISettings';
+import ISettings, { SettingsWithDefaults } from './settings/ISettings';
 import IAssetHandler from './AssetHandler/IAssetHandler';
 import ILevel from './entities/Level/ILevel';
 import { IErrorHandler } from './ErrorHandler/IErrorHandler';

@@ -1,4 +1,4 @@
-import { SettingsWithDefaults } from "../../settings/ISettings";
+import { SettingsWithDefaults } from "../settings/ISettings";
 import IAssetHandler from "../AssetHandler/IAssetHandler";
 import GameEngine from "../engines/GameEngine/GameEngine";
 import Camera from "../engines/GraphicEngine/Camera";

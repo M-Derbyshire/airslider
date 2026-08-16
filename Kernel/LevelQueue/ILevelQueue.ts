@@ -1,4 +1,4 @@
-import ISettings from "../../settings/ISettings";
+import ISettings from "../settings/ISettings";
 import IGameEngine from "../engines/GameEngine/IGameEngine";
 import IGraphicEngine from "../engines/GraphicEngine/IGraphicEngine";
 import ISoundEngine from "../engines/SoundEngine/ISoundEngine";

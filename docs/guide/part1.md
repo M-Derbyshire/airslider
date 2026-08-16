@@ -12,7 +12,8 @@ You can access the Kernel object anywhere in your code by using the static metho
 
 ## The Settings Object
 
-The settings object sets certain properties for the game. You will define multiple settings objects, but they will all implement the [ISettings](../reference/ISettings.md) interface. These files can be found in the `/settings` directory
+The settings object sets certain properties for the game. You will define multiple settings objects, but they will all implement the [ISettings](../reference/ISettings.md) interface. The settings files can be found in the `/settings` directory, and the ISettings interface can be found in the 
+`/Kernel/settings` directory.
 
 - `settings.base.ts` - This file should contain the settings that are not limited to a specific environment.
 - `settings.development.ts` - The object in this file should contain a spread of the contents of the base settings object. You should then add any settings to the object that are specific to your development environment.

@@ -1,4 +1,4 @@
-import ISettings from './ISettings';
+import ISettings from '../Kernel/settings/ISettings';
 import baseSettings from './settings.base';
 
 export default {

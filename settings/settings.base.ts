@@ -4,7 +4,7 @@ import ModelEventManager from '../Kernel/entities/Level/ModelEventManager';
 import PointerEventManager from '../Kernel/entities/Level/PointerEventManager';
 import IKernel from '../Kernel/IKernel';
 import EpilepsyWarning from '../src/levels/Menus/EpilepsyWarning/EpilepsyWarning';
-import ISettings from './ISettings';
+import ISettings from '../Kernel/settings/ISettings';
 
 export default {
 	getInitialLevel: (kernel:IKernel) => new EpilepsyWarning(

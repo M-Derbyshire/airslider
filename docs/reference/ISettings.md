@@ -1,4 +1,4 @@
-# [ISettings](../../settings/ISettings.ts)
+# [ISettings](../../Kernel/settings/ISettings.ts)
 
 The settings for the game
 

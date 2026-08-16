@@ -1,5 +1,5 @@
-import ILevel from "../Kernel/entities/Level/ILevel";
-import IKernel from "../Kernel/IKernel";
+import ILevel from "../entities/Level/ILevel";
+import IKernel from "../IKernel";
 
 /**
  * The settings for the game
