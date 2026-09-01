@@ -14,7 +14,6 @@ export default class GameLoopManager implements IGameLoopManager
     private _fpsLimit:number; // The maximum FPS that the game should run at
     private _fps:number; // The current Frames Per Second of the game
     private _fpsDisplayColor?:string; // If we want to display the FPS counter, what color should the text be?
-    private _highestFpsReached:number; // The highest FPS the game has reached
     private _lastTime:Date; // The date/time that the last frame ran
     
     // The total amount of milliseconds that the level has not been paused or stopped for any reason
@@ -48,7 +47,6 @@ export default class GameLoopManager implements IGameLoopManager
         this._fpsDisplayColor = fpsDisplayColor;
         
         this._fps = this._fpsLimit;
-        this._highestFpsReached = 0;
         this._lastTime = new Date();
         
         this._prepareForLevelStart();
@@ -204,23 +202,7 @@ export default class GameLoopManager implements IGameLoopManager
      */
     private _getNewFps(currentDateTime:Date):number
     {
-        /*
-            If the browser window/tab is not visible, the browser will stop calling the 
-            run method until it is visible again.
-            
-            However, this can cause unexpected behaviour because the frame rate will drop for a single  
-            frame when the player returns to the tab/window. 
-            
-            Therefore, we will store the highest frame rate achieved, and return that if the 
-            current rate is unexpectably low.
-        */
-       
-        const currentFps = 1000 / (currentDateTime.getTime() - this._lastTime.getTime());
-        
-        if(currentFps > this._highestFpsReached)
-            this._highestFpsReached = currentFps;
-        
-        return (currentFps < (this._highestFpsReached - 20)) ? this._highestFpsReached : currentFps;
+        return 1000 / (currentDateTime.getTime() - this._lastTime.getTime());
     }
     
     /**
