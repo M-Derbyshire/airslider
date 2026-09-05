@@ -46,19 +46,19 @@ export default class Racer extends ASModel
         super.registerAnimations();
         
         // All the frames share the same width/height.
-        const frameWidth = 92;
-        const frameHeight = 119;
+        const frameWidth = 115;
+        const frameHeight = 149;
         
         // There are 3 versions of the same animation (different colours) on the spritesheet.
         
         const colorXPositions = { // These are the same for every frame of each version
             [RacerColor.Blue]: 0,
-            [RacerColor.Red]: 92,
-            [RacerColor.Yellow]: 184
+            [RacerColor.Red]: 115,
+            [RacerColor.Yellow]: 230
         };
         const xPosition = colorXPositions[this._color];
         
-        const frameYPositions = [1, 120, 242, 364]; // These are the same for every color
+        const frameYPositions = [1, 150, 303, 455]; // These are the same for every color
         
         this.animationManager.registerAnimations({
             forward: this.animationManager.createAnimation({
