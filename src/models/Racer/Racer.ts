@@ -47,7 +47,7 @@ export default class Racer extends ASModel
         
         // All the frames share the same width/height.
         const frameWidth = 92;
-        const frameHeight = 119;
+        const frameHeight = 115;
         
         // There are 3 versions of the same animation (different colours) on the spritesheet.
         
