@@ -201,7 +201,7 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
         const animation = this.animations[animationName];
         
         if(animation.frameCoordinates.length > 1 || animation.onAnimationEnd) {
-            let currentFrameIndex = animation.currentFrameIndex;
+            let nextFrameIndex = animation.currentFrameIndex;
             
             //First, we need to determine how many game-loop frames we need to wait before we move on to the next 
             //frame of this sprite's animation. This is to ensure that the sprite's animation remains consistent
@@ -214,28 +214,28 @@ export default class ModelAnimationsManager implements IModelAnimationsManager {
                 if(animation.fps > currentFps)
                     //If the sprite has more frames per second than the current game fps,
                     //skip the necessary amount of frames to make up for that.
-                    currentFrameIndex += Math.floor(animation.fps / currentFps);
+                    nextFrameIndex += Math.floor(animation.fps / currentFps);
                 else
                     //If the sprite has less or equal frames per second to the game-loop's fps,
                     //we can just move to the next frame now.
-                    currentFrameIndex++;
+                    nextFrameIndex++;
                 
                 animation.waitCount = 0;
             }
             
             animation.waitCount++;
-            animation.currentFrameIndex = currentFrameIndex;
+            animation.currentFrameIndex = nextFrameIndex;
             
-            //Is this the last frame in this sprite animation?
-            if(currentFrameIndex > animation.frameCoordinates.length - 1)
-            {
-                //Reset the current animation
-                animation.currentFrameIndex = 0;
-                
-                if(animation.onAnimationEnd)
+            // Have we gone past the last frame in this sprite's animation?
+            const lastFrameIndex = animation.frameCoordinates.length - 1;
+            if(nextFrameIndex > lastFrameIndex)
+            {   
+                if(animation.onAnimationEnd) {
                     animation.onAnimationEnd();
-                
-                return animation.frameCoordinates[animation.frameCoordinates.length - 1];
+                    animation.currentFrameIndex = lastFrameIndex;
+                } else {
+                    animation.currentFrameIndex = 0;
+                }
             }
         }
 		
