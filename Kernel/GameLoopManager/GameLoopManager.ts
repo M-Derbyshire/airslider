@@ -214,7 +214,7 @@ export default class GameLoopManager implements IGameLoopManager
     {
         const timePassed = currentDateTime.getTime() - this._lastTime.getTime();
         
-        if(this._status !== GameLoopStatus.Paused && timePassed > 0)
+        if(this._status === GameLoopStatus.Active && timePassed > 0)
             this._totalLevelActiveMilliseconds += timePassed;
     }
     
