@@ -36,7 +36,7 @@ The `setSoundVolume` method is changes the volume of a sound
 
 ### `playSound`
 
-The `playSound` method starts (or unpauses) a sound. If the sound is already playing, this will restart it
+The `playSound` method starts (or unpauses) a sound. If the sound is already playing, this will restart it (unless the current browser is Safari-based, as there are known issues with consistently restarting already playing sounds in such browsers)
 
 #### Parameters:
 - **key** - The key used to identify the sound

@@ -17,9 +17,7 @@ export default class BrowserHelper
         // browsers
         if(this._isSafari === undefined)
             this._isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-        console.log(navigator.userAgent)
-        console.log(this._isSafari)
+        
         return this._isSafari;
     }
 };

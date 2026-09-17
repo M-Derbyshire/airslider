@@ -1,3 +1,4 @@
+import BrowserHelper from '../../utils/BrowserHelper';
 import ISoundEngine, { SoundStatus } from './ISoundEngine';
 
 /**
@@ -82,8 +83,10 @@ export default class SoundEngine implements ISoundEngine {
     }
 
     /**
-     * Starts (or unpauses) a sound. If the sound is already playing, this 
-     * will restart it
+     * Starts (or unpauses) a sound. 
+     * If the sound is already playing, this will restart it (unless the
+     * current browser is Safari-based, as there are known issues with
+     * consistently restarting already playing sounds in such browsers).
      * @param key the key used to identify the sound
      * @param loop should the sound be looped?
      */
@@ -97,6 +100,10 @@ export default class SoundEngine implements ISoundEngine {
         
         if(sound.status === SoundStatus.Paused)
             newLoopValue = sound.asset.loop;
+        else if(BrowserHelper.isSafari() && sound.status === SoundStatus.Playing)
+            // There is an issue with restarting an already playing sound on Safari browsers,
+            // so we don't want to restart a sound if that is the case.
+            return;
         else if(sound.status !== SoundStatus.Stopped)
             this._resetSound(sound);
         
