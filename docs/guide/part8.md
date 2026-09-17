@@ -27,3 +27,10 @@ The UnitHelper provides methods that help you when working with "unit" values. Y
 - **xUnitsToPixels** - Converts an X-axis value (in units) into the correct pixel value. In most cases, it would probably be better to use the methods provided by the [GraphicEngine](../reference/GraphicEngine.md), rather than using this method directly
 - **yUnitsToPixels** - Converts a Y-axis value (in units) into the correct pixel value. In most cases, it would probably be better to use the methods provided by the [GraphicEngine](../reference/GraphicEngine.md), rather than using this method directly
 - **consistentSpeed** - Converts a speed value into a new value that remains consistent, regardless of a changing FPS (this is only designed for slight changes in the FPS -- larger changes will still be noticeable)
+
+## [BrowserHelper](../reference/BrowserHelper.md)
+
+The BrowserHelper provides methods that can be used to determine details about the web browser.
+
+### Static Methods:
+- **isSafari** - This will tell you if the current web browser is Safari (or a browser that is required to use WebKit, as may be the case for some browsers on IOS)

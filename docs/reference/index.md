@@ -151,6 +151,10 @@ Contains methods that provide information related to time
 
 Contains methods that perform calculations to convert "unit" values into actual canvas positions/dimensions. Also provides a method for keeping speeds consistent when the FPS changes
 
+## [BrowserHelper](BrowserHelper.md)
+
+Contains methods that can be used to determine details about the web browser
+
 ## [ISettings](ISettings.md)
 
 The settings for the game
