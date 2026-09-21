@@ -131,7 +131,7 @@ export default class Sign extends ASModel
             x: 460,
             y: 145,
             size: 150,
-            font: "CourierPrime",
+            font: "'Courier New', monospace",
             color: "white",
             style: "normal",
             alignment: "left",
