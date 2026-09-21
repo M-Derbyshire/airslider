@@ -10,6 +10,7 @@ export default class AssetHandler implements IAssetHandler
     private _onErrorCallback:(err:any)=>void; // Should be called whenever there is a loading error
     
     private _assetsDirPath:string; // The path of the assets directory
+    private _fontsDirPath:string; // The path of the fonts directory
     private _isHostedLocally:boolean; // Is the game being hosted locally?
     
     private _assetsStillLoading:number; // The number of assets that are still loading
@@ -31,10 +32,11 @@ export default class AssetHandler implements IAssetHandler
      */
     constructor(onErrorCallback:(err:any)=>void, assetsDirUrl?:string)
     {
-        this._assetsDirPath = assetsDirUrl ?? this._getLocalAssetsDirPath();
         this._onErrorCallback = onErrorCallback;
         
         this._isHostedLocally = !assetsDirUrl;
+        this._assetsDirPath = assetsDirUrl ?? this._getLocalAssetsDirPath();
+        this._fontsDirPath = assetsDirUrl ?? this._getLocalFontsDirPath();
         
         this._assetsStillLoading = 0;
         
@@ -74,7 +76,7 @@ export default class AssetHandler implements IAssetHandler
         if(this._loadedFontPaths.includes(path)) 
             return;
         
-        const font = new FontFace(name, `url(${this._prepareAssetPath(path)})`);
+        const font = new FontFace(name, `url(${this._prepareAssetPath(path, this._fontsDirPath)})`);
         
         font.load()
             .then((newFont) => {
@@ -148,13 +150,31 @@ export default class AssetHandler implements IAssetHandler
      */
     private _getLocalAssetsDirPath():string
     {
+        const root = this._getLocalProjectRootDirPath();
+        return `${root}/src`;
+    }
+
+    /**
+     * Constructs the path to the fonts directory, when the game is being hosted locally
+     * @returns The local fonts directory path
+     */
+    private _getLocalFontsDirPath():string
+    {
+        const root = this._getLocalProjectRootDirPath();
+        return `${root}/fonts`;
+    }
+
+    /**
+     * Constructs the path to the project's root directory, when the game is being hosted locally
+     * @returns The local directory path of this project
+     */
+    private _getLocalProjectRootDirPath():string
+    {
         let root = window.location.pathname;
         if(root.endsWith("/"))
             root = root.slice(0, -1); // Remove trailing slash
-        
-        const assetsDirName = "src";
-        
-        return `${root}/${assetsDirName}`;
+
+        return root;
     }
     
     /**
@@ -168,9 +188,10 @@ export default class AssetHandler implements IAssetHandler
     /**
      * Makes any required modifications to the asset path before it is used
      * @param path the original asset path
+     * @param assetsDirPath the path to the directory that holds the game's assets
      * @returns the modified asset path
      */
-    private _prepareAssetPath(path:string):string
+    private _prepareAssetPath(path:string, assetsDirPath:string = this._assetsDirPath):string
     {
         // Remove leading slash from path
         if(path.startsWith("/"))
@@ -179,6 +200,6 @@ export default class AssetHandler implements IAssetHandler
         if(!this._isHostedLocally)
             path = pathToUniqueFilename(path);
         
-        return `${this._assetsDirPath}/${path}`;
+        return `${assetsDirPath}/${path}`;
     }
 }

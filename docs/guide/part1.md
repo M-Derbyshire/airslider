@@ -60,16 +60,16 @@ The settings interface has multiple properties that you can set. Most of the pro
 
 ## The Fonts Object
 
-You can store all of your fonts in the `/src/fonts` directory.
+You can store all of your fonts in the `/fonts` directory.
 
-The fonts object is found in `/src/fonts/fonts.ts`. Each property name on the object should be the name of a font, and the value should be the file path to the font (a full file path, starting from within the `/src` directory).
+The fonts object is found in `/fonts/fonts.ts`. Each property name on the object should be the name of a font, and the value should be the file path to the font (a full file path, starting from within the `/fonts` directory).
 
 ### Example
 
 ```
 export default {
-    MyCrazyFont: "/fonts/MyCrazyFont/MyCrazyFont-Regular.ttf",
-    MySeriousFont: "/fonts/MySeriousFont/MySeriousFont.ttf"
+    MyCrazyFont: "/MyCrazyFont/MyCrazyFont-Regular.ttf",
+    MySeriousFont: "/MySeriousFont/MySeriousFont.ttf"
 };
 ```
 

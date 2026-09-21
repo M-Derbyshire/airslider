@@ -1,6 +1,10 @@
 export default {
     assets: {
-        dir: "src", // The name of the source assets directory
+        dirs: [
+            // The name of the assets directories
+            "src",
+            "fonts"
+        ],
         excludedExtensions: [
             // File extensions that should not be treated as assets
             "js",

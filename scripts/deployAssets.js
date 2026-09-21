@@ -26,24 +26,33 @@ try {
     exitWithError(`Error while creating the new deployment directories: ${err.message}`, 2);
 }
 
-// Next, we generate an array of all the asset files from the source assets directory
-let filePathsToCopy;
-try {
-    filePathsToCopy = getFileList(config.assets.dir, config.assets.excludedExtensions);
-} catch(err) {
-    exitWithError(`Error while generating the list of asset files to be copied: ${err.message}`, 3);
-}
+// Next, we generate an array of all the asset files from the assets directories
+const filesToCopy = []; // This will contain objects that each have 2 properties: "sourcePath" and "filename"
 
-// Next, we copy the asset files to the output directory (giving each one a new, unique filename)
+config.assets.dirs.forEach((assetDir) => {
+    try {
+        const fullPaths = getFileList(assetDir, config.assets.excludedExtensions);
+        const files = fullPaths.map(fp => (
+            {
+                sourcePath: fp,
+                filename: pathToUniqueFilename(fp.replace(`${assetDir}/`, ""))
+            }
+        ));
+
+        filesToCopy.push(...files);
+    } catch(err) {
+        exitWithError(`Error while generating the list of asset files to be copied: ${err.message}`, 3);
+    }
+});
+
+// Next, we copy the asset files to the output directory
 try {
-    const assetsDirPrefix = `${config.assets.dir}/`; // The beginning of the source file paths
     const assetsOutputDir = `${config.build.dir}/${config.build.assets}`; // The directory to output the assets to
     
-    filePathsToCopy.forEach(source => {
-        const newFilename = pathToUniqueFilename(source.replace(assetsDirPrefix, ""));
-        const destination = `${assetsOutputDir}/${newFilename}`;
+    filesToCopy.forEach(fileDetails => {
+        const destination = `${assetsOutputDir}/${fileDetails.filename}`;
         
-        fs.copyFileSync(source, destination);
+        fs.copyFileSync(fileDetails.sourcePath, destination);
     });
 } catch(err) {
     exitWithError(`Error while copying asset files: ${err.message}`, 4);

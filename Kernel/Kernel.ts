@@ -1,5 +1,5 @@
 import AssetHandler from './AssetHandler/AssetHandler';
-import fonts from '../src/fonts/fonts';
+import fonts from '../fonts/fonts';
 import IKernel from './IKernel';
 import ISettings, { SettingsWithDefaults } from './settings/ISettings';
 import IAssetHandler from './AssetHandler/IAssetHandler';
