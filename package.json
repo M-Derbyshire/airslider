@@ -14,11 +14,9 @@
   "scripts": {
     "serve:dev": "npx webpack serve --config webpack/dev.config.js --mode=development",
     "deploy:prod": "npm run destroy:deploy && npm run deploy:assets && npm run build:prod",
-    "deploy:int": "npm run destroy:deploy && npm run deploy:assets && npm run build:int && cp -r build/* int_test_site",
     "deploy:assets": "node scripts/deployAssets.js",
     "destroy:deploy": "node scripts/removeDeployDir.js",
     "build:prod": "npx webpack --config webpack/prod.config.js --mode=production",
-    "build:int": "npx webpack --config webpack/int.config.js --mode=production",
     "make:hud": "cd ./src/HUDs && scaff HUD",
     "make:hudComponent": "cd ./src/HUDComponents && scaff HUDComponent",
     "make:level": "cd ./src/levels && scaff level",
