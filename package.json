@@ -31,7 +31,7 @@
     "make:hudComponent:base": "cd ./src/HUDComponents && scaff baseHUDComponent",
     "make:level:base": "cd ./src/levels && scaff baseLevel",
     "make:model:base": "cd ./src/models && scaff baseModel",
-    "test:kernel": "jest ./Kernel"
+    "test:kernel": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js ./Kernel"
   },
   "repository": {
     "type": "git",
