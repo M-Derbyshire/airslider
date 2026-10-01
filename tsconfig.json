@@ -9,6 +9,10 @@
         "lib": [
             "es2016",
             "dom"
+        ],
+        "types": [
+            "node",
+            "jest"
         ]
     },
     "exclude": [

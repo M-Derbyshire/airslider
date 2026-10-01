@@ -4,7 +4,11 @@
   "description": "A game by Matthew Stuart Derbyshire",
   "devDependencies": {
     "@babel/register": "^7.21.0",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.5.2",
+    "ts-jest": "^29.4.14",
     "ts-loader": "^9.4.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.0.4",
     "webpack": "^5.84.0",
     "webpack-cli": "^4.10.0",
@@ -26,7 +30,8 @@
     "make:hud:base": "cd ./src/HUDs && scaff baseHUD",
     "make:hudComponent:base": "cd ./src/HUDComponents && scaff baseHUDComponent",
     "make:level:base": "cd ./src/levels && scaff baseLevel",
-    "make:model:base": "cd ./src/models && scaff baseModel"
+    "make:model:base": "cd ./src/models && scaff baseModel",
+    "test:kernel": "jest ./Kernel"
   },
   "repository": {
     "type": "git",
