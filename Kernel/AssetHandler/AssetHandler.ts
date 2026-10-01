@@ -1,4 +1,4 @@
-import { pathToUniqueFilename } from "./deployedFilename";
+import { pathToUniqueFilename } from "./deployedFilename.js";
 import IAssetHandler from "./IAssetHandler";
 import ILoadedAssetData from "./ILoadedAssetData";
 
