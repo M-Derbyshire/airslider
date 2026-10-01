@@ -17,3 +17,7 @@ To run the game locally, using the development settings, you should run the `ser
 ## Building the Game
 
 To build the game for your production environment, you should use the `deploy:prod` NPM command. This will generate the `/build` directory. Inside this directory, you will find the bundled script (that will run the game) and the `/build/assets` directory (This will contain all of the game's assets. E.g. images, sounds, fonts).
+
+## Running Tests
+
+At this time, the project only has tests for the game's framework. You can run these tests with `npm run test:kernel`.
