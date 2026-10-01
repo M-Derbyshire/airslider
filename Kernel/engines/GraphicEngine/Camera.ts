@@ -197,7 +197,7 @@ export default class Camera implements ICamera {
      */
     drawBack():void
     {
-        this.drawEmptySpaceColor();
+        this._drawEmptySpaceColor();
     }
     
     /**
@@ -205,59 +205,7 @@ export default class Camera implements ICamera {
      */
     drawFront():void
     {
-        this.drawLetterbox();
-    }
-    
-    /**
-     * Draws the color of any empty space on the canvas (this color is set with the setColors() method)
-     */
-    drawEmptySpaceColor():void
-    {
-        const ctx = this._canvas.getContext("2d")!;
-        
-        ctx.fillStyle = this._emptySpaceColor;
-        ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.fill();
-    }
-    
-    /**
-     * Draws the letterbox around the game (the color is set with the setColors() method)
-     */
-    drawLetterbox():void
-    {
-        const ctx = this._canvas.getContext("2d")!;
-        
-        ctx.fillStyle = this._letterBoxColor;
-        ctx.beginPath();
-        
-        if(this._positions.canvas.y > 0) // Draw the letterboxes on top and bottom
-        {
-            //Top letterbox bar
-            ctx.rect(0, 0, ctx.canvas.width, this._positions.canvas.y);
-            
-            //Bottom letterbox bar
-            ctx.rect(
-                0, 
-                this._positions.canvas.y + this._positions.canvas.height,
-                ctx.canvas.width, 
-                this._positions.canvas.y
-            );
-        }
-        else // Draw the letterboxes on left and right
-        {
-            //Left letterbox bar
-            ctx.rect(0, 0, this._positions.canvas.x, ctx.canvas.height);
-            
-            //Right letterbox bar
-            ctx.rect( 
-                this._positions.canvas.x + this._positions.canvas.width,
-                0,
-                this._positions.canvas.x,
-                ctx.canvas.height
-            );
-        }
-        
-        ctx.fill();
+        this._drawLetterbox();
     }
     
     /**
@@ -308,5 +256,57 @@ export default class Camera implements ICamera {
     moveDown(speed:number):void
     {
         this._positions.drawSpace.y += UnitHelper.consistentSpeed(speed);
+    }
+
+    /**
+     * Draws the color of any empty space on the canvas (this color is set with the setColors() method)
+     */
+    private _drawEmptySpaceColor():void
+    {
+        const ctx = this._canvas.getContext("2d")!;
+        
+        ctx.fillStyle = this._emptySpaceColor;
+        ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.fill();
+    }
+    
+    /**
+     * Draws the letterbox around the game (the color is set with the setColors() method)
+     */
+    private _drawLetterbox():void
+    {
+        const ctx = this._canvas.getContext("2d")!;
+        
+        ctx.fillStyle = this._letterBoxColor;
+        ctx.beginPath();
+        
+        if(this._positions.canvas.y > 0) // Draw the letterboxes on top and bottom
+        {
+            //Top letterbox bar
+            ctx.rect(0, 0, ctx.canvas.width, this._positions.canvas.y);
+            
+            //Bottom letterbox bar
+            ctx.rect(
+                0, 
+                this._positions.canvas.y + this._positions.canvas.height,
+                ctx.canvas.width, 
+                this._positions.canvas.y
+            );
+        }
+        else // Draw the letterboxes on left and right
+        {
+            //Left letterbox bar
+            ctx.rect(0, 0, this._positions.canvas.x, ctx.canvas.height);
+            
+            //Right letterbox bar
+            ctx.rect( 
+                this._positions.canvas.x + this._positions.canvas.width,
+                0,
+                this._positions.canvas.x,
+                ctx.canvas.height
+            );
+        }
+        
+        ctx.fill();
     }
 };

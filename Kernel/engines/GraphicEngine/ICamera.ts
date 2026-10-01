@@ -95,16 +95,6 @@ export default interface ICamera {
      */
     drawFront():void;
     
-    /**
-     * Draws the color of any empty space on the canvas (this color is set with the setColors() method)
-     */
-    drawEmptySpaceColor():void;
-    
-    /**
-     * Draws the letterbox around the game (the color is set with the setColors() method)
-     */
-    drawLetterbox():void;
-    
     
     /**
      * Sets the camera's position within the level's available space (centered on the given X/Y)
