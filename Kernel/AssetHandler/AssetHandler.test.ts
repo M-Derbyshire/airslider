@@ -233,7 +233,7 @@ describe("AssetHandler", () => {
         it("should load the font with local path and add it to the document FontFaceSet", async () => {
             const name = "test-font-name";
             const path = "/test/font/path";
-            const expectedPath = `url(/fonts${path})`;
+            const expectedPath = `url(${path})`;
 
             let resolveLoadPromise:(v:unknown)=>void;
             const loadFontPromise = new Promise((res, _) => resolveLoadPromise = res);
