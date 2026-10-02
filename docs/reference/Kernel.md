@@ -12,6 +12,7 @@ The `init` method is used to initialise the game.
 #### Parameters:
 - **canvas** - The Canvas element that the game should be drawn onto
 - **settings** - The game's settings
+- **fonts** *(optional)* - The fonts object (keys are font names, and values are paths to font files)
 
 ### `getInstance`
 
@@ -20,6 +21,7 @@ The `getInstance` method returns the singleton instance of the Kernel.
 #### Parameters:
 - **canvas** *(optional)* - The Canvas element that the game should be drawn onto. You should not need to provide this in practice, as it will have already been set by the `init` method.
 - **settings** *(optional)* - The game's settings. You should not need to provide this in practice, as it will have already been set by the `init` method.
+- **fonts** *(optional)* - The fonts object (keys are font names, and values are paths to font files). You should not need to provide this in practice, as it will have already been set by the `init` method.
 
 ## Methods
 

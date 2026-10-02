@@ -1,14 +1,12 @@
 # Fonts Object
 
-The fonts object should be a simple object. Each property name should be the name of a font, and the value should be the filepath to the font (a full filepath, starting from within the `/fonts` directory)
-
-The font object should be exported from `/fonts/fonts.ts`
+The fonts object should be a simple object. Each property name should be the name of a font, and the value should be the filepath to the font (the filepath should be relative to the project's root directory)
 
 ## Example
 
 ```
 export default {
-    MyCrazyFont: "/MyCrazyFont/MyCrazyFont-Regular.ttf",
-    MySeriousFont: "/MySeriousFont/MySeriousFont.ttf"
+    MyCrazyFont: "/fonts/MyCrazyFont/MyCrazyFont-Regular.ttf",
+    MySeriousFont: "/fonts/MySeriousFont/MySeriousFont.ttf"
 };
 ```

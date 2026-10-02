@@ -36,7 +36,7 @@ export default class AssetHandler implements IAssetHandler
         
         this._isHostedLocally = !assetsDirUrl;
         this._assetsDirPath = assetsDirUrl ?? this._getLocalAssetsDirPath();
-        this._fontsDirPath = assetsDirUrl ?? this._getLocalFontsDirPath();
+        this._fontsDirPath = assetsDirUrl ?? this._getLocalProjectRootDirPath();
         
         this._assetsStillLoading = 0;
         
@@ -152,16 +152,6 @@ export default class AssetHandler implements IAssetHandler
     {
         const root = this._getLocalProjectRootDirPath();
         return `${root}/src`;
-    }
-
-    /**
-     * Constructs the path to the fonts directory, when the game is being hosted locally
-     * @returns The local fonts directory path
-     */
-    private _getLocalFontsDirPath():string
-    {
-        const root = this._getLocalProjectRootDirPath();
-        return `${root}/fonts`;
     }
 
     /**

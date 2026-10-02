@@ -1,5 +1,4 @@
 import AssetHandler from './AssetHandler/AssetHandler';
-import fonts from '../fonts/fonts';
 import IKernel from './IKernel';
 import ISettings, { SettingsWithDefaults } from './settings/ISettings';
 import IAssetHandler from './AssetHandler/IAssetHandler';
@@ -24,12 +23,13 @@ export default class Kernel implements IKernel
      * Gets the singleton instance of the kernel
      * @param canvas The Canvas element that the game should be drawn onto
      * @param settings The game's settings
+     * @param fonts The fonts object (keys are font names, and values are paths to font files)
      * @returns the singleton instance of the kernel
      */
-    static getInstance(canvas?:HTMLCanvasElement, settings?:any):IKernel
+    static getInstance(canvas?:HTMLCanvasElement, settings?:ISettings, fonts?:FontsObject):IKernel
     {
         if(!Kernel._instance)
-            Kernel._instance = new Kernel(canvas, settings);
+            Kernel._instance = new Kernel(canvas, settings, fonts);
         
         return Kernel._instance;
     }
@@ -38,10 +38,11 @@ export default class Kernel implements IKernel
      * Triggers the starting of the game
      * @param canvas The Canvas element that the game should be drawn onto
      * @param settings The game's settings
+     * @param fonts The fonts object (keys are font names, and values are paths to font files)
      */
-    static init(canvas:HTMLCanvasElement, settings:any)
+    static init(canvas:HTMLCanvasElement, settings:ISettings, fonts?:FontsObject)
     {
-        const instance = this.getInstance(canvas, settings) as Kernel;
+        const instance = this.getInstance(canvas, settings, fonts) as Kernel;
         
         if(instance.level) // If we've already initiated the game
             return;
@@ -59,6 +60,7 @@ export default class Kernel implements IKernel
     
     private _settings:SettingsWithDefaults; // The settings for the game
     private _canvasContext:CanvasRenderingContext2D; // The 2D context from the HTML canvas element
+    private _fonts:FontsObject; // Lists the fonts used by the game (keys are font names, and values are paths to font files)
     
     private _levelQueue:ILevelQueue; // Manages the queue of levels
     private _gameLoopManager:IGameLoopManager; // Manages the "Game Loop"
@@ -76,9 +78,10 @@ export default class Kernel implements IKernel
      * Constructor
      * @param canvas The Canvas element that the game should be drawn onto
      * @param settings The game's settings
+     * @param fonts The fonts object (keys are font names, and values are paths to font files)
      * @returns The singleton instance of the kernel
      */
-    private constructor(canvas?:HTMLCanvasElement, settings?:ISettings)
+    private constructor(canvas?:HTMLCanvasElement, settings?:ISettings, fonts?:FontsObject)
     {
         // While we want the canvas/settings parameters to be optional for the constructor/getInstance() methods (so they're 
         // not needed when we're getting the pre-existing kernel instance), they are still a requirement when initially 
@@ -90,6 +93,7 @@ export default class Kernel implements IKernel
         
         this._canvasContext = canvas.getContext("2d")!;
         this._settings = this._getSettingsWithDefaults(settings);
+        this._fonts = (fonts) ? fonts : {};
         
         this._hasError = false;
         this._errorHandler = new ErrorHandler(this._canvasContext);
@@ -284,8 +288,8 @@ export default class Kernel implements IKernel
     private _load():void
     {
         // Load the fonts from the "fonts" object
-        Object.keys(fonts).forEach((key:string) => {
-            const fontPath = fonts[key as keyof typeof fonts];
+        Object.keys(this._fonts).forEach((key:string) => {
+            const fontPath = this._fonts[key as keyof typeof this._fonts];
             this._assetHandler.loadFont(key, fontPath);
         });
         
@@ -323,3 +327,6 @@ export default class Kernel implements IKernel
         this._levelQueue.unloadCurrentLevel();
     }
 };
+
+// An object that lists the fonts used by the game (keys are font names, and values are paths to font files)
+type FontsObject = {[key:string]:string};

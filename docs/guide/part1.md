@@ -60,16 +60,14 @@ The settings interface has multiple properties that you can set. Most of the pro
 
 ## The Fonts Object
 
-You can store all of your fonts in the `/fonts` directory.
-
-The fonts object is found in `/fonts/fonts.ts`. Each property name on the object should be the name of a font, and the value should be the file path to the font (a full file path, starting from within the `/fonts` directory).
+The fonts object should be a simple object. Each property name should be the name of a font, and the value should be the filepath to the font (the filepath should be relative to the project's root directory).
 
 ### Example
 
 ```
 export default {
-    MyCrazyFont: "/MyCrazyFont/MyCrazyFont-Regular.ttf",
-    MySeriousFont: "/MySeriousFont/MySeriousFont.ttf"
+    MyCrazyFont: "/fonts/MyCrazyFont/MyCrazyFont-Regular.ttf",
+    MySeriousFont: "/fonts/MySeriousFont/MySeriousFont.ttf"
 };
 ```
 
@@ -79,17 +77,18 @@ There are 2 files that are used to initialise the game
 - `init.dev.ts` - This initialises the game for local development. You should not need to modify this
 - `init.prod.ts`- This initialises the game in your production environment
 
-The game is initialised using the Kernel's `init` static method. This method will take 2 parameters: the game's canvas element, and the settings object.
+The game is initialised using the Kernel's `init` static method. This method will take 3 parameters: the game's canvas element, the settings object, and the fonts object.
 
 ### Example
 
 ```
 import Kernel from './Kernel/Kernel';
 import settings from './settings/settings.production';
+import fonts from './fonts/fonts';
 
 const canvas = document.getElementById("my-canvas") as HTMLCanvasElement;
 
-Kernel.init(canvas, settings);
+Kernel.init(canvas, settings, fonts);
 ```
 
 ## Running/Building the Game

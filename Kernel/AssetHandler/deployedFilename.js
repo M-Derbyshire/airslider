@@ -15,7 +15,7 @@ const assetsDirsAbbreviations = [
  * Converts an asset file path into a unique filename (unique enough for our 
  * purposes). This file path should be relative to the project's src directory
  * (though, in some cases, it may be relative to another directory -- for example,
- * the fonts are relative to the fonts directory)
+ * the fonts are relative to the project's root directory)
  * @param {string} path The path of the file
  * @returns {string} A unique filename for the file
  */

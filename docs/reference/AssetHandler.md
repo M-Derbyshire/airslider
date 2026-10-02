@@ -23,7 +23,7 @@ The `loadAudio` method loads an audio file with the asset handler. If the asset 
 
 ### `loadFont`
 
-The `loadFont` method starts the loading of a font file into the HTML document. You shouldn't need to call this from your own code, as this will be called automatically by the Kernel (which will load all of the fonts listed in the `/fonts/fonts.ts` file)
+The `loadFont` method starts the loading of a font file into the HTML document. You shouldn't need to call this from your own code, as this will be called automatically by the Kernel (which will load all of the fonts listed in the [FontsObject](FontsObject.md))
 
 #### Parameters:
 - **name** - The name of the font

@@ -161,4 +161,4 @@ The settings for the game
 
 ## [Fonts Object](FontsObject.md)
 
-The fonts object should be a simple object. Each property name should be the name of a font, and the value should be the filepath to the font (a full filepath, starting from within the `/fonts` directory)
+The fonts object should be a simple object. Each property name should be the name of a font, and the value should be the filepath to the font (the filepath should be relative to the project's root directory)
