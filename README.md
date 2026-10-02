@@ -21,3 +21,5 @@ To build the game for your production environment, you should use the `deploy:pr
 ## Running Tests
 
 At this time, the project only has tests for the game's framework. You can run these tests with `npm run test:kernel`.
+
+Some tests have snapshots. If you want to update these snapshots, use `npm run test:kernel:update-snapshots`.

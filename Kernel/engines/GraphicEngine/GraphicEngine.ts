@@ -128,6 +128,10 @@ export default class GraphicEngine implements IGraphicEngine {
                 z: unscaledValues.z
             }, !!showNegative).height;
         }
+
+        if(!height) {
+            return
+        }
         
         // Setup style and alignment properties
         this._canvasCtx.font = `${textContent.style} ${height}px ${textContent.font}`;

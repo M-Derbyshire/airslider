@@ -7,6 +7,7 @@
     "@testing-library/dom": "^10.4.2",
     "@types/jest": "^30.0.0",
     "jest": "^30.5.2",
+    "jest-canvas-mock": "^2.5.8",
     "jest-environment-jsdom": "^30.5.2",
     "ts-jest": "^29.4.14",
     "ts-loader": "^9.4.2",
@@ -33,7 +34,8 @@
     "make:hudComponent:base": "cd ./src/HUDComponents && scaff baseHUDComponent",
     "make:level:base": "cd ./src/levels && scaff baseLevel",
     "make:model:base": "cd ./src/models && scaff baseModel",
-    "test:kernel": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config Kernel/jest.config.ts"
+    "test:kernel": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config Kernel/jest.config.ts",
+    "test:kernel:update-snapshots": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config Kernel/jest.config.ts -u"
   },
   "repository": {
     "type": "git",
