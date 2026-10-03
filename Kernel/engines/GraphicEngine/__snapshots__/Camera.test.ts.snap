@@ -1,0 +1,350 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Camera drawFront should draw letterboxes with correct color and expected positions/dimensions: landscape ratio on landscape canvas 1`] = `
+[
+  {
+    "height": 100,
+    "width": 11.111111111111114,
+    "x": 0,
+    "y": 0,
+  },
+  {
+    "height": 100,
+    "width": 11.111111111111114,
+    "x": 188.88888888888889,
+    "y": 0,
+  },
+]
+`;
+
+exports[`Camera drawFront should draw letterboxes with correct color and expected positions/dimensions: landscape ratio on portrait canvas 1`] = `
+[
+  {
+    "height": 76.47058823529412,
+    "width": 100,
+    "x": 0,
+    "y": 0,
+  },
+  {
+    "height": 76.47058823529412,
+    "width": 100,
+    "x": 0,
+    "y": 123.52941176470588,
+  },
+]
+`;
+
+exports[`Camera drawFront should draw letterboxes with correct color and expected positions/dimensions: portrait ratio on landscape canvas 1`] = `
+[
+  {
+    "height": 100,
+    "width": 71.875,
+    "x": 0,
+    "y": 0,
+  },
+  {
+    "height": 100,
+    "width": 71.875,
+    "x": 128.125,
+    "y": 0,
+  },
+]
+`;
+
+exports[`Camera drawFront should draw letterboxes with correct color and expected positions/dimensions: portrait ratio on portrait canvas 1`] = `
+[
+  {
+    "height": 200,
+    "width": 2.941176470588239,
+    "x": 0,
+    "y": 0,
+  },
+  {
+    "height": 200,
+    "width": 2.941176470588239,
+    "x": 97.05882352941177,
+    "y": 0,
+  },
+]
+`;
+
+exports[`Camera setCameraSize should set camera size to be portrait or landscape, based on aspect ratio: landscape ratio on landscape canvas 1`] = `
+{
+  "height": 100,
+  "width": 177.77777777777777,
+  "x": 11.111111111111114,
+  "y": 0,
+}
+`;
+
+exports[`Camera setCameraSize should set camera size to be portrait or landscape, based on aspect ratio: landscape ratio on portrait canvas 1`] = `
+{
+  "height": 47.05882352941177,
+  "width": 100,
+  "x": 0,
+  "y": 76.47058823529412,
+}
+`;
+
+exports[`Camera setCameraSize should set camera size to be portrait or landscape, based on aspect ratio: portrait ratio on landscape canvas 1`] = `
+{
+  "height": 100,
+  "width": 56.25,
+  "x": 71.875,
+  "y": 0,
+}
+`;
+
+exports[`Camera setCameraSize should set camera size to be portrait or landscape, based on aspect ratio: portrait ratio on portrait canvas 1`] = `
+{
+  "height": 200,
+  "width": 94.11764705882352,
+  "x": 2.941176470588239,
+  "y": 0,
+}
+`;
+
+exports[`Camera setCameraSize should set expected positions/dimensions based on aspect ratio and canvas size 1`] = `
+[
+  {
+    "height": 135,
+    "width": 327.375,
+    "x": 18.3125,
+    "y": 0,
+  },
+  {
+    "height": 222.70588235294116,
+    "width": 631,
+    "x": 0,
+    "y": 482.1470588235294,
+  },
+  {
+    "height": 16.06779661016949,
+    "width": 316,
+    "x": 0,
+    "y": 448.46610169491527,
+  },
+  {
+    "height": 119.4342105263158,
+    "width": 313,
+    "x": 0,
+    "y": 576.7828947368421,
+  },
+  {
+    "height": 346.81333333333333,
+    "width": 703,
+    "x": 0,
+    "y": 244.09333333333333,
+  },
+  {
+    "height": 300,
+    "width": 709.0909090909091,
+    "x": 180.95454545454544,
+    "y": 0,
+  },
+  {
+    "height": 14.397590361445783,
+    "width": 239,
+    "x": 0,
+    "y": 466.80120481927713,
+  },
+  {
+    "height": 238.65625,
+    "width": 1091,
+    "x": 0,
+    "y": 455.671875,
+  },
+  {
+    "height": 765.1428571428571,
+    "width": 1442,
+    "x": 0,
+    "y": 124.42857142857144,
+  },
+  {
+    "height": 13,
+    "width": 23.400000000000002,
+    "x": 57.8,
+    "y": 0,
+  },
+  {
+    "height": 59.528301886792455,
+    "width": 631,
+    "x": 0,
+    "y": 439.2358490566038,
+  },
+  {
+    "height": 422.4146341463415,
+    "width": 753,
+    "x": 0,
+    "y": 361.29268292682923,
+  },
+  {
+    "height": 125,
+    "width": 300,
+    "x": 0,
+    "y": 680,
+  },
+  {
+    "height": 475.3125,
+    "width": 1170,
+    "x": 0,
+    "y": 376.34375,
+  },
+  {
+    "height": 4.829268292682927,
+    "width": 99,
+    "x": 0,
+    "y": 582.5853658536586,
+  },
+  {
+    "height": 291.0927835051546,
+    "width": 1086,
+    "x": 0,
+    "y": 596.4536082474227,
+  },
+  {
+    "height": 33.18181818181818,
+    "width": 365,
+    "x": 0,
+    "y": 474.90909090909093,
+  },
+  {
+    "height": 181.4179104477612,
+    "width": 935,
+    "x": 0,
+    "y": 191.7910447761194,
+  },
+  {
+    "height": 122.49484536082474,
+    "width": 457,
+    "x": 0,
+    "y": 206.75257731958763,
+  },
+  {
+    "height": 94.69565217391305,
+    "width": 121,
+    "x": 0,
+    "y": 151.65217391304347,
+  },
+  {
+    "height": 602,
+    "width": 185.72340425531914,
+    "x": 173.63829787234044,
+    "y": 0,
+  },
+  {
+    "height": 527,
+    "width": 381.2340425531915,
+    "x": 319.3829787234042,
+    "y": 0,
+  },
+  {
+    "height": 1177,
+    "width": 408.8526315789474,
+    "x": 500.57368421052627,
+    "y": 0,
+  },
+  {
+    "height": 1061,
+    "width": 457.3275862068965,
+    "x": 384.83620689655174,
+    "y": 0,
+  },
+  {
+    "height": 280,
+    "width": 221.49253731343282,
+    "x": 379.75373134328356,
+    "y": 0,
+  },
+  {
+    "height": 139,
+    "width": 62.310344827586206,
+    "x": 341.8448275862069,
+    "y": 0,
+  },
+  {
+    "height": 193,
+    "width": 29.84536082474227,
+    "x": 193.57731958762886,
+    "y": 0,
+  },
+  {
+    "height": 1030,
+    "width": 228.88888888888889,
+    "x": 560.0555555555555,
+    "y": 0,
+  },
+  {
+    "height": 284,
+    "width": 4.2388059701492535,
+    "x": 221.88059701492537,
+    "y": 0,
+  },
+  {
+    "height": 836,
+    "width": 135.85,
+    "x": 298.075,
+    "y": 0,
+  },
+  {
+    "height": 418.59999999999997,
+    "width": 299,
+    "x": 0,
+    "y": 144.70000000000002,
+  },
+  {
+    "height": 662.3529411764706,
+    "width": 563,
+    "x": 0,
+    "y": 334.8235294117647,
+  },
+  {
+    "height": 94.58333333333334,
+    "width": 454,
+    "x": 0,
+    "y": 15.708333333333329,
+  },
+  {
+    "height": 682,
+    "width": 198,
+    "x": 0,
+    "y": 238,
+  },
+  {
+    "height": 1151,
+    "width": 30.289473684210524,
+    "x": 463.85526315789474,
+    "y": 0,
+  },
+  {
+    "height": 381,
+    "width": 104.3835616438356,
+    "x": 178.3082191780822,
+    "y": 0,
+  },
+  {
+    "height": 812,
+    "width": 263.0422535211268,
+    "x": 526.9788732394366,
+    "y": 0,
+  },
+  {
+    "height": 129.54545454545453,
+    "width": 120,
+    "x": 0,
+    "y": 167.72727272727275,
+  },
+  {
+    "height": 674.2222222222222,
+    "width": 444,
+    "x": 0,
+    "y": 175.8888888888889,
+  },
+  {
+    "height": 148,
+    "width": 13.731958762886599,
+    "x": 114.1340206185567,
+    "y": 0,
+  },
+]
+`;
