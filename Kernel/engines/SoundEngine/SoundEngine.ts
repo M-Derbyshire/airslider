@@ -170,7 +170,8 @@ export default class SoundEngine implements ISoundEngine {
         sound.asset.currentTime = 0;
         sound.asset.muted = true;
         sound.asset.loop = false;
-        sound.asset.play();
+        sound.asset.play()
+            .catch(()=>{}); //swallow any errors
         
         sound.status = SoundStatus.ForceLoading;
     }
