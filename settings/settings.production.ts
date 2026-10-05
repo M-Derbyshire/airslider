@@ -3,5 +3,5 @@ import baseSettings from './settings.base';
 
 export default {
 	...baseSettings,
-	assetsDirUrl: "/games/assets/airslider"
+	assetsDirUrl: "games/assets/airslider"
 } as ISettings;
