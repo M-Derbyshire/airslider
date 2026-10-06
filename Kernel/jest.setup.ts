@@ -6,11 +6,12 @@ import FrameManager from "./engines/GraphicEngine/FrameManager";
 import ModelEventManager from "./entities/Level/ModelEventManager";
 import PointerEventManager from "./entities/Level/PointerEventManager";
 import KeyboardEventManager from "./entities/Level/KeyboardEventManager";
+import IKernel from "./IKernel";
 
 globalThis.jest = jest;
 
 // Setup the Kernel instance
 const canvas = document.createElement("canvas");
 Kernel.init(canvas, {
-    getInitialLevel: (_:Kernel) => new Level(new FrameManager(), new ModelEventManager(), new PointerEventManager(canvas), new KeyboardEventManager()),
+    getInitialLevel: (_:IKernel) => new Level(new FrameManager(), new ModelEventManager(), new PointerEventManager(canvas), new KeyboardEventManager()),
 });
