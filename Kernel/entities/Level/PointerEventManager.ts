@@ -145,8 +145,10 @@ export default class PointerEventManager implements IPointerEventManager {
 				switch (action) {
 					case PointerAction.onClick:
 						subject.onClick?.();
+						break;
 					case PointerAction.onHover:
 						subject.onHover?.();
+						break;
 				}
 			}
 		});
