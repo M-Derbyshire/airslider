@@ -104,7 +104,7 @@ export default class Model implements IModel
     }
     set state(newValue)
     {
-        if(this.animationManager?.animations && this.animationManager.animations[newValue])
+        if(this.animationManager.animations[newValue])
         {
             this.x += this.animationManager.animations[newValue].xOffset;
             this.y += this.animationManager.animations[newValue].yOffset;
