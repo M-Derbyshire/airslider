@@ -14,9 +14,11 @@
   "scripts": {
     "serve:dev": "npx webpack serve --config webpack/dev.config.js --mode=development",
     "deploy:prod": "npm run destroy:deploy && npm run deploy:assets && npm run build:prod",
+    "deploy:itch": "npm run destroy:deploy && npm run deploy:assets && npm run build:itch",
     "deploy:assets": "node scripts/deployAssets.js",
     "destroy:deploy": "node scripts/removeDeployDir.js",
     "build:prod": "npx webpack --config webpack/prod.config.js --mode=production",
+    "build:itch": "npx webpack --config webpack/itch.config.js --mode=production",
     "make:hud": "cd ./src/HUDs && scaff HUD",
     "make:hudComponent": "cd ./src/HUDComponents && scaff HUDComponent",
     "make:level": "cd ./src/levels && scaff level",
