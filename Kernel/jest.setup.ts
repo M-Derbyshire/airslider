@@ -11,7 +11,12 @@ import IKernel from "./IKernel";
 globalThis.jest = jest;
 
 // Setup the Kernel instance
-const canvas = document.createElement("canvas");
-Kernel.init(canvas, {
-    getInitialLevel: (_:IKernel) => new Level(new FrameManager(), new ModelEventManager(), new PointerEventManager(canvas), new KeyboardEventManager()),
-});
+const initialiseKernel = () => {
+    const canvas = document.createElement("canvas");
+
+    Kernel.init(canvas, {
+        getInitialLevel: (_:IKernel) => new Level(new FrameManager(), new ModelEventManager(), new PointerEventManager(canvas), new KeyboardEventManager()),
+    });
+};
+
+initialiseKernel();
