@@ -166,6 +166,7 @@ describe("LevelQueue", () => {
             const expectedError = "test error 123"
             const soundKey = "test";
             const sound = new Audio(soundKey);
+            sound.pause = jest.fn();
             sound.play = jest.fn().mockRejectedValue(expectedError);
 
             soundEngine.addSound(soundKey, sound);
@@ -192,10 +193,13 @@ describe("LevelQueue", () => {
                     keyboardEventManager:IKeyboardEventManager
                 ) {
                     super(frameManager, modelEventManager, pointerEventManager, keyboardEventManager);
+
+                    const sound = new Audio(expectedSoundKey);
+                    sound.pause = jest.fn();
                     this.sounds = [
                         {
                             key: expectedSoundKey,
-                            asset: new Audio(expectedSoundKey)
+                            asset: sound
                         }
                     ];
                 }
@@ -224,10 +228,13 @@ describe("LevelQueue", () => {
             class TestModel extends Model {
                 constructor(animManager:IModelAnimationsManager, soundKey:string) {
                     super(animManager);
+
+                    const sound = new Audio(soundKey);
+                    sound.pause = jest.fn();
                     this.sounds = [
                         {
                             key: soundKey,
-                            asset: new Audio(soundKey)
+                            asset: sound
                         }
                     ];
                 }
