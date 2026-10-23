@@ -17,7 +17,7 @@ import GameLoopManager from './GameLoopManager/GameLoopManager';
 export default class Kernel implements IKernel
 {
     // *********************** Static Methods/Properties **********************************
-    private static _instance:Kernel; // The singleton instance of Kernel
+    private static _instance?:Kernel; // The singleton instance of Kernel
     
     /**
      * Gets the singleton instance of the kernel
@@ -30,8 +30,15 @@ export default class Kernel implements IKernel
     {
         if(!Kernel._instance)
             Kernel._instance = new Kernel(canvas, settings, fonts);
-        
-        return Kernel._instance;
+
+        return Kernel._instance!;
+    }
+
+    /**
+     * Removes the current singleton instance of the kernel, so it can be reinitialised
+     */
+    static dropInstance() {
+        Kernel._instance = undefined;
     }
     
     /**

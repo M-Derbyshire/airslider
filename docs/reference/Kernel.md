@@ -23,6 +23,10 @@ The `getInstance` method returns the singleton instance of the Kernel.
 - **settings** *(optional)* - The game's settings. You should not need to provide this in practice, as it will have already been set by the `init` method.
 - **fonts** *(optional)* - The fonts object (keys are font names, and values are paths to font files). You should not need to provide this in practice, as it will have already been set by the `init` method.
 
+### `dropInstance`
+
+The `dropInstance` method will remove the current singleton instance of the kernel, so it can be reinitialised. This method can be useful when unit-testing the game. You should never need to call this in your game's code.
+
 ## Methods
 
 ### `loadLevel`
