@@ -20,3 +20,5 @@ const initialiseKernel = () => {
 };
 
 initialiseKernel();
+
+export { initialiseKernel };
